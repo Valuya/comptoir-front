@@ -1,9 +1,10 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, View, NgFor, NgIf, FORM_DIRECTIVES, EventEmitter, OnInit} from 'angular2/angular2';
+import {Component, EventEmitter, OnInit} from 'angular2/core';
+import {NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/common';
 
-import {LocalAccount, LocalAccountFactory, NewAccount} from '../../../client/localDomain/account';
+import {LocalAccount, LocalAccountFactory} from '../../../client/localDomain/account';
 
 import {AccountType, ALL_ACCOUNT_TYPES} from '../../../client/domain/account';
 
@@ -21,11 +22,9 @@ import {FormMessage} from '../../utils/formMessage/formMessage';
 import * as Immutable from 'immutable';
 
 @Component({
-    selector: 'accountEditComponent',
+    selector: 'account-edit',
     inputs: ['account'],
-    outputs: ['saved', 'cancelled']
-})
-@View({
+    outputs: ['saved', 'cancelled'],
     templateUrl: './components/account/edit/editAccount.html',
     styleUrls: ['./components/account/edit/editAccount.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelect, LocalizedDirective,
@@ -57,7 +56,7 @@ export class AccountsEditComponent implements OnInit {
         this.allAccountTypes = Immutable.List(ALL_ACCOUNT_TYPES);
     }
 
-    onInit() {
+    ngOnInit() {
         this.accountModel = this.account.toJS();
     }
 
@@ -67,7 +66,7 @@ export class AccountsEditComponent implements OnInit {
 
 
     onFormSubmit() {
-        var account = NewAccount(this.accountModel);
+        var account = LocalAccountFactory.createNewAccount(this.accountModel);
         this.saveAccount(account)
             .then((account)=> {
                 this.saved.next(account);

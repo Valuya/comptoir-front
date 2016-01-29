@@ -2,22 +2,22 @@
     <h1 class="pageTitle">Liste des comptes</h1>
 
     <img class="busy"
-         src="../../../res/img/spinner-2-black.gif"
+         src="res/img/spinner-2-black.gif"
          [hidden]="!searchRequest.busy">
 
     <div class="topActions">
     </div>
 
-    <paginator [total-count]="searchResult.count"
-               [page-size]="accountsPerPage"
+    <paginator [totalCount]="searchResult.count"
+               [pageSize]="accountsPerPage"
                show-prev-next="true" show-first-last="true"
-               (page-change)="onPageChanged($event)"></paginator>
+               (pageChange)="onPageChanged($event)"></paginator>
 
-    <accountList [accounts]="searchResult.list"
+    <account-list [accounts]="searchResult.list"
                  [columns]="columns"
-                 [row-selectable]="true"
-                 [headers-visible]="true"
-                 (columns-action)="onColumnAction($event)"
-                 (row-clicked)="doEditAccount($event)"></accountList>
+                 [rowSelectable]="true"
+                 [headersVisible]="true"
+                 (columnAction)="onColumnAction($event)"
+                 (rowClicked)="doEditAccount($event)"></account-list>
 
 </div>

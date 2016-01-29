@@ -1,10 +1,11 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, View, NgIf, ChangeDetectionStrategy} from 'angular2/angular2';
+import {Component, ChangeDetectionStrategy} from 'angular2/core';
+import {NgIf} from 'angular2/common';
 import {RouteParams, Router, RouterLink, OnActivate} from 'angular2/router';
 
-import {LocalAccount, NewAccount} from '../../../client/localDomain/account';
+import {LocalAccount, LocalAccountFactory} from '../../../client/localDomain/account';
 import {LocaleTexts} from '../../../client/utils/lang';
 
 import {AuthService} from '../../../services/auth';
@@ -14,10 +15,8 @@ import {ErrorService} from '../../../services/error';
 import {AccountsEditComponent} from '../../../components/account/edit/editAccount';
 
 @Component({
-    selector: 'editAccount',
-    changeDetection: ChangeDetectionStrategy.Default
-})
-@View({
+    selector: 'edit-account',
+    changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './routes/accounts/edit/editView.html',
     styleUrls: ['./routes/accounts/edit/editView.css'],
     directives: [NgIf, RouterLink, AccountsEditComponent]
@@ -44,7 +43,7 @@ export class AccountsEditView implements OnActivate {
         this.findAccount();
     }
 
-    onActivate() {
+    routerOnActivate() {
         return this.findAccount()
             .then((account:LocalAccount)=> {
                 this.account = account;
@@ -57,7 +56,7 @@ export class AccountsEditView implements OnActivate {
                 company: this.authService.getEmployeeCompany(),
                 description: new LocaleTexts()
             };
-            var account = NewAccount(accountDef);
+            var account = LocalAccountFactory.createNewAccount(accountDef);
             return Promise.resolve(account);
         }
         return this.accountService.get(this.accountId);

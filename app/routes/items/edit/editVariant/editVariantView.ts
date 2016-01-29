@@ -1,10 +1,11 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, View, NgIf} from 'angular2/angular2';
+import {Component} from 'angular2/core';
+import {NgIf} from 'angular2/common';
 import {RouteParams, Router, RouterLink, OnActivate} from 'angular2/router';
 
-import {LocalItemVariant, NewItemVariant} from '../../../../client/localDomain/itemVariant';
+import {LocalItemVariant, LocalItemVariantFactory} from '../../../../client/localDomain/itemVariant';
 import {LocalItem} from '../../../../client/localDomain/item';
 import {Pricing} from '../../../../client/domain/itemVariant';
 
@@ -16,9 +17,7 @@ import {AuthService} from '../../../../services/auth';
 import {ItemVariantEditComponent} from '../../../../components/itemVariant/edit/editVariant';
 
 @Component({
-    selector: 'editItemVariant'
-})
-@View({
+    selector: 'editItemVariant',
     templateUrl: './routes/items/edit/editVariant/editVariantView.html',
     styleUrls: ['./routes/items/edit/editVariant/editVariantView.css'],
     directives: [NgIf, RouterLink, ItemVariantEditComponent]
@@ -45,7 +44,7 @@ export class ItemVariantEditView implements OnActivate {
         this.routeParams = routeParams;
     }
 
-    onActivate() {
+    routerOnActivate() {
         return this.findItem(this.routeParams)
             .then(()=> {
                 this.findItemVariant(this.routeParams);
@@ -98,7 +97,7 @@ export class ItemVariantEditView implements OnActivate {
         itemVariantDesc.item = this.item;
         itemVariantDesc.pricingAmount = 0;
         itemVariantDesc.company = this.authService.getEmployeeCompany();
-        this.itemVariant = NewItemVariant(itemVariantDesc);
+        this.itemVariant = LocalItemVariantFactory.createNewItemVariant(itemVariantDesc);
     }
 
     getItemVariant(id:number) {

@@ -1,9 +1,9 @@
 /**
  * Created by cghislai on 29/09/15.
  */
-import {Component, View, EventEmitter, ChangeDetectionStrategy} from 'angular2/angular2';
+import {Component, EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
 
-import {LocalMoneyPile,  NewMoneyPile} from '../../../client/localDomain/moneyPile';
+import {LocalMoneyPile,  LocalMoneyPileFactory} from '../../../client/localDomain/moneyPile';
 
 import {Language} from '../../../client/utils/lang';
 
@@ -13,12 +13,10 @@ import {FastInput} from '../../utils/fastInput';
 
 
 @Component({
-    selector: 'moneyPileCount',
+    selector: 'money-pile-count',
     inputs: ['moneyPile'],
     outputs: ['changed'],
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-@View({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/cash/moneyPile/moneyPileCount.html',
     styleUrls: ['./components/cash/moneyPile/moneyPileCount.css'],
     directives: [FastInput]
@@ -39,7 +37,7 @@ export class MoneyPileCountComponent {
         }
         var moneyPileJS = this.moneyPile.toJS();
         moneyPileJS.unitCount = newCount;
-        var newMoneyPile = NewMoneyPile(moneyPileJS);
+        var newMoneyPile = LocalMoneyPileFactory.createNewMoneyPile(moneyPileJS);
         this.changed.next(newMoneyPile);
     }
 }

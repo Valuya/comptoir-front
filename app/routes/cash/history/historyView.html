@@ -2,22 +2,22 @@
     <h1 class="pageTitle">Historique de la caisse</h1>
 
     <img class="busy"
-         src="../../../res/img/spinner-2-black.gif"
+         src="res/img/spinner-2-black.gif"
          [hidden]="!searchRequest.busty">
 
     <div class="search">
     </div>
 
 
-    <paginator *ng-if="searchResult != null"
-               [total-count]="searchResult.count"
-               [page-size]="itemsPerPage"
+    <paginator *ngIf="searchResult != null"
+               [totalCount]="searchResult.count"
+               [pageSize]="itemsPerPage"
                show-prev-next="true" show-first-last="true"
-               (page-change)="onPageChanged($event)"></paginator>
+               (pageChange)="onPageChanged($event)"></paginator>
 
 
-    <balanceList [balances]="searchResult.list"
+    <balance-list [balances]="searchResult.list"
                  [columns]="columns"
-                 [row-selectable]="false"
-                 [headers-visible]="true"></balanceList>
+                 [rowSelectable]="false"
+                 [headersVisible]="true"></balance-list>
 </div>

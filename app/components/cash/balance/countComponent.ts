@@ -1,12 +1,12 @@
 /**
  * Created by cghislai on 29/09/15.
  */
-import {Component, View, NgFor, NgIf, EventEmitter, ChangeDetectionStrategy} from 'angular2/angular2';
+import {Component, EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
+import {NgFor, NgIf} from 'angular2/common';
 
 import {LocalAccount} from '../../../client/localDomain/account';
-import {LocalBalance, NewBalance} from '../../../client/localDomain/balance';
-import {LocalMoneyPile, ALL_CASH_TYPES,
-    NewMoneyPile, LocalMoneyPileFactory} from '../../../client/localDomain/moneyPile';
+import {LocalBalance, LocalBalanceFactory} from '../../../client/localDomain/balance';
+import {LocalMoneyPile, ALL_CASH_TYPES, LocalMoneyPileFactory} from '../../../client/localDomain/moneyPile';
 
 import {NumberUtils} from '../../../client/utils/number';
 
@@ -21,12 +21,10 @@ import {FastInput} from '../../utils/fastInput';
 import * as Immutable from 'immutable';
 
 @Component({
-    selector: 'balanceCountComponent',
+    selector: 'balance-count-component',
     inputs: ['account'],
     outputs: ['validated', 'cancelled'],
-    changeDetection: ChangeDetectionStrategy.Default
-})
-@View({
+    changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/cash/balance/countComponent.html',
     styleUrls: ['./components/cash/balance/countComponent.css'],
     directives: [NgFor, NgIf, MoneyPileCountComponent, FastInput]
@@ -57,10 +55,10 @@ export class BalanceCountComponent {
 
     }
 
-    onInit() {
+    ngOnInit() {
         this.moneyPiles = Immutable.List(ALL_CASH_TYPES)
             .map((cashType)=> {
-                return NewMoneyPile({
+                return LocalMoneyPileFactory.createNewMoneyPile({
                     account: this.account,
                     unitCount: null,
                     unitAmount: LocalMoneyPileFactory.getCashTypeUnitValue(cashType),
@@ -68,7 +66,7 @@ export class BalanceCountComponent {
                 });
             })
             .toList();
-        this.balance = NewBalance({
+        this.balance = LocalBalanceFactory.createNewBalance({
             account: this.account,
             company: this.authService.getEmployeeCompany()
         });
@@ -123,7 +121,7 @@ export class BalanceCountComponent {
         total = NumberUtils.toFixedDecimals(total, 2);
         var balanceJs = this.balance.toJS();
         balanceJs.balance = total;
-        var newBalance = NewBalance(balanceJs);
+        var newBalance = LocalBalanceFactory.createNewBalance(balanceJs);
 
         this.balanceService.save(newBalance)
             .then((ref)=> {
@@ -139,13 +137,16 @@ export class BalanceCountComponent {
     }
 
     onValidateBalanceClicked() {
-        this.balanceService.closeBalance(this.balance)
+        this.saveBalanceIfRequired()
+            .then(()=> {
+                return this.balanceService.closeBalance(this.balance);
+            })
             .then((ref)=> {
                 return this.balanceService.get(ref.id);
             })
             .then((balance:LocalBalance)=> {
                 this.balance = balance;
-                this.validated.next(balance);
+                this.validated.emit(balance);
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);

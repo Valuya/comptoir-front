@@ -1,20 +1,20 @@
 /**
  * Created by cghislai on 14/08/15.
  */
-import {Component, View, NgIf, FORM_DIRECTIVES} from 'angular2/angular2';
+import {Component} from 'angular2/core';
+import {NgIf, FORM_DIRECTIVES} from 'angular2/common';
 import {Router, RouterLink} from 'angular2/router';
 
-import {CompanyRef, CompanyClient} from '../../../client/domain/company';
+import {CompanyRef} from '../../../client/domain/company';
 import {Language} from '../../../client/utils/lang';
 
 import {ErrorService} from '../../../services/error';
 import {AuthService} from '../../../services/auth';
+import {CompanyService} from '../../../services/company';
 
 
 @Component({
-    selector: 'importItems'
-})
-@View({
+    selector: 'import-items',
     templateUrl: './routes/items/import/importView.html',
     styleUrls: ['./routes/items/import/importView.css'],
     directives: [NgIf, FORM_DIRECTIVES, RouterLink]
@@ -24,7 +24,7 @@ export class ItemsImportView {
     authService:AuthService;
     router:Router;
     language:Language;
-    companyClient:CompanyClient;
+    companyService:CompanyService;
 
     toUploadFile:File;
     toUploadFileSizeLabel:string;
@@ -33,11 +33,12 @@ export class ItemsImportView {
     uploadInProgress:boolean;
     uploadPercentage:number;
 
-    constructor(errorService:ErrorService, authService:AuthService, router:Router) {
+    constructor(errorService:ErrorService, authService:AuthService,
+                companyService: CompanyService, router:Router) {
         this.router = router;
         this.errorService = errorService;
         this.authService = authService;
-        this.companyClient = new CompanyClient();
+        this.companyService = companyService;
         this.language = authService.getEmployeeLanguage();
 
         this.toUploadFile = null;
@@ -83,7 +84,7 @@ export class ItemsImportView {
         this.uploadInProgress = true;
         var authToken = this.authService.authToken;
         var companyRef = new CompanyRef(this.authService.auth.employee.company.id);
-        this.companyClient
+        this.companyService
             .uploadImportDataFile(this.toUploadData, companyRef, authToken,
             (percentage:number)=> {
                 thisView.uploadPercentage = percentage;

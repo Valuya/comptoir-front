@@ -2,16 +2,17 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, View, EventEmitter, NgFor, NgIf, ChangeDetectionStrategy} from 'angular2/angular2';
+import {Component, EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
+import {NgFor, NgIf} from 'angular2/common';
 
 import {LocalSale} from '../../../../client/localDomain/sale';
 import {LocalAccount} from '../../../../client/localDomain/account';
-import {LocalAccountingEntry, NewAccountingEntry } from '../../../../client/localDomain/accountingEntry';
+import {LocalAccountingEntry, LocalAccountingEntryFactory} from '../../../../client/localDomain/accountingEntry';
 
 import {NumberUtils} from '../../../../client/utils/number';
 import {LocaleTextsFactory, Language} from '../../../../client/utils/lang';
 
-import {ActiveSaleService} from '../../../../routes/sales/sale/activeSale';
+import {ActiveSaleService} from '../../../../services/activeSale';
 import {ErrorService} from '../../../../services/error';
 import {AuthService} from '../../../../services/auth';
 
@@ -19,12 +20,10 @@ import {FastInput} from '../../../utils/fastInput';
 import * as Immutable from 'immutable';
 
 @Component({
-    selector: 'payView',
+    selector: 'pay-view',
     outputs: ['paid'],
     inputs: ['saleTotal', 'paidAmount', 'noInput', 'sale', 'accountingEntries'],
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-@View({
+    changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/payView/payView.html',
     styleUrls: ['./components/sales/sale/payView/payView.css'],
     directives: [NgFor, NgIf, FastInput]
@@ -38,10 +37,10 @@ export class PayView {
     language:Language;
     noInput:boolean;
     saleTotal:number;
-    paidAmount: number;
-    sale: LocalSale;
-    accountingEntries: Immutable.List<LocalAccountingEntry>;
-
+    paidAmount:number;
+    sale:LocalSale;
+    accountingEntries:Immutable.List<LocalAccountingEntry>;
+    accountList:Immutable.List<LocalAccount>;
     paid = new EventEmitter();
 
     constructor(activeSaleService:ActiveSaleService,
@@ -50,6 +49,7 @@ export class PayView {
         this.errorService = errorService;
 
         this.language = authService.getEmployeeLanguage();
+        this.fetchAccountList();
     }
 
     hasSale():boolean {
@@ -60,14 +60,14 @@ export class PayView {
         return this.activeSaleService.accountingEntriesRequest.busy;
     }
 
-    isEditing(entry: LocalAccountingEntry) {
+    isEditing(entry:LocalAccountingEntry) {
         return this.editingEntry != null && this.editingEntry.id === entry.id;
     }
 
-
-    get accountsResult() {
-        return this.activeSaleService.accountsResult;
+    fetchAccountList() {
+        this.accountList = this.activeSaleService.accountsResult.list;
     }
+
 
     get toPayAmount() {
         var total = this.saleTotal - this.activeSaleService.paidAmount;
@@ -76,7 +76,7 @@ export class PayView {
 
 
     addAccountingEntry(account:LocalAccount) {
-        var localAccountingEntryDesc: any = {};
+        var localAccountingEntryDesc:any = {};
         localAccountingEntryDesc.account = account;
         localAccountingEntryDesc.amount = this.toPayAmount;
         localAccountingEntryDesc.company = account.company;
@@ -84,7 +84,7 @@ export class PayView {
         localAccountingEntryDesc.customer = this.sale.customer;
         localAccountingEntryDesc.description = LocaleTextsFactory.toLocaleTexts({});
         localAccountingEntryDesc.dateTime = new Date();
-        var localAccountingEntry = NewAccountingEntry(localAccountingEntryDesc);
+        var localAccountingEntry = LocalAccountingEntryFactory.createAccountingEntry(localAccountingEntryDesc);
         this.startEditEntry(localAccountingEntry);
     }
 

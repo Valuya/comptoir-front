@@ -1,12 +1,12 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, View, NgFor, NgIf, FORM_DIRECTIVES, EventEmitter,
-    OnInit, ChangeDetectionStrategy} from 'angular2/angular2';
+import {Component, EventEmitter,OnInit, ChangeDetectionStrategy} from 'angular2/core';
+import {NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/common';
 import {RouteParams, Router, RouterLink} from 'angular2/router';
 
-import {LocalPicture, NewPicture} from '../../../client/localDomain/picture';
-import {LocalItem, NewItem} from '../../../client/localDomain/item';
+import {LocalPicture, LocalPictureFactory} from '../../../client/localDomain/picture';
+import {LocalItem, LocalItemFactory} from '../../../client/localDomain/item';
 import {LocalItemVariant} from '../../../client/localDomain/itemVariant';
 
 import {CompanyRef} from '../../../client/domain/company';
@@ -32,12 +32,10 @@ import * as Immutable from 'immutable';
 
 
 @Component({
-    selector: 'editItemComponent',
+    selector: 'edit-item-component',
     inputs: ['item'],
     outputs: ['saved', 'cancelled'],
-    changeDetection: ChangeDetectionStrategy.Default
-})
-@View({
+    changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/item/edit/editView.html',
     styleUrls: ['./components/item/edit/editView.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES,
@@ -69,11 +67,11 @@ export class ItemEditComponent implements OnInit {
     saved = new EventEmitter();
     cancelled = new EventEmitter();
 
-    router: Router;
+    router:Router;
 
     constructor(itemService:ItemService, errorService:ErrorService, pictureService:PictureService,
                 authService:AuthService, itemVariantService:ItemVariantService,
-                router: Router) {
+                router:Router) {
         this.router = router;
         this.itemService = itemService;
         this.itemVariantService = itemVariantService;
@@ -95,7 +93,7 @@ export class ItemEditComponent implements OnInit {
 
     }
 
-    onInit() {
+    ngOnInit() {
         this.itemJS = this.item.toJS();
         // FIXME: causes Lifecycle tick loops
         // Should probably be handled in the background in a editItemService
@@ -155,7 +153,7 @@ export class ItemEditComponent implements OnInit {
             };
             reader.readAsDataURL(file);
         }).then((data:string)=> {
-                var mainPicture:LocalPicture = NewPicture({
+                var mainPicture:LocalPicture = LocalPictureFactory.createNewPicture({
                     dataURI: data,
                     company: this.authService.getEmployeeCompany()
                 });
@@ -218,7 +216,7 @@ export class ItemEditComponent implements OnInit {
         var column = event.column;
         var itemVariant:LocalItemVariant = event.itemVariant;
         if (column === ItemVariantColumn.ACTION_REMOVE) {
-            this.itemVariantService.remove(itemVariant)
+            this.itemVariantService.remove(itemVariant.id)
                 .then(()=> {
                     this.findItemVariants();
                 })
@@ -230,15 +228,15 @@ export class ItemEditComponent implements OnInit {
 
     private saveItem():Promise<LocalItem> {
         if (this.itemPictureTouched) {
-            var picture = NewPicture(this.itemJS.mainPicture);
+            var picture = LocalPictureFactory.createNewPicture(this.itemJS.mainPicture);
             return this.pictureService.save(picture)
                 .then((localPic:LocalPicture)=> {
                     this.itemJS.mainPicture = localPic;
-                    var item = NewItem(this.itemJS);
+                    var item = LocalItemFactory.createNewItem(this.itemJS);
                     return this.itemService.save(item);
                 });
         } else {
-            var item = NewItem(this.itemJS);
+            var item = LocalItemFactory.createNewItem(this.itemJS);
             return this.itemService.save(item);
         }
     }
