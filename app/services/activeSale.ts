@@ -168,12 +168,16 @@ export class ActiveSaleService {
             throw 'Sale not saved';
         }
 
+        var item = itemVariant.item;
+        var multipleSale = item.multipleSale;
 
-        var itemSale:LocalItemVariantSale = this.saleItemsResult.list.find((itemSale)=> {
-            return itemSale.itemVariant.id === itemVariant.id;
-        });
+        if (!multipleSale) {
+            var itemSale:LocalItemVariantSale = this.saleItemsResult.list.find((itemSale)=> {
+                return itemSale.itemVariant.id === itemVariant.id;
+            });
+        }
 
-        if (itemSale == null) {
+        if (itemSale == null || multipleSale) {
             var itemSaleDesc:any = {
                 comment: LocaleTextsFactory.toLocaleTexts({}),
                 discountRatio: 0,
@@ -325,10 +329,19 @@ export class ActiveSaleService {
 
     private updateSaleItem(fetchedItem:LocalItemVariantSale) {
         var listIndex = this.saleItemsResult.list.findIndex((item)=> {
-            return item.itemVariant.id === fetchedItem.itemVariant.id;
+            return item.id === fetchedItem.id;
         });
         if (listIndex < 0) {
-            return;
+            var mutipleSale = fetchedItem.itemVariant.item.multipleSale;
+            if (!mutipleSale) {
+                listIndex = this.saleItemsResult.list.findIndex((item)=> {
+                    return item.itemVariant.id === fetchedItem.itemVariant.id;
+                });
+            }
+        }
+        if (listIndex < 0) {
+            console.warn("Cannot find sale item to update");
+            return this.doSearchSaleItems();
         }
         this.saleItemsResult.list = this.saleItemsResult.list.set(listIndex, fetchedItem);
     }
