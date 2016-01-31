@@ -37,6 +37,7 @@ export class AccountsEditComponent implements OnInit {
 
     account:LocalAccount;
     accountModel:any;
+    paymentAccount:boolean;
 
     editLanguage:Language;
     appLanguage:Language;
@@ -64,8 +65,16 @@ export class AccountsEditComponent implements OnInit {
         return LocalAccountFactory.getAccountTypeLabel(accountType).get(this.appLanguage.locale);
     }
 
+    isPaymentAccount() {
+        return this.accountModel.accountType == AccountType.PAYMENT;
+    }
+
 
     onFormSubmit() {
+        if (!this.isPaymentAccount()) {
+            this.accountModel.cash = false;
+        }
+
         var account = LocalAccountFactory.createNewAccount(this.accountModel);
         this.saveAccount(account)
             .then((account)=> {
@@ -81,7 +90,7 @@ export class AccountsEditComponent implements OnInit {
     }
 
     private saveAccount(account:LocalAccount):Promise<LocalAccount> {
-        return this.accountService.save(account)
+         return this.accountService.save(account)
             .then((ref)=> {
                 return this.accountService.get(ref.id);
             })

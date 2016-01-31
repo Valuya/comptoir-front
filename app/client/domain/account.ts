@@ -28,6 +28,7 @@ export class Account {
     name:string;
     description:LocaleTexts;
     accountType:string;
+    cash: boolean;
 }
 
 export class AccountRef {

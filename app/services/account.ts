@@ -82,6 +82,7 @@ export class AccountService {
         account.iban = localAccount.iban;
         account.id = localAccount.id;
         account.name = localAccount.name;
+        account.cash = localAccount.cash;
         return account;
     }
 
@@ -95,6 +96,7 @@ export class AccountService {
         localAccountDesc.iban = account.iban;
         localAccountDesc.id = account.id;
         localAccountDesc.name = account.name;
+        localAccountDesc.cash = account.cash;
 
         var taskList = [];
 

@@ -52,7 +52,17 @@
                 <input type="text" id="bic"
                        [(ngModel)]="accountModel.bic">
             </div>
-
+            <div [hidden]="!isPaymentAccount()">
+                <label></label>
+                <div>
+                    <input type="checkbox" [(ngModel)]="accountModel.cash"
+                           name="cash"
+                           ngControl="cash" id="cash">
+                    <label for="cash" title="Les comptes monétaires contiennent de l'argent liquide, lequel peut être compté pour validation de la caisse.">
+                        Compte monétaire
+                    </label>
+                </div>
+            </div>
         </div>
         <div class="actions">
             <button type="submit" [disabled]="!accountForm.form.valid">Enregistrer</button>

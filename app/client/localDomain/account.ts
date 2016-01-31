@@ -21,6 +21,7 @@ export interface LocalAccount extends Immutable.Map<string, any> {
     description:LocaleTexts;
     accountType:AccountType;
     accountTypeLabel:LocaleTexts;
+    cash: boolean;
 }
 
 var AccountRecord = Immutable.Record({
@@ -32,7 +33,8 @@ var AccountRecord = Immutable.Record({
     name: null,
     description: null,
     accountType: null,
-    accountTypeLabel: null
+    accountTypeLabel: null,
+    cash: null
 });
 
 export class LocalAccountFactory {
