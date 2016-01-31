@@ -1,4 +1,4 @@
-<div class="pageContent" >
+<div class="pageContent">
     <div class="column left">
         <form #f="ngForm"
               (ngSubmit)="doSaveItem()"
@@ -19,8 +19,8 @@
                 <div>
                     <label>Langue</label>
                     <lang-select [displayLanguage]="appLanguage"
-                                [selectedLanguage]="editLanguage"
-                                (languageChanged)="editLanguage = $event"></lang-select>
+                                 [selectedLanguage]="editLanguage"
+                                 (languageChanged)="editLanguage = $event"></lang-select>
                 </div>
                 <div>
                     <label for="reference">Référence</label>
@@ -86,6 +86,20 @@
                         </span>
                     </div>
                 </div>
+
+                <div>
+                    <label></label>
+                    <div>
+                        <input type="checkbox" [(ngModel)]="itemJS.multipleSale"
+                               name="multipleSale"
+
+                               ngControl="multipleSale" id="multipleSale">
+                        <label for="multipleSale"
+                               title="Lorsque cette case est cochée, si deux produits sont ajoutés lors d'une vente, deux entrées seront visibles sur le tiquet. Si elle n'est pas cochée, une seule entrée sera présente sur le tiquet, avec un total pour les deux unités.">
+                            Ne pas regrouper lors des ventes
+                        </label>
+                    </div>
+                </div>
             </div>
 
             <div class="actions">
@@ -99,11 +113,11 @@
         <h3>Variantes</h3>
 
         <item-variant-list [items]="itemVariantSearchResult.list"
-                         [columns]="itemVariantListColumns"
-                         [rowSelectable]="true"
-                         [headersVisible]="true"
-                         (rowClicked)="onVariantRowSelected($event)"
-                         (columnAction)="onVariantColumnAction($event)">
+                           [columns]="itemVariantListColumns"
+                           [rowSelectable]="true"
+                           [headersVisible]="true"
+                           (rowClicked)="onVariantRowSelected($event)"
+                           (columnAction)="onVariantColumnAction($event)">
         </item-variant-list>
 
         <a (click)="doAddNewVariant()" [class.disabled]="item.id == null"

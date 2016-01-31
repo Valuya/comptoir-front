@@ -81,6 +81,7 @@ export class ItemService {
         localItemDesc.description = item.description;
         localItemDesc.id = item.id;
         localItemDesc.name = item.name;
+        localItemDesc.multipleSale = item.multipleSale;
         localItemDesc.reference = item.reference;
         localItemDesc.vatExclusive = item.vatExclusive;
         localItemDesc.vatRate = item.vatRate;
@@ -122,6 +123,7 @@ export class ItemService {
             item.mainPictureRef = picRef;
         }
         item.name = localItem.name;
+        item.multipleSale = localItem.multipleSale;
         item.reference = localItem.reference;
         item.vatExclusive = localItem.vatExclusive;
         item.vatRate = localItem.vatRate;

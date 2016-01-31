@@ -188,6 +188,11 @@ export class ItemEditComponent implements OnInit {
         this.calcTotalPrice();
     }
 
+    setItemMultipleSale(event) {
+        var valueBoolean = event.target.checked;
+        this.itemJS.multipleSale = valueBoolean;
+    }
+
     doAddNewVariant() {
         this.saveItem().then((item)=> {
             this.router.navigate(['/Items/Edit/EditVariant', {itemId: item.id, variantId: 'new'}]);

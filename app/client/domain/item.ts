@@ -27,6 +27,7 @@ export class Item {
     vatRate:number;
 
     mainPictureRef:PictureRef;
+    multipleSale: boolean;
 }
 
 export class ItemSearch {
@@ -37,6 +38,7 @@ export class ItemSearch {
     reference:string;
     referenceContains:string;
     locale: string;
+    multipleSale: boolean;
 }
 
 export class ItemFactory {

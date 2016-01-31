@@ -22,6 +22,7 @@ export interface LocalItem extends Immutable.Map<string, any> {
     vatRate:number;
 
     mainPicture:LocalPicture;
+    multipleSale: boolean;
 }
 var ItemRecord = Immutable.Record({
     id: null,
@@ -31,7 +32,8 @@ var ItemRecord = Immutable.Record({
     description: null,
     vatExclusive: null,
     vatRate: null,
-    mainPicture: null
+    mainPicture: null,
+    multipleSale: null
 });
 
 export class LocalItemFactory {
