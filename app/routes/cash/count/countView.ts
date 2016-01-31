@@ -78,6 +78,8 @@ export class CountCashView {
         if (this.pos != null) {
             accountSearch.posRef = new PosRef(this.pos.id);
         }
+        accountSearch.cash = true;
+        accountSearch.type = AccountType[AccountType.PAYMENT];
         accountSearch.companyRef = this.authService.getEmployeeCompanyRef();
         this.accountSearchRequest.search = accountSearch;
 

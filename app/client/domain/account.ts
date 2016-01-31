@@ -44,6 +44,7 @@ export class AccountSearch {
     companyRef:CompanyRef;
     posRef:PosRef;
     type:string;
+    cash: boolean;
 }
 
 
