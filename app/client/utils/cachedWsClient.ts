@@ -95,10 +95,10 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         var request = this.http.request(new Request(options));
 
         // TODO: cancel ongoing GET requests
-        request.subscribe(()=> {
-            this.resourceCache.clearId(id);
-        });
-        return request;
+        return request
+            .do(()=> {
+                this.resourceCache.clearId(id);
+            });
     }
 
     doCreate(entity:T, authToken:string, cancellation?:Cancellation):Observable<WithId> {
@@ -123,11 +123,10 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         options.body = JSON.stringify(entity, JSONFactory.toJSONReplacer);
         var request = this.http.request(new Request(options));
 
-        // TODO: cancel ongoing get requests?
-        request.subscribe(()=> {
-            this.resourceCache.clearId(entity.id);
-        });
         return request
+            .do(()=> {
+                this.resourceCache.clearId(entity.id);
+            })
             .map((response:Response)=> {
                 return <WithId>response.json();
             });
@@ -170,8 +169,8 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         var subscription = cancellation.onCancel.subscribe(()=> {
             //request.discardRequest();
         });
-        request.subscribe(()=> {
-            subscription.unsubscribe();
-        });
+        /*request.subscribe(()=> {
+         subscription.unsubscribe();
+         });*/
     }
 }
