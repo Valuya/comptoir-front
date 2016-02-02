@@ -249,7 +249,7 @@ export class CommandViewTable {
             this.cancelEdits();
             return;
         }
-        var vatExclusive = NumberUtils.toFixedDecimals(price / ( 1 + this.editingItem.vatRate), 5);
+        var vatExclusive = NumberUtils.toFixedDecimals(price / ( 1 + this.editingItem.vatRate), 4);
         var item = <LocalItemVariantSale>this.editingItem.set('vatExclusive', vatExclusive);
         this.activeSaleService.doUpdateItem(item)
             .catch((error)=> {
