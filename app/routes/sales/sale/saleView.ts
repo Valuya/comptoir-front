@@ -4,7 +4,7 @@
 
 import {Component, ViewChild} from 'angular2/core';
 import {NgIf} from 'angular2/common';
-import {Router, RouteParams, Location} from 'angular2/router';
+import {Router, RouteParams, Location, CanReuse} from 'angular2/router';
 
 import {LocalSale} from '../../../client/localDomain/sale';
 import {LocalItemVariant} from '../../../client/localDomain/itemVariant';
@@ -27,7 +27,7 @@ import {PosSelect} from '../../../components/pos/posSelect/posSelect';
     directives: [ItemListView, CommandView, PayView, NgIf, PosSelect]
 })
 
-export class SaleView {
+export class SaleView implements CanReuse {
     activeSaleService:ActiveSaleService;
     errorService:ErrorService;
     authService:AuthService;
@@ -43,7 +43,7 @@ export class SaleView {
     language:string;
 
     @ViewChild(PayView)
-    payView: PayView;
+    payView:PayView;
 
     constructor(activeSaleService:ActiveSaleService, errorService:ErrorService,
                 authService:AuthService, saleService:SaleService,
@@ -75,7 +75,7 @@ export class SaleView {
             });
     }
 
-    canReuse() {
+    routerCanReuse() {
         return false;
         //return this.navigatingWithinSale;
     }
@@ -98,10 +98,9 @@ export class SaleView {
     }
 
 
-
     onPosChanged(pos) {
         this.activeSaleService.setPos(pos)
-            .then(()=>{
+            .then(()=> {
                 if (this.payView) {
                     this.payView.fetchAccountList();
                 }
@@ -116,8 +115,8 @@ export class SaleView {
             .then(()=> {
                 this.router.navigate(['/Sales/Sale', {id: 'new'}]);
             }).catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
+            this.errorService.handleRequestError(error);
+        });
     }
 
     onItemClicked(item:LocalItemVariant) {
