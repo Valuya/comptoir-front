@@ -352,7 +352,7 @@ export class CommandViewTable {
     doRemoveItem(localItemVariantSale:LocalItemVariantSale) {
         this.activeSaleService.doRemoveItem(localItemVariantSale)
             .then(()=> {
-                this.itemRemoved.next(null);
+                this.itemRemoved.emit(null);
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
