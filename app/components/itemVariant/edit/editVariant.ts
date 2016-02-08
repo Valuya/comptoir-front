@@ -59,6 +59,8 @@ export class ItemVariantEditComponent implements OnInit {
     pricingAmountRequired:boolean;
     pictureTouched:boolean;
 
+    totalPrice:number;
+
     appLanguage:Language;
     editLanguage:Language;
 
@@ -91,11 +93,16 @@ export class ItemVariantEditComponent implements OnInit {
         this.itemVariantModel = this.itemVariant.toJS();
         this.picture = this.itemVariant.mainPicture;
         this.checkPricingAmountRequired();
+        this.calcTotalPrice();
     }
 
-    getItemVariantTotalPrice() {
+    private calcTotalPrice() {
         var itemVariant = LocalItemVariantFactory.createNewItemVariant(this.itemVariantModel);
-        return LocalItemVariantFactory.calcPrice(itemVariant, true);
+        var totalPrice = LocalItemVariantFactory.calcPrice(itemVariant, true);
+        if (isNaN(totalPrice)) {
+            totalPrice = 0;
+        }
+        this.totalPrice = totalPrice;
     }
 
 
@@ -110,8 +117,8 @@ export class ItemVariantEditComponent implements OnInit {
             .then((itemVariant)=> {
                 this.saved.next(itemVariant);
             }).catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
+            this.errorService.handleRequestError(error);
+        });
         ;
     }
 
@@ -134,23 +141,23 @@ export class ItemVariantEditComponent implements OnInit {
             };
             reader.readAsDataURL(file);
         }).then((data:string)=> {
-                var mainPicture:LocalPicture;
-                var currentPicture = this.itemVariant.mainPicture;
-                if (currentPicture == null) {
-                    var picDesc = {
-                        dataURI: data,
-                        company: this.authService.getEmployeeCompany()
-                    };
-                    mainPicture = LocalPictureFactory.createNewPicture(picDesc);
-                } else {
-                    mainPicture = <LocalPicture>currentPicture.set('dataURI', data);
-                }
-                this.itemVariantModel.mainPicture = mainPicture.toJS();
-                this.picture = mainPicture;
-                this.pictureTouched = true;
-            }).catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
+            var mainPicture:LocalPicture;
+            var currentPicture = this.itemVariant.mainPicture;
+            if (currentPicture == null) {
+                var picDesc = {
+                    dataURI: data,
+                    company: this.authService.getEmployeeCompany()
+                };
+                mainPicture = LocalPictureFactory.createNewPicture(picDesc);
+            } else {
+                mainPicture = <LocalPicture>currentPicture.set('dataURI', data);
+            }
+            this.itemVariantModel.mainPicture = mainPicture.toJS();
+            this.picture = mainPicture;
+            this.pictureTouched = true;
+        }).catch((error)=> {
+            this.errorService.handleRequestError(error);
+        });
     }
 
 
@@ -158,7 +165,9 @@ export class ItemVariantEditComponent implements OnInit {
         var pricing:Pricing = <Pricing>parseInt(event.target.value);
         this.itemVariantModel.pricing = pricing;
         this.checkPricingAmountRequired();
+        this.calcTotalPrice();
     }
+
 
     setPricingAmount(event) {
         var valueString = event.target.value;
@@ -168,6 +177,7 @@ export class ItemVariantEditComponent implements OnInit {
         }
         valueNumber = NumberUtils.toFixedDecimals(valueNumber, 2);
         this.itemVariantModel.pricingAmount = valueNumber;
+        this.calcTotalPrice();
     }
 
     checkPricingAmountRequired() {

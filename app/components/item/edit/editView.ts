@@ -188,6 +188,16 @@ export class ItemEditComponent implements OnInit {
         this.calcTotalPrice();
     }
 
+    setItemPrice(event) {
+        var valueString = event.target.value;
+        var valueNumber:number = parseFloat(valueString);
+        if (isNaN(valueNumber)) {
+            return;
+        }
+        this.itemJS.vatExclusive = valueNumber;
+        this.calcTotalPrice();
+    }
+
     setItemMultipleSale(event) {
         var valueBoolean = event.target.checked;
         this.itemJS.multipleSale = valueBoolean;
