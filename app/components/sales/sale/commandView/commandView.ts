@@ -396,7 +396,7 @@ export class CommandView {
     onItemRemoved() {
         var searchResult = this.activeSaleService.saleItemsResult;
         if (searchResult.list.size === 0) {
-            this.saleEmptied.next(null);
+            this.saleEmptied.emit(null);
         }
     }
 }
