@@ -57,15 +57,14 @@
                            min="0" step="0.01" id="price" size="5"
                            [ngModel]="itemTotalPrice"
                            (input)="setItemTotalPrice($event)"
-                           ngControl="vatExclusive"
+                           ngControl="vatInclusive"
                            validate-required>
                     €
-                    <form-message for="vatExclusive" check-errors="['required']"></form-message>
+                    <form-message for="vatInclusive" check-errors="['required']"></form-message>
                 </span>
                 </div>
                 <div>
                     <label for="vat">TVA</label>
-
                     <div>
                         <input class="number" type="number"
                                min="0" max="100" step="1" id="vat" size="5"
@@ -78,12 +77,16 @@
                     </div>
                 </div>
                 <div>
-                    <label for="vatInclusive">Prix HTVA</label>
-
-                    <div class="totalPreview" id="vatInclusive">
-                        <span>
-                            {{ itemJS.vatExclusive | currency:'EUR':true:'.2-2' }}
-                        </span>
+                    <label for="priceVatExclusive">Prix HTVA</label>
+                    <div>
+                        <input class="number" type="number"
+                               min="0" step="0.01" id="priceVatExclusive" size="5"
+                               [ngModel]="itemJS.vatExclusive"
+                               (input)="setItemPrice($event)"
+                               ngControl="vatExclusive"
+                               validate-required>
+                        €
+                        <form-message for="vatExclusive" check-errors="['required']"></form-message>
                     </div>
                 </div>
 

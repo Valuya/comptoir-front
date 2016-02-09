@@ -77,7 +77,13 @@ export class ItemEditView implements OnActivate {
         itemDesc.description = LocaleTextsFactory.toLocaleTexts({});
         itemDesc.name = LocaleTextsFactory.toLocaleTexts({});
         itemDesc.company = this.authService.getEmployeeCompany();
+        var company = this.authService.getEmployeeCompany();
+        var country = company.country;
+        var vatRate = country.defaultVatRate;
+        itemDesc.vatRate = vatRate;
         this.item = LocalItemFactory.createNewItem(itemDesc);
+
+
     }
 
     getItem(id:number) {

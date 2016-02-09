@@ -24,50 +24,53 @@
                            [(ngModel)]="itemVariantModel.variantReference"
                            ngControl="reference" required>
                     <form-message for="reference"
-                                 check-errors=" ['required']"></form-message>
+                                  check-errors=" ['required']"></form-message>
                 </span>
             </div>
             <div>
                 <label for="pricing">Type de tarification</label>
                 <span>
+                    <!-- Keep 2-way binding on ngModel, otherwise value '0' is treated as invalid-->
                     <select id="pricing"
-                            [(ngModel)]="itemVariantModel.pricing"
+                            [ngModel]="itemVariantModel.pricing"
                             (change)="onPricingChanged($event)"
-                            ngControl="pricing" required>
+                            ngControl="pricing" >
                         <option *ngFor="#pricing of allPricings"
                                 [value]="pricing">
                             {{ getPricingLabel(pricing) }}
                         </option>
                     </select>
                     <form-message for="pricing"
-                                 check-errors="['required']"></form-message>
+                                  check-errors="['required']"></form-message>
                 </span>
             </div>
-            <div>
-                <label for="pricingAmount">Tarif</label>
+            <div [hidden]="!pricingAmountRequired">
+                <label for="pricingAmount">Prix (HTVA)</label>
                 <span>
-                    <span [hidden]="!pricingAmountRequired">
                         <input class="number" type="number"
-                               [value]="itemVariantModel.pricingAmount"
+                               [ngModel]="itemVariantModel.pricingAmount"
                                (input)="setPricingAmount($event)"
                                [attr.validate-required]="pricingAmountRequired"
                                min="0" step="0.01" id="pricingAmount" size="5"
                                ngControl="pricingAmount">
                         €
-                    </span>
-                    <div class="totalPreview">
-                        <span>
-                            Total (TVAC): {{ getItemVariantTotalPrice() | currency:'EUR':true:'.2-2' }}
-                        </span>
-                    </div>
                     <form-message for="pricingAmount"
-                                 check-errors="['required']"></form-message>
+                                  check-errors="['required']"></form-message>
                 </span>
+            </div>
+            <div>
+                <label>Total (TVAC)</label>
+                <div class="totalPreview">
+                        <span>
+                            {{ totalPrice | currency:'EUR':true:'.2-2' }}
+                        </span>
+                </div>
             </div>
         </div>
         <div class="actions">
             <button type="submit"
-                    [disabled]="!itemForm.form.valid">Enregistrer</button>
+                    [disabled]="!itemForm.form.valid">Enregistrer
+            </button>
             <a (click)="onCancelClicked()" class="blueLink">Retour</a>
         </div>
     </form>
@@ -88,7 +91,7 @@
                 </td>
                 <td class="actions">
                     <a class="actionIcon"
-                          (click)="doRemoveAttribute(attribute)">
+                       (click)="doRemoveAttribute(attribute)">
                         <i class="fa fa-minus red"></i>
                     </a>
                 </td>
@@ -113,8 +116,8 @@
         <div class="form">
             <div class="language">
                 <lang-select [displayLanguage]="appLanguage"
-                            [selectedLanguage]="editLanguage"
-                            (languageChanged)="editLanguage = $event"></lang-select>
+                             [selectedLanguage]="editLanguage"
+                             (languageChanged)="editLanguage = $event"></lang-select>
             </div>
             <div class="attribute">
                 <input class="definition"

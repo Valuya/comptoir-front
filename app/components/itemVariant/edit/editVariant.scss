@@ -12,10 +12,13 @@ div.pageContent {
     font-size: .9em;
     font-weight: normal;
     margin-top: .2em;
+    line-height: 1em;
 
     > span {
       border: .1em solid lightgray;
-      padding: .1em;
+      padding: .3em;
+      height: 100%;
+      display: inline-block;
     }
   }
 

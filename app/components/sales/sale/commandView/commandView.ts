@@ -352,7 +352,7 @@ export class CommandViewTable {
     doRemoveItem(localItemVariantSale:LocalItemVariantSale) {
         this.activeSaleService.doRemoveItem(localItemVariantSale)
             .then(()=> {
-                this.itemRemoved.next(null);
+                this.itemRemoved.emit(null);
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -396,7 +396,7 @@ export class CommandView {
     onItemRemoved() {
         var searchResult = this.activeSaleService.saleItemsResult;
         if (searchResult.list.size === 0) {
-            this.saleEmptied.next(null);
+            this.saleEmptied.emit(null);
         }
     }
 }

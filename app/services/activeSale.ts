@@ -215,13 +215,16 @@ export class ActiveSaleService {
         return this.itemVariantSaleService.remove(saleItem.id)
             .then(()=> {
                 var taskList:Promise<any>[] = [
-                    this.saleService.get(this.sale.id).then((sale)=> {
+                    this.saleService.fetch(this.sale.id).then((sale)=> {
                         this.sale = sale;
                     }),
                     this.doSearchSaleItems()
                 ];
                 return Promise.all(taskList);
-            });
+            })
+            .then(()=>{
+                return this.getSaleTotalAmount();
+            })
     }
 
     public doUpdateItem(saleItem:LocalItemVariantSale):Promise<any> {
