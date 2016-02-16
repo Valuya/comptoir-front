@@ -130,10 +130,10 @@ export class ItemListView {
     }
 
     onFilterChange($event) {
-        this.applyFilter($event.target.value);
+      //  this.applyFilter($event.target.value);
     }
 
-    applyFilter(filterValue:string) {
+    applyFilter(filterValue:string): Promise<any> {
         var variantSearch = this.variantRequest.search.itemSearch;
         if (variantSearch.multiSearch !== filterValue) {
             variantSearch.multiSearch = filterValue;
@@ -144,9 +144,9 @@ export class ItemListView {
         }
 
         if (this.variantSelection) {
-            this.searchItemVariants();
+            return this.searchItemVariants();
         } else {
-            this.searchItems();
+            return this.searchItems();
         }
     }
 
@@ -155,15 +155,15 @@ export class ItemListView {
         var variantSearch = this.variantRequest.search;
         var itemRef = new ItemRef(item.id);
         variantSearch.itemRef = itemRef;
-        this.applyFilter('');
         this.itemVariantService.search(this.variantRequest)
             .then((results)=> {
                 this.variantResult = results;
                 if (results.count === 1) {
                     var variant = results.list.get(0);
-                    this.onVariantSelected(variant);
+                    return this.onVariantSelected(variant);
                 } else {
                     this.variantSelection = true;
+                    return this.applyFilter('');
                 }
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -171,8 +171,9 @@ export class ItemListView {
     }
 
     onVariantSelected(variant:LocalItemVariant) {
-        this.variantSelected.next(variant);
+        this.variantSelected.emit(variant);
         this.variantSelection = false;
+        return this.applyFilter('');
     }
 
     focus() {

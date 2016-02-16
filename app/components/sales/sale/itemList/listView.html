@@ -21,7 +21,7 @@
         </div>
     </header>
 
-    <div class="scrollPane">
+    <div class="scrollPane" [class.no-input]="searchRequest.busy">
         <item-list [hidden]="variantSelection"
                    [columns]="columns"
                    [items]="searchResult.list"
