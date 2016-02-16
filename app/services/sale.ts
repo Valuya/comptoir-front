@@ -106,7 +106,9 @@ export class SaleService {
 
         return request
             .map(response=> {
-                return <SaleRef>response.json();
+                var saleRef =  <SaleRef>response.json();
+                this.saleClient.doClear(saleRef.id);
+                return saleRef;
             })
             .toPromise();
     }

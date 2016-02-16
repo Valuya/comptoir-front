@@ -52,6 +52,9 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         return searchParams;
     }
 
+    doClear(id: number): void {
+        this.resourceCache.clearId(id);
+    }
 
     doFetch(id:number, authToken:string, cancellation?:Cancellation):Observable<T> {
         this.resourceCache.clearId(id);
