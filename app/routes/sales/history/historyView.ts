@@ -57,15 +57,7 @@ export class SaleHistoryView {
         var saleSearch = new SaleSearch();
         saleSearch.companyRef = new CompanyRef(authService.auth.employee.company.id);
         saleSearch.closed = true;
-        var pagination = PaginationFactory.Pagination({
-            firstIndex: 0,
-            pageIndex: 0,
-            pageSize: this.salesPerPage,
-            sorts: {
-                'DATETIME': 'desc'
-            }
-        });
-        this.searchRequest.pagination = pagination;
+        this.resetPagination();
         this.searchRequest.search = saleSearch;
         this.searchResult = new SearchResult<LocalSale>();
         this.totalPayedPrice = LocalSalePriceFactory.createNewSalePrice({base: 0, taxes: 0});
@@ -83,12 +75,19 @@ export class SaleHistoryView {
 
     onSearchClicked() {
         this.updateDates();
+        this.resetPagination();
+        this.searchSales();
+    }
+
+    resetPagination() {
         this.searchRequest.pagination = PaginationFactory.Pagination({
             firstIndex: 0,
             pageSize: this.salesPerPage,
-            pageIndex: 0
+            pageIndex: 0,
+            sorts: {
+                'DATETIME': 'desc'
+            }
         });
-        this.searchSales();
     }
 
     searchSales() {
