@@ -123,8 +123,8 @@ export class CommandViewTable {
     validated:boolean;
     noInput:boolean;
     itemRemoved = new EventEmitter();
-    language: Language;
-    sale: LocalSale;
+    language:Language;
+    sale:LocalSale;
 
     editingItem:LocalItemVariantSale;
     editingComment:boolean = false;
@@ -376,6 +376,9 @@ export class CommandView {
     errorService:ErrorService;
 
     validated:boolean = false;
+    editingReference:boolean;
+    noInput:boolean;
+    newSaleReference:string;
     saleEmptied = new EventEmitter();
     validateChanged = new EventEmitter();
 
@@ -398,5 +401,23 @@ export class CommandView {
         if (searchResult.list.size === 0) {
             this.saleEmptied.emit(null);
         }
+    }
+
+    onEditRefClicked() {
+        if (this.noInput) {
+            return;
+        }
+        this.editingReference = true;
+        this.newSaleReference = this.activeSaleService.sale.reference;
+    }
+
+    onConfirmNewReference() {
+        this.activeSaleService.doSetSaleReference(this.newSaleReference);
+        this.editingReference = false;
+        this.newSaleReference = null;
+    }
+    onCancelNewReference() {
+        this.editingReference = false;
+        this.newSaleReference = null;
     }
 }

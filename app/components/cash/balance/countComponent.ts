@@ -68,6 +68,7 @@ export class BalanceCountComponent {
             .toList();
         this.balance = LocalBalanceFactory.createNewBalance({
             account: this.account,
+            balance: 0,
             company: this.authService.getEmployeeCompany()
         });
     }
@@ -106,10 +107,25 @@ export class BalanceCountComponent {
 
     startEditTotal() {
         this.editingTotal = true;
+        if (this.balance.balance == null) {
+            this.balance.balance = 0;
+        }
     }
 
     onTotalCancelled() {
         this.editingTotal = false;
+        // Refetch total
+        return this.saveBalanceIfRequired()
+            .then((balance)=> {
+                balance = <LocalBalance>balance.set('balance', null);
+                return this.balanceService.save(balance);
+            })
+            .then((ref)=> {
+                return this.balanceService.get(ref.id);
+            })
+            .then((balance:LocalBalance)=> {
+                this.balance = balance;
+            });
     }
 
     onTotalChanged(newValue) {

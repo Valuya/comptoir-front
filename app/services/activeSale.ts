@@ -330,6 +330,12 @@ export class ActiveSaleService {
         return total;
     }
 
+    public doSetSaleReference(reference: string): Promise<any> {
+        var newSale = <LocalSale>this.sale.set('reference', reference);
+        this.sale = newSale;
+        return this.doUpdateSale();
+    }
+
     private updateSaleItem(fetchedItem:LocalItemVariantSale) {
         var listIndex = this.saleItemsResult.list.findIndex((item)=> {
             return item.id === fetchedItem.id;

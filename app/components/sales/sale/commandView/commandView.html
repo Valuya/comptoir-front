@@ -9,4 +9,23 @@
                         [sale]="activeSaleService.sale"
                         (itemRemoved)="onItemRemoved($event)"></command-view-table>
 
+    <form class="sale-reference">
+        <label for="saleReference">Référence</label>
+        <div class="reference"
+             id="saleReference"
+             (click)="onEditRefClicked()"
+             [hidden]="editingReference">
+            {{activeSaleService.sale.reference}}
+        </div>
+        <div [hidden]="noInput || !editingReference">
+            <textarea [(ngModel)]="newSaleReference"
+                      id="editSaleReference"
+                      class="edit-reference-area"
+                      autofocus></textarea>
+            <span class="editActions">
+                        <i class="fa fa-check green" (click)="onConfirmNewReference()"></i>
+                        <i class="fa fa-times red" (click)="onCancelNewReference()"></i>
+            </span>
+        </div>
+    </form>
 </div>
