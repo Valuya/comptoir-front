@@ -1,6 +1,7 @@
 <div class="commandView">
     <command-view-header [noInput]="noInput"
                          [validated]="validated || noInput "
+                         (reopenClicked)="onReopenClicked()"
                          (validateChanged)="onValidateChanged($event)"></command-view-header>
 
     <command-view-table [noInput]="noInput"

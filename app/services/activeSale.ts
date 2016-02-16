@@ -146,6 +146,22 @@ export class ActiveSaleService {
             });
     }
 
+    public doReopensale() : Promise<any> {
+        if (this.sale == null) {
+            throw 'no sale';
+        }
+        if (this.sale.id == null) {
+            throw 'Sale not saved';
+        }
+        var authToken = this.authService.authToken;
+        this.sale = <LocalSale>this.sale.set('closed', false);
+        return Promise.resolve(this.sale);
+        /* TODO
+        return this.saleService.closeSale(this.sale.id, authToken)
+            .then(()=> {
+                this.getNewSale();
+            });*/
+    }
 
     public fetchSaleAndItem(item:LocalItemVariantSale):Promise<any[]> {
         var taskList:Promise<any>[] = <Promise<any>[]>[

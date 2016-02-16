@@ -1,5 +1,5 @@
 <div class="saleView">
-    <div class="header">
+    <div class="header" [hidden]="saleClosed">
         <span>Point de vente :</span>
         <span><pos-select (posChanged)="onPosChanged($event)"
                 [editable]="!saleClosed"></pos-select></span>
@@ -17,6 +17,7 @@
                     <command-view id="saleCommandView"  *ngIf="activeSaleService.sale != null"
                                  (saleEmptied)="onSaleEmptied()"
                                  (validateChanged)="onValidateChanged($event)"
+                                  (reopened)="onSaleReopened()"
                                  [validated]="payStep"
                                  [noInput]="saleClosed"></command-view>
                 </div>

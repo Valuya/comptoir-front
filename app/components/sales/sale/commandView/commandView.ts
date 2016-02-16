@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, EventEmitter,ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter,ChangeDetectionStrategy, Output} from 'angular2/core';
 import {NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/common';
 import * as Immutable from 'immutable';
 
@@ -21,7 +21,7 @@ import {FastInput} from '../../../utils/fastInput';
 @Component({
     selector: 'command-view-header',
     inputs: ['noInput', 'validated'],
-    outputs: ['validateChanged'],
+    outputs: ['validateChanged', 'reopenClicked'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/commandView/header.html',
     styleUrls: ['./components/sales/sale/commandView/commandView.css'],
@@ -34,6 +34,7 @@ export class CommandViewHeader {
     editingSaleDiscount:boolean = false;
     validated:boolean = false;
     validateChanged = new EventEmitter();
+    reopenClicked = new EventEmitter();
 
     constructor(saleService:ActiveSaleService,
                 errorService:ErrorService) {
@@ -97,11 +98,15 @@ export class CommandViewHeader {
     }
 
     doValidate() {
-        this.validateChanged.next(true);
+        this.validateChanged.emit(true);
     }
 
     doUnvalidate() {
-        this.validateChanged.next(false);
+        this.validateChanged.emit(false);
+    }
+
+    doReopenSale() {
+        this.reopenClicked.emit(null)
     }
 }
 
@@ -364,7 +369,6 @@ export class CommandViewTable {
 // The component
 @Component({
     selector: 'command-view',
-    outputs: ['saleEmptied', 'validateChanged'],
     inputs: ['noInput', 'validated'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/commandView/commandView.html',
@@ -379,8 +383,12 @@ export class CommandView {
     editingReference:boolean;
     noInput:boolean;
     newSaleReference:string;
+    @Output()
     saleEmptied = new EventEmitter();
+    @Output()
     validateChanged = new EventEmitter();
+    @Output()
+    reopened = new EventEmitter();
 
     constructor(saleService:ActiveSaleService,
                 errorService:ErrorService) {
@@ -419,5 +427,8 @@ export class CommandView {
     onCancelNewReference() {
         this.editingReference = false;
         this.newSaleReference = null;
+    }
+    onReopenClicked() {
+        this.reopened.emit(null);
     }
 }

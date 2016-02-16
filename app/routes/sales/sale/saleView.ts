@@ -152,6 +152,14 @@ export class SaleView implements CanReuse {
         this.payStep = validated;
     }
 
+    onSaleReopened() {
+        this.payStep = false;
+        this.activeSaleService.doReopensale()
+            .catch((error)=> {
+                this.errorService.handleRequestError(error);
+            });
+    }
+
     private findSale():Promise<any> {
         if (this.routeParams != null && this.routeParams.params != null) {
             var idParam = this.routeParams.get('id');
