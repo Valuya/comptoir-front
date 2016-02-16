@@ -35,4 +35,8 @@
                (saleClicked)="onSaleClicked($event)"
                (columnAction)="onColumnAction($event)">
     </sale-list>
+
+    <div class="total-payed">
+        Total des {{ searchResult.count}} ventes: {{ totalPayedPrice.base | currency:'EUR':true:'.2-2' }}
+    </div>
 </div>

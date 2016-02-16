@@ -12,10 +12,12 @@ import {InvoiceRef} from '../client/domain/invoice';
 
 import {LocalSale, LocalSaleFactory} from '../client/localDomain/sale';
 import {LocalAccount} from '../client/localDomain/account';
+import {LocalSalePrice, LocalSalePriceFactory} from "../client/localDomain/salePrice";
 
 import {WithId} from '../client/utils/withId';
 import {SearchRequest, SearchResult} from '../client/utils/search';
 import {WsUtils} from '../client/utils/wsClient';
+import {JSONFactory} from '../client/utils/factory';
 
 import {SaleClient} from '../client/sale';
 
@@ -125,6 +127,23 @@ export class SaleService {
             .map(value=> {
                 var payed:number = parseFloat(value.value);
                 return payed;
+            })
+            .toPromise();
+    }
+    
+    getSalesTotalPayed(searchRequest:SearchRequest<LocalSale>):Promise<LocalSalePrice> {
+        var url = this.saleClient.webServiceUrl + this.saleClient.resourcePath + '/searchTotalPayed';
+        var options = WsUtils.getRequestOptions(this.getAuthToken());
+        options.method = 'POST';
+        options.url = url;
+        options.body = JSON.stringify(searchRequest.search, JSONFactory.toJSONReplacer);
+        var request = this.http.request(new Request(options));
+
+        return request
+            .map(response=>response.json())
+            .map(value=> {
+                var salePrice = LocalSalePriceFactory.createNewSalePrice(value);
+                return salePrice;
             })
             .toPromise();
     }

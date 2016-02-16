@@ -6,6 +6,7 @@ import {NgIf, FORM_DIRECTIVES} from 'angular2/common';
 import {Router} from 'angular2/router';
 
 import {LocalSale} from '../../../client/localDomain/sale';
+import {LocalSalePrice, LocalSalePriceFactory} from '../../../client/localDomain/salePrice';
 import {SaleSearch} from '../../../client/domain/sale';
 import {CompanyRef} from '../../../client/domain/company';
 
@@ -35,13 +36,14 @@ export class SaleHistoryView {
 
     searchRequest:SearchRequest<LocalSale>;
     searchResult:SearchResult<LocalSale>;
+    totalPayedPrice:LocalSalePrice;
 
     columns:Immutable.List<SaleColumn>;
     salesPerPage:number = 25;
 
     loading:boolean;
-    fromDateString: string;
-    toDateString: string;
+    fromDateString:string;
+    toDateString:string;
 
 
     constructor(saleService:SaleService, errorService:ErrorService,
@@ -57,6 +59,7 @@ export class SaleHistoryView {
         saleSearch.closed = true;
         var pagination = PaginationFactory.Pagination({
             firstIndex: 0,
+            pageIndex: 0,
             pageSize: this.salesPerPage,
             sorts: {
                 'DATETIME': 'desc'
@@ -65,6 +68,7 @@ export class SaleHistoryView {
         this.searchRequest.pagination = pagination;
         this.searchRequest.search = saleSearch;
         this.searchResult = new SearchResult<LocalSale>();
+        this.totalPayedPrice = LocalSalePriceFactory.createNewSalePrice({base: 0, taxes: 0});
 
         this.columns = Immutable.List.of(
             SaleColumn.ID,
@@ -88,12 +92,20 @@ export class SaleHistoryView {
     }
 
     searchSales() {
-
-        this.saleService
+        var saleTask = this.saleService
             .search(this.searchRequest)
             .then((result) => {
                 this.searchResult = result;
-            }).catch((error)=> {
+                return result;
+            });
+        var payedTask = this.saleService
+            .getSalesTotalPayed(this.searchRequest)
+            .then((result)=> {
+                this.totalPayedPrice = result;
+                return result;
+            });
+        return Promise.all([saleTask, payedTask])
+            .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
     }
