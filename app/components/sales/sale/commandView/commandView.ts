@@ -369,7 +369,7 @@ export class CommandViewTable {
 // The component
 @Component({
     selector: 'command-view',
-    inputs: ['noInput', 'validated'],
+    inputs: ['noInput', 'validated', 'newSale'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/commandView/commandView.html',
     styleUrls: ['./components/sales/sale/commandView/commandView.css'],
@@ -380,9 +380,12 @@ export class CommandView {
     errorService:ErrorService;
 
     validated:boolean = false;
+    newSale:boolean = false;
     editingReference:boolean;
+    editingDateTime:boolean;
     noInput:boolean;
     newSaleReference:string;
+    newSaleDateTimeString:string;
     @Output()
     saleEmptied = new EventEmitter();
     @Output()
@@ -428,6 +431,31 @@ export class CommandView {
         this.editingReference = false;
         this.newSaleReference = null;
     }
+
+    onEditTimeClicked() {
+        if (this.noInput) {
+            return;
+        }
+        var dateTime = this.activeSaleService.sale.dateTime;
+        var isoString  = dateTime.toISOString();
+        // input[type=datetime-local] required in chrome for the calendar widget.
+        // On the other hand, this does not accept timezone values, so strip it off
+        var zIndex = isoString.indexOf('Z');
+        this.newSaleDateTimeString = isoString.substring(0, zIndex);
+        this.editingDateTime = true;
+    }
+
+    onConfirmNewDateTime() {
+        var date:Date = new Date(this.newSaleDateTimeString);
+        this.activeSaleService.doSetSaleDateTime(date);
+        this.editingDateTime = false;
+        this.newSaleDateTimeString = null;
+    }
+    onCancelNewDateTime() {
+        this.editingDateTime = false;
+        this.newSaleDateTimeString = null;
+    }
+
     onReopenClicked() {
         this.reopened.emit(null);
     }

@@ -201,19 +201,21 @@ tfoot {
 
 }
 
-form.sale-reference {
+form.sale-form {
   margin-top: 1em;
   font-size: .9em;
   >label {
     font-weight: bold;
     display:  block;
   }
-  div.reference {
+  .output-field {
     border: 1px solid lightgray;
-    min-height: 3em;
     padding: .3em;
   }
-  textarea {
+  div.reference {
+    min-height: 3em;
+  }
+  .edit-reference-area {
     width: 100%;
     height: 3em;
   }

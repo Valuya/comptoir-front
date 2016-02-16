@@ -10,9 +10,9 @@
                         [sale]="activeSaleService.sale"
                         (itemRemoved)="onItemRemoved($event)"></command-view-table>
 
-    <form class="sale-reference">
+    <form class="sale-form sale-reference">
         <label for="saleReference">Référence</label>
-        <div class="reference"
+        <div class="output-field reference"
              id="saleReference"
              (click)="onEditRefClicked()"
              [hidden]="editingReference">
@@ -26,6 +26,23 @@
             <span class="editActions">
                         <i class="fa fa-check green" (click)="onConfirmNewReference()"></i>
                         <i class="fa fa-times red" (click)="onCancelNewReference()"></i>
+            </span>
+        </div>
+    </form>
+    <form class="sale-form sale-time" [hidden]="newSale">
+        <label for="saleTime">Date</label>
+        <div class="output-field time" id="saleTime"
+             (click)="onEditTimeClicked()"
+             [hidden]="editingDateTime">
+            {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
+        </div>
+        <div [hidden]="noInput || !editingDateTime">
+            <input type="datetime-local" autofocus
+                   [(ngModel)]="newSaleDateTimeString"
+                   class="edit-time-field">
+            <span class="editActions">
+                        <i class="fa fa-check green" (click)="onConfirmNewDateTime()"></i>
+                        <i class="fa fa-times red" (click)="onCancelNewDateTime()"></i>
             </span>
         </div>
     </form>

@@ -17,7 +17,8 @@
                     <command-view id="saleCommandView"  *ngIf="activeSaleService.sale != null"
                                  (saleEmptied)="onSaleEmptied()"
                                  (validateChanged)="onValidateChanged($event)"
-                                  (reopened)="onSaleReopened()"
+                                 (reopened)="onSaleReopened()"
+                                 [newSale]="newSale"
                                  [validated]="payStep"
                                  [noInput]="saleClosed"></command-view>
                 </div>
