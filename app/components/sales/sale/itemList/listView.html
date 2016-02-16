@@ -2,9 +2,7 @@
     <header class="coloredHeader">
         <div class="filter">
             <input #filter id="itemListFilterInput"
-                (keyup)="onFilterKeyUp($event)"
-                (change)="onFilterChange($event)"
-                [value]="searchRequest.search.multiSearch"
+                [(ngModel)]="searchRequest.search.multiSearch"
                 placeholder="Filtrer les produits" autofocusselect/>
 
             <div class="busy">

@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component,EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
+import {Component,EventEmitter, ChangeDetectionStrategy,ViewChild,ElementRef, AfterViewInit} from 'angular2/core';
 import {NgFor, NgIf} from 'angular2/common';
 
 import {LocalItem} from '../../../../client/localDomain/item';
@@ -23,6 +23,8 @@ import {ItemVariantList, ItemVariantColumn} from '../../../itemVariant/list/item
 import {AutoFocusDirective} from '../../../utils/autoFocus';
 import {FocusableDirective} from '../../../utils/focusable';
 import * as Immutable from 'immutable';
+import {Observable} from 'rxjs/Rx';
+import {ViewQuery} from "angular2/core";
 
 @Component({
     selector: 'item-list-view',
@@ -33,7 +35,7 @@ import * as Immutable from 'immutable';
     directives: [NgFor, NgIf, AutoFocusDirective, FocusableDirective, ItemList, ItemVariantList]
 })
 
-export class ItemListView {
+export class ItemListView implements AfterViewInit {
     itemService:ItemService;
     itemVariantService:ItemVariantService;
     errorService:ErrorService;
@@ -41,10 +43,7 @@ export class ItemListView {
 
     itemClicked = new EventEmitter();
     variantSelected = new EventEmitter();
-    // Delay keyevent for 500ms
-    keyboardTimeoutSet:boolean;
     keyboardTimeout:number = 200;
-    //
     searchRequest:SearchRequest<LocalItem>;
     searchResult:SearchResult<LocalItem>;
     columns:Immutable.List<ItemColumn>;
@@ -53,6 +52,9 @@ export class ItemListView {
     variantResult:SearchResult<LocalItemVariant>;
     variantColumns:Immutable.List<ItemVariantColumn>;
     variantSelection:boolean;
+
+    @ViewChild('filter')
+    inputFieldResult:ElementRef;
 
     constructor(errorService:ErrorService, itemService:ItemService,
                 itemVariantService:ItemVariantService, authService:AuthService) {
@@ -95,6 +97,21 @@ export class ItemListView {
             ItemVariantColumn.TOTAL_PRICE
         );
         this.searchItems();
+
+    }
+
+    ngAfterViewInit() {
+        if (this.inputFieldResult == null) {
+            console.error('Invalid field');
+            return;
+        }
+        Observable.fromEvent(this.inputFieldResult.nativeElement, 'keyup')
+            .map(() => this.searchRequest.search.multiSearch)
+            .debounceTime(this.keyboardTimeout)
+            .distinctUntilChanged()
+            .subscribe((value)=> {
+                this.applyFilter(value);
+            });
     }
 
     searchItems() {
@@ -117,23 +134,7 @@ export class ItemListView {
             });
     }
 
-    onFilterKeyUp($event) {
-        if (this.keyboardTimeoutSet) {
-            return;
-        }
-        this.keyboardTimeoutSet = true;
-        var thisList = this;
-        setTimeout(function () {
-            thisList.applyFilter($event.target.value);
-            thisList.keyboardTimeoutSet = false;
-        }, this.keyboardTimeout);
-    }
-
-    onFilterChange($event) {
-      //  this.applyFilter($event.target.value);
-    }
-
-    applyFilter(filterValue:string): Promise<any> {
+    applyFilter(filterValue:string):Promise<any> {
         var variantSearch = this.variantRequest.search.itemSearch;
         if (variantSearch.multiSearch !== filterValue) {
             variantSearch.multiSearch = filterValue;
@@ -166,8 +167,8 @@ export class ItemListView {
                     return this.applyFilter('');
                 }
             }).catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
+            this.errorService.handleRequestError(error);
+        });
     }
 
     onVariantSelected(variant:LocalItemVariant) {
