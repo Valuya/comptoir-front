@@ -9,7 +9,7 @@ import {PageChangeEvent} from '../../../client/utils/pagination';
 @Component({
     selector: 'paginator',
     outputs: ['pageChange'],
-    inputs: ['totalCount', 'pageSize',
+    inputs: ['totalCount', 'pageSize', 'activePage',
         'showPrevNextLink', 'showFirstLastLink'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/utils/paginator/paginator.html',

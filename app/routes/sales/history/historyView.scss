@@ -3,3 +3,10 @@
 .listPage {
   margin-right: 1em;
 }
+
+.topActions {
+  >div {
+    display: inline-block;
+    margin: 0 .5em;
+  }
+}

@@ -7,19 +7,32 @@
 
 
     <div class="topActions">
-
+        <div class="from-date-filter">
+            <label for="from-date-field">À partir du:</label>
+            <input type="date" id="from-date-field"
+                   [(ngModel)]="fromDateString">
+        </div>
+        <div class="to-date-filter">
+            <label for="to-date-field">Jusqu'au:</label>
+            <input type="date" id="to-date-field"
+                   [(ngModel)]="toDateString">
+        </div>
+        <div class="boxedHoverableLink"
+             (click)="onSearchClicked()">
+            Rechercher
+        </div>
     </div>
 
     <paginator *ngIf="searchResult != null"
                [totalCount]="searchResult.count"
-               [pageSize]="salesPerPage"
+               [pageSize]="salesPerPage" [activePage]="searchRequest.pagination.pageIndex"
                [showPrevNextLink]="true" [showFirstLastLink]="true"
                (pageChange)="onPageChanged($event)"></paginator>
     <sale-list [sales]="searchResult.list"
-              [columns]="columns"
-              [rowSelectable]="true"
-              [headersVisible]="true"
-              (saleClicked)="onSaleClicked($event)"
-              (columnAction)="onColumnAction($event)">
+               [columns]="columns"
+               [rowSelectable]="true"
+               [headersVisible]="true"
+               (saleClicked)="onSaleClicked($event)"
+               (columnAction)="onColumnAction($event)">
     </sale-list>
 </div>

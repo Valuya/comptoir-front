@@ -9,7 +9,7 @@ import {LocalSale} from '../../../client/localDomain/sale';
 import {SaleSearch} from '../../../client/domain/sale';
 import {CompanyRef} from '../../../client/domain/company';
 
-import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from '../../../client/utils/pagination';
+import {Pagination, PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from '../../../client/utils/pagination';
 import {SearchRequest, SearchResult} from '../../../client/utils/search';
 
 import {ErrorService} from '../../../services/error';
@@ -40,6 +40,8 @@ export class SaleHistoryView {
     salesPerPage:number = 25;
 
     loading:boolean;
+    fromDateString: string;
+    toDateString: string;
 
 
     constructor(saleService:SaleService, errorService:ErrorService,
@@ -75,7 +77,18 @@ export class SaleHistoryView {
         this.searchSales();
     }
 
+    onSearchClicked() {
+        this.updateDates();
+        this.searchRequest.pagination = PaginationFactory.Pagination({
+            firstIndex: 0,
+            pageSize: this.salesPerPage,
+            pageIndex: 0
+        });
+        this.searchSales();
+    }
+
     searchSales() {
+
         this.saleService
             .search(this.searchRequest)
             .then((result) => {
@@ -96,6 +109,13 @@ export class SaleHistoryView {
     }
 
     onColumnAction(sale:LocalSale, col:SaleColumn) {
+    }
+
+    updateDates() {
+        var fromDate = new Date(this.fromDateString);
+        this.searchRequest.search.fromDateTime = fromDate;
+        var toDate = new Date(this.toDateString);
+        this.searchRequest.search.toDateTime = toDate;
     }
 
 

@@ -35,6 +35,8 @@ export class SaleRef {
 export class SaleSearch {
     companyRef:CompanyRef;
     closed:boolean;
+    toDateTime: Date;
+    fromDateTime: Date;
 }
 
 export class SaleFactory {
