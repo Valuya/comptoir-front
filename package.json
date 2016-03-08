@@ -55,13 +55,13 @@
     "zone.js": "^0.5.8"
   },
   "dependencies": {
-    "angular2": "2.0.0-beta.0",
-    "rxjs": "^5.0.0-beta.0",
-    "zone.js": "^0.5.10",
-    "es6-shim": "^0.33.6",
-    "es6-promise": "^3.0.2",
-    "systemjs": "^0.19.4",
-    "immutable": "^3.7.5",
-    "font-awesome": "^4.4.0"
+    "angular2": "=2.0.0-beta.0",
+    "rxjs": "=5.0.0-beta.0",
+    "zone.js": "=0.5.10",
+    "es6-shim": "=0.33.6",
+    "es6-promise": "=3.0.2",
+    "systemjs": "=0.19.4",
+    "immutable": "=3.7.5",
+    "font-awesome": "=4.4.0"
   }
 }
