@@ -33,6 +33,14 @@ export class BalanceService {
         this.accountService = accountService;
     }
 
+    fetch(id:number):Promise<LocalBalance> {
+        return this.balanceClient.doFetch(id, this.getAuthToken())
+            .toPromise()
+            .then((entity:Balance)=> {
+                return this.toLocalConverter(entity);
+            });
+    }
+
     get(id:number):Promise<LocalBalance> {
         return this.balanceClient.doGet(id, this.getAuthToken())
             .toPromise()

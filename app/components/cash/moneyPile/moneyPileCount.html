@@ -5,6 +5,7 @@
     <span class="amount">
         <input type="number" min="0" step="1"
                [initialValue]="moneyPile.unitCount"
+               [value]="moneyPile.unitCount"
                [validator]="validateAmount"
                [validateOnBlur]="true"
                (fastChange)="onMoneyPileChanged($event)"

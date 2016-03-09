@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 29/09/15.
  */
-import {Component, EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter, ChangeDetectionStrategy, OnInit} from 'angular2/core';
 import {NgFor, NgIf} from 'angular2/common';
 
 import {LocalAccount} from '../../../client/localDomain/account';
@@ -30,7 +30,7 @@ import * as Immutable from 'immutable';
     directives: [NgFor, NgIf, MoneyPileCountComponent, FastInput]
 })
 
-export class BalanceCountComponent {
+export class BalanceCountComponent implements OnInit {
     authService:AuthService;
     errorService:ErrorService;
     moneyPileService:MoneyPileService;
@@ -51,11 +51,13 @@ export class BalanceCountComponent {
         this.errorService = errorService;
         this.balanceService = balanceService;
         this.moneyPileService = moneyPileService;
-
-
     }
 
     ngOnInit() {
+        this.initBalance();
+    }
+
+    initBalance() {
         this.moneyPiles = Immutable.List(ALL_CASH_TYPES)
             .map((cashType)=> {
                 return LocalMoneyPileFactory.createNewMoneyPile({
@@ -71,6 +73,7 @@ export class BalanceCountComponent {
             balance: 0,
             company: this.authService.getEmployeeCompany()
         });
+        this.editingTotal = false;
     }
 
     onMoneyPileChanged(moneyPile) {
@@ -88,7 +91,7 @@ export class BalanceCountComponent {
             .then((ref:any)=> {
                 var taskList:Promise<any>[] = <Promise<any>[]>[
                     this.moneyPileService.get(ref.id),
-                    this.balanceService.get(this.balance.id)
+                    this.balanceService.fetch(  this.balance.id)
                 ];
                 return Promise.all(taskList);
             })
@@ -158,11 +161,11 @@ export class BalanceCountComponent {
                 return this.balanceService.closeBalance(this.balance);
             })
             .then((ref)=> {
-                return this.balanceService.get(ref.id);
+                return this.balanceService.fetch(ref.id);
             })
             .then((balance:LocalBalance)=> {
-                this.balance = balance;
                 this.validated.emit(balance);
+                this.initBalance();
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);

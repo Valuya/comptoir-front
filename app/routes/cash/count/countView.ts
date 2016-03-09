@@ -3,6 +3,7 @@
  */
 import {Component} from 'angular2/core';
 import {NgIf, NgFor} from 'angular2/common';
+import {CanReuse, OnReuse, OnActivate, Router} from 'angular2/router';
 
 import {LocalAccount} from '../../../client/localDomain/account';
 import {LocalBalance} from '../../../client/localDomain/balance';
@@ -23,6 +24,7 @@ import {AuthService} from '../../../services/auth';
 
 import {PosSelect} from '../../../components/pos/posSelect/posSelect';
 import {BalanceCountComponent} from '../../../components/cash/balance/countComponent';
+import {LocalBalanceFactory} from "../../../client/localDomain/balance";
 
 @Component({
     selector: 'count-cash-view',
@@ -31,14 +33,13 @@ import {BalanceCountComponent} from '../../../components/cash/balance/countCompo
     directives: [NgIf, NgFor, PosSelect, BalanceCountComponent]
 })
 
-export class CountCashView {
+export class CountCashView implements CanReuse, OnReuse, OnActivate {
     balanceService:BalanceService;
     posService:PosService;
     accountService:AccountService;
     errorService:ErrorService;
     authService:AuthService;
 
-    balance:LocalBalance;
     pos:Pos;
 
     accountSearchRequest:SearchRequest<LocalAccount>;
@@ -52,14 +53,17 @@ export class CountCashView {
     lastBalance:LocalBalance;
 
     appLanguage:Language;
+    router:Router;
 
     constructor(errorService:ErrorService, balanceService:BalanceService,
-                posService:PosService, accountService:AccountService, authService:AuthService) {
+                posService:PosService, accountService:AccountService, authService:AuthService,
+                router:Router) {
         this.balanceService = balanceService;
         this.posService = posService;
         this.accountService = accountService;
         this.errorService = errorService;
         this.authService = authService;
+        this.router = router;
 
         this.accountSearchRequest = new SearchRequest<LocalAccount>();
         this.accountSearchResult = new SearchResult<LocalAccount>();
@@ -68,9 +72,18 @@ export class CountCashView {
 
         this.appLanguage = authService.getEmployeeLanguage();
         this.accountId = null;
-        this.searchPaymentAccounts();
     }
 
+    routerCanReuse() {
+        return true;
+    }
+
+    routerOnReuse() {
+        this.searchPaymentAccounts();
+    }
+    routerOnActivate() {
+        this.searchPaymentAccounts();
+    }
 
     searchPaymentAccounts():Promise<any> {
         var accountSearch = new AccountSearch();
@@ -87,7 +100,7 @@ export class CountCashView {
         this.paymentAccountList = null;
         this.accountId = null;
         this.account = null;
-        this.lastBalance =  null;
+        this.lastBalance = null;
 
         return this.accountService.search(this.accountSearchRequest)
             .then((result:SearchResult<LocalAccount>)=> {
@@ -104,7 +117,7 @@ export class CountCashView {
     }
 
     onPosChanged(pos:Pos) {
-        if (this.pos == pos)  {
+        if (this.pos == pos) {
             return;
         }
         this.pos = pos;
@@ -139,7 +152,6 @@ export class CountCashView {
         this.setAccount(account);
     }
 
-
     searchLastBalance() {
         if (this.account == null) {
             return;
@@ -161,8 +173,8 @@ export class CountCashView {
                 this.balanceSearchResult = result;
                 this.lastBalance = result.list.first();
             }).catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
+            this.errorService.handleRequestError(error);
+        });
     }
 
     onBalanceValidated(balance) {
@@ -170,6 +182,5 @@ export class CountCashView {
     }
 
     onBalanceCancelled() {
-
     }
 }

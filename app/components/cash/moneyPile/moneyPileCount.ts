@@ -19,7 +19,8 @@ import {FastInput} from '../../utils/fastInput';
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/cash/moneyPile/moneyPileCount.html',
     styleUrls: ['./components/cash/moneyPile/moneyPileCount.css'],
-    directives: [FastInput]
+    directives: [FastInput],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoneyPileCountComponent {
     moneyPile:LocalMoneyPile;
