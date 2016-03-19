@@ -1,0 +1,8 @@
+<div class="formPage pageContent">
+    <h1 class="pageTitle">Édition du stock</h1>
+
+    <stock-edit-component *ngIf="stock != null"
+             [stock]="stock"
+             (saved)="onSaved($event)"
+             (cancelled)="onCancelled()"></stock-edit-component>
+</div>

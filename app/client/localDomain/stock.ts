@@ -17,6 +17,7 @@ export interface LocalStock extends Immutable.Map<string, any> {
 var StockRecord = Immutable.Record({
     id: null,
     company: null,
+    description: null,
     active: null
 });
 

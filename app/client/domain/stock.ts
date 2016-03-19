@@ -4,6 +4,7 @@
 
 import {CompanyRef} from './company';
 import {LocaleTexts} from "../utils/lang";
+import {LocaleTextsFactory} from "../utils/lang";
 
 
 export class Stock {
@@ -29,6 +30,9 @@ export class StockSearch {
 
 export class StockFactory {
     static fromJSONReviver = (key, value)=> {
+        if (key ==='description') {
+            return LocaleTextsFactory.fromLocaleTextArrayReviver(value);
+        }
         return value;
     }
 

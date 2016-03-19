@@ -43,33 +43,33 @@ export class StockService {
         this.companyService = companyService;
     }
 
-    get(id:number, authToken:string):Promise<LocalStock> {
-        return this.stockClient.doGet(id, authToken)
+    get(id:number):Promise<LocalStock> {
+        return this.stockClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:Stock)=> {
-                return this.toLocalConverter(entity, authToken);
+                return this.toLocalConverter(entity, this.getAuthToken());
             });
     }
 
-    remove(id:number, authToken:string):Promise<any> {
-        return this.stockClient.doRemove(id, authToken)
+    remove(id:number):Promise<any> {
+        return this.stockClient.doRemove(id, this.getAuthToken())
             .toPromise();
     }
 
-    save(entity:LocalStock, authToken:string):Promise<WithId> {
+    save(entity:LocalStock):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
-        return this.stockClient.doSave(e, authToken)
+        return this.stockClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalStock>, authToken:string):Promise<SearchResult<LocalStock>> {
-        return this.stockClient.doSearch(searchRequest, authToken)
+    search(searchRequest:SearchRequest<LocalStock>):Promise<SearchResult<LocalStock>> {
+        return this.stockClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<Stock>)=> {
                 var taskList = [];
                 result.list.forEach((entity)=> {
                     taskList.push(
-                        this.toLocalConverter(entity, authToken)
+                        this.toLocalConverter(entity, this.getAuthToken())
                     );
                 });
                 return Promise.all(taskList)
@@ -112,4 +112,7 @@ export class StockService {
         return stock;
     }
 
+    private getAuthToken():string {
+        return this.authService.authToken;
+    }
 }

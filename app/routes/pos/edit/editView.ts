@@ -81,7 +81,7 @@ export class EditPosView {
             });
     }
 
-    doCancelEdit() {
+    onCancelled() {
         this.router.navigate(['/Pos/List']);
     }
 
