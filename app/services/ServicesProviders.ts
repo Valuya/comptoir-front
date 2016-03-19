@@ -25,6 +25,7 @@ import {MoneyPileService} from './moneyPile';
 import {PictureService} from './picture';
 import {PosService} from './pos';
 import {SaleService} from './sale';
+import {StockService} from './stock';
 
 export const SERVICES_PROVIDERS = [
     AccountService,
@@ -48,5 +49,6 @@ export const SERVICES_PROVIDERS = [
     MoneyPileService,
     PictureService,
     PosService,
-    SaleService
+    SaleService,
+    StockService
 ];
