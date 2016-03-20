@@ -1,1 +1,47 @@
 @import '../../../styles/_forms';
+
+.stock-edit {
+
+  .row {
+    display: table;
+    width: 100%;
+    > *:not([hidden]) {
+      display: table-cell;
+      vertical-align: top;
+      width: 49%;
+      padding: .3em 1em;
+    }
+    .stock-edit-panel {
+    }
+    .item-select-panel {
+      text-align: left;
+    }
+    .item-stock-panel {
+      .header {
+        font-size: 1.2em;
+        margin: 0;
+        padding: .5em .3em;
+        background-color: lightgray;
+        text-align: left;
+
+        .header-column {
+          display: inline-block;
+          margin: 0 .5em;
+
+          &.current-stock {
+            float: right;
+            font-size: 1.2em;
+            font-weight: bold;
+          }
+
+          .ref {
+            font-size: .8em;
+            font-family: monospace;
+            text-align: left;
+            max-width: 10%;
+          }
+        }
+      }
+    }
+  }
+}

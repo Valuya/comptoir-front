@@ -74,7 +74,7 @@ export class StockList {
 
 
     onStockClick(item:Stock, event) {
-        this.rowClicked.next(item);
+        this.rowClicked.emit(item);
         event.stopPropagation();
         event.preventDefault();
     }

@@ -32,6 +32,10 @@ export enum StockChangeType {
 export class ItemVariantStockRef {
     id: number;
     link: string;
+
+    constructor(id?: number) {
+        this.id = id;
+    }
 }
 
 export class ItemVariantStockSearch {
@@ -45,6 +49,10 @@ export class ItemVariantStockFactory {
     static fromJSONReviver = (key, value)=>{
         if (key ==='stockChangeSaleRef') {
             return StockChangeType[value];
+        }
+        if (key === 'startDateTime' || key === 'endDateTime') {
+            var date = new Date(value);
+            return date;
         }
         return value;
     }

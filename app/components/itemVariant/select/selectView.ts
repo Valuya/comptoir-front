@@ -6,7 +6,7 @@ import {
     Component,
     EventEmitter,
     ChangeDetectionStrategy,
-    Input,
+    Input, Output,
     ViewChild,
     ElementRef,
     AfterViewInit
@@ -33,7 +33,6 @@ import {Observable} from "rxjs/Observable";
 
 @Component({
     selector: 'item-variant-select',
-    outputs: ['itemClicked', 'variantSelected'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/itemVariant/select/selectView.html',
     styleUrls: ['./components/itemVariant/select/selectView.css'],
@@ -47,7 +46,9 @@ export class ItemVariantSelectView implements AfterViewInit {
     errorService:ErrorService;
     authService:AuthService;
 
+    @Output()
     itemClicked = new EventEmitter();
+    @Output()
     variantSelected = new EventEmitter();
     keyboardTimeout:number = 200;
     searchRequest:SearchRequest<LocalItem>;

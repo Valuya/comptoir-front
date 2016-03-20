@@ -1,8 +1,98 @@
-<div class="formPage pageContent">
-    <h1 class="pageTitle">Édition du stock</h1>
+<div class="formPage pageContent stock-edit">
+    <h1 class="pageTitle">
+        Édition du stock
+        <span *ngIf="stock?.description != null">
+            : {{ stock.description[displayLanguage.locale] }}
+        </span>
+    </h1>
 
-    <stock-edit-component *ngIf="stock != null"
-             [stock]="stock"
-             (saved)="onSaved($event)"
-             (cancelled)="onCancelled()"></stock-edit-component>
+    <div class="row">
+        <div class="stock-edit-panel"
+             [hidden]="itemVariant != null">
+            <stock-edit-component *ngIf="stock != null"
+                                  [stock]="stock"
+                                  (saved)="onSaved($event)"
+                                  (cancelled)="onCancelled()"></stock-edit-component>
+        </div>
+
+        <div class="item-select-panel"
+             [hidden]="stock?.id == null">
+            <item-variant-select [stock]="stock"
+                                 (variantSelected)="onVariantSelected($event)"
+            ></item-variant-select>
+        </div>
+
+        <div class="item-stock-panel"
+             *ngIf="itemVariant != null">
+            <div class="header">
+                <span *ngFor="#column of itemVariantHeaderColumns"
+                      class="header-column"
+                      [class.current-stock]="column.name == 'currentStockAmount'">
+                <item-variant-column [itemVariant]="itemVariant"
+                                     [column]="column"
+                                     [lang]="displayLanguage"></item-variant-column>
+                </span>
+            </div>
+
+            <div [hidden]="itemVariantStockResult.count > 0"
+                 class="initial-stock-panel">
+                <form id="initialVariantStockForm" #initialStockForm="ngForm"
+                      *ngIf="editingVariantStockDesc != null"
+                      (ngSubmit)="onCreateInitialStock()">
+                    <div class="table">
+                        <div>
+                            <label for="initialQuantity">Quantité:</label>
+                            <input id="initialQuantity" type="number"
+                                   min="0" step="1"
+                                   required validate-required
+                                   [(ngModel)]="editingVariantStockDesc.quantity">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="submit"
+                                [disabled]="!initialStockForm.form.valid">
+                            Enregistrer le stock initial
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div [hidden]="itemVariantStockResult.count < 1">
+                <item-variant-stock-list [columns]="variantStockListColumns"
+                                         [headersVisible]="true"
+                                         [rowSelectable]="false"
+                                         [itemVariantStockList]="itemVariantStockResult.list">
+                </item-variant-stock-list>
+
+                <form id="adjustementStockForm" #stockForm="ngForm"
+                      *ngIf="editingVariantStockDesc != null"
+                      (ngSubmit)="onCreateAdjustmentStock()">
+                    <div class="table">
+                        <div>
+                            <label for="quantity">Quantité:</label>
+                            <input id="quantity" type="number"
+                                   min="0" step="1"
+                                   required validate-required
+                                   [(ngModel)]="editingVariantStockDesc.quantity">
+                        </div>
+                        <div>
+                            <label for="comment">Commentaire:</label>
+                            <input id="comment"
+                                   required validate-required
+                                   [(ngModel)]="editingVariantStockDesc.comment">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="submit"
+                                [disabled]="!stockForm.form.valid">
+                            Enregistrer l'ajustement
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+            <a (click)="onVariantStockCancelClicked()" class="blueLink">Retour</a>
+        </div>
+    </div>
 </div>

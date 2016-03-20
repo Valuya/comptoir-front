@@ -8,7 +8,7 @@ import {Http} from 'angular2/http';
 import {ItemVariantSale, ItemVariantSaleFactory} from './domain/itemVariantSale';
 import {CachedWSClient} from './utils/cachedWsClient';
 import {COMPTOIR_SERVICE_URL} from '../config/service';
-import {ItemVariantStock} from "./domain/itemVariantStock";
+import {ItemVariantStock, ItemVariantStockFactory} from "./domain/itemVariantStock";
 
 @Injectable()
 export class ItemVariantStockClient extends CachedWSClient<ItemVariantStock> {
@@ -18,6 +18,6 @@ export class ItemVariantStockClient extends CachedWSClient<ItemVariantStock> {
         this.http = http;
         this.resourcePath = '/itemVariantStock';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = ItemVariantSaleFactory.fromJSONReviver;
+        this.jsonReviver = ItemVariantStockFactory.fromJSONReviver;
     }
 }

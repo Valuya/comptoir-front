@@ -112,8 +112,8 @@
     </template>
     <template [ngSwitchWhen]=" 'currentStockAmount' ">
         <span class="stockAmount"
-              [class.out-of-stock]="itemVariant.currentStock?.quantity < 1"
               [class.low-stock]="itemVariant.currentStock?.quantity < 5"
+              [class.out-of-stock]="itemVariant.currentStock?.quantity < 1"
               [hidden]="itemVariant.currentStock == null">
               {{ itemVariant.currentStock?.quantity | number }}
         </span>

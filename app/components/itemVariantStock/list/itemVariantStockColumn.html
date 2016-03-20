@@ -1,0 +1,43 @@
+<div [ngSwitch]="column.name">
+    <template [ngSwitchWhen]="'id'">
+        <span class="id">
+            {{ stock.id }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'changeType' ">
+        <span class="changeType" >
+            {{ getChangeTypeLabel(itemVariantStock.stockChangeType) }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'startDate' ">
+        <span class="date" >
+            {{ itemVariantStock.startDateTime | date:"dd/MM/yyyy HH:mm" }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'endDate' ">
+        <span class="date" >
+             {{ itemVariantStock.startDateTime | date:"dd/MM/yyyy HH:mm" }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'quantity' ">
+        <span class="quantity" >
+             {{ itemVariantStock.quantity }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'comment' ">
+        <span class="comment" >
+             {{ itemVariantStock.comment }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'variant' ">
+        <span class="variant" >
+            # {{ itemVariantStock.itemVariantRef }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'stock' ">
+        <span class="stock" >
+            # {{ itemVariantStock.stockRef }}
+        </span>
+    </template>
+
+</div>
