@@ -93,7 +93,7 @@ export class SaleHistoryView {
     searchSales() {
         var saleTask = this.saleService
             .search(this.searchRequest)
-            .then((result) => {
+            .then((result: SearchResult<LocalSale>) => {
                 this.searchResult = result;
                 return result;
             });

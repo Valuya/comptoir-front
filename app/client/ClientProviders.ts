@@ -23,6 +23,7 @@ import {PictureClient} from './picture';
 import {PosClient} from './pos';
 import {SaleClient} from './sale';
 import {StockClient} from './stock';
+import {ItemVariantStockClient} from "./itemVariantStock";
 
 export const CLIENT_PROVIDERS = [
     AccountClient,
@@ -40,6 +41,7 @@ export const CLIENT_PROVIDERS = [
     ItemClient,
     ItemVariantClient,
     ItemVariantSaleClient,
+    ItemVariantStockClient,
     MoneyPileClient,
     PictureClient,
     PosClient,

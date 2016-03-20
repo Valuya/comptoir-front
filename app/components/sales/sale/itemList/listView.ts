@@ -114,8 +114,8 @@ export class ItemListView implements AfterViewInit {
             });
     }
 
-    searchItems() {
-        this.itemService.search(this.searchRequest)
+    searchItems(): Promise<any> {
+        return this.itemService.search(this.searchRequest)
             .then((result)=> {
                 this.searchResult = result;
             })
@@ -124,8 +124,8 @@ export class ItemListView implements AfterViewInit {
             });
     }
 
-    searchItemVariants() {
-        this.itemVariantService.search(this.variantRequest)
+    searchItemVariants(): Promise<any> {
+        return this.itemVariantService.search(this.variantRequest)
             .then((result)=> {
                 this.variantResult = result;
             })
@@ -136,11 +136,11 @@ export class ItemListView implements AfterViewInit {
 
     applyFilter(filterValue:string):Promise<any> {
         var variantSearch = this.variantRequest.search.itemSearch;
-        if (variantSearch.multiSearch !== filterValue) {
+        if (variantSearch.multiSearch != filterValue) {
             variantSearch.multiSearch = filterValue;
         }
         var itemSearch = this.searchRequest.search;
-        if (itemSearch.multiSearch !== filterValue) {
+        if (itemSearch.multiSearch != filterValue) {
             itemSearch.multiSearch = filterValue;
         }
 
@@ -152,7 +152,7 @@ export class ItemListView implements AfterViewInit {
     }
 
     onItemClicked(item:LocalItem) {
-        this.itemClicked.next(item);
+        this.itemClicked.emit(item);
         var variantSearch = this.variantRequest.search;
         var itemRef = new ItemRef(item.id);
         variantSearch.itemRef = itemRef;

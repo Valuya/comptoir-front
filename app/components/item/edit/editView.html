@@ -10,8 +10,8 @@
 
                     <div>
                         <img [src]="itemJS.mainPicture.dataURI"
-                             class="itemPicturePreview"
-                             *ngIf="itemJS.mainPicture?.dataURI != null">
+                             *ngIf="itemJS.mainPicture?.dataURI != null"
+                             class="itemPicturePreview">
                         <input type="file" id="picture" accept="image/*"
                                (change)="onPictureFileSelected($event)">
                     </div>

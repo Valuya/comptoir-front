@@ -16,7 +16,6 @@ import {FastInput} from '../../utils/fastInput';
     selector: 'money-pile-count',
     inputs: ['moneyPile'],
     outputs: ['changed'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/cash/moneyPile/moneyPileCount.html',
     styleUrls: ['./components/cash/moneyPile/moneyPileCount.css'],
     directives: [FastInput],
@@ -39,6 +38,6 @@ export class MoneyPileCountComponent {
         var moneyPileJS = this.moneyPile.toJS();
         moneyPileJS.unitCount = newCount;
         var newMoneyPile = LocalMoneyPileFactory.createNewMoneyPile(moneyPileJS);
-        this.changed.next(newMoneyPile);
+        this.changed.emit(newMoneyPile);
     }
 }
