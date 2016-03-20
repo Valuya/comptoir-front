@@ -127,7 +127,8 @@ export class ItemVariantColumn extends Column {
     static TOTAL_PRICE:ItemVariantColumn;
 
     static ACTION_REMOVE:ItemVariantColumn;
-    static ALL_COLUMNS:ItemVariantColumn[];
+
+    static CURRENT_STOCK_AMOUNT: ItemVariantColumn;
 
     static init() {
         ItemVariantColumn.ID = new ItemVariantColumn(
@@ -232,6 +233,13 @@ export class ItemVariantColumn extends Column {
             'totalPrice', 2,
             LocaleTextsFactory.toLocaleTexts({
                 'fr': 'Prix total'
+            }), true
+        );
+
+        ItemVariantColumn.CURRENT_STOCK_AMOUNT = new ItemVariantColumn(
+            'currentStockAmount', 1,
+            LocaleTextsFactory.toLocaleTexts({
+                'fr': 'Stock'
             }), true
         );
 

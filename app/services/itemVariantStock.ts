@@ -1,23 +1,20 @@
 /**
  * Created by cghislai on 06/08/15.
  */
-import {Injectable} from 'angular2/core';
-
-import {ItemVariantStock, ItemVariantStockRef, ItemVariantStockSearch, ItemVariantStockFactory} from '../client/domain/itemVariantStock';
-import {ItemVariantRef} from '../client/domain/itemVariant';
-import {StockRef} from '../client/domain/stock';
-
-import {LocalItemVariantStock, LocalItemVariantStockFactory} from '../client/localDomain/itemVariantStock';
-import {LocalAccount} from '../client/localDomain/account';
-
-import {WithId} from '../client/utils/withId';
-import {SearchRequest, SearchResult} from '../client/utils/search';
-
-import {ItemVariantStockClient} from '../client/itemVariantStock';
-
-import {AuthService} from './auth';
-import {ItemVariantService} from './itemVariant';
-import {StockService} from './stock';
+import {Injectable} from "angular2/core";
+import {ItemVariantStock, ItemVariantStockSearch} from "../client/domain/itemVariantStock";
+import {ItemVariantRef} from "../client/domain/itemVariant";
+import {StockRef} from "../client/domain/stock";
+import {LocalItemVariantStock, LocalItemVariantStockFactory} from "../client/localDomain/itemVariantStock";
+import {WithId} from "../client/utils/withId";
+import {SearchRequest, SearchResult} from "../client/utils/search";
+import {ItemVariantStockClient} from "../client/itemVariantStock";
+import {AuthService} from "./auth";
+import {ItemVariantService} from "./itemVariant";
+import {StockService} from "./stock";
+import {LocalItemVariant} from "../client/localDomain/itemVariant";
+import {LocalStock} from "../client/localDomain/stock";
+import {PaginationFactory} from "../client/utils/pagination";
 
 @Injectable()
 export class ItemVariantStockService {
@@ -84,6 +81,33 @@ export class ItemVariantStockService {
                     });
             });
     }
+
+
+    fetchCurrentItemStock(itemVariant: LocalItemVariant, stock: LocalStock): Promise<LocalItemVariant> {
+        var itemStockSearch = new ItemVariantStockSearch();
+        itemStockSearch.companyRef = this.authService.getEmployeeCompanyRef();
+        itemStockSearch.itemVariantRef = new ItemVariantRef(itemVariant.id);
+        itemStockSearch.stockRef = new StockRef(stock.id);
+        itemStockSearch.atDateTime = new Date();
+
+        var searchRequest = new SearchRequest<LocalItemVariantStock>();
+        searchRequest.search = itemStockSearch;
+        searchRequest.pagination = PaginationFactory.Pagination({
+            firstIndex: 0,
+            pageSize: 1
+        });
+
+        return this.search(searchRequest)
+            .then((result: SearchResult<LocalItemVariantStock>)=>{
+                if (result.count > 0) {
+                    var localStock = result.list.first();
+                    itemVariant.currentStock = localStock;
+                    // TODO: store in cache?
+                }
+                return itemVariant;
+            });
+    }
+
 
     toLocalConverter(itemVariantStock:ItemVariantStock):Promise<LocalItemVariantStock> {
         var localItemStockDesc:any = {};

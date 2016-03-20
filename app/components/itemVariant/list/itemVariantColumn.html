@@ -110,6 +110,14 @@
               {{ getVariantPrice(itemVariant) | currency:'EUR':true:'.2-2' }}
         </span>
     </template>
+    <template [ngSwitchWhen]=" 'currentStockAmount' ">
+        <span class="stockAmount"
+              [class.out-of-stock]="itemVariant.currentStock?.quantity < 1"
+              [class.low-stock]="itemVariant.currentStock?.quantity < 5"
+              [hidden]="itemVariant.currentStock == null">
+              {{ itemVariant.currentStock?.quantity | number }}
+        </span>
+    </template>
 
     <template [ngSwitchWhen]=" 'action_remove' ">
         <span class="action remove">

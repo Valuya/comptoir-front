@@ -95,13 +95,13 @@ export class SaleHistoryView {
             .search(this.searchRequest)
             .then((result: SearchResult<LocalSale>) => {
                 this.searchResult = result;
-                return result;
+                return null;
             });
         var payedTask = this.saleService
             .getSalesTotalPayed(this.searchRequest)
-            .then((result)=> {
+            .then((result: LocalSalePrice)=> {
                 this.totalPayedPrice = result;
-                return result;
+                return null;
             });
         return Promise.all([saleTask, payedTask])
             .catch((error)=> {

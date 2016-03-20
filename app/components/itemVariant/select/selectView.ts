@@ -2,42 +2,48 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component,EventEmitter, ChangeDetectionStrategy,ViewChild,ElementRef, AfterViewInit} from 'angular2/core';
-import {NgFor, NgIf} from 'angular2/common';
+import {
+    Component,
+    EventEmitter,
+    ChangeDetectionStrategy,
+    Input,
+    ViewChild,
+    ElementRef,
+    AfterViewInit
+} from "angular2/core";
+import {NgFor, NgIf} from "angular2/common";
+import {ItemVariantList, ItemVariantColumn} from "../list/itemVariantList";
+import {ItemList, ItemColumn} from "../../item/list/itemList";
+import {FocusableDirective} from "../../utils/focusable";
+import {AutoFocusDirective} from "../../utils/autoFocus";
+import {ItemService} from "../../../services/item";
+import {ItemVariantService} from "../../../services/itemVariant";
+import {ItemVariantStockService} from "../../../services/itemVariantStock";
+import {ErrorService} from "../../../services/error";
+import {AuthService} from "../../../services/auth";
+import {LocalItem} from "../../../client/localDomain/item";
+import {SearchRequest, SearchResult} from "../../../client/utils/search";
+import {LocalItemVariant} from "../../../client/localDomain/itemVariant";
+import {LocalStock} from "../../../client/localDomain/stock";
+import {ItemSearch, ItemRef} from "../../../client/domain/item";
+import {PaginationFactory} from "../../../client/utils/pagination";
+import {ItemVariantSearch} from "../../../client/domain/itemVariant";
+import {Observable} from "rxjs/Observable";
 
-import {LocalItem} from '../../../../client/localDomain/item';
-import {LocalItemVariant} from '../../../../client/localDomain/itemVariant';
-
-import {ItemSearch, ItemRef} from '../../../../client/domain/item';
-import {ItemVariantSearch} from '../../../../client/domain/itemVariant';
-import {SearchResult, SearchRequest} from '../../../../client/utils/search';
-import { PaginationFactory} from '../../../../client/utils/pagination';
-
-import {AuthService} from '../../../../services/auth';
-import {ErrorService} from '../../../../services/error';
-import {ItemService} from '../../../../services/item';
-import {ItemVariantService} from '../../../../services/itemVariant';
-
-import {ItemList, ItemColumn} from '../../../item/list/itemList';
-import {ItemVariantList, ItemVariantColumn} from '../../../itemVariant/list/itemVariantList';
-import {AutoFocusDirective} from '../../../utils/autoFocus';
-import {FocusableDirective} from '../../../utils/focusable';
-import * as Immutable from 'immutable';
-import {Observable} from 'rxjs/Rx';
-import {ViewQuery} from "angular2/core";
 
 @Component({
-    selector: 'item-list-view',
+    selector: 'item-variant-select',
     outputs: ['itemClicked', 'variantSelected'],
     changeDetection: ChangeDetectionStrategy.Default,
-    templateUrl: './components/sales/sale/itemList/listView.html',
-    styleUrls: ['./components/sales/sale/itemList/listView.css'],
+    templateUrl: './components/itemVariant/select/selectView.html',
+    styleUrls: ['./components/itemVariant/select/selectView.css'],
     directives: [NgFor, NgIf, AutoFocusDirective, FocusableDirective, ItemList, ItemVariantList]
 })
 
-export class ItemListView implements AfterViewInit {
+export class ItemVariantSelectView implements AfterViewInit {
     itemService:ItemService;
     itemVariantService:ItemVariantService;
+    itemVariantStockService:ItemVariantStockService;
     errorService:ErrorService;
     authService:AuthService;
 
@@ -53,13 +59,18 @@ export class ItemListView implements AfterViewInit {
     variantColumns:Immutable.List<ItemVariantColumn>;
     variantSelection:boolean;
 
+    @Input()
+    stock: LocalStock;
+
     @ViewChild('filter')
     inputFieldResult:ElementRef;
 
     constructor(errorService:ErrorService, itemService:ItemService,
+                itemVariantStockService:ItemVariantStockService,
                 itemVariantService:ItemVariantService, authService:AuthService) {
         this.itemService = itemService;
         this.errorService = errorService;
+        this.itemVariantStockService = itemVariantStockService;
         this.authService = authService;
         this.itemVariantService = itemVariantService;
 
@@ -94,10 +105,10 @@ export class ItemListView implements AfterViewInit {
             ItemVariantColumn.VARIANT_REFERENCE,
             ItemVariantColumn.PICTURE,
             ItemVariantColumn.ATTRIBUTES,
+            ItemVariantColumn.CURRENT_STOCK_AMOUNT,
             ItemVariantColumn.TOTAL_PRICE
         );
         this.searchItems();
-
     }
 
     ngAfterViewInit() {
@@ -109,7 +120,7 @@ export class ItemListView implements AfterViewInit {
             .map(() => this.searchRequest.search.multiSearch)
             .debounceTime(this.keyboardTimeout)
             .distinctUntilChanged()
-            .subscribe((value)=> {
+            .subscribe((value: string)=> {
                 this.applyFilter(value);
             });
     }
@@ -127,6 +138,18 @@ export class ItemListView implements AfterViewInit {
     searchItemVariants(): Promise<any> {
         return this.itemVariantService.search(this.variantRequest)
             .then((result)=> {
+                var taskList = result.list.toSeq()
+                    .map((itemVariant)=>{
+                        return this.itemVariantStockService.fetchCurrentItemStock(itemVariant, this.stock);
+                    })
+                    .toArray();
+                return Promise.all(taskList)
+                    .then((results: LocalItemVariant[])=>{
+                        result.list = Immutable.List(results);
+                        return result;
+                    });
+            })
+            .then((result)=>{
                 this.variantResult = result;
             })
             .catch((error)=> {

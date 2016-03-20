@@ -8,8 +8,11 @@
         <div class="saleViewContainer" [class.slide-left]="payStep"  [class.no-anim]="saleClosed || newSale">
             <div class="itemList" >
                 <div>
-                    <item-list-view id="saleItemList"
-                                  (variantSelected)="onItemClicked($event)"></item-list-view>
+                    <item-variant-select
+                            id="saleItemList"
+                            [stock]="stock"
+                            (variantSelected)="onItemClicked($event)">
+                    </item-variant-select>
                 </div>
             </div>
             <div class="commandView" >

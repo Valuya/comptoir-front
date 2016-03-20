@@ -9,6 +9,8 @@ import {LocalPicture} from './picture';
 import {LocaleTexts, LocaleTextsFactory} from '../utils/lang';
 
 import * as Immutable from 'immutable';
+import {ItemVariantStock} from "../domain/itemVariantStock";
+import {LocalItemVariantStock} from "./itemVariantStock";
 
 export interface LocalItemVariant extends Immutable.Map<string, any> {
     id:number;
@@ -20,6 +22,7 @@ export interface LocalItemVariant extends Immutable.Map<string, any> {
     mainPicture:LocalPicture;
     item:LocalItem;
 
+    currentStock: LocalItemVariantStock;
 }
 var ItemVariantRecord = Immutable.Record({
     id: null,
@@ -28,7 +31,8 @@ var ItemVariantRecord = Immutable.Record({
     pricingAmount: null,
     attributeValues: null,
     mainPicture: null,
-    item: null
+    item: null,
+    currentStock: null
 });
 
 export class LocalItemVariantFactory {

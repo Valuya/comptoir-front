@@ -1,25 +1,19 @@
 /**
  * Created by cghislai on 06/08/15.
  */
-import {Injectable} from 'angular2/core';
-
-import {ItemVariant,Pricing, ItemVariantRef, ItemVariantSearch, ItemVariantFactory} from '../client/domain/itemVariant';
-import {AttributeValueRef} from '../client/domain/attributeValue';
-import {ItemRef} from '../client/domain/item';
-import {PictureRef} from '../client/domain/picture';
-
-import {LocalItemVariant, LocalItemVariantFactory} from '../client/localDomain/itemVariant';
-import {LocalAccount} from '../client/localDomain/account';
-
-import {WithId} from '../client/utils/withId';
-import {SearchRequest, SearchResult} from '../client/utils/search';
-
-import {ItemVariantClient} from '../client/itemVariant';
-
-import {AuthService} from './auth';
-import {AttributeValueService} from './attributeValue';
-import {ItemService} from './item';
-import {PictureService} from './picture';
+import {Injectable} from "angular2/core";
+import {ItemVariant, Pricing} from "../client/domain/itemVariant";
+import {AttributeValueRef} from "../client/domain/attributeValue";
+import {ItemRef} from "../client/domain/item";
+import {PictureRef} from "../client/domain/picture";
+import {LocalItemVariant, LocalItemVariantFactory} from "../client/localDomain/itemVariant";
+import {WithId} from "../client/utils/withId";
+import {SearchRequest, SearchResult} from "../client/utils/search";
+import {ItemVariantClient} from "../client/itemVariant";
+import {AuthService} from "./auth";
+import {AttributeValueService} from "./attributeValue";
+import {ItemService} from "./item";
+import {PictureService} from "./picture";
 
 @Injectable()
 export class ItemVariantService {
@@ -47,6 +41,14 @@ export class ItemVariantService {
         return  this.itemVariantClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:ItemVariant)=> {
+                return this.toLocalConverter(entity);
+            });
+    }
+
+    fetch(id: number) : Promise<LocalItemVariant> {
+        return this.itemVariantClient.doFetch(id, this.getAuthToken())
+            .toPromise()
+            .then((entity: ItemVariant)=>{
                 return this.toLocalConverter(entity);
             });
     }

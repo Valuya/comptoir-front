@@ -14,17 +14,19 @@ import {SaleService} from '../../../services/sale';
 import {AuthService} from '../../../services/auth';
 
 import {ActiveSaleService} from '../../../services/activeSale';
-import {ItemListView} from '../../../components/sales/sale/itemList/listView';
 import {CommandView} from '../../../components/sales/sale/commandView/commandView';
 import {PayView} from '../../../components/sales/sale/payView/payView';
 import {PosSelect} from '../../../components/pos/posSelect/posSelect';
+import {SearchResult} from "../../../client/utils/search";
+import {LocalStock} from "../../../client/localDomain/stock";
+import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
 
 @Component({
     selector: 'sale-view',
     bindings: [ActiveSaleService],
     templateUrl: './routes/sales/sale/saleView.html',
     styleUrls: ['./routes/sales/sale/saleView.css'],
-    directives: [ItemListView, CommandView, PayView, NgIf, PosSelect]
+    directives: [ItemVariantSelectView, CommandView, PayView, NgIf, PosSelect]
 })
 
 export class SaleView implements CanReuse {
@@ -41,6 +43,7 @@ export class SaleView implements CanReuse {
     payStep:boolean;
 
     language:string;
+    stock: LocalStock;
 
     @ViewChild(PayView)
     payView:PayView;
@@ -101,6 +104,7 @@ export class SaleView implements CanReuse {
     onPosChanged(pos) {
         this.activeSaleService.setPos(pos)
             .then(()=> {
+                this.fetchStock();
                 if (this.payView) {
                     this.payView.fetchAccountList();
                 }
@@ -108,6 +112,20 @@ export class SaleView implements CanReuse {
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
+    }
+
+    fetchStock() {
+        var stockResult: SearchResult<LocalStock> = this.activeSaleService.stockResult;
+        if (stockResult.count < 1) {
+            this.stock = null;
+            return;
+        }
+        if (stockResult.count == 1) {
+            this.stock = stockResult.list.first();
+            return;
+        }
+        // TODO: UI to select stock
+        this.stock = stockResult.list.first();
     }
 
     onSaleEmptied() {

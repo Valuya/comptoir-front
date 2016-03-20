@@ -25,6 +25,9 @@ import {AccountService} from './account';
 import {AccountingEntryService} from './accountingEntry';
 import {SaleService} from './sale';
 import {ItemVariantSaleService} from './itemVariantSale';
+import {LocalStock} from "../client/localDomain/stock";
+import {StockSearch} from "../client/domain/stock";
+import {StockService} from "./stock";
 
 @Injectable()
 export class ActiveSaleService {
@@ -36,6 +39,8 @@ export class ActiveSaleService {
     accountingEntriesResult:SearchResult<LocalAccountingEntry>;
     accountsRequest:SearchRequest<LocalAccount>;
     accountsResult:SearchResult<LocalAccount>;
+    stockRequest: SearchRequest<LocalStock>;
+    stockResult: SearchResult<LocalStock>;
     paidAmount:number;
 
 
@@ -43,13 +48,16 @@ export class ActiveSaleService {
     accountService:AccountService;
     accountingEntryService:AccountingEntryService;
     saleService:SaleService;
+    stockService:StockService;
     itemVariantSaleService:ItemVariantSaleService;
 
     constructor(authService:AuthService,
                 accountService:AccountService,
+                stockService: StockService,
                 accountingEntryService:AccountingEntryService,
                 saleService:SaleService,
                 itemVariantSaleService:ItemVariantSaleService) {
+        this.stockService = stockService;
         this.sale = null;
         this.pos = null;
 
@@ -70,6 +78,12 @@ export class ActiveSaleService {
         accountSearch.companyRef = authService.getEmployeeCompanyRef();
         this.accountsRequest.search = accountSearch;
         this.accountsResult = new SearchResult<LocalAccount>();
+
+        this.stockRequest = new SearchRequest<LocalStock>();
+         var stockSearch = new StockSearch();
+        stockSearch.companyRef = authService.getEmployeeCompanyRef();
+        this.stockRequest.search = stockSearch;
+        this.stockResult = new SearchResult<LocalStock>();
 
         this.authService = authService;
         this.accountService = accountService;
@@ -288,7 +302,10 @@ export class ActiveSaleService {
 
     public setPos(pos:Pos):Promise<any> {
         this.pos = pos;
-        return this.searchAccounts();
+        return Promise.all([
+            this.searchAccounts(),
+            this.searchStocks()
+        ]);
     }
 
     public searchAccounts():Promise<any> {
@@ -298,6 +315,16 @@ export class ActiveSaleService {
         return this.accountService.search(this.accountsRequest)
             .then((result)=> {
                 this.accountsResult = result;
+            });
+    }
+
+    public searchStocks(): Promise<any> {
+        var search = this.stockRequest.search;
+        var posRef = new PosRef(this.pos.id);
+        search.posRef = posRef;
+        return this.stockService.search(this.stockRequest)
+            .then((result)=>{
+                this.stockResult = result;
             });
     }
 
