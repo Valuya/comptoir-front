@@ -8,6 +8,7 @@ import {LocalSale} from './sale';
 import {LocaleTexts} from '../utils/lang';
 
 import * as Immutable from 'immutable';
+import {LocalStock} from "./stock";
 
 export interface LocalItemVariantSale extends Immutable.Map<string, any> {
     id:number;
@@ -20,6 +21,7 @@ export interface LocalItemVariantSale extends Immutable.Map<string, any> {
     total:number;
     itemVariant:LocalItemVariant;
     sale:LocalSale;
+    stock: LocalStock;
 }
 var ItemVariantSaleRecord = Immutable.Record({
     id: null,
@@ -31,7 +33,8 @@ var ItemVariantSaleRecord = Immutable.Record({
     discountRatio: null,
     total: null,
     itemVariant: null,
-    sale: null
+    sale: null,
+    stock: null
 });
 
 export class LocalItemVariantSaleFactory {

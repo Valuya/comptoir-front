@@ -7,6 +7,7 @@ import {ItemVariantRef} from './itemVariant';
 import {SaleRef} from './sale';
 import {Price} from './price';
 import {LocaleTexts, LocaleTextsFactory} from '../utils/lang';
+import {StockRef} from "./stock";
 
 
 export class ItemVariantSale {
@@ -20,6 +21,7 @@ export class ItemVariantSale {
     vatRate: number;
     discountRatio: number;
     total: number;
+    stockRef: StockRef;
 }
 
 export class ItemVariantSaleRef {

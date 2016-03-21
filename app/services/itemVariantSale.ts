@@ -1,23 +1,19 @@
 /**
  * Created by cghislai on 06/08/15.
  */
-import {Injectable} from 'angular2/core';
-
-import {ItemVariantSale, ItemVariantSaleRef, ItemVariantSaleSearch, ItemVariantSaleFactory} from '../client/domain/itemVariantSale';
-import {ItemVariantRef} from '../client/domain/itemVariant';
-import {SaleRef} from '../client/domain/sale';
-
-import {LocalItemVariantSale, LocalItemVariantSaleFactory} from '../client/localDomain/itemVariantSale';
-import {LocalAccount} from '../client/localDomain/account';
-
-import {WithId} from '../client/utils/withId';
-import {SearchRequest, SearchResult} from '../client/utils/search';
-
-import {ItemVariantSaleClient} from '../client/itemVariantSale';
-
-import {AuthService} from './auth';
-import {ItemVariantService} from './itemVariant';
-import {SaleService} from './sale';
+import {Injectable} from "angular2/core";
+import {ItemVariantSale} from "../client/domain/itemVariantSale";
+import {ItemVariantRef} from "../client/domain/itemVariant";
+import {SaleRef} from "../client/domain/sale";
+import {LocalItemVariantSale, LocalItemVariantSaleFactory} from "../client/localDomain/itemVariantSale";
+import {WithId} from "../client/utils/withId";
+import {SearchRequest, SearchResult} from "../client/utils/search";
+import {ItemVariantSaleClient} from "../client/itemVariantSale";
+import {AuthService} from "./auth";
+import {ItemVariantService} from "./itemVariant";
+import {SaleService} from "./sale";
+import {StockService} from "./stock";
+import {StockRef} from "../client/domain/stock";
 
 @Injectable()
 export class ItemVariantSaleService {
@@ -25,15 +21,18 @@ export class ItemVariantSaleService {
     private authService:AuthService;
     private itemVariantService:ItemVariantService;
     private saleService:SaleService;
+    private stockService:StockService;
 
 
     constructor(itemVariantSaleClient:ItemVariantSaleClient,
                 authService:AuthService,
                 itemVariantService:ItemVariantService,
+                stockService:StockService,
                 saleService:SaleService) {
         this.itemVariantSaleClient = itemVariantSaleClient;
         this.authService = authService;
         this.itemVariantService = itemVariantService;
+        this.stockService = stockService;
         this.saleService = saleService;
     }
 
@@ -114,6 +113,16 @@ export class ItemVariantSaleService {
                 })
         );
 
+        var stockRef = itemVariantSale.stockRef;
+        if (stockRef != null) {
+            taskList.push(
+                this.stockService.get(stockRef.id)
+                    .then((stock)=> {
+                        localItemSaleDesc.stock = stock;
+                    })
+            );
+        }
+
         return Promise.all(taskList)
             .then(()=> {
                 return LocalItemVariantSaleFactory.createNewItemVariantSale(localItemSaleDesc);
@@ -132,6 +141,9 @@ export class ItemVariantSaleService {
         itemSale.total = localItemVariantSale.total;
         itemSale.vatExclusive = localItemVariantSale.vatExclusive;
         itemSale.vatRate = localItemVariantSale.vatRate;
+        if (localItemVariantSale.stock != null) {
+            itemSale.stockRef = new StockRef(localItemVariantSale.stock.id);
+        }
         return itemSale;
     }
 
