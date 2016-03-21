@@ -115,7 +115,7 @@ export class FastInput implements OnInit {
     }
 
     triggerChange(value) {
-        this.fastChange.next(value);
+        this.fastChange.emit(value);
     }
 
     doValidate() {
@@ -128,6 +128,6 @@ export class FastInput implements OnInit {
 
     doCancel() {
         this.elementRef.nativeElement.value = this.initialValue;
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 }

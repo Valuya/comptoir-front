@@ -63,6 +63,13 @@ table.dataTable {
         }
       }
 
+      &:not(:hover) {
+        a.actionIcon:not(.noBlur) {
+          color: rgb(220, 220, 220);
+          -webkit-filter: blur(.1em);
+        }
+      }
+
       a.actionIcon {
         &:not([hidden]) {
           display: inline-block;
@@ -70,10 +77,6 @@ table.dataTable {
         font-size: 1em;
         vertical-align: middle;
 
-        &:not(.noBlur) {
-          color: rgb(220, 220, 220);
-          -webkit-filter: blur(.1em);
-        }
         &.noBlur {
           .red {
             color: red;

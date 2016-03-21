@@ -4,11 +4,16 @@
                          (reopenClicked)="onReopenClicked()"
                          (validateChanged)="onValidateChanged($event)"></command-view-header>
 
-    <command-view-table [noInput]="noInput"
-                        [validated]="validated || noInput"
-                        [items]="activeSaleService.saleItemsResult.list"
-                        [sale]="activeSaleService.sale"
-                        (itemRemoved)="onItemRemoved($event)"></command-view-table>
+    <item-variant-sale-list [rowSelectable]="false"
+                            [headersVisible]="true"
+                            [footerVisible]="true"
+                            [footerTotalColIndex]="3"
+                            [columns]="variantSaleColumns"
+                            [itemVariantSaleList]="activeSaleService.saleItemsResult.list"
+                            [editable]="!validated"
+                            [sale]="activeSaleService.sale"
+                            (columnAction)="onColumnAction($event)"
+                            (variantUpdated)="onVariantUpdated($event)"></item-variant-sale-list>
 
     <form class="sale-form sale-reference">
         <label for="saleReference">Référence</label>

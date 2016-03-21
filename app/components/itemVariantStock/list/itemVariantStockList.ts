@@ -14,6 +14,7 @@ import {AuthService} from '../../../services/auth';
 import {FocusableDirective} from '../../utils/focusable';
 
 import * as Immutable from 'immutable';
+import {LocalItemVariantStock} from "../../../client/localDomain/itemVariantStock";
 
 /****
  * Column component
@@ -31,7 +32,7 @@ export class ItemVariantStockColumnComponent {
     @Output()
     action = new EventEmitter();
     @Input()
-    itemVariantStock:ItemVariantStock;
+    itemVariantStock:LocalItemVariantStock;
     @Input()
     column:ItemVariantStockColumn;
     @Input()
@@ -90,7 +91,7 @@ export class ItemVariantStockColumnComponent {
 export class ItemVariantStockList {
     // properties
     @Input()
-    itemVariantStockList:Immutable.List<ItemVariantStock>;
+    itemVariantStockList:Immutable.List<LocalItemVariantStock>;
     @Input()
     columns:Immutable.List<ItemVariantStockColumn>;
     @Input()
