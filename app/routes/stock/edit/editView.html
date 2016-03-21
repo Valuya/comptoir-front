@@ -1,4 +1,10 @@
 <div class="formPage pageContent stock-edit">
+    <span class="backLink">
+        <div class="boxedHoverableLink"
+            (click)="onCancelled()">
+            Retour
+        </div>
+    </span>
     <h1 class="pageTitle">
         Édition du stock
         <span *ngIf="stock?.description != null">
@@ -98,7 +104,6 @@
 
 
             </div>
-            <a (click)="onVariantStockCancelClicked()" class="blueLink">Retour</a>
         </div>
     </div>
 </div>

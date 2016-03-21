@@ -185,10 +185,4 @@ export class EditStockView {
                 this.searchVariantStocks();
             });
     }
-
-    onVariantStockCancelClicked() {
-        this.editingVariantStockDesc = null;
-        this.itemVariantCurrentStock = null;
-        this.itemVariant = null;
-    }
 }
