@@ -48,7 +48,6 @@ export class EditStockView {
     displayLanguage: Language;
 
     itemVariant: LocalItemVariant;
-    itemVariantHeaderColumns: Immutable.List<ItemVariantColumn>;
     itemVariantCurrentStock: LocalItemVariantStock;
     itemVariantStockRequest: SearchRequest<LocalItemVariantStock>;
     itemVariantStockResult: SearchResult<LocalItemVariantStock>;
@@ -67,11 +66,6 @@ export class EditStockView {
         this.variantStockService = variantStockService;
 
         this.displayLanguage = this.authService.getEmployeeLanguage();
-        this.itemVariantHeaderColumns = Immutable.List([
-            ItemVariantColumn.VARIANT_REFERENCE,
-            ItemVariantColumn.ITEM_NAME,
-            ItemVariantColumn.CURRENT_STOCK_AMOUNT
-        ]);
         this.variantStockListColumns = Immutable.List([
             ItemVariantStockColumn.START_DATE,
             ItemVariantStockColumn.CHANGE_TYPE,
@@ -166,7 +160,6 @@ export class EditStockView {
                 this.itemVariantStockResult = result;
                 if (result.count > 0) {
                     this.itemVariantCurrentStock = result.list.first();
-                    this.itemVariant = <LocalItemVariant>this.itemVariant.set('currentStock', this.itemVariantCurrentStock);
                     this.editingVariantStockDesc.quantity = this.itemVariantCurrentStock.quantity;
                 }
             });

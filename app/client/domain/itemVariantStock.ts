@@ -18,7 +18,7 @@ export class ItemVariantStock {
     quantity: number;
     comment: string;
     previousItemStockRef: ItemVariantStockRef;
-    stockChangeType: StockChangeType;
+    stockChangeType: string;
     stockChangeSaleRef: SaleRef;
 }
 

@@ -25,11 +25,15 @@
         <div class="item-stock-panel"
              *ngIf="itemVariant != null">
             <div class="header">
-                <span *ngFor="#column of itemVariantHeaderColumns"
-                      class="header-column {{column.name}}">
-                <item-variant-column [itemVariant]="itemVariant"
-                                     [column]="column"
-                                     [lang]="displayLanguage"></item-variant-column>
+                <span class="valignAnchor"></span>
+                <span class="ref">
+                    {{ itemVariant.variantReference }}
+                </span>
+                <span class="name">
+                    {{ itemVariant.item.name[displayLanguage.locale] }}
+                </span>
+                <span class="stock">
+                    {{ itemVariantCurrentStock?.quantity }}
                 </span>
             </div>
 

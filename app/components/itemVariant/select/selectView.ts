@@ -60,9 +60,6 @@ export class ItemVariantSelectView implements AfterViewInit {
     variantColumns:Immutable.List<ItemVariantColumn>;
     variantSelection:boolean;
 
-    @Input()
-    stock: LocalStock;
-
     @ViewChild('filter')
     inputFieldResult:ElementRef;
 
@@ -106,7 +103,6 @@ export class ItemVariantSelectView implements AfterViewInit {
             ItemVariantColumn.VARIANT_REFERENCE,
             ItemVariantColumn.PICTURE,
             ItemVariantColumn.ATTRIBUTES,
-            ItemVariantColumn.CURRENT_STOCK_AMOUNT,
             ItemVariantColumn.TOTAL_PRICE
         );
         this.searchItems();
@@ -138,18 +134,6 @@ export class ItemVariantSelectView implements AfterViewInit {
 
     searchItemVariants(): Promise<any> {
         return this.itemVariantService.search(this.variantRequest)
-            .then((result)=> {
-                var taskList = result.list.toSeq()
-                    .map((itemVariant)=>{
-                        return this.itemVariantStockService.fetchCurrentItemStock(itemVariant, this.stock);
-                    })
-                    .toArray();
-                return Promise.all(taskList)
-                    .then((results: LocalItemVariant[])=>{
-                        result.list = Immutable.List(results);
-                        return result;
-                    });
-            })
             .then((result)=>{
                 this.variantResult = result;
             })

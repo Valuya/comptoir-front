@@ -24,6 +24,7 @@ export interface LocalItem extends Immutable.Map<string, any> {
     mainPicture:LocalPicture;
     multipleSale: boolean;
 }
+
 var ItemRecord = Immutable.Record({
     id: null,
     company: null,

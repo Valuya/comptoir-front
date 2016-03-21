@@ -43,7 +43,6 @@ export class SaleView implements CanReuse {
     payStep:boolean;
 
     language:string;
-    stock: LocalStock;
 
     @ViewChild(PayView)
     payView:PayView;
@@ -104,7 +103,6 @@ export class SaleView implements CanReuse {
     onPosChanged(pos) {
         this.activeSaleService.setPos(pos)
             .then(()=> {
-                this.fetchStock();
                 if (this.payView) {
                     this.payView.fetchAccountList();
                 }
@@ -112,20 +110,6 @@ export class SaleView implements CanReuse {
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
-    }
-
-    fetchStock() {
-        var stockResult: SearchResult<LocalStock> = this.activeSaleService.stockResult;
-        if (stockResult.count < 1) {
-            this.stock = null;
-            return;
-        }
-        if (stockResult.count == 1) {
-            this.stock = stockResult.list.first();
-            return;
-        }
-        // TODO: UI to select stock
-        this.stock = stockResult.list.first();
     }
 
     onSaleEmptied() {

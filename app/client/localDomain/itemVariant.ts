@@ -21,8 +21,6 @@ export interface LocalItemVariant extends Immutable.Map<string, any> {
     attributeValues:LocalAttributeValue[];
     mainPicture:LocalPicture;
     item:LocalItem;
-
-    currentStock: LocalItemVariantStock;
 }
 var ItemVariantRecord = Immutable.Record({
     id: null,
@@ -31,8 +29,7 @@ var ItemVariantRecord = Immutable.Record({
     pricingAmount: null,
     attributeValues: null,
     mainPicture: null,
-    item: null,
-    currentStock: null
+    item: null
 });
 
 export class LocalItemVariantFactory {

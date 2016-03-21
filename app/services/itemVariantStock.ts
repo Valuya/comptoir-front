@@ -83,7 +83,7 @@ export class ItemVariantStockService {
     }
 
 
-    fetchCurrentItemStock(itemVariant: LocalItemVariant, stock: LocalStock): Promise<LocalItemVariant> {
+    fetchCurrentItemStock(itemVariant:LocalItemVariant, stock:LocalStock):Promise<LocalItemVariant> {
         if (itemVariant == null || stock == null) {
             return Promise.resolve(itemVariant);
         }
@@ -101,7 +101,7 @@ export class ItemVariantStockService {
         });
 
         return this.search(searchRequest)
-            .then((result: SearchResult<LocalItemVariantStock>)=>{
+            .then((result:SearchResult<LocalItemVariantStock>)=> {
                 if (result.count > 0) {
                     var localStock = result.list.first();
                     itemVariant = <LocalItemVariant>itemVariant.set('currentStock', localStock);
@@ -116,15 +116,12 @@ export class ItemVariantStockService {
         var localItemStockDesc:any = {};
         localItemStockDesc.id = itemVariantStock.id;
         localItemStockDesc.startDateTime = itemVariantStock.startDateTime;
-        localItemStockDesc.endDateTime= itemVariantStock.endDateTime;
+        localItemStockDesc.endDateTime = itemVariantStock.endDateTime;
         localItemStockDesc.quantity = itemVariantStock.quantity;
         localItemStockDesc.comment = itemVariantStock.comment;
-        var stockChangeType = itemVariantStock.stockChangeType;
-        if (typeof stockChangeType == "string") {
-            stockChangeType = StockChangeType[stockChangeType];
-        }
+        var stockChangeType = StockChangeType[itemVariantStock.stockChangeType];
         localItemStockDesc.stockChangeType = stockChangeType;
-        localItemStockDesc.previousItemStockRef= itemVariantStock.previousItemStockRef;
+        localItemStockDesc.previousItemStockRef = itemVariantStock.previousItemStockRef;
         localItemStockDesc.stockChangeSaleRef = itemVariantStock.stockChangeSaleRef;
 
         var taskList = [];
@@ -168,10 +165,7 @@ export class ItemVariantStockService {
         }
         itemStock.quantity = localItemVariantStock.quantity;
         itemStock.comment = localItemVariantStock.comment;
-        var stockChangeType = localItemVariantStock.stockChangeType;
-        if (typeof stockChangeType != "string") {
-            stockChangeType = StockChangeType[stockChangeType];
-        }
+        var stockChangeType = StockChangeType[localItemVariantStock.stockChangeType];
         itemStock.stockChangeType = stockChangeType;
         itemStock.stockChangeSaleRef = localItemVariantStock.stockChangeSaleRef;
         itemStock.previousItemStockRef = localItemVariantStock.previousItemStockRef;

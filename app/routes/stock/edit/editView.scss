@@ -1,4 +1,5 @@
 @import '../../../styles/_forms';
+@import '../../../styles/_main';
 
 .stock-edit {
 
@@ -18,23 +19,25 @@
     }
     .item-stock-panel {
       .header {
-        font-size: 1.2em;
         margin: 0;
-        padding: .5em .3em;
         background-color: lightgray;
         text-align: left;
+        height: 3.5em;
 
-        .header-column {
+        >span {
           display: inline-block;
+          vertical-align: middle;
           margin: 0 .5em;
+          font-size: 1.2em;
 
-          &.currentStockAmount {
+          &.stock {
             float: right;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            margin: .5em;
             font-weight: bold;
           }
 
-          &.variantReference {
+          &.ref {
             font-size: .8em;
             font-family: monospace;
             text-align: left;

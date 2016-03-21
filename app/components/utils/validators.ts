@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 31/08/15.
  */
-import {Directive, provide, xdescribe} from 'angular2/core';
+import {Directive, provide} from 'angular2/core';
 import {Control, NG_VALIDATORS} from 'angular2/common';
 
 @Directive({
