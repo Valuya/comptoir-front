@@ -2,31 +2,31 @@
  * Created by cghislai on 28/08/15.
  */
 
-import {Component, ViewChild} from 'angular2/core';
-import {NgIf} from 'angular2/common';
-import {Router, RouteParams, Location, CanReuse} from 'angular2/router';
-
-import {LocalSale} from '../../../client/localDomain/sale';
-import {LocalItemVariant} from '../../../client/localDomain/itemVariant';
-
-import {ErrorService} from '../../../services/error';
-import {SaleService} from '../../../services/sale';
-import {AuthService} from '../../../services/auth';
-
-import {ActiveSaleService} from '../../../services/activeSale';
-import {CommandView} from '../../../components/sales/sale/commandView/commandView';
-import {PayView} from '../../../components/sales/sale/payView/payView';
-import {PosSelect} from '../../../components/pos/posSelect/posSelect';
-import {SearchResult} from "../../../client/utils/search";
+import {Component, ViewChild} from "angular2/core";
+import {NgIf} from "angular2/common";
+import {Router, RouteParams, Location, CanReuse} from "angular2/router";
+import {LocalSale} from "../../../client/localDomain/sale";
+import {LocalItemVariant} from "../../../client/localDomain/itemVariant";
+import {ErrorService} from "../../../services/error";
+import {SaleService} from "../../../services/sale";
+import {AuthService} from "../../../services/auth";
+import {ActiveSaleService} from "../../../services/activeSale";
+import {CommandView} from "../../../components/sales/sale/commandView/commandView";
+import {PayView} from "../../../components/sales/sale/payView/payView";
+import {PosSelect} from "../../../components/pos/posSelect/posSelect";
+import {SearchResult, SearchRequest} from "../../../client/utils/search";
 import {LocalStock} from "../../../client/localDomain/stock";
 import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
+import {StockService} from "../../../services/stock";
+import {StockSearch} from "../../../client/domain/stock";
+import {ChooseStocksView} from "../../../components/sales/sale/chooseStocksView/chooseStocksView";
 
 @Component({
     selector: 'sale-view',
     bindings: [ActiveSaleService],
     templateUrl: './routes/sales/sale/saleView.html',
     styleUrls: ['./routes/sales/sale/saleView.css'],
-    directives: [ItemVariantSelectView, CommandView, PayView, NgIf, PosSelect]
+    directives: [ItemVariantSelectView, CommandView, PayView, ChooseStocksView, NgIf, PosSelect]
 })
 
 export class SaleView implements CanReuse {
@@ -41,28 +41,42 @@ export class SaleView implements CanReuse {
 
     navigatingWithinSale:boolean;
     payStep:boolean;
+    stockStep:boolean;
 
     language:string;
 
     @ViewChild(PayView)
     payView:PayView;
 
+    stockRequest:SearchRequest<LocalStock>;
+    stockResult:SearchResult<LocalStock>;
+    private stockService:StockService;
+
     constructor(activeSaleService:ActiveSaleService, errorService:ErrorService,
                 authService:AuthService, saleService:SaleService,
+                stockService:StockService,
                 routeParams:RouteParams, router:Router, location:Location) {
         this.activeSaleService = activeSaleService;
         this.authService = authService;
         this.errorService = errorService;
         this.saleService = saleService;
+        this.stockService = stockService;
 
         this.routeParams = routeParams;
         this.router = router;
         this.location = location;
 
         this.navigatingWithinSale = false;
+        this.stockRequest = new SearchRequest<LocalStock>();
+        var search = new StockSearch();
+        search.companyRef = this.authService.getEmployeeCompanyRef();
+        search.active = true;
+        this.stockRequest.search = search;
+        this.stockResult = new SearchResult<LocalStock>();
     }
 
     routerOnActivate() {
+        this.searchStocks();
         return this.findSale()
             .then((sale)=> {
                 if (sale.closed) {
@@ -146,12 +160,23 @@ export class SaleView implements CanReuse {
     }
 
     onCommandPaid() {
+        if (this.stockResult.count > 1) {
+            this.stockStep = true;
+            return;
+        }
+        this.payStep = false;
+        this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+    }
+
+    onStocksValidated() {
+        this.stockStep = false;
         this.payStep = false;
         this.router.navigate(['/Sales/Sale', {id: 'new'}]);
     }
 
     onValidateChanged(validated) {
         this.payStep = validated;
+        this.stockStep = false;
     }
 
     onSaleReopened() {
@@ -202,6 +227,17 @@ export class SaleView implements CanReuse {
                     this.router.navigateByInstruction(instruction, false);
                 }
                 return sale;
+            });
+    }
+
+
+    private searchStocks() {
+        this.stockService.search(this.stockRequest)
+            .then((result)=> {
+                this.stockResult = result;
+            })
+            .catch((error)=> {
+                this.errorService.handleRequestError(error);
             });
     }
 }

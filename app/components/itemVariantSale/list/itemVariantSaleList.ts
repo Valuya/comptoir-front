@@ -2,10 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {
-    Component, Input, Output, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter,
-    OnInit
-} from "angular2/core";
+import {Component, Input, Output, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter} from "angular2/core";
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from "angular2/common";
 import {ItemVariantSale} from "../../../client/domain/itemVariantSale";
 import {Language, LocaleTexts, LocaleTextsFactory} from "../../../client/utils/lang";
@@ -16,6 +13,7 @@ import {LocalItemVariantSale} from "../../../client/localDomain/itemVariantSale"
 import {FastInput} from "../../utils/fastInput";
 import {NumberUtils} from "../../../client/utils/number";
 import {LocalSale} from "../../../client/localDomain/sale";
+import {LocalStock} from "../../../client/localDomain/stock";
 
 /****
  * Column component
@@ -43,6 +41,12 @@ export class ItemVariantSaleColumnComponent {
     editing:boolean;
     @Input()
     editingSubColumn:ItemVariantSaleColumn;
+    @Input()
+    stockList:Immutable.List<LocalStock>;
+    @Input()
+    actionsVisible:boolean;
+    @Input()
+    confirmButtonsVisible:boolean;
 
     onColumnAction(itemVariantSale:LocalItemVariantSale, column:ItemVariantSaleColumn, event, action?:string, value?:any) {
         var actionEvent = new ItemVariantSaleColumnActionEvent();
@@ -157,7 +161,15 @@ export class ItemVariantSaleList {
     @Input()
     footerTotalColIndex:number;
     @Input()
+    actionsVisible:boolean = true;
+    @Input()
+    confirmButtonsVisible:boolean = true;
+    @Input()
     editable:boolean;
+    @Input()
+    editableColumns:Immutable.List<ItemVariantSaleColumn>;
+    @Input()
+    stockList:Immutable.List<LocalStock>;
 
     @Output()
     rowClicked = new EventEmitter();
@@ -176,6 +188,19 @@ export class ItemVariantSaleList {
         this.language = authService.getEmployeeLanguage();
     }
 
+    isColumnEditable(column:ItemVariantSaleColumn) {
+        if (this.editable) {
+            return true;
+        }
+        if (column == ItemVariantSaleColumn.ACTIONS) {
+            return true;
+        }
+        if (this.editableColumns == null) {
+            return false;
+        }
+        return this.editableColumns.contains(column);
+    }
+
     onItemVariantSaleClick(item:ItemVariantSale, event) {
         this.rowClicked.emit(item);
         event.stopPropagation();
@@ -183,7 +208,8 @@ export class ItemVariantSaleList {
     }
 
     onColumnAction(event:ItemVariantSaleColumnActionEvent) {
-        if (this.editable) {
+        var column = event.column;
+        if (this.isColumnEditable(column)) {
             var action = event.action;
             switch (action) {
                 case ItemVariantSaleColumnAction.EDIT:
@@ -236,6 +262,8 @@ export class ItemVariantSaleList {
         if (event.column == ItemVariantSaleColumn.ACTIONS) {
             var input = this.doFindInput(event.value);
             if (input == null) {
+                // for non-fast-input component, we update the item directly
+                this.onColumnCancelAction();
                 return;
             }
             input.dispatchEvent(FastInput.VALIDATE_EVENT);
@@ -261,6 +289,11 @@ export class ItemVariantSaleList {
             case ItemVariantSaleColumn.DISCOUNT_TOTAL_PRICE:
             {
                 itemVariantSale = this.updateDiscount(itemVariantSale, value);
+                break;
+            }
+            case ItemVariantSaleColumn.STOCK:
+            {
+                itemVariantSale = this.updateStock(itemVariantSale, value);
             }
         }
         this.cancelEdit();
@@ -363,6 +396,13 @@ export class ItemVariantSaleList {
         }
         var discountRatio = NumberUtils.toFixedDecimals(discountPercentage / 100, 2);
         return <LocalItemVariantSale>localItemVariantSale.set('discountRatio', discountRatio);
+    }
+
+    updateStock(localItemVariantSale:LocalItemVariantSale, stockId: number):LocalItemVariantSale {
+        var stock = this.stockList.toSeq().filter((listStock)=>{
+            return listStock.id == stockId;
+        }).first();
+        return <LocalItemVariantSale>localItemVariantSale.set('stock', stock);
     }
 
 }

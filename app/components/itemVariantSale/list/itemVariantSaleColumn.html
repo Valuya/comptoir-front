@@ -87,13 +87,12 @@
     </template>
     <template [ngSwitchWhen]="'quantity' ">
          <span class="quantity"
-               [class.unneeded]="itemVariantSale.quantity <= 1 && !editing"
                [class.nolink]="!editable">
             <span [hidden]="editing">
                   <a class="quantityLink"
                      (click)="onColumnAction(itemVariantSale, column, $event, 'EDIT')"
                      [class.actionLink]="editable">
-                      {{ itemVariantSale.quantity}} x
+                      {{ itemVariantSale.quantity}}
                   </a>
             </span>
             <span *ngIf="editing">
@@ -234,7 +233,28 @@
     </template>
     <template [ngSwitchWhen]="'stock' ">
         <span class="stock">
-             {{ itemVariantSale.stock.description[lang.locale] }}
+            <span [hidden]="editing">
+                 <a class="stockLink"
+                    [class.nolink]="!editable"
+                    [class.actionLink]="editable"
+                    (click)="onColumnAction(itemVariantSale, column, $event, 'EDIT')">
+                     <span *ngIf="itemVariantSale.stock != null">
+                       {{ itemVariantSale.stock.description[lang.locale] }}
+                     </span>
+                     <span [hidden]="itemVariantSale.stock != null">
+                         Aucun
+                     </span>
+                 </a>
+            </span>
+            <span *ngIf="editing">
+                <select [ngModel]="itemVariantSale.stock?.id"
+                        (input)="onColumnAction(itemVariantSale, column, $event, 'CONFIRM', $event.target.value)">
+                    <option *ngFor="#stock of stockList"
+                            [value]="stock.id">
+                        {{ stock.description[lang.locale] }}
+                    </option>
+                </select>
+            </span>
         </span>
     </template>
     <template [ngSwitchWhen]="'sale' ">
@@ -244,7 +264,7 @@
     </template>
     <template [ngSwitchWhen]="'actions' ">
         <span class="actions">
-            <span [hidden]="editing">
+            <span [hidden]="editing || !actionsVisible">
                  <a class="actionIcon remove"
                     (click)="onColumnAction(itemVariantSale, column, $event, 'REMOVE')">
                      <i class="fa fa-minus red"></i>
@@ -260,7 +280,7 @@
                      <i class="fa fa-comment"></i>
                  </a>
             </span>
-            <span [hidden]="!editing">
+            <span [hidden]="!editing || !confirmButtonsVisible">
                  <a class="actionIcon noBlur validate"
                     (click)="onColumnAction(itemVariantSale, column, $event, 'CONFIRM', colDiv)">
                      <i class="fa fa-check green"></i>

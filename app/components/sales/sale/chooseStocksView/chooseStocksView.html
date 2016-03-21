@@ -1,0 +1,18 @@
+<div class="stockEditView">
+    <div class="coloredHeader">
+        <h1>Choix des stocks</h1>
+        <div class="actions">
+            <div class="action validate" (click)="doValidate()">Valider</div>
+        </div>
+    </div>
+
+    <item-variant-sale-list [rowSelectable]="false"
+                            [headersVisible]="true"
+                            [footerVisible]="false"
+                            [columns]="variantSaleColumns"
+                            [itemVariantSaleList]="activeSaleService.saleItemsResult.list"
+                            [editableColumns]="editableColumns"
+                            [stockList]="stockList"
+                            (variantUpdated)="onVariantUpdated($event)"></item-variant-sale-list>
+
+</div>

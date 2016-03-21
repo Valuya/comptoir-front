@@ -36,9 +36,14 @@
                     {{ -toPayAmount  | currency:'EUR':true:'.2-2'}}
                 </span>
                 <span class="action validateLink"
-                      [hidden]="noInput"
+                      [hidden]="noInput || stockList.size > 1"
                       (click)="onValidateClicked()">
                     Valider
+                </span>
+                <span class="action stockLink"
+                      [hidden]="noInput || stockList.size <= 1"
+                      (click)="onChooseStockClicked()">
+                    Choix des stocks
                 </span>
             </span>
         </div>

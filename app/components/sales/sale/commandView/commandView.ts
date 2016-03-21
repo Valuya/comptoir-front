@@ -2,24 +2,20 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, EventEmitter,ChangeDetectionStrategy, Output} from 'angular2/core';
-import {NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/common';
-import * as Immutable from 'immutable';
-
-import {LocalSale} from '../../../../client/localDomain/sale';
-import {LocalItemVariantSale} from '../../../../client/localDomain/itemVariantSale';
-
-import {LocaleTexts, Language} from '../../../../client/utils/lang';
-import {NumberUtils} from '../../../../client/utils/number';
-
-import {ActiveSaleService} from '../../../../services/activeSale';
-import {ErrorService} from '../../../../services/error';
-import {AuthService} from '../../../../services/auth';
-
-import {FastInput} from '../../../utils/fastInput';
+import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from "angular2/core";
+import {NgIf, FORM_DIRECTIVES} from "angular2/common";
+import * as Immutable from "immutable";
+import {LocalSale} from "../../../../client/localDomain/sale";
+import {LocalItemVariantSale} from "../../../../client/localDomain/itemVariantSale";
+import {NumberUtils} from "../../../../client/utils/number";
+import {ActiveSaleService} from "../../../../services/activeSale";
+import {ErrorService} from "../../../../services/error";
+import {FastInput} from "../../../utils/fastInput";
 import {
-    ItemVariantSaleColumn, ItemVariantSaleList,
-    ItemVariantSaleColumnAction, ItemVariantSaleColumnActionEvent
+    ItemVariantSaleColumn,
+    ItemVariantSaleList,
+    ItemVariantSaleColumnAction,
+    ItemVariantSaleColumnActionEvent
 } from "../../../itemVariantSale/list/itemVariantSaleList";
 
 @Component({
@@ -117,7 +113,6 @@ export class CommandViewHeader {
 // The component
 @Component({
     selector: 'command-view',
-    inputs: ['noInput', 'validated', 'newSale'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/commandView/commandView.html',
     styleUrls: ['./components/sales/sale/commandView/commandView.css'],
@@ -127,13 +122,12 @@ export class CommandView {
     activeSaleService:ActiveSaleService;
     errorService:ErrorService;
 
-    validated:boolean = false;
+    @Input()
     newSale:boolean = false;
-    editingReference:boolean;
-    editingDateTime:boolean;
+    @Input()
     noInput:boolean;
-    newSaleReference:string;
-    newSaleDateTimeString:string;
+    @Input()
+    validated:boolean = false;
     @Output()
     saleEmptied = new EventEmitter();
     @Output()
@@ -141,14 +135,17 @@ export class CommandView {
     @Output()
     reopened = new EventEmitter();
 
+    editingReference:boolean;
+    editingDateTime:boolean;
+    newSaleReference:string;
+    newSaleDateTimeString:string;
 
-    variantSaleColumns: Immutable.List<ItemVariantSaleColumn>;
+    variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
 
     constructor(saleService:ActiveSaleService,
                 errorService:ErrorService) {
         this.activeSaleService = saleService;
         this.errorService = errorService;
-
         this.variantSaleColumns = Immutable.List([
             ItemVariantSaleColumn.VARIANT_REF,
             ItemVariantSaleColumn.VARIANT_NAME_COMMENT,
@@ -161,29 +158,19 @@ export class CommandView {
     onValidateChanged(validated) {
         if (validated) {
             this.activeSaleService.searchPaidAmount();
-            // Drop action column
-            this.variantSaleColumns = this.variantSaleColumns.pop();
-        } else {
-            this.variantSaleColumns = Immutable.List([
-                ItemVariantSaleColumn.VARIANT_REF,
-                ItemVariantSaleColumn.VARIANT_NAME_COMMENT,
-                ItemVariantSaleColumn.QUANTITY_PRICE,
-                ItemVariantSaleColumn.DISCOUNT_TOTAL_PRICE,
-                ItemVariantSaleColumn.ACTIONS
-            ]);
         }
         this.validated = validated;
         this.validateChanged.emit(validated);
     }
 
-    onVariantUpdated(variant: LocalItemVariantSale) {
+    onVariantUpdated(variant:LocalItemVariantSale) {
         this.activeSaleService.doUpdateItem(variant)
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
     }
 
-    onColumnAction(event: ItemVariantSaleColumnActionEvent) {
+    onColumnAction(event:ItemVariantSaleColumnActionEvent) {
         var variantSale = event.itemVariantSale;
         var action = event.action;
         if (action == ItemVariantSaleColumnAction.REMOVE) {
@@ -217,6 +204,7 @@ export class CommandView {
         this.editingReference = false;
         this.newSaleReference = null;
     }
+
     onCancelNewReference() {
         this.editingReference = false;
         this.newSaleReference = null;
@@ -227,7 +215,7 @@ export class CommandView {
             return;
         }
         var dateTime = this.activeSaleService.sale.dateTime;
-        var isoString  = dateTime.toISOString();
+        var isoString = dateTime.toISOString();
         // input[type=datetime-local] required in chrome for the calendar widget.
         // On the other hand, this does not accept timezone values, so strip it off
         var zIndex = isoString.indexOf('Z');
@@ -241,6 +229,7 @@ export class CommandView {
         this.editingDateTime = false;
         this.newSaleDateTimeString = null;
     }
+
     onCancelNewDateTime() {
         this.editingDateTime = false;
         this.newSaleDateTimeString = null;

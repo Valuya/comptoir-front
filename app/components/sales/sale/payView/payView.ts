@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from 'angular2/core';
 import {NgFor, NgIf} from 'angular2/common';
 
 import {LocalSale} from '../../../../client/localDomain/sale';
@@ -18,11 +18,10 @@ import {AuthService} from '../../../../services/auth';
 
 import {FastInput} from '../../../utils/fastInput';
 import * as Immutable from 'immutable';
+import {LocalStock} from "../../../../client/localDomain/stock";
 
 @Component({
     selector: 'pay-view',
-    outputs: ['paid'],
-    inputs: ['saleTotal', 'paidAmount', 'noInput', 'sale', 'accountingEntries'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/payView/payView.html',
     styleUrls: ['./components/sales/sale/payView/payView.css'],
@@ -33,15 +32,25 @@ export class PayView {
     errorService:ErrorService;
     activeSaleService:ActiveSaleService;
 
+    @Input()
+    noInput:boolean;
+    @Input()
+    saleTotal:number;
+    @Input()
+    paidAmount:number;
+    @Input()
+    sale:LocalSale;
+    @Input()
+    stockList: Immutable.List<LocalStock>;
+    @Input()
+    accountingEntries:Immutable.List<LocalAccountingEntry>;
+
+    @Output()
+    paid = new EventEmitter();
+
     editingEntry:LocalAccountingEntry;
     language:Language;
-    noInput:boolean;
-    saleTotal:number;
-    paidAmount:number;
-    sale:LocalSale;
-    accountingEntries:Immutable.List<LocalAccountingEntry>;
     accountList:Immutable.List<LocalAccount>;
-    paid = new EventEmitter();
 
     constructor(activeSaleService:ActiveSaleService,
                 errorService:ErrorService, authService:AuthService) {
@@ -144,6 +153,12 @@ export class PayView {
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
-        this.paid.next(true);
+        this.paid.emit(true);
     }
+
+    onChooseStockClicked() {
+        this.cancelEditEntry();
+        this.paid.emit(true);
+    }
+
 }

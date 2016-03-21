@@ -2,11 +2,11 @@
     <div class="header" [hidden]="saleClosed">
         <span>Point de vente :</span>
         <span><pos-select (posChanged)="onPosChanged($event)"
-                [editable]="!saleClosed"></pos-select></span>
+                          [editable]="!saleClosed"></pos-select></span>
     </div>
     <div class="wrapper">
-        <div class="saleViewContainer" [class.slide-left]="payStep"  [class.no-anim]="saleClosed || newSale">
-            <div class="itemList" >
+        <div class="saleViewContainer" [class.slide-left]="payStep" [class.no-anim]="saleClosed || newSale">
+            <div class="itemList">
                 <div>
                     <item-variant-select
                             id="saleItemList"
@@ -14,26 +14,33 @@
                     </item-variant-select>
                 </div>
             </div>
-            <div class="commandView" >
+            <div class="commandView">
                 <div>
-                    <command-view id="saleCommandView"  *ngIf="activeSaleService.sale != null"
-                                 (saleEmptied)="onSaleEmptied()"
-                                 (validateChanged)="onValidateChanged($event)"
-                                 (reopened)="onSaleReopened()"
-                                 [newSale]="newSale"
-                                 [validated]="payStep"
-                                 [noInput]="saleClosed"></command-view>
+                    <command-view id="saleCommandView" *ngIf="activeSaleService.sale != null"
+                                  (saleEmptied)="onSaleEmptied()"
+                                  (validateChanged)="onValidateChanged($event)"
+                                  (reopened)="onSaleReopened()"
+                                  [newSale]="newSale"
+                                  [validated]="payStep"
+                                  [noInput]="saleClosed"></command-view>
                 </div>
             </div>
             <div class="payView">
                 <div>
-                    <pay-view id="salePayView"  *ngIf="activeSaleService.sale != null"
-                             [saleTotal]="activeSaleService.getSaleTotalAmount()"
-                             [paidAmount]="activeSaleService.paidAmount"
-                             [sale]="activeSaleService.sale"
-                             [accountingEntries]="activeSaleService.accountingEntriesResult.list"
-                             (paid)="onCommandPaid()"
-                             [noInput]="saleClosed"></pay-view>
+                    <pay-view id="salePayView" *ngIf="activeSaleService.sale != null"
+                              [hidden]="stockStep"
+                              [saleTotal]="activeSaleService.getSaleTotalAmount()"
+                              [paidAmount]="activeSaleService.paidAmount"
+                              [sale]="activeSaleService.sale"
+                              [accountingEntries]="activeSaleService.accountingEntriesResult.list"
+                              (paid)="onCommandPaid()"
+                              [stockList]="stockResult.list"
+                              [noInput]="saleClosed"></pay-view>
+                    <choose-stock-view id="chooseStockView" *ngIf="activeSaleService.sale != null"
+                                       [hidden]="!stockStep"
+                                       [stockList]="stockResult.list"
+                                       (validated)="onStocksValidated()"
+                    ></choose-stock-view>
                 </div>
             </div>
         </div>

@@ -176,7 +176,11 @@ export class ActiveSaleService {
             }),
             this.itemVariantSaleService.fetch(item.id)
                 .then((fetchedItem)=> {
-                    this.updateSaleItem(fetchedItem);
+                    if (item.id != null) {
+                        return this.updateSaleItem(fetchedItem);
+                    } else {
+                        return this.doSearchSaleItems();
+                    }
                 })
         ];
         return Promise.all(taskList);
@@ -210,11 +214,6 @@ export class ActiveSaleService {
                 vatRate: itemVariant.item.vatRate
             };
             itemSale = LocalItemVariantSaleFactory.createNewItemVariantSale(itemSaleDesc);
-
-            if (this.saleItemsResult != null) {
-                this.saleItemsResult.list = this.saleItemsResult.list.push(itemSale);
-                this.saleItemsResult.count++;
-            }
         } else {
             var oldQuantity = itemSale.quantity;
             var newQuantity = oldQuantity + 1;
@@ -224,6 +223,12 @@ export class ActiveSaleService {
         return this.itemVariantSaleService.save(itemSale)
             .then((ref)=> {
                 var newItemSale = <LocalItemVariantSale>itemSale.set('id', ref.id);
+                if (multipleSale) {
+                    if (this.saleItemsResult != null) {
+                        this.saleItemsResult.list = this.saleItemsResult.list.push(newItemSale);
+                        this.saleItemsResult.count++;
+                    }
+                }
                 return this.fetchSaleAndItem(newItemSale);
             });
     }

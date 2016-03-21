@@ -10,17 +10,24 @@
       white-space: nowrap;
 
       &.variantName, &.variantNameComment {
-        max-width: 5em;
+        min-width: 5em;
+        max-width: 12em;
       }
       &.quantity {
         padding-right: 1em;
       }
-      &.actions {
+      &.actions:not(.noactions) {
         width: 4em;
       }
       &.totalPrice, &.discountTotalPrice {
         width: 1%;
         padding: 0 .5em;
+      }
+      &.stock {
+        width: 10em;
+      }
+      &.quantityPrice {
+        min-width: 6em;
       }
 
       .nolink {
@@ -105,17 +112,21 @@
   }
 
   .comment {
+    font-size: .8em;
+    font-weight: normal;
+    @media screen {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .commentLink {
+      color: gray !important;
       &.unneeded {
         display: none;
       }
-
     }
-    a {
-      color: gray !important;
+    input {
+      width: 98%;
     }
-    font-size: .8em;
-    font-weight: normal;
   }
 
   .quantityPrice {
