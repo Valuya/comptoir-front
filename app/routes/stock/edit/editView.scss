@@ -28,13 +28,13 @@
           display: inline-block;
           margin: 0 .5em;
 
-          &.current-stock {
+          &.currentStockAmount {
             float: right;
             font-size: 1.2em;
             font-weight: bold;
           }
 
-          .ref {
+          &.variantReference {
             font-size: .8em;
             font-family: monospace;
             text-align: left;

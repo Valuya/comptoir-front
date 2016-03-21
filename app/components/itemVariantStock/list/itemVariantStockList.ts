@@ -156,13 +156,13 @@ export class ItemVariantStockColumn {
         ItemVariantStockColumn.START_DATE.name = 'startDate';
         ItemVariantStockColumn.START_DATE.alignCenter = true;
         ItemVariantStockColumn.START_DATE.title = LocaleTextsFactory.toLocaleTexts({
-            'fr': 'Du'
+            'fr': 'Date'
         });
         ItemVariantStockColumn.END_DATE = new ItemVariantStockColumn();
         ItemVariantStockColumn.END_DATE.name = 'endDate';
         ItemVariantStockColumn.END_DATE.alignCenter = true;
         ItemVariantStockColumn.END_DATE.title = LocaleTextsFactory.toLocaleTexts({
-            'fr': 'Au'
+            'fr': 'Fin'
         });
         ItemVariantStockColumn.QUANTITY = new ItemVariantStockColumn();
         ItemVariantStockColumn.QUANTITY.name = 'quantity';
@@ -178,12 +178,12 @@ export class ItemVariantStockColumn {
         ItemVariantStockColumn.ITEM_VARIANT = new ItemVariantStockColumn();
         ItemVariantStockColumn.ITEM_VARIANT.name = 'variant';
         ItemVariantStockColumn.ITEM_VARIANT.title = LocaleTextsFactory.toLocaleTexts({
-            'fr': 'Variante'
+            'fr': 'Variante (ref)'
         });
         ItemVariantStockColumn.STOCK = new ItemVariantStockColumn();
         ItemVariantStockColumn.STOCK.name = 'stock';
         ItemVariantStockColumn.STOCK.title = LocaleTextsFactory.toLocaleTexts({
-            'fr': 'Stock'
+            'fr': 'Stock (ref)'
         });
     }
 }

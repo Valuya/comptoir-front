@@ -26,8 +26,7 @@
              *ngIf="itemVariant != null">
             <div class="header">
                 <span *ngFor="#column of itemVariantHeaderColumns"
-                      class="header-column"
-                      [class.current-stock]="column.name == 'currentStockAmount'">
+                      class="header-column {{column.name}}">
                 <item-variant-column [itemVariant]="itemVariant"
                                      [column]="column"
                                      [lang]="displayLanguage"></item-variant-column>
@@ -44,7 +43,8 @@
                             <label for="initialQuantity">Quantité:</label>
                             <input id="initialQuantity" type="number"
                                    min="0" step="1"
-                                   required validate-required
+                                   ngControl="quantity"
+                                   validate-required
                                    [(ngModel)]="editingVariantStockDesc.quantity">
                         </div>
                     </div>
@@ -72,12 +72,14 @@
                             <label for="quantity">Quantité:</label>
                             <input id="quantity" type="number"
                                    min="0" step="1"
-                                   required validate-required
+                                   ngControl="quantity"
+                                   validate-required
                                    [(ngModel)]="editingVariantStockDesc.quantity">
                         </div>
                         <div>
                             <label for="comment">Commentaire:</label>
                             <input id="comment"
+                                   ngControl="comment"
                                    required validate-required
                                    [(ngModel)]="editingVariantStockDesc.comment">
                         </div>
