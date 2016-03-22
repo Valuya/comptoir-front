@@ -41,6 +41,9 @@
                     {{ itemVariant.item.name[displayLanguage.locale] }}
                 </span>
                 <span class="stock">
+                    <img class="busy"
+                         src="res/img/spinner-2-black.gif"
+                         [hidden]="!itemVariantStockRequest.busy">
                     {{ itemVariantCurrentStock?.quantity }}
                 </span>
             </div>
@@ -68,6 +71,12 @@
                     </div>
                 </form>
             </div>
+
+            <paginator *ngIf="itemVariantStockResult != undefined"
+                       [totalCount]="itemVariantStockResult.count"
+                       [pageSize]="itemsPerPage"
+                       [showPrevNextLink]="true" [showFirstLastLink]="true"
+                       (pageChange)="onPageChanged($event)"></paginator>
 
             <div [hidden]="itemVariantStockResult.count < 1">
                 <item-variant-stock-list [columns]="variantStockListColumns"

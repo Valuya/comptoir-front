@@ -21,13 +21,14 @@ import {
 import {StockRef} from "../../../client/domain/stock";
 import {ItemVariantRef} from "../../../client/domain/itemVariant";
 import {ItemVariantStockService} from "../../../services/itemVariantStock";
-import {PaginationFactory} from "../../../client/utils/pagination";
+import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../../client/utils/pagination";
 import {ItemVariantColumn, ItemVariantColumnComponent} from "../../../components/itemVariant/list/itemVariantList";
 import {
     ItemVariantStockColumn,
     ItemVariantStockList
 } from "../../../components/itemVariantStock/list/itemVariantStockList";
 import {RequiredValidator} from "../../../components/utils/validators";
+import {Paginator} from "../../../components/utils/paginator/paginator";
 
 @Component({
     selector: 'edit-stock',
@@ -35,6 +36,7 @@ import {RequiredValidator} from "../../../components/utils/validators";
     styleUrls: ['./routes/stock/edit/editView.css'],
     directives: [NgIf, NgFor, RouterLink, NgForm, StockEditComponent,
         ItemVariantSelectView, ItemVariantColumnComponent,
+        Paginator,
         ItemVariantStockList, RequiredValidator, FORM_DIRECTIVES]
 })
 export class EditStockView {
@@ -54,6 +56,7 @@ export class EditStockView {
     editingVariantStockDesc: any;
 
     variantStockListColumns:  Immutable.List<ItemVariantStockColumn>;
+    itemsPerPage = 10;
 
     constructor(stockService:StockService, authService:AuthService,
                 errorService:ErrorService,
@@ -82,7 +85,7 @@ export class EditStockView {
         };
         var pagination = PaginationFactory.Pagination({
             firstIndex: 0,
-            pageSize: 10,
+            pageSize: this.itemsPerPage,
             sorts: sorts
         });
         this.itemVariantStockRequest.pagination = pagination;
@@ -174,6 +177,12 @@ export class EditStockView {
                 this.searchVariantStocks();
             });
     }
+
+    onPageChanged(pageChange:PageChangeEvent) {
+        this.itemVariantStockRequest.pagination = ApplyPageChangeEvent(this.itemVariantStockRequest.pagination, pageChange);
+        this.searchVariantStocks();
+    }
+
 
     onCreateAdjustmentStock() {
         this.editingVariantStockDesc.stockChangeType = StockChangeType.ADJUSTMENT;
