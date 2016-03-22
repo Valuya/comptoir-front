@@ -2,31 +2,24 @@
  * Created by cghislai on 22/09/15.
  */
 
-import {Injectable} from 'angular2/core';
-
-import {Sale, SaleRef} from '../client/domain/sale';
-import {Account, AccountSearch} from '../client/domain/account';
-import {AccountingEntry, AccountingEntrySearch} from '../client/domain/accountingEntry';
-import {AccountingTransactionRef} from '../client/domain/accountingTransaction';
-import {ItemVariantSale, ItemVariantSaleSearch} from '../client/domain/itemVariantSale';
-import {Pos, PosRef} from '../client/domain/pos';
-
-import {LocalAccount, LocalAccountFactory} from '../client/localDomain/account';
-import {LocalAccountingEntry, LocalAccountingEntryFactory} from '../client/localDomain/accountingEntry';
-import {LocalSale, LocalSaleFactory} from '../client/localDomain/sale';
-import {LocalItemVariant, LocalItemVariantFactory} from '../client/localDomain/itemVariant';
-import {LocalItemVariantSale, LocalItemVariantSaleFactory} from '../client/localDomain/itemVariantSale';
-
-import {SearchRequest, SearchResult} from '../client/utils/search';
-import {LocaleTextsFactory} from '../client/utils/lang';
-
-import {AuthService} from './auth';
-import {AccountService} from './account';
-import {AccountingEntryService} from './accountingEntry';
-import {SaleService} from './sale';
-import {ItemVariantSaleService} from './itemVariantSale';
-import {LocalStock} from "../client/localDomain/stock";
-import {StockSearch} from "../client/domain/stock";
+import {Injectable} from "angular2/core";
+import {SaleRef} from "../client/domain/sale";
+import {AccountSearch} from "../client/domain/account";
+import {AccountingEntrySearch} from "../client/domain/accountingEntry";
+import {ItemVariantSaleSearch} from "../client/domain/itemVariantSale";
+import {Pos, PosRef} from "../client/domain/pos";
+import {LocalAccount} from "../client/localDomain/account";
+import {LocalAccountingEntry} from "../client/localDomain/accountingEntry";
+import {LocalSale, LocalSaleFactory} from "../client/localDomain/sale";
+import {LocalItemVariant, LocalItemVariantFactory} from "../client/localDomain/itemVariant";
+import {LocalItemVariantSale, LocalItemVariantSaleFactory} from "../client/localDomain/itemVariantSale";
+import {SearchRequest, SearchResult} from "../client/utils/search";
+import {LocaleTextsFactory} from "../client/utils/lang";
+import {AuthService} from "./auth";
+import {AccountService} from "./account";
+import {AccountingEntryService} from "./accountingEntry";
+import {SaleService} from "./sale";
+import {ItemVariantSaleService} from "./itemVariantSale";
 import {StockService} from "./stock";
 
 @Injectable()
@@ -51,7 +44,7 @@ export class ActiveSaleService {
 
     constructor(authService:AuthService,
                 accountService:AccountService,
-                stockService: StockService,
+                stockService:StockService,
                 accountingEntryService:AccountingEntryService,
                 saleService:SaleService,
                 itemVariantSaleService:ItemVariantSaleService) {
@@ -152,7 +145,7 @@ export class ActiveSaleService {
             });
     }
 
-    public doReopensale() : Promise<any> {
+    public doReopensale():Promise<any> {
         if (this.sale == null) {
             throw 'no sale';
         }
@@ -161,12 +154,10 @@ export class ActiveSaleService {
         }
         var authToken = this.authService.authToken;
         this.sale = <LocalSale>this.sale.set('closed', false);
-        return Promise.resolve(this.sale);
-        /* TODO
-        return this.saleService.closeSale(this.sale.id, authToken)
-            .then(()=> {
-                this.getNewSale();
-            });*/
+        return this.saleService.reopenSale(this.sale.id)
+            .then((ref)=> {
+                return this.getSale(ref.id);
+            });
     }
 
     public fetchSaleAndItem(item:LocalItemVariantSale):Promise<any[]> {
@@ -249,7 +240,7 @@ export class ActiveSaleService {
                 ];
                 return Promise.all(taskList);
             })
-            .then(()=>{
+            .then(()=> {
                 return this.getSaleTotalAmount();
             })
     }
@@ -359,14 +350,14 @@ export class ActiveSaleService {
         return total;
     }
 
-    public doSetSaleReference(reference: string): Promise<any> {
+    public doSetSaleReference(reference:string):Promise<any> {
         var newSale = <LocalSale>this.sale.set('reference', reference);
         this.sale = newSale;
         return this.doUpdateSale();
     }
 
 
-    public doSetSaleDateTime(dateTime: Date): Promise<any> {
+    public doSetSaleDateTime(dateTime:Date):Promise<any> {
         var newSale = <LocalSale>this.sale.set('dateTime', dateTime);
         this.sale = newSale;
         return this.doUpdateSale();

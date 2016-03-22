@@ -115,6 +115,22 @@ export class SaleService {
             .toPromise();
     }
 
+    reopenSale(id:number):Promise<SaleRef> {
+        var url = this.saleClient.webServiceUrl + this.saleClient.resourcePath + '/' + id + '/state/OPEN';
+        var options = WsUtils.getRequestOptions(this.getAuthToken());
+        options.method = 'PUT';
+        options.url = url;
+        var request = this.http.request(new Request(options));
+
+        return request
+            .map(response=> {
+                var saleRef =  <SaleRef>response.json();
+                this.saleClient.doClear(saleRef.id);
+                return saleRef;
+            })
+            .toPromise();
+    }
+
     getTotalPayed(id:number, authToken:string):Promise<number> {
         var url = this.saleClient.webServiceUrl + this.saleClient.resourcePath + '/' + id + '/payed';
         var options = WsUtils.getRequestOptions(this.getAuthToken());
