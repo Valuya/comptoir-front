@@ -114,13 +114,13 @@ export class ItemList implements OnInit {
     }
 
     private selectPrevious(element:HTMLElement ) {
-        var previous = element.previousElementSibling;
+        var previous = <HTMLElement>element.previousElementSibling;
         if (previous) {
             previous.focus();
         }
     }
     private selectNext(element:HTMLElement ) {
-        var next = element.nextElementSibling;
+        var next = <HTMLElement>element.nextElementSibling;
         if (next) {
             next.focus();
         }
@@ -129,7 +129,7 @@ export class ItemList implements OnInit {
 
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

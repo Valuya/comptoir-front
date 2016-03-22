@@ -1,5 +1,5 @@
 <div class="itemList">
-    <header class="coloredHeader">
+    <header [class.coloredHeader]="coloredHeader">
         <div class="filter">
             <input #filter id="itemListFilterInput"
                 [(ngModel)]="inputFieldValue"
@@ -24,14 +24,14 @@
                    [columns]="columns"
                    [items]="searchResult.list"
                    [rowSelectable]="true"
-                   [headersVisible]="false"
+                   [headersVisible]="tableHeaders"
                    (rowClicked)="onItemClicked($event)"></item-list>
 
         <item-variant-list [hidden]="!variantSelection"
                            [columns]="variantColumns"
                            [items]="variantResult.list"
                            [rowSelectable]="true"
-                           [headersVisible]="false"
+                           [headersVisible]="tableHeaders"
                            (rowClicked)="onVariantSelected($event)"></item-variant-list>
     </div>
 </div>

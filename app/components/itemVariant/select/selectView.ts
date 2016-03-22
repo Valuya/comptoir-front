@@ -9,7 +9,7 @@ import {
     Output,
     ViewChild,
     ElementRef,
-    AfterViewInit
+    AfterViewInit, Input
 } from "angular2/core";
 import {NgFor, NgIf} from "angular2/common";
 import {ItemVariantList, ItemVariantColumn} from "../list/itemVariantList";
@@ -47,6 +47,11 @@ export class ItemVariantSelectView implements AfterViewInit {
     itemClicked = new EventEmitter();
     @Output()
     variantSelected = new EventEmitter();
+    @Input()
+    coloredHeader: boolean = true;
+    @Input()
+    tableHeaders: boolean;
+
     keyboardTimeout:number = 200;
     searchRequest:SearchRequest<LocalItem>;
     searchResult:SearchResult<LocalItem>;
@@ -112,7 +117,10 @@ export class ItemVariantSelectView implements AfterViewInit {
             return;
         }
         Observable.fromEvent(this.inputFieldResult.nativeElement, 'keyup')
-            .map((event:KeyboardEvent) => event.target.value)
+            .map((event:KeyboardEvent) => {
+                var target = <HTMLInputElement>event.target;
+                return target.value;
+            })
             .distinctUntilChanged()
             .debounceTime(this.keyboardTimeout)
             .subscribe((value:string)=> {

@@ -24,6 +24,8 @@
         <div class="item-select-panel"
              [hidden]="stock?.id == null">
             <item-variant-select [stock]="stock"
+                                 [coloredHeader]="false"
+                                 [tableHeaders]="true"
                                  (variantSelected)="onVariantSelected($event)"
             ></item-variant-select>
         </div>
