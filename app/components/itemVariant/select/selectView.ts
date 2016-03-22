@@ -6,7 +6,7 @@ import {
     Component,
     EventEmitter,
     ChangeDetectionStrategy,
-    Input, Output,
+    Output,
     ViewChild,
     ElementRef,
     AfterViewInit
@@ -14,8 +14,6 @@ import {
 import {NgFor, NgIf} from "angular2/common";
 import {ItemVariantList, ItemVariantColumn} from "../list/itemVariantList";
 import {ItemList, ItemColumn} from "../../item/list/itemList";
-import {FocusableDirective} from "../../utils/focusable";
-import {AutoFocusDirective} from "../../utils/autoFocus";
 import {ItemService} from "../../../services/item";
 import {ItemVariantService} from "../../../services/itemVariant";
 import {ItemVariantStockService} from "../../../services/itemVariantStock";
@@ -24,7 +22,6 @@ import {AuthService} from "../../../services/auth";
 import {LocalItem} from "../../../client/localDomain/item";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
 import {LocalItemVariant} from "../../../client/localDomain/itemVariant";
-import {LocalStock} from "../../../client/localDomain/stock";
 import {ItemSearch, ItemRef} from "../../../client/domain/item";
 import {PaginationFactory} from "../../../client/utils/pagination";
 import {ItemVariantSearch} from "../../../client/domain/itemVariant";
@@ -36,7 +33,7 @@ import {Observable} from "rxjs/Observable";
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/itemVariant/select/selectView.html',
     styleUrls: ['./components/itemVariant/select/selectView.css'],
-    directives: [NgFor, NgIf, AutoFocusDirective, FocusableDirective, ItemList, ItemVariantList]
+    directives: [NgFor, NgIf, ItemList, ItemVariantList]
 })
 
 export class ItemVariantSelectView implements AfterViewInit {
@@ -62,6 +59,7 @@ export class ItemVariantSelectView implements AfterViewInit {
 
     @ViewChild('filter')
     inputFieldResult:ElementRef;
+    inputFieldValue:string;
 
     constructor(errorService:ErrorService, itemService:ItemService,
                 itemVariantStockService:ItemVariantStockService,
@@ -114,15 +112,17 @@ export class ItemVariantSelectView implements AfterViewInit {
             return;
         }
         Observable.fromEvent(this.inputFieldResult.nativeElement, 'keyup')
-            .map(() => this.searchRequest.search.multiSearch)
-            .debounceTime(this.keyboardTimeout)
+            .map((event:KeyboardEvent) => event.target.value)
             .distinctUntilChanged()
-            .subscribe((value: string)=> {
+            .debounceTime(this.keyboardTimeout)
+            .subscribe((value:string)=> {
                 this.applyFilter(value);
             });
+        this.focus();
     }
 
-    searchItems(): Promise<any> {
+
+    searchItems():Promise<any> {
         return this.itemService.search(this.searchRequest)
             .then((result)=> {
                 this.searchResult = result;
@@ -132,9 +132,9 @@ export class ItemVariantSelectView implements AfterViewInit {
             });
     }
 
-    searchItemVariants(): Promise<any> {
+    searchItemVariants():Promise<any> {
         return this.itemVariantService.search(this.variantRequest)
-            .then((result)=>{
+            .then((result)=> {
                 this.variantResult = result;
             })
             .catch((error)=> {
@@ -159,6 +159,11 @@ export class ItemVariantSelectView implements AfterViewInit {
         }
     }
 
+    clearFilter() {
+        this.applyFilter(null);
+        this.inputFieldValue = null;
+    }
+
     onItemClicked(item:LocalItem) {
         this.itemClicked.emit(item);
         var variantSearch = this.variantRequest.search;
@@ -172,22 +177,30 @@ export class ItemVariantSelectView implements AfterViewInit {
                     return this.onVariantSelected(variant);
                 } else {
                     this.variantSelection = true;
-                    return this.applyFilter('');
+                    this.clearFilter();
                 }
-            }).catch((error)=> {
-            this.errorService.handleRequestError(error);
-        });
+            })
+            .then(()=> {
+                this.focus();
+            })
+            .catch((error)=> {
+                this.errorService.handleRequestError(error);
+            });
     }
 
     onVariantSelected(variant:LocalItemVariant) {
         this.variantSelected.emit(variant);
         this.variantSelection = false;
-        return this.applyFilter('');
+        this.clearFilter();
+        this.focus();
     }
 
     focus() {
-        var element:HTMLInputElement = <HTMLInputElement>document.getElementById('itemListFilterInput');
-        element.focus();
-        element.select();
+        var element:HTMLInputElement = this.inputFieldResult.nativeElement;
+        if (element) {
+            element.focus();
+            element.select();
+        }
+        console.log("focused "+element);
     }
 }

@@ -92,6 +92,42 @@ export class ItemList implements OnInit {
         event.preventDefault();
     }
 
+    onItemKeyDown(item: LocalItem, event) {
+        // TODO: use event.key once supported
+        switch (event.which) {
+            case 13: {
+                // Enter
+                this.rowClicked.emit(item);
+                break;
+            }
+            case 38: {
+                // Up
+                this.selectPrevious(event.target);
+                break;
+            }
+            case 40: {
+                // Down
+                this.selectNext(event.target);
+                break;
+            }
+        }
+    }
+
+    private selectPrevious(element:HTMLElement ) {
+        var previous = element.previousElementSibling;
+        if (previous) {
+            previous.focus();
+        }
+    }
+    private selectNext(element:HTMLElement ) {
+        var next = element.nextElementSibling;
+        if (next) {
+            next.focus();
+        }
+    }
+
+
+
     onColumnAction(event:any) {
         this.columnAction.next(event);
     }

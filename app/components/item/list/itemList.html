@@ -15,16 +15,18 @@
         <tr *ngFor="#item of items"
             [class.selectable]="rowSelectable"
             (click)="onItemClick(item, $event)"
-            [attr.focusable]="rowSelectable">
+            (keydown)="onItemKeyDown(item, $event)"
+            [attr.focusable]="rowSelectable"
+            [attr.tabIndex]="rowSelectable ? 0 : false">
             <td *ngFor="#col of columns"
                 width="{{col.weight * columnWeightToPercentage}}%"
                 [class.right]="col.alignRight"
                 [class.center]="col.alignCenter">
                 <item-column class="column"
-                        (action)="onColumnAction($event)"
-                        [item]="item"
-                        [column]="col"
-                        [lang]="language">
+                             (action)="onColumnAction($event)"
+                             [item]="item"
+                             [column]="col"
+                             [lang]="language">
                 </item-column>
             </td>
         </tr>

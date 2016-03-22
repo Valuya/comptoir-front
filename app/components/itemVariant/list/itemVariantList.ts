@@ -2,20 +2,15 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component,    ChangeDetectionStrategy, OnInit,    EventEmitter, ViewEncapsulation} from 'angular2/core';
-import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
-
-import {LocalItemVariant, LocalItemVariantFactory} from '../../../client/localDomain/itemVariant';
-import {Pricing} from '../../../client/domain/itemVariant';
-
-import {Language, LocaleTextsFactory} from '../../../client/utils/lang';
-
-import {AuthService} from '../../../services/auth';
-
-import {FocusableDirective} from '../../utils/focusable';
-import {Column} from '../../utils/column';
-
-import * as Immutable from 'immutable';
+import {Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation} from "angular2/core";
+import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from "angular2/common";
+import {LocalItemVariant, LocalItemVariantFactory} from "../../../client/localDomain/itemVariant";
+import {Pricing} from "../../../client/domain/itemVariant";
+import {Language, LocaleTextsFactory} from "../../../client/utils/lang";
+import {AuthService} from "../../../services/auth";
+import {FocusableDirective} from "../../utils/focusable";
+import {Column} from "../../utils/column";
+import * as Immutable from "immutable";
 
 /****
  * Column component
@@ -98,6 +93,44 @@ export class ItemVariantList implements OnInit {
         this.rowClicked.next(item);
         event.stopPropagation();
         event.preventDefault();
+    }
+
+    onItemKeyDown(item:LocalItemVariant, event) {
+        // TODO: use event.key once supported
+        switch (event.which) {
+            case 13:
+            {
+                // Enter
+                this.rowClicked.emit(item);
+                break;
+            }
+            case 38:
+            {
+                // Up
+                this.selectPrevious(event.target);
+                break;
+            }
+            case 40:
+            {
+                // Down
+                this.selectNext(event.target);
+                break;
+            }
+        }
+    }
+
+    private selectPrevious(element:HTMLElement) {
+        var previous = element.previousElementSibling;
+        if (previous) {
+            previous.focus();
+        }
+    }
+
+    private selectNext(element:HTMLElement) {
+        var next = element.nextElementSibling;
+        if (next) {
+            next.focus();
+        }
     }
 
     onColumnAction(event:any) {
