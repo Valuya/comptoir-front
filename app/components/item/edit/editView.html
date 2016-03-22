@@ -29,7 +29,7 @@
                            [(ngModel)]="itemJS.reference"
                            ngControl="reference"
                            validate-required required>
-                    <form-message for="reference" check-errors="['required']"></form-message>
+                    <form-message for="reference" checkErrors="['required']"></form-message>
                 </span>
                 </div>
                 <div>
@@ -39,7 +39,7 @@
                            localized [language]="editLanguage"
                            [localeTexts]="itemJS.name"
                            required>
-                    <form-message for="name" check-errors="['required']"></form-message>
+                    <form-message for="name" checkErrors="['required']"></form-message>
                 </span>
                 </div>
                 <div>
@@ -60,7 +60,7 @@
                            ngControl="vatInclusive"
                            validate-required>
                     €
-                    <form-message for="vatInclusive" check-errors="['required']"></form-message>
+                    <form-message for="vatInclusive" checkErrors="['required']"></form-message>
                 </span>
                 </div>
                 <div>
@@ -73,7 +73,7 @@
                                ngControl="vatPercentage"
                                validate-required>
                         %
-                        <form-message for="vatPercentage" check-errors="['required']"></form-message>
+                        <form-message for="vatPercentage" checkErrors="['required']"></form-message>
                     </div>
                 </div>
                 <div>
@@ -86,7 +86,7 @@
                                ngControl="vatExclusive"
                                validate-required>
                         €
-                        <form-message for="vatExclusive" check-errors="['required']"></form-message>
+                        <form-message for="vatExclusive" checkErrors="['required']"></form-message>
                     </div>
                 </div>
 

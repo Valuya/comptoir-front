@@ -1,6 +1,7 @@
 <div class="formError"
      [class.fatal]="error"
      [class.info]="!error"
-     [hidden]="errorMessage == null">
-          {{ message }}
+     *ngIf="control != null"
+     [hidden]="control.valid || control.pristine || errorMessage == null">
+          {{ errorMessage }}
 </div>

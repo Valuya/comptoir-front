@@ -19,7 +19,7 @@
                             {{ getAccountTypeLabel(accountType) }}
                         </option>
                     </select>
-                    <form-message for="accountType" check-errors="['required']"></form-message>
+                    <form-message for="accountType" checkErrors="['required']"></form-message>
                 </span>
             </div>
             <div>
@@ -28,7 +28,7 @@
                     <input id="name" type="text" validate-required
                            [(ngModel)]="accountModel.name"
                            ngControl="name">
-                    <form-message for="name" check-errors="['required']"></form-message>
+                    <form-message for="name" checkErrors="['required']"></form-message>
                 </span>
             </div>
             <div>
@@ -52,7 +52,7 @@
                 <input type="text" id="bic"
                        [(ngModel)]="accountModel.bic">
             </div>
-            <div [hidden]="!isPaymentAccount()">
+            <div *ngIf="isPaymentAccount()">
                 <label></label>
                 <div>
                     <input type="checkbox" [(ngModel)]="accountModel.cash"

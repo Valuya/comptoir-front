@@ -55,7 +55,7 @@
                     <input type="text" id="firstName"
                            [(ngModel)]="editingEmployee.firstName"
                            ngControl="firstName" validate-required>
-                    <form-message for="firstName" check-errors="['required']"></form-message>
+                    <form-message for="firstName" checkErrors="['required']"></form-message>
                 </span>
             </div>
             <div>
@@ -64,7 +64,7 @@
                     <input type="text" id="lastName"
                            [(ngModel)]="editingEmployee.lastName"
                            ngControl="lastName" validate-required>
-                    <form-message for="lastName" check-errors="['required']"></form-message>
+                    <form-message for="lastName" checkErrors="['required']"></form-message>
                 </span>
             </div>
         </div>
@@ -77,7 +77,7 @@
                     <input type="text" id="login"
                            [(ngModel)]="editingEmployee.login"
                            ngControl="login" validate-required>
-                    <form-message for="login" check-errors="['required']"></form-message>
+                    <form-message for="login" checkErrors="['required']"></form-message>
                 </span>
             </div>
 
@@ -87,7 +87,7 @@
                     <input type="text" id="password"
                            [(ngModel)]="password"
                            ngControl="password" validate-required>
-                    <form-message for="password" check-errors="['required', 'passwordTooShort']"></form-message>
+                    <form-message for="password" checkErrors="['required', 'passwordTooShort']"></form-message>
                 </span>
             </div>
         </div>
