@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, View,ChangeDetectionStrategy,EventEmitter, ViewEncapsulation} from 'angular2/core';
+import {Component, ChangeDetectionStrategy,EventEmitter, ViewEncapsulation} from 'angular2/core';
 import { NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {LocalSale} from '../../../client/localDomain/sale';

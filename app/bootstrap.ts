@@ -1,6 +1,9 @@
 /**
  * Created by cghislai on 07/01/16.
  */
+
+///<reference path="../node_modules/angular2/typings/browser.d.ts"/>
+
 import {provide} from 'angular2/core';
 import {HTTP_PROVIDERS} from 'angular2/http';
 import {bootstrap} from 'angular2/platform/browser';

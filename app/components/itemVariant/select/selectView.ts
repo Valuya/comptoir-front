@@ -209,6 +209,5 @@ export class ItemVariantSelectView implements AfterViewInit {
             element.focus();
             element.select();
         }
-        console.log("focused "+element);
     }
 }

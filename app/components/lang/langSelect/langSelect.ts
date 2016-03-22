@@ -2,7 +2,7 @@
  * Created by cghislai on 20/08/15.
  */
 
-import {Component, View, ChangeDetectionStrategy, EventEmitter, Attribute} from 'angular2/core'
+import {Component, ChangeDetectionStrategy, EventEmitter, Attribute} from 'angular2/core'
 import {NgFor,  NgIf, NgControl,  ControlValueAccessor} from 'angular2/common';
 import {Language, LanguageFactory} from '../../../client/utils/lang';
 import {AuthService} from '../../../services/auth';

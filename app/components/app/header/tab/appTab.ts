@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 28/08/15.
  */
-import {Component, View, ViewEncapsulation} from 'angular2/core';
+import {Component, ViewEncapsulation} from 'angular2/core';
 
 @Component({
     selector: 'app-tab',
