@@ -183,9 +183,11 @@ export class ItemEditComponent implements OnInit {
         if (isNaN(valueNumber)) {
             return;
         }
-        var vatExclusive = NumberUtils.toFixedDecimals(valueNumber / (1 + this.item.vatRate), 2);
+        // Use 4 decimals to compute
+        var vatExclusive = NumberUtils.toFixedDecimals(valueNumber / (1 + this.item.vatRate), 4);
         this.itemJS.vatExclusive = vatExclusive;
         this.calcTotalPrice();
+        this.itemJS.vatExclusive = NumberUtils.toFixedDecimals(vatExclusive, 2);
     }
 
     setItemPrice(event) {
@@ -269,7 +271,7 @@ export class ItemEditComponent implements OnInit {
     }
 
     onCancelClicked() {
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 
 }
