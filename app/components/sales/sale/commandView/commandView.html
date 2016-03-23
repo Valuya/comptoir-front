@@ -20,13 +20,13 @@
 
         <form class="sale-form sale-customer">
             <label for="saleReference" class="inline">Client</label>
-            <a class="customer actionLink"
+            <a class="customer actionlink"
                [class.nolink]="noInput"
                id="customer"
                (click)="onEditCustomerClicked()"
                [hidden]="editingCustomer">
             <span *ngIf="activeSaleService.sale.customer != null">
-                {{activeSaleService.sale.customer.firstName }} {{activeSaleService.sale.customer.lastName }}
+                {{activeSaleService.sale.customer.lastName }} {{activeSaleService.sale.customer.firstName }}
             </span>
             <span [hidden]="activeSaleService.sale.customer != null">
                 Choisir un client
@@ -53,10 +53,10 @@
 
         <form class="sale-form sale-time" [hidden]="newSale">
             <label for="saleTime" class="inline">Date</label>
-            <a class="actionLink time" id="saleTime"
+            <a class="actionlink time" id="saleTime"
                [class.nolink]="noInput"
-               (click)="onEditTimeClicked()"
-               [hidden]="editingDateTime">
+                 (click)="onEditTimeClicked()"
+                 [hidden]="editingDateTime">
                 {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
             </a>
             <span [hidden]="noInput || !editingDateTime">

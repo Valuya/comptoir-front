@@ -252,7 +252,7 @@ div.dataTable:not([hidden]) {
   color: red;
 }
 
-.actionlink:not([hidden]):hover {
+.actionlink:not([hidden]):not(.nolink):hover {
   text-decoration: underline;
   cursor: pointer;
   color: lighten(black, 50%);

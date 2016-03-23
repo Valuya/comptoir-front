@@ -13,6 +13,7 @@ import {Observable} from "rxjs/Observable";
 import {FORM_DIRECTIVES, NgFor} from "angular2/common";
 import {AutoFocusDirective} from "../../utils/autoFocus";
 import {FocusableDirective} from "../../utils/focusable";
+import {NewPagination} from "../../../client/utils/pagination";
 
 @Component({
     selector: 'customer-select-input',
@@ -49,6 +50,14 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
         var search = new CustomerSearch();
         search.companyRef = authService.getEmployeeCompanyRef();
         this.searchRequest.search = search;
+        var pagination = NewPagination({
+            firstIndex: 0,
+            pageSize: 10,
+            sorts: {
+                'LAST_NAME': 'asc'
+            }
+        });
+        this.searchRequest.pagination = pagination;
 
         this.searchResult = new SearchResult<LocalCustomer>();
     }
