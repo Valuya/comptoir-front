@@ -30,6 +30,12 @@ export class CustomerRef {
 
 export class CustomerSearch {
     companyRef:CompanyRef;
+    multiSearch: string;
+    lastNameContains: string;
+    firstNameContains: string;
+    cityContains: string;
+    emailContains: string;
+    notesContains: string;
 }
 
 export class CustomerFactory {
