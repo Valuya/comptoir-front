@@ -251,14 +251,14 @@ export class CommandView {
         this.editingCustomer = true;
         this.newCustomer = this.activeSaleService.sale.customer;
         if (this.newCustomer != null) {
-            this.newCustomerText = this.newCustomer.lastName;
+            this.newCustomerText = this.newCustomer.lastName + " " + this.newCustomer.firstName;
         }
     }
 
     onNewCustomerSelected(customer:LocalCustomer) {
         this.newCustomer = customer;
         if (this.newCustomer != null) {
-            this.newCustomerText = this.newCustomer.lastName;
+            this.newCustomerText = this.newCustomer.lastName + " " + this.newCustomer.firstName;
         }
         this.onConfirmNewCustomer();
     }

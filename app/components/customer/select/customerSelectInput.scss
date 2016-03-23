@@ -21,7 +21,13 @@
       padding: .3em .1em;
 
       &:focus {
-        background-color: $focusColor;
+        background-color: $onWhiteLinkColor;
+        color: white;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background-color: $onWhiteHoverColor;
         color: white;
       }
     }
