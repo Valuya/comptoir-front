@@ -197,9 +197,6 @@ export class CommandView {
     }
 
     onEditRefClicked() {
-        if (this.noInput) {
-            return;
-        }
         this.editingReference = true;
         this.newSaleReference = this.activeSaleService.sale.reference;
     }
@@ -216,9 +213,6 @@ export class CommandView {
     }
 
     onEditTimeClicked() {
-        if (this.noInput) {
-            return;
-        }
         var dateTime = this.activeSaleService.sale.dateTime;
         var isoString = dateTime.toISOString();
         // input[type=datetime-local] required in chrome for the calendar widget.
@@ -245,9 +239,6 @@ export class CommandView {
     }
 
     onEditCustomerClicked() {
-        if (this.noInput) {
-            return;
-        }
         this.editingCustomer = true;
         this.newCustomer = this.activeSaleService.sale.customer;
         if (this.newCustomer != null) {
