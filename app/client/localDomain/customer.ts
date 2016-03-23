@@ -8,7 +8,7 @@ import {LocalCompany} from './company';
 export interface LocalCustomer extends Immutable.Map<string, any> {
     id: number;
     company:LocalCompany;
-    firsName:string;
+    firstName:string;
     lastName:string;
     address1:string;
     address2:string;
@@ -22,7 +22,7 @@ export interface LocalCustomer extends Immutable.Map<string, any> {
 var CustomerRecord = Immutable.Record({
     id: null,
     company: null,
-    firsName: null,
+    firstName: null,
     lastName: null,
     address1: null,
     address2: null,

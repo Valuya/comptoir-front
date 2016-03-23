@@ -1,0 +1,68 @@
+<div [ngSwitch]="column.name">
+    <template [ngSwitchWhen]="'id'">
+        <span class="id">
+            {{ customer.id }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'firstName'">
+        <span class="firstName">
+            {{ customer.firstName }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'lastName'">
+        <span class="lastName">
+            {{ customer.lastName }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'address1'">
+        <span class="address">
+            {{ customer.address1 }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'address2'">
+        <span class="address">
+            {{ customer.address2 }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'zip'">
+        <span class="zip">
+            {{ customer.zip}}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'city'">
+        <span class="city">
+            {{ customer.city }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'phone1'">
+        <span class="phone">
+            {{ customer.phone1 }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'phone2'">
+        <span class="phone">
+            {{ customer.phone2 }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'email'">
+        <span class="email">
+            {{ customer.email }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'notes'">
+        <span class="notes">
+            {{ customer.notes }}
+        </span>
+    </template>
+
+
+    <template [ngSwitchWhen]=" 'action_remove' ">
+        <span class="action remove">
+            <a class="actionIcon "
+               (click)="onColumnAction(customer, column, $event)">
+                <i class="fa fa-minus red"></i>
+            </a>
+        </span>
+    </template>
+
+</div>

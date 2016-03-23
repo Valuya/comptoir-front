@@ -73,13 +73,13 @@ export class CustomerService {
 
     toLocalConverter(customer:Customer):Promise<LocalCustomer> {
         var localCustomerDesc:any = {};
-        localCustomerDesc.address1 = customer.address1;
-        localCustomerDesc.address2 = customer.address2;
+        localCustomerDesc.address1 = customer.adress1;
+        localCustomerDesc.address2 = customer.adress2;
         localCustomerDesc.city = customer.city;
         localCustomerDesc.email = customer.email;
-        localCustomerDesc.firsName = customer.firsName;
+        localCustomerDesc.firstName = customer.firstName;
         localCustomerDesc.id = customer.id;
-        localCustomerDesc.tNa = customer.lastName;
+        localCustomerDesc.lastName = customer.lastName;
         localCustomerDesc.notes = customer.notes;
         localCustomerDesc.phone1 = customer.phone1;
         localCustomerDesc.phone2 = customer.phone2;
@@ -102,12 +102,12 @@ export class CustomerService {
 
     fromLocalConverter(localCustomer:LocalCustomer):Customer {
         var customer = new Customer();
-        customer.address1 = localCustomer.address1;
-        customer.address2 = localCustomer.address2;
+        customer.adress1 = localCustomer.address1;
+        customer.adress2 = localCustomer.address2;
         customer.city = localCustomer.city;
         customer.companyRef = new CompanyRef(localCustomer.company.id);
         customer.email = localCustomer.email;
-        customer.firsName = localCustomer.firsName;
+        customer.firstName = localCustomer.firstName;
         customer.id = localCustomer.id;
         customer.lastName = localCustomer.lastName;
         customer.notes = localCustomer.notes;

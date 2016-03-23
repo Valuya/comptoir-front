@@ -7,10 +7,10 @@ import {CompanyRef} from './company';
 export class Customer {
     id: number;
     companyRef:CompanyRef;
-    firsName:string;
+    firstName:string;
     lastName:string;
-    address1:string;
-    address2:string;
+    adress1:string;
+    adress2:string;
     zip:string;
     city:string;
     phone1:string;

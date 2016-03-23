@@ -1,0 +1,32 @@
+<div class="customerList listPage">
+    <table class="dataTable">
+        <thead [hidden]="!headersVisible">
+        <tr>
+            <th *ngFor="#col of columns"
+                [class.right]="col.alignRight"
+                [class.center]="col.alignCenter">
+                    <span *ngIf="col.title !== null">
+                        {{ col.title.get(language.locale) }}
+                    </span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="#customer of customerList"
+            [class.selectable]="rowSelectable"
+            (click)="onCustomerClick(customer, $event)"
+            [attr.focusable]="rowSelectable">
+            <td *ngFor="#col of columns"
+                [class.right]="col.alignRight"
+                [class.center]="col.alignCenter">
+                <customer-column class="column"
+                        (action)="onColumnAction($event)"
+                        [customer]="customer"
+                        [column]="col"
+                        [lang]="language">
+                </customer-column>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

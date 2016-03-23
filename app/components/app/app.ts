@@ -18,6 +18,7 @@ import {AccountsView} from '../../routes/accounts/accountsView';
 import {CashView} from '../../routes/cash/cashView';
 import {PosView} from '../../routes/pos/posView';
 import {StockView} from "../../routes/stock/stockView";
+import {CustomerView} from "../../routes/customer/customerView";
 
 
 @Component({
@@ -38,7 +39,8 @@ import {StockView} from "../../routes/stock/stockView";
     {path: '/accounts/...', component: AccountsView, name: 'Accounts'},
     {path: '/cash/...', component: CashView, name: 'Cash'},
     {path: '/pos/...', component: PosView, name: 'Pos'},
-    {path: '/stock/...', component: StockView, name: 'Stock'}
+    {path: '/stock/...', component: StockView, name: 'Stock'},
+    {path: '/customer/...', component: CustomerView, name: 'Customer'}
 ])
 export class App {
     appService:ApplicationService;
