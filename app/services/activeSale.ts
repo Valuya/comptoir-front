@@ -21,6 +21,7 @@ import {AccountingEntryService} from "./accountingEntry";
 import {SaleService} from "./sale";
 import {ItemVariantSaleService} from "./itemVariantSale";
 import {StockService} from "./stock";
+import {LocalCustomer} from "../client/localDomain/customer";
 
 @Injectable()
 export class ActiveSaleService {
@@ -352,6 +353,13 @@ export class ActiveSaleService {
 
     public doSetSaleReference(reference:string):Promise<any> {
         var newSale = <LocalSale>this.sale.set('reference', reference);
+        this.sale = newSale;
+        return this.doUpdateSale();
+    }
+
+
+    public doSetSaleCustomer(customer: LocalCustomer):Promise<any> {
+        var newSale = <LocalSale>this.sale.set('customer', customer);
         this.sale = newSale;
         return this.doUpdateSale();
     }

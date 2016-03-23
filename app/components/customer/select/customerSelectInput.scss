@@ -1,0 +1,29 @@
+@import '../../../styles/_main.scss';
+
+.customer-select-input {
+  display: inline-block;
+
+  input{
+    width: 14em;
+  }
+
+  .suggestions {
+    position: absolute;
+    max-height: 6em;
+    width: 14em;
+    overflow-y: auto;
+    padding: .3em;
+    background-color: white;
+    border: 1px solid lightgray;
+
+    .customer-suggestion {
+      display: block;
+      padding: .3em .1em;
+
+      &:focus {
+        background-color: $focusColor;
+        color: white;
+      }
+    }
+  }
+}

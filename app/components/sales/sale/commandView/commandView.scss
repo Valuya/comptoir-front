@@ -56,7 +56,13 @@ form.sale-form {
   font-size: .9em;
   >label {
     font-weight: bold;
-    display:  block;
+
+    &:not(.inline) {
+      display:  block;
+    }
+    &.inline {
+      padding-right: .5em;
+    }
   }
   .output-field {
     border: 1px solid lightgray;

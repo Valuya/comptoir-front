@@ -238,6 +238,10 @@ div.dataTable:not([hidden]) {
 
 .actionlink:not([hidden]) {
   color: black;
+
+  &.nolink {
+    pointer-events: none;
+  }
 }
 
 .actionlink.green:not([hidden]) {

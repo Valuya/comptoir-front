@@ -17,6 +17,8 @@ import {
     ItemVariantSaleColumnAction,
     ItemVariantSaleColumnActionEvent
 } from "../../../itemVariantSale/list/itemVariantSaleList";
+import {LocalCustomer} from "../../../../client/localDomain/customer";
+import {CustomerSelectInputComponent} from "../../../customer/select/customerSelectInput";
 
 @Component({
     selector: 'command-view-header',
@@ -116,7 +118,7 @@ export class CommandViewHeader {
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/commandView/commandView.html',
     styleUrls: ['./components/sales/sale/commandView/commandView.css'],
-    directives: [CommandViewHeader, ItemVariantSaleList]
+    directives: [CommandViewHeader, ItemVariantSaleList, CustomerSelectInputComponent]
 })
 export class CommandView {
     activeSaleService:ActiveSaleService;
@@ -137,8 +139,11 @@ export class CommandView {
 
     editingReference:boolean;
     editingDateTime:boolean;
+    editingCustomer:boolean;
     newSaleReference:string;
     newSaleDateTimeString:string;
+    newCustomerText:string;
+    newCustomer:LocalCustomer;
 
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
 
@@ -238,4 +243,42 @@ export class CommandView {
     onReopenClicked() {
         this.reopened.emit(null);
     }
+
+    onEditCustomerClicked() {
+        if (this.noInput) {
+            return;
+        }
+        this.editingCustomer = true;
+        this.newCustomer = this.activeSaleService.sale.customer;
+        if (this.newCustomer != null) {
+            this.newCustomerText = this.newCustomer.firstName + " " + this.newCustomer.lastName;
+        }
+    }
+
+    onNewCustomerSelected(customer:LocalCustomer) {
+        this.newCustomer = customer;
+        if (this.newCustomer != null) {
+            this.newCustomerText = this.newCustomer.firstName + " " + this.newCustomer.lastName;
+        }
+        this.onConfirmNewCustomer();
+    }
+
+    onConfirmNewCustomer() {
+        this.activeSaleService.doSetSaleCustomer(this.newCustomer);
+        this.editingCustomer = false;
+        this.newCustomer = null;
+        this.newCustomerText = null;
+    }
+
+    onCancelNewCustomer() {
+        this.editingCustomer = false;
+        this.newCustomer = null;
+        this.newCustomerText = null;
+    }
+
+    onRemoveSaleCustomer() {
+        this.activeSaleService.doSetSaleCustomer(null);
+        this.onCancelNewCustomer();
+    }
+
 }

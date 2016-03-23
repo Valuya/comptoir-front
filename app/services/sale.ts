@@ -1,30 +1,22 @@
 /**
  * Created by cghislai on 06/08/15.
  */
-import {Injectable} from 'angular2/core';
-import {Http, Request} from 'angular2/http';
-
-import {Sale, SaleRef, SaleSearch, SaleFactory} from '../client/domain/sale';
-import {AccountingTransactionRef} from '../client/domain/accountingTransaction';
-import {CompanyRef} from '../client/domain/company';
-import {CustomerRef} from '../client/domain/customer';
-import {InvoiceRef} from '../client/domain/invoice';
-
-import {LocalSale, LocalSaleFactory} from '../client/localDomain/sale';
-import {LocalAccount} from '../client/localDomain/account';
+import {Injectable} from "angular2/core";
+import {Http, Request} from "angular2/http";
+import {Sale, SaleRef} from "../client/domain/sale";
+import {CompanyRef} from "../client/domain/company";
+import {CustomerRef} from "../client/domain/customer";
+import {LocalSale, LocalSaleFactory} from "../client/localDomain/sale";
 import {LocalSalePrice, LocalSalePriceFactory} from "../client/localDomain/salePrice";
-
-import {WithId} from '../client/utils/withId';
-import {SearchRequest, SearchResult} from '../client/utils/search';
-import {WsUtils} from '../client/utils/wsClient';
-import {JSONFactory} from '../client/utils/factory';
-
-import {SaleClient} from '../client/sale';
-
-import {AuthService} from './auth';
-import {AccountingTransactionService} from './accountingTransaction';
-import {CompanyService} from './company';
-import {CustomerService} from './customer';
+import {WithId} from "../client/utils/withId";
+import {SearchRequest, SearchResult} from "../client/utils/search";
+import {WsUtils} from "../client/utils/wsClient";
+import {JSONFactory} from "../client/utils/factory";
+import {SaleClient} from "../client/sale";
+import {AuthService} from "./auth";
+import {AccountingTransactionService} from "./accountingTransaction";
+import {CompanyService} from "./company";
+import {CustomerService} from "./customer";
 
 @Injectable()
 export class SaleService {
@@ -108,7 +100,7 @@ export class SaleService {
 
         return request
             .map(response=> {
-                var saleRef =  <SaleRef>response.json();
+                var saleRef = <SaleRef>response.json();
                 this.saleClient.doClear(saleRef.id);
                 return saleRef;
             })
@@ -124,7 +116,7 @@ export class SaleService {
 
         return request
             .map(response=> {
-                var saleRef =  <SaleRef>response.json();
+                var saleRef = <SaleRef>response.json();
                 this.saleClient.doClear(saleRef.id);
                 return saleRef;
             })
@@ -140,7 +132,7 @@ export class SaleService {
 
         return request
             .map(response=>response.json())
-            .map(value=> {
+            .map((value:any)=> {
                 var payed:number = parseFloat(value.value);
                 return payed;
             })

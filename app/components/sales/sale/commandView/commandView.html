@@ -16,15 +16,69 @@
                             (columnAction)="onColumnAction($event)"
                             (variantUpdated)="onVariantUpdated($event)"></item-variant-sale-list>
 
-    <form class="sale-form sale-reference">
-        <label for="saleReference">Référence</label>
-        <div class="output-field reference"
-             id="saleReference"
-             (click)="onEditRefClicked()"
-             [hidden]="editingReference">
-            {{activeSaleService.sale.reference}}
-        </div>
-        <div [hidden]="noInput || !editingReference">
+    <div class="info-panel">
+
+        <form class="sale-form sale-customer">
+            <label for="saleReference" class="inline">Client</label>
+            <a class="customer actionLink"
+               [class.nolink]="noInput"
+               id="customer"
+               (click)="onEditCustomerClicked()"
+               [hidden]="editingCustomer">
+            <span *ngIf="activeSaleService.sale.customer != null">
+                {{activeSaleService.sale.customer.firstName }} {{activeSaleService.sale.customer.lastName }}
+            </span>
+            <span [hidden]="activeSaleService.sale.customer != null">
+                Choisir un client
+            </span>
+            </a>
+        <span [hidden]="noInput || !editingCustomer">
+            <customer-select-input
+                    #customerSelect
+                    *ngIf="editingCustomer"
+                    [customerText]="newCustomerText"
+                    (customerSelected)="onNewCustomerSelected($event)"
+            ></customer-select-input>
+            <span class="editActions">
+                <i class="fa fa-times red"
+                   title="Annuler"
+                   (click)="onCancelNewCustomer()"></i>
+                <i class="fa fa-minus red"
+                   title="Supprimer"
+                   [hidden]="activeSaleService.sale.customer == null"
+                   (click)="onRemoveSaleCustomer()"></i>
+            </span>
+        </span>
+        </form>
+
+        <form class="sale-form sale-time" [hidden]="newSale">
+            <label for="saleTime" class="inline">Date</label>
+            <a class="actionLink time" id="saleTime"
+               [class.nolink]="noInput"
+               (click)="onEditTimeClicked()"
+               [hidden]="editingDateTime">
+                {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
+            </a>
+            <span [hidden]="noInput || !editingDateTime">
+                <input type="datetime-local" autofocus
+                       [(ngModel)]="newSaleDateTimeString"
+                       class="edit-time-field">
+                <span class="editActions">
+                            <i class="fa fa-check green" (click)="onConfirmNewDateTime()"></i>
+                            <i class="fa fa-times red" (click)="onCancelNewDateTime()"></i>
+                </span>
+            </span>
+        </form>
+
+        <form class="sale-form sale-reference">
+            <label for="saleReference">Référence</label>
+            <div class="output-field reference"
+                 id="saleReference"
+                 (click)="onEditRefClicked()"
+                 [hidden]="editingReference">
+                {{activeSaleService.sale.reference}}
+            </div>
+            <div [hidden]="noInput || !editingReference">
             <textarea [(ngModel)]="newSaleReference"
                       id="editSaleReference"
                       class="edit-reference-area"
@@ -33,23 +87,10 @@
                         <i class="fa fa-check green" (click)="onConfirmNewReference()"></i>
                         <i class="fa fa-times red" (click)="onCancelNewReference()"></i>
             </span>
-        </div>
-    </form>
-    <form class="sale-form sale-time" [hidden]="newSale">
-        <label for="saleTime">Date</label>
-        <div class="output-field time" id="saleTime"
-             (click)="onEditTimeClicked()"
-             [hidden]="editingDateTime">
-            {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
-        </div>
-        <div [hidden]="noInput || !editingDateTime">
-            <input type="datetime-local" autofocus
-                   [(ngModel)]="newSaleDateTimeString"
-                   class="edit-time-field">
-            <span class="editActions">
-                        <i class="fa fa-check green" (click)="onConfirmNewDateTime()"></i>
-                        <i class="fa fa-times red" (click)="onCancelNewDateTime()"></i>
-            </span>
-        </div>
-    </form>
+            </div>
+        </form>
+
+
+    </div>
+
 </div>

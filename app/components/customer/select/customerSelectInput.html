@@ -1,0 +1,23 @@
+<span class="customer-select-input">
+    <div>
+        <input #customerInput
+               type="text"
+               [(ngModel)]="customerText"
+               (focusout)="onFocusOut($event)"
+               placeholder="Nom du client"
+               select-on-focus
+               autocomplete="off">
+    </div>
+    <div class="suggestions"
+         #suggestionsDiv
+         [hidden]="searchResult.count < 1 || hasSelectedCustomer">
+        <div class="customer-suggestion"
+             *ngFor="#customer of searchResult.list"
+             focusable="true"
+             (focus)="onCustomerFocused(customer)"
+             (keyup)="onSuggestionsKeyUp($event)"
+             (click)="onCustomerSelected(customer)">
+            {{ customer.firstName }} {{ customer.lastName }}
+        </div>
+    </div>
+</span>
