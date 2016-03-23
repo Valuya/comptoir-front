@@ -29,7 +29,7 @@
                 {{activeSaleService.sale.customer.lastName }} {{activeSaleService.sale.customer.firstName }}
             </span>
             <span [hidden]="activeSaleService.sale.customer != null">
-                Choisir un client
+                Aucun client
             </span>
             </a>
         <span [hidden]="noInput || !editingCustomer">
@@ -45,7 +45,7 @@
                    (click)="onCancelNewCustomer()"></i>
                 <i class="fa fa-minus red"
                    title="Supprimer"
-                   [hidden]="activeSaleService.sale.customer == null"
+                   *ngIf="activeSaleService.sale.customer != null"
                    (click)="onRemoveSaleCustomer()"></i>
             </span>
         </span>
