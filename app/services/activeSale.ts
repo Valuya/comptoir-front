@@ -354,6 +354,10 @@ export class ActiveSaleService {
     public doSetSaleReference(reference:string):Promise<any> {
         var newSale = <LocalSale>this.sale.set('reference', reference);
         this.sale = newSale;
+        if (this.sale.id == null) {
+            // New sale;
+            return Promise.resolve(this.sale);
+        }
         return this.doUpdateSale();
     }
 
@@ -361,6 +365,10 @@ export class ActiveSaleService {
     public doSetSaleCustomer(customer: LocalCustomer):Promise<any> {
         var newSale = <LocalSale>this.sale.set('customer', customer);
         this.sale = newSale;
+        if (this.sale.id == null) {
+            // New sale;
+            return Promise.resolve(this.sale);
+        }
         return this.doUpdateSale();
     }
 
@@ -368,6 +376,10 @@ export class ActiveSaleService {
     public doSetSaleDateTime(dateTime:Date):Promise<any> {
         var newSale = <LocalSale>this.sale.set('dateTime', dateTime);
         this.sale = newSale;
+        if (this.sale.id == null) {
+            // New sale;
+            return Promise.resolve(this.sale);
+        }
         return this.doUpdateSale();
     }
 
