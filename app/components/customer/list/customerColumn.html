@@ -54,6 +54,11 @@
             {{ customer.notes }}
         </span>
     </template>
+    <template [ngSwitchWhen]="'loyaltyBalance'">
+        <span class="loyaltyBalance">
+            {{ customer.loyaltyBalance | currency:'EUR':true:'.2-2' }}
+        </span>
+    </template>
 
 
     <template [ngSwitchWhen]=" 'action_remove' ">

@@ -57,6 +57,7 @@ export class CustomerListView {
             CustomerColumn.ZIP,
             CustomerColumn.CITY,
             CustomerColumn.EMAIL,
+            CustomerColumn.LOYALTY_BALANCE, 
             CustomerColumn.NOTES
             //CustomerColumn.ACTION_REMOVE // FIXME: implement in backend
         );

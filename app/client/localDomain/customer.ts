@@ -18,6 +18,8 @@ export interface LocalCustomer extends Immutable.Map<string, any> {
     phone2:string;
     email:string;
     notes:string;
+    
+    loyaltyBalance: number;
 }
 var CustomerRecord = Immutable.Record({
     id: null,
@@ -31,7 +33,9 @@ var CustomerRecord = Immutable.Record({
     phone1: null,
     phone2: null,
     email: null,
-    notes: null
+    notes: null,
+
+    loyaltyBalance: null
 });
 
 export class LocalCustomerFactory {

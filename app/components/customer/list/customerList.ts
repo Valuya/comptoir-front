@@ -98,6 +98,7 @@ export class CustomerColumn {
     static PHONE2:CustomerColumn;
     static EMAIL:CustomerColumn;
     static NOTES:CustomerColumn;
+    static LOYALTY_BALANCE:CustomerColumn;
     static ACTION_REMOVE:CustomerColumn;
 
     title:LocaleTexts;
@@ -164,6 +165,12 @@ export class CustomerColumn {
         CustomerColumn.NOTES.name = 'notes';
         CustomerColumn.NOTES.title = LocaleTextsFactory.toLocaleTexts({
             'fr': 'Notes'
+        });
+
+        CustomerColumn.LOYALTY_BALANCE = new CustomerColumn();
+        CustomerColumn.LOYALTY_BALANCE.name = 'loyaltyBalance';
+        CustomerColumn.LOYALTY_BALANCE.title = LocaleTextsFactory.toLocaleTexts({
+            'fr': 'Solde fidelité'
         });
 
 
