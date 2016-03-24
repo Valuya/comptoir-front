@@ -6,7 +6,8 @@
     </template>
     <template [ngSwitchWhen]="'variantReference' ">
         <span class="ref">
-               {{ itemVariant.variantReference }}
+            <span class="itemRef">{{ itemVariant.item.reference }}</span>
+            <span class="variantRef">{{ itemVariant.variantReference }}</span>
         </span>
     </template>
     <template [ngSwitchWhen]="'picture' ">

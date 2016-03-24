@@ -19,8 +19,12 @@
             <div>
                 <label for="reference">Référence</label>
                 <span>
+                    <span class="ref">
+                        <span class="itemRef"
+                              [hidden]="itemVariantModel.item.reference == null">{{ itemVariantModel.item.reference }}-</span>
+                    </span>
                     <input type="text" id="reference"
-                           [placeholder]="itemVariantModel.item.reference"
+                           placeholder="Référence"
                            [(ngModel)]="itemVariantModel.variantReference"
                            ngControl="reference" required>
                     <form-message for="reference"

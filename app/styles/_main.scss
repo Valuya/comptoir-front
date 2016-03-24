@@ -342,3 +342,22 @@ a.disabled, a.disabled:hover {
     width: 100%;
   }
 }
+
+.ref {
+  font-size: .0;
+  font-family: monospace;
+  >* {
+    padding: 0;
+    margin: 0;
+  }
+  .itemRef {
+    font-size: .9rem;
+    font-weight: bold;
+  }
+  .variantRef {
+    font-size: .8rem;
+    &:before {
+      content: '-';
+    }
+  }
+}

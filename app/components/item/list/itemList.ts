@@ -156,14 +156,14 @@ export class ItemColumn extends Column {
         );
 
         ItemColumn.REFERENCE = new ItemColumn(
-            'ref', 1,
+            'ref', 2,
             LocaleTextsFactory.toLocaleTexts({
                 'fr': 'Ref'
             })
         );
 
         ItemColumn.NAME = new ItemColumn(
-            'name', 3,
+            'name', 5,
             LocaleTextsFactory.toLocaleTexts({
                 'fr': 'Nom'
             })

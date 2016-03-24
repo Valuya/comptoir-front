@@ -170,7 +170,7 @@ export class ItemVariantColumn extends Column {
         );
 
         ItemVariantColumn.VARIANT_REFERENCE = new ItemVariantColumn(
-            'variantReference', 1,
+            'variantReference', 2,
             LocaleTextsFactory.toLocaleTexts({
                 'fr': 'Ref'
             })

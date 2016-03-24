@@ -1,7 +1,7 @@
 <div class="formPage pageContent stock-edit">
     <span class="backLink">
         <div class="boxedHoverableLink"
-            (click)="onCancelled()">
+             (click)="onCancelled()">
             Retour
         </div>
     </span>
@@ -35,7 +35,8 @@
             <div class="header">
                 <span class="valignAnchor"></span>
                 <span class="ref">
-                    {{ itemVariant.variantReference }}
+                    <span class="itemRef">{{ itemVariant.item.reference }}</span>
+                    <span class="variantRef">{{ itemVariant.variantReference }}</span>
                 </span>
                 <span class="name">
                     {{ itemVariant.item.name[displayLanguage.locale] }}

@@ -6,7 +6,7 @@
     </template>
     <template [ngSwitchWhen]=" 'ref'">
         <span class="ref">
-            {{ item.reference }}
+            <span class="itemRef">{{ item.reference }}</span>
         </span>
     </template>
     <template [ngSwitchWhen]=" 'name'">

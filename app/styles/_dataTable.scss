@@ -2,6 +2,7 @@
  * Created by cghislai on 03/09/15.
  */
 @import './_constants';
+@import './_main';
 
 img.busy {
   position: absolute;
@@ -22,7 +23,7 @@ table.dataTable {
     text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    //white-space: nowrap;
 
     &.right {
       text-align: right;

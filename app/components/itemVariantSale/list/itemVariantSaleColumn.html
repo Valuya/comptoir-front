@@ -82,7 +82,8 @@
 
     <template [ngSwitchWhen]="'variantRef' ">
         <span class="ref">
-             {{ itemVariantSale.itemVariant.variantReference }}
+            <span class="itemRef">{{ itemVariantSale.itemVariant.item.reference }}</span>
+            <span class="variantRef">{{ itemVariantSale.itemVariant.variantReference }}</span>
         </span>
     </template>
     <template [ngSwitchWhen]="'quantity' ">
