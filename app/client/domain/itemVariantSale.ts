@@ -22,6 +22,7 @@ export class ItemVariantSale {
     discountRatio: number;
     total: number;
     stockRef: StockRef;
+    forceCustomerLoyalty: boolean;
 }
 
 export class ItemVariantSaleRef {

@@ -21,13 +21,16 @@ import {AuthService} from '../../services/auth';
 import {ErrorService} from '../../services/error';
 import {CompanyService} from '../../services/company';
 import {EmployeeService} from '../../services/employee';
+import {CompanyEditComponent} from "../../components/company/edit/editCompany";
+import {CompanyFactory} from "../../client/domain/company";
 
 @Component({
     selector: 'register-view',
     templateUrl: './routes/register/register.html',
     styleUrls: ['./routes/register/register.css'],
     directives: [FORM_DIRECTIVES, NgFor,  RouterLink, AppHeader, FormMessage,
-        LangSelect, LangSelectControl, LocalizedDirective, RequiredValidator, PasswordValidator]
+        LangSelect, LangSelectControl, LocalizedDirective,
+        RequiredValidator, PasswordValidator, CompanyEditComponent]
 })
 export class RegisterView {
     authService:AuthService;
@@ -36,12 +39,12 @@ export class RegisterView {
     employeeService: EmployeeService;
     router:Router;
 
-    editingCompany: any;
+    company: LocalCompany;
+    companySaved: boolean;
     editingEmployee: any;
     password: string;
 
     appLanguage:Language;
-    editLanguage:Language;
 
     constructor(authService:AuthService, errorService:ErrorService,
                 companyService: CompanyService, employeeService: EmployeeService,
@@ -53,20 +56,26 @@ export class RegisterView {
         this.router = router;
 
         this.appLanguage = NewLanguage(LanguageFactory.DEFAULT_LANGUAGE.toJS());
-        this.editLanguage = NewLanguage(LanguageFactory.DEFAULT_LANGUAGE.toJS());
 
-        this.editingCompany = {};
-        this.editingCompany.description = LocaleTextsFactory.toLocaleTexts({});
-        this.editingCompany.name = LocaleTextsFactory.toLocaleTexts({});
-        this.editingCompany.country = new Country();
-        this.editingCompany.country.code = 'BE';
+        this.company = LocalCompanyFactory.createNewCompany({
+            name: LocaleTextsFactory.toLocaleTexts({}),
+            description: LocaleTextsFactory.toLocaleTexts({})
+        });
         this.editingEmployee = {};
         this.editingEmployee.language = NewLanguage(LanguageFactory.DEFAULT_LANGUAGE.toJS());
     }
 
+    onCompanySaved(company: LocalCompany) {
+        this.company = company;
+        this.companySaved = true;
+    }
+
+    onCancelled() {
+        this.router.navigate(['/Login']);
+    }
     doRegister() {
         var registration = new Registration();
-        var localCompany:LocalCompany = LocalCompanyFactory.createNewCompany(this.editingCompany);
+        var localCompany:LocalCompany = LocalCompanyFactory.createNewCompany(this.company);
         var company = this.companyService.fromLocalConverter(localCompany);
         this.editingEmployee.locale = this.editingEmployee.language.locale;
         var localEmployee:LocalEmployee = LocalEmployeeFactory.createNewEmployee(this.editingEmployee);

@@ -12,6 +12,7 @@ export class Company {
     name: LocaleTexts;
     description: LocaleTexts;
     countryRef: CountryRef;
+    customerLoyaltyRate: number;
 }
 
 export class CompanyRef {
