@@ -1,0 +1,8 @@
+<div class="formPage pageContent">
+    <h1 class="pageTitle">Édition de la compagnie</h1>
+
+    <company-edit-component *ngIf="company != null"
+             [company]="company"
+             (saved)="onSaved($event)"
+             (cancelled)="onCancelled()"></company-edit-component>
+</div>
