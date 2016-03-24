@@ -1,32 +1,31 @@
 /**
  * Created by cghislai on 31/07/15.
  */
-import {Component} from 'angular2/core';
-import {NgIf, FORM_DIRECTIVES} from 'angular2/common';
-import {Router} from 'angular2/router';
-
-import {LocalSale} from '../../../client/localDomain/sale';
-import {LocalSalePrice, LocalSalePriceFactory} from '../../../client/localDomain/salePrice';
-import {SaleSearch} from '../../../client/domain/sale';
-import {CompanyRef} from '../../../client/domain/company';
-
-import {Pagination, PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from '../../../client/utils/pagination';
-import {SearchRequest, SearchResult} from '../../../client/utils/search';
-
-import {ErrorService} from '../../../services/error';
-import {AuthService} from '../../../services/auth';
-import {SaleService} from '../../../services/sale';
-
-import {Paginator} from '../../../components/utils/paginator/paginator';
-import {SaleListComponent, SaleColumn} from '../../../components/sales/list/saleList';
-
-import * as Immutable from 'immutable';
+import {Component} from "angular2/core";
+import {NgIf, FORM_DIRECTIVES} from "angular2/common";
+import {Router} from "angular2/router";
+import {LocalSale} from "../../../client/localDomain/sale";
+import {LocalSalePrice, LocalSalePriceFactory} from "../../../client/localDomain/salePrice";
+import {SaleSearch} from "../../../client/domain/sale";
+import {CompanyRef} from "../../../client/domain/company";
+import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../../client/utils/pagination";
+import {SearchRequest, SearchResult} from "../../../client/utils/search";
+import {ErrorService} from "../../../services/error";
+import {AuthService} from "../../../services/auth";
+import {SaleService} from "../../../services/sale";
+import {Paginator} from "../../../components/utils/paginator/paginator";
+import {SaleListComponent, SaleColumn} from "../../../components/sales/list/saleList";
+import * as Immutable from "immutable";
+import {LocalCustomer} from "../../../client/localDomain/customer";
+import {CustomerRef} from "../../../client/domain/customer";
+import {CustomerSelectInputComponent} from "../../../components/customer/select/customerSelectInput";
 
 @Component({
     selector: 'sales-history-view',
     templateUrl: './routes/sales/history/historyView.html',
     styleUrls: ['./routes/sales/history/historyView.css'],
-    directives: [SaleListComponent, NgIf, Paginator, FORM_DIRECTIVES]
+    directives: [SaleListComponent, NgIf, Paginator,
+        FORM_DIRECTIVES,CustomerSelectInputComponent]
 })
 
 export class SaleHistoryView {
@@ -44,6 +43,7 @@ export class SaleHistoryView {
     loading:boolean;
     fromDateString:string;
     toDateString:string;
+    customerSearchCustomer: LocalCustomer;
 
 
     constructor(saleService:SaleService, errorService:ErrorService,
@@ -93,13 +93,13 @@ export class SaleHistoryView {
     searchSales() {
         var saleTask = this.saleService
             .search(this.searchRequest)
-            .then((result: SearchResult<LocalSale>) => {
+            .then((result:SearchResult<LocalSale>) => {
                 this.searchResult = result;
                 return null;
             });
         var payedTask = this.saleService
             .getSalesTotalPayed(this.searchRequest)
-            .then((result: LocalSalePrice)=> {
+            .then((result:LocalSalePrice)=> {
                 this.totalPayedPrice = result;
                 return null;
             });
@@ -129,5 +129,14 @@ export class SaleHistoryView {
         this.searchRequest.search.toDateTime = toDate;
     }
 
+    onCustomerSelected(customer:LocalCustomer) {
+        this.customerSearchCustomer = customer;
+        var customerRef = new CustomerRef(customer.id);
+        this.searchRequest.search.customerRef = customerRef;
+    }
 
+    onCustomerRemoved() {
+        this.searchRequest.search.customerRef = null;
+        this.customerSearchCustomer = null;
+    }
 }

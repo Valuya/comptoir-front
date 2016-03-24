@@ -1,16 +1,16 @@
-<span class="customer-select-input">
+<span class="customer-select-input" (focusout)="onFocusOut($event)">
     <div>
         <input #customerInput
                type="text"
                [(ngModel)]="customerText"
-               (focusout)="onFocusOut($event)"
+               (focus)="onFocus($event)"
                placeholder="Nom du client"
                select-on-focus
                autocomplete="off">
     </div>
     <div class="suggestions"
          #suggestionsDiv
-         [hidden]="searchResult.count < 1 || hasSelectedCustomer">
+         [hidden]="searchResult.count < 1 || suggestionsHidden">
         <div class="customer-suggestion"
              *ngFor="#customer of searchResult.list"
              focusable="true"

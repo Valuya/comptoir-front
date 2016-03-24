@@ -142,7 +142,6 @@ export class CommandView {
     editingCustomer:boolean;
     newSaleReference:string;
     newSaleDateTimeString:string;
-    newCustomerText:string;
     newCustomer:LocalCustomer;
 
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
@@ -241,16 +240,10 @@ export class CommandView {
     onEditCustomerClicked() {
         this.editingCustomer = true;
         this.newCustomer = this.activeSaleService.sale.customer;
-        if (this.newCustomer != null) {
-            this.newCustomerText = this.newCustomer.lastName + " " + this.newCustomer.firstName;
-        }
     }
 
     onNewCustomerSelected(customer:LocalCustomer) {
         this.newCustomer = customer;
-        if (this.newCustomer != null) {
-            this.newCustomerText = this.newCustomer.lastName + " " + this.newCustomer.firstName;
-        }
         this.onConfirmNewCustomer();
     }
 
@@ -258,13 +251,11 @@ export class CommandView {
         this.activeSaleService.doSetSaleCustomer(this.newCustomer);
         this.editingCustomer = false;
         this.newCustomer = null;
-        this.newCustomerText = null;
     }
 
     onCancelNewCustomer() {
         this.editingCustomer = false;
         this.newCustomer = null;
-        this.newCustomerText = null;
     }
 
     onRemoveSaleCustomer() {

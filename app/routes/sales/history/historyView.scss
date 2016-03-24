@@ -5,9 +5,14 @@
 }
 
 .topActions {
+  margin-bottom: .5em;
+
   >div {
     display: inline-block;
     margin: 0 .5em;
+  }
+  label {
+    font-weight: bold;
   }
 }
 

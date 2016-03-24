@@ -17,6 +17,21 @@
             <input type="date" id="to-date-field"
                    [(ngModel)]="toDateString">
         </div>
+        <div class="customer-filter">
+            <label for="customer-select">Client:</label>
+            <customer-select-input
+                    id="customer-select"
+                    [selectedCustomer]="customerSearchCustomer"
+                    [autoFocus]="false"
+                    (customerSelected)="onCustomerSelected($event)"
+            ></customer-select-input>
+            <span class="actionlink red"
+                  [hidden]="searchRequest.search.customerRef == null">
+                <i class="fa fa-minus red"
+                   title="Supprimer"
+                   (click)="onCustomerRemoved()"></i>
+            </span>
+        </div>
         <div class="boxedHoverableLink"
              (click)="onSearchClicked()">
             Rechercher

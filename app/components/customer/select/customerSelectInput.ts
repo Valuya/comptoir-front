@@ -3,7 +3,17 @@
  */
 
 
-import {Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, OnInit} from "angular2/core";
+import {
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    ViewChild,
+    ElementRef,
+    AfterViewInit,
+    OnInit,
+    OnChanges, SimpleChange
+} from "angular2/core";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
 import {LocalCustomer} from "../../../client/localDomain/customer";
 import {AuthService} from "../../../services/auth";
@@ -21,9 +31,14 @@ import {NewPagination} from "../../../client/utils/pagination";
     styleUrls: ['./components/customer/select/customerSelectInput.css'],
     directives: [NgFor, FORM_DIRECTIVES, AutoFocusDirective, FocusableDirective]
 })
-export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
+export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
     @Input()
     customerText:string;
+    @Input()
+    autoFocus:boolean = true;
+    @Input()
+    selectedCustomer:LocalCustomer;
+
     @Output()
     customerSelected = new EventEmitter();
 
@@ -40,7 +55,8 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
 
 
     private focusedSuggestion:LocalCustomer;
-    private hasSelectedCustomer: boolean;
+    private suggestionsHidden:boolean;
+    private handleFocusOut:boolean = true;
 
     constructor(authService:AuthService,
                 customerService:CustomerService) {
@@ -62,11 +78,14 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
         this.searchResult = new SearchResult<LocalCustomer>();
     }
 
-    ngOnInit() {
-        if (this.customerText == null) {
-            this.customerText = "";
+
+    ngOnChanges(changes:{
+        [key:string]:SimpleChange;
+    }) {
+        if (changes['selectedCustomer'] == null) {
+            return;
         }
-        this.searchSuggestions(this.customerText);
+        this.setSearchText();
     }
 
     ngAfterViewInit() {
@@ -74,15 +93,14 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
             console.error('Invalid field');
             return;
         }
-       // triggers search for characters
+        // triggers search for characters
         Observable.fromEvent(this.inputElement.nativeElement, 'keyup')
             .map((event:KeyboardEvent) => {
                 var target = <HTMLInputElement>event.target;
                 return target.value;
             })
-            .distinctUntilChanged()
-            .do(()=>{
-                this.hasSelectedCustomer = false;
+            .do(()=> {
+                this.suggestionsHidden = false;
             })
             .debounceTime(this.keyboardTimeout)
             .subscribe((value:string)=> {
@@ -93,7 +111,26 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
             .subscribe((event:KeyboardEvent)=> {
                 this.handleInputNavigationKeyUp(event);
             });
-        this.focus();
+        if (this.autoFocus) {
+            this.focus();
+        }
+    }
+
+    onFocus() {
+        this.searchSuggestions(this.customerText);
+    }
+
+    onFocusOut(event) {
+        if (!this.handleFocusOut) {
+            return;
+        }
+        var target = <HTMLElement>event.relatedTarget;
+        if (target != null && target.classList.contains('customer-suggestion')) {
+            return;
+        }
+        this.suggestionsHidden = true;
+        this.setSearchText();
+        this.searchRequest.search.multiSearch = null;
     }
 
     onCustomerFocused(customer:LocalCustomer) {
@@ -120,7 +157,8 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
                 this.selectNext(event.target);
                 break;
             }
-            default: {
+            default:
+            {
                 return;
             }
         }
@@ -130,28 +168,32 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
     public focus() {
         if (this.inputElement) {
             var inputelement = <HTMLInputElement>this.inputElement.nativeElement;
-            inputelement.focus();
+            this.doFocusViewElement(inputelement);
+
         }
     }
 
-    private onCustomerSelected(customer: LocalCustomer) {
+    private onCustomerSelected(customer:LocalCustomer) {
         this.focusedSuggestion = customer;
+        this.selectedCustomer = customer;
         this.onSuggestionSelected();
     }
 
     private onSuggestionSelected() {
-        this.customerText = this.focusedSuggestion.firstName + " " + this.focusedSuggestion.lastName;
+        this.setSearchText();
         this.customerSelected.emit(this.focusedSuggestion);
-        this.hasSelectedCustomer = true;
+        this.suggestionsHidden = true;
     }
 
     private searchSuggestions(multiSearch:string) {
         if (multiSearch == this.searchRequest.search.multiSearch) {
+            this.suggestionsHidden = false;
             return;
         }
         this.searchRequest.search.multiSearch = multiSearch;
         this.customerService.search(this.searchRequest)
             .then((result)=> {
+                this.suggestionsHidden = false;
                 this.searchResult = result;
             });
     }
@@ -177,21 +219,36 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnInit {
             return;
         }
         var firstElement:HTMLElement = <HTMLElement>divElement.children.item(0);
-        firstElement.focus();
+        this.doFocusViewElement(firstElement);
+
     }
 
     private selectPrevious(element:HTMLElement) {
         var previous = <HTMLElement>element.previousElementSibling;
         if (previous) {
-            previous.focus();
+            this.doFocusViewElement(previous);
+
         }
     }
 
     private selectNext(element:HTMLElement) {
         var next = <HTMLElement>element.nextElementSibling;
         if (next) {
-            next.focus();
+            this.doFocusViewElement(next);
         }
     }
 
+    private doFocusViewElement(element:HTMLElement) {
+        this.handleFocusOut = false;
+        element.focus();
+        this.handleFocusOut = true;
+    }
+
+    private setSearchText() {
+        if (this.selectedCustomer != null) {
+            this.customerText = this.selectedCustomer.lastName + " " + this.selectedCustomer.firstName;
+        } else {
+            this.customerText = "";
+        }
+    }
 }

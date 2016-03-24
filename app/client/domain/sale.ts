@@ -37,6 +37,7 @@ export class SaleSearch {
     closed:boolean;
     toDateTime: Date;
     fromDateTime: Date;
+    customerRef: CustomerRef;
 }
 
 export class SaleFactory {
