@@ -78,11 +78,10 @@ export class SaleView implements CanReuse, OnActivate {
         return this.findSale()
             .then((sale)=> {
                 if (sale.closed) {
-                    this.payStep = true;
-                } else {
-                    this.payStep = false;
+                    this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+                    return null;
                 }
-                this.activeSaleService.sale = sale;
+                return sale;
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -159,7 +158,13 @@ export class SaleView implements CanReuse, OnActivate {
 
     onCommandPaid() {
         this.payStep = false;
-        this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+        this.activeSaleService.doCloseSale()
+            .then(()=> {
+                return this.activeSaleService.getNewSale();
+            })
+            .then(()=> {
+                this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+            });
     }
 
     onSaleDetails() {
