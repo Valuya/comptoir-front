@@ -158,14 +158,16 @@ export class EditStockView {
         var variantRef = new ItemVariantRef(this.itemVariant.id);
         this.itemVariantStockRequest.search.itemVariantRef = variantRef;
 
-        this.variantStockService.search(this.itemVariantStockRequest)
+        var searchTask =  this.variantStockService.search(this.itemVariantStockRequest)
             .then((result)=>{
                 this.itemVariantStockResult = result;
-                if (result.count > 0) {
-                    this.itemVariantCurrentStock = result.list.first();
-                    this.editingVariantStockDesc.quantity = this.itemVariantCurrentStock.quantity;
-                }
             });
+        var currentTask = this.variantStockService.fetchCurrentItemStock(this.itemVariant, this.stock)
+            .then((variantStock)=>{
+                this.itemVariantCurrentStock = variantStock;
+                this.editingVariantStockDesc.quantity = this.itemVariantCurrentStock.quantity;
+            });
+        return Promise.all([searchTask, currentTask]);
     }
 
     onCreateInitialStock() {

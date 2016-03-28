@@ -81,7 +81,7 @@ export class StockService {
                     });
             });
     }
-
+    
     toLocalConverter(stock:Stock, authToken:string):Promise<LocalStock> {
         var localStockDesc:any = {};
         localStockDesc.description = stock.description;
