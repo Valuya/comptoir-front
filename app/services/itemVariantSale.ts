@@ -94,7 +94,7 @@ export class ItemVariantSaleService {
         localItemSaleDesc.total = itemVariantSale.total;
         localItemSaleDesc.vatExclusive = itemVariantSale.vatExclusive;
         localItemSaleDesc.vatRate = itemVariantSale.vatRate;
-        localItemSaleDesc.forceCustomerLoyalty = itemVariantSale.forceCustomerLoyalty;
+        localItemSaleDesc.includeCustomerLoyalty = itemVariantSale.includeCustomerLoyalty;
 
         var taskList = [];
 
@@ -142,7 +142,7 @@ export class ItemVariantSaleService {
         itemSale.total = localItemVariantSale.total;
         itemSale.vatExclusive = localItemVariantSale.vatExclusive;
         itemSale.vatRate = localItemVariantSale.vatRate;
-        itemSale.forceCustomerLoyalty = localItemVariantSale.forceCustomerLoyalty;
+        itemSale.includeCustomerLoyalty = localItemVariantSale.includeCustomerLoyalty;
         if (localItemVariantSale.stock != null) {
             itemSale.stockRef = new StockRef(localItemVariantSale.stock.id);
         }

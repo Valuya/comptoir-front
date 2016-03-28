@@ -141,8 +141,8 @@ export class ActiveSaleService {
         }
         var authToken = this.authService.authToken;
         return this.saleService.closeSale(this.sale.id, authToken)
-            .then(()=> {
-                this.getNewSale();
+            .then((ref)=>{
+                return this.getSale(ref.id);
             });
     }
 

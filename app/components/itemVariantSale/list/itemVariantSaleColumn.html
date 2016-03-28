@@ -81,10 +81,7 @@
     </template>
 
     <template [ngSwitchWhen]="'variantRef' ">
-        <span class="ref">
-            <span class="itemRef">{{ itemVariantSale.itemVariant.item.reference }}</span>
-            <span class="variantRef">{{ itemVariantSale.itemVariant.variantReference }}</span>
-        </span>
+        <span class="ref"><span class="itemRef">{{ itemVariantSale.itemVariant.item.reference }}</span><span class="variantRef">{{ itemVariantSale.itemVariant.variantReference }}</span></span>
     </template>
     <template [ngSwitchWhen]="'quantity' ">
          <span class="quantity"
@@ -256,6 +253,25 @@
                     </option>
                 </select>
             </span>
+        </span>
+    </template>
+    <template [ngSwitchWhen]="'includeCustomerLoyalty' ">
+        <span class="customerLoyalty">
+             <a class="loyaltyLink"
+                *ngIf="itemVariantSale.includeCustomerLoyalty != null"
+                [class.nolink]="!editable"
+                [class.actionLink]="editable"
+                (click)="onColumnAction(itemVariantSale, column, $event, 'CONFIRM', !itemVariantSale?.includeCustomerLoyalty)">
+                 <i class="fa fa-times" [hidden]="itemVariantSale.includeCustomerLoyalty"></i>
+                 <i class="fa fa-check" [hidden]="!itemVariantSale.includeCustomerLoyalty"></i>
+             </a>
+             <a class="loyaltyLink"
+                *ngIf="itemVariantSale.includeCustomerLoyalty == null"
+                [class.nolink]="!editable"
+                [class.actionLink]="editable"
+                (click)="onColumnAction(itemVariantSale, column, $event, 'CONFIRM', true)">
+                 Par défault
+             </a>
         </span>
     </template>
     <template [ngSwitchWhen]="'sale' ">

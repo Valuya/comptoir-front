@@ -2,7 +2,7 @@
  * Created by cghislai on 31/08/15.
  */
 
-import {Component,EventEmitter} from 'angular2/core';
+import {Component, EventEmitter, Input, Output, ViewEncapsulation} from 'angular2/core';
 import {NgIf, NgFor} from 'angular2/common';
 
 import {Pos, PosSearch} from '../../../client/domain/pos';
@@ -17,10 +17,9 @@ import * as Immutable from 'immutable';
 
 @Component({
     selector: 'pos-select',
-    outputs: ['posChanged'],
-    inputs: ['editable'],
     templateUrl: './components/pos/posSelect/posSelect.html',
-    directives: [NgFor, NgIf]
+    directives: [NgFor, NgIf],
+    encapsulation: ViewEncapsulation.None
 })
 export class PosSelect {
     posService:PosService;
@@ -29,10 +28,13 @@ export class PosSelect {
 
     searchRequest:SearchRequest<LocalPos>;
     posList:Immutable.List<LocalPos>;
-    pos:LocalPos;
     language:Language;
 
+    @Input()
     editable:boolean;
+    @Input()
+    pos:LocalPos;
+    @Output()
     posChanged = new EventEmitter();
 
     constructor(posService:PosService, authService:AuthService, errorService:ErrorService) {
@@ -54,12 +56,14 @@ export class PosSelect {
         this.posService.search(this.searchRequest)
             .then((result:SearchResult<LocalPos>)=> {
                 this.posList = result.list;
-                var lastUsedPos = this.posService.lastUsedPos;
-                if (lastUsedPos != null) {
-                    this.setPos(lastUsedPos);
-                } else if (result.list.size > 0) {
-                    var pos = result.list.first();
-                    this.setPos(pos);
+                if (this.pos == null) {
+                    var lastUsedPos = this.posService.lastUsedPos;
+                    if (lastUsedPos != null) {
+                        this.setPos(lastUsedPos);
+                    } else if (result.list.size > 0) {
+                        var pos = result.list.first();
+                        this.setPos(pos);
+                    }
                 }
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);

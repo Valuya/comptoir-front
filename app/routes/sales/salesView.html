@@ -2,6 +2,9 @@
     <app-tab  [selectable]="true" [active]="isActive('./sale')">
         <a [routerLink]="['./Sale', {id: 'active'}]">En cours</a>
     </app-tab>
+    <app-tab  [selectable]="false" [active]="isActive('./details')">
+        <a>Details</a>
+    </app-tab>
     <app-tab  [selectable]="true">
         <a [routerLink]="['./Sale', {id: 'new'}]">Nouvelle</a>
     </app-tab>

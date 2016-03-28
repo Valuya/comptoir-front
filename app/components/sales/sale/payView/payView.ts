@@ -47,6 +47,8 @@ export class PayView {
 
     @Output()
     paid = new EventEmitter();
+    @Output()
+    details = new EventEmitter();
 
     editingEntry:LocalAccountingEntry;
     language:Language;
@@ -156,9 +158,13 @@ export class PayView {
         this.paid.emit(true);
     }
 
-    onChooseStockClicked() {
+    isConfirmationRequired() {
+        return true;
+    }
+
+    onConfirmationClicked() {
         this.cancelEditEntry();
-        this.paid.emit(true);
+        this.details.emit(null);
     }
 
 }

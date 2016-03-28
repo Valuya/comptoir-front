@@ -6,7 +6,7 @@ import {CORE_DIRECTIVES} from "angular2/common";
 
 @Component({
     selector: 'edit-link',
-    template: `<span class="edit-link-output"
+    template: `<span class="edit-link-component"
                     [class.editing]="editing"
                     [class.editable]="editable">
                     <ng-content></ng-content>
@@ -26,7 +26,9 @@ import {CORE_DIRECTIVES} from "angular2/common";
                 </span>`,
     styleUrls: ['./components/utils/editLink/editLink.css'],
     host: {
-        "(click)": "onEditAction($event)"
+        "(click)": "onEditAction($event)",
+        "[class.editing]":"editing",
+        "[class.editable]":"editable"
     },
     directives: [CORE_DIRECTIVES],
     encapsulation: ViewEncapsulation.None
@@ -34,6 +36,10 @@ import {CORE_DIRECTIVES} from "angular2/common";
 export class EditLinkComponent {
     private editing:boolean;
 
+    @Output()
+    private editAction = new EventEmitter();
+    @Output()
+    private cancelAction = new EventEmitter();
     @Output()
     private confirmAction = new EventEmitter();
     @Output()
@@ -55,19 +61,27 @@ export class EditLinkComponent {
         }
         this.editing = true;
         event.stopImmediatePropagation();
+        this.editAction.emit(null);
         return false;
     }
 
-    onCancelAction(event) {
+    doCancel() {
         if (!this.editing) {
             return;
         }
         this.editing = false;
+    }
+
+    onCancelAction(event) {
+        this.doCancel();
         event.stopImmediatePropagation();
+        this.cancelAction.emit(null);
         return false;
     }
 
     onConfirmAction(event) {
+        this.doCancel();
+
         this.confirmAction.emit(null);
         event.stopImmediatePropagation();
         return false;

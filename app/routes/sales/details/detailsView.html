@@ -1,0 +1,11 @@
+<div class="saleView">
+
+    <sale-details-component id="detailsView"
+                       *ngIf="activeSaleService.sale != null"
+                       [stockList]="stockResult.list"
+                       (saleEmptied)="onSaleEmptied()"
+                       (validated)="onSaleClosed()"
+                       (reopened)="onSaleReopened()"
+                       (editAction)="onSaleEditAction()"
+    ></sale-details-component>
+</div>

@@ -260,6 +260,7 @@ export class ItemVariantSaleList {
 
     private onColumnConfirmAction(event:ItemVariantSaleColumnActionEvent) {
         if (event.column == ItemVariantSaleColumn.ACTIONS) {
+            // Dispatch validate event to row input
             var input = this.doFindInput(event.value);
             if (input == null) {
                 // for non-fast-input component, we update the item directly
@@ -269,6 +270,10 @@ export class ItemVariantSaleList {
             input.dispatchEvent(FastInput.VALIDATE_EVENT);
             return;
         }
+        // Update column for controls that trigger CONFIRM directly
+        if (event.column != null && this.editingColumn == null) {
+            this.editingColumn = event.column;
+        }
         var itemVariantSale = event.itemVariantSale;
         var value = event.value;
         switch (this.editingColumn) {
@@ -276,6 +281,10 @@ export class ItemVariantSaleList {
             case ItemVariantSaleColumn.VARIANT_NAME_COMMENT:
                 itemVariantSale = this.updateComment(itemVariantSale, value);
                 break;
+            case ItemVariantSaleColumn.QUANTITY: {
+                itemVariantSale = this.updateQuantity(itemVariantSale, value);
+                break;
+            }
             case ItemVariantSaleColumn.QUANTITY_PRICE:
             {
                 if (this.editingSubColumn == ItemVariantSaleColumn.QUANTITY) {
@@ -283,6 +292,10 @@ export class ItemVariantSaleList {
                 } else {
                     itemVariantSale = this.updatePrice(itemVariantSale, value);
                 }
+                break;
+            }
+            case ItemVariantSaleColumn.UNIT_PRICE: {
+                itemVariantSale = this.updatePrice(itemVariantSale, value);
                 break;
             }
             case ItemVariantSaleColumn.DISCOUNT:
@@ -294,6 +307,11 @@ export class ItemVariantSaleList {
             case ItemVariantSaleColumn.STOCK:
             {
                 itemVariantSale = this.updateStock(itemVariantSale, value);
+                break;
+            }
+            case ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY: {
+                itemVariantSale = this.updateCustomerLoyalty(itemVariantSale, value);
+                break;
             }
         }
         this.cancelEdit();
@@ -310,6 +328,9 @@ export class ItemVariantSaleList {
     private onAddComment(variantSale:LocalItemVariantSale) {
         this.columns.toSeq()
             .forEach((column)=> {
+                if (!this.isColumnEditable(column)) {
+                    return;
+                }
                 switch (column) {
                     case ItemVariantSaleColumn.COMMENT:
                     {
@@ -404,6 +425,14 @@ export class ItemVariantSaleList {
         }).first();
         return <LocalItemVariantSale>localItemVariantSale.set('stock', stock);
     }
+    updateCustomerLoyalty(localItemVariantSale:LocalItemVariantSale, customerLoyalty: string | boolean):LocalItemVariantSale {
+        if (typeof customerLoyalty == 'string') {
+            if (customerLoyalty == "true") {
+                customerLoyalty = true;
+            }
+        }
+        return <LocalItemVariantSale>localItemVariantSale.set('includeCustomerLoyalty', customerLoyalty);
+    }
 
 }
 
@@ -426,6 +455,7 @@ export class ItemVariantSaleColumn {
     static STOCK:ItemVariantSaleColumn;
     static SALE:ItemVariantSaleColumn;
     static ACTIONS:ItemVariantSaleColumn;
+    static INCLUDE_CUSTOMER_LOYALTY:ItemVariantSaleColumn;
 
     title:LocaleTexts;
     name:string;
@@ -521,6 +551,12 @@ export class ItemVariantSaleColumn {
         ItemVariantSaleColumn.SALE.name = 'sale';
         ItemVariantSaleColumn.SALE.title = LocaleTextsFactory.toLocaleTexts({
             'fr': 'Vente'
+        });
+        ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY = new ItemVariantSaleColumn();
+        ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY.name = 'includeCustomerLoyalty';
+        ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY.alignCenter = true;
+        ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY.title = LocaleTextsFactory.toLocaleTexts({
+            'fr': 'Épargne fidelité'
         });
         ItemVariantSaleColumn.ACTIONS = new ItemVariantSaleColumn();
         ItemVariantSaleColumn.ACTIONS.name = 'actions';
