@@ -36,7 +36,8 @@
             {{ selectedCustomer.firstName }}
         </span>
     </span>
-    <span *ngIf="selectedCustomer == null">
-        Aucun client
+    <span *ngIf="selectedCustomer == null"
+        [hidden]="emptyLabel == null">
+        {{ emptyLabel }}
     </span>
 </span>

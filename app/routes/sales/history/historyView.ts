@@ -66,6 +66,7 @@ export class SaleHistoryView {
             SaleColumn.ID,
             SaleColumn.REFERENCE,
             SaleColumn.DATETIME,
+            SaleColumn.CUSTOMER,
             SaleColumn.VAT_EXCLUSIVE_AMOUNT,
             SaleColumn.VAT_AMOUNT,
             SaleColumn.VAT_INCLUSIVE_AMOUNT

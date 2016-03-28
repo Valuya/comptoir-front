@@ -29,9 +29,10 @@
                            id="customer"
                            #customerEditLink
                            (confirmAction)="onNewCustomerSelected()"
-                           (removeAction)="onRemoveSaleCustomer()">
+                           (removeAction)="customerEditLink.doCancel(); onRemoveSaleCustomer()">
                     <span class="output">
                         <customer-select-input [selectedCustomer]="activeSaleService.sale?.customer"
+                                               emptyLabel="Aucun client"
                                                [editable]="false">
                         </customer-select-input>
                     </span>

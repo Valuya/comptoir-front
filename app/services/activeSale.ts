@@ -189,8 +189,9 @@ export class ActiveSaleService {
         var item = itemVariant.item;
         var multipleSale = item.multipleSale;
 
+        var itemSale:LocalItemVariantSale;
         if (!multipleSale) {
-            var itemSale:LocalItemVariantSale = this.saleItemsResult.list.find((itemSale)=> {
+            itemSale = this.saleItemsResult.list.find((itemSale)=> {
                 return itemSale.itemVariant.id === itemVariant.id;
             });
         }

@@ -1,7 +1,9 @@
 @import '../../../styles/_main.scss';
 
 .customer-select-input {
-  display: inline-block;
+  &:not([hidden]) {
+    display: inline-block;
+  }
 
   input{
     width: 14em;
