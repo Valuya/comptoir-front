@@ -23,7 +23,6 @@ import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/d
 
 @Component({
     selector: 'sale-view',
-    bindings: [ActiveSaleService],
     templateUrl: './routes/sales/sale/saleView.html',
     styleUrls: ['./routes/sales/sale/saleView.css'],
     directives: [ItemVariantSelectView, CommandView, PayView, SaleDetailsComponent, NgIf, PosSelect]
