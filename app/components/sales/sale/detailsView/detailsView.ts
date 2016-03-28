@@ -48,8 +48,6 @@ export class SaleDetailsComponent {
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
     editableColumns:Immutable.List<ItemVariantSaleColumn>;
 
-    editingReference:boolean;
-    editingDiscount:boolean;
     newSaleReference:string;
     newSaleDateTimeString:string;
     newSaleDiscount:number;
