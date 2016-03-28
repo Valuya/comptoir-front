@@ -37,7 +37,7 @@ export class BalanceColumnComponent {
     lang:Language;
 
     onColumnAction(balance:LocalBalance, column:BalanceColumn, event) {
-        this.action.next({balance: balance, column: column});
+        this.action.emit({balance: balance, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -87,13 +87,13 @@ export class BalanceList implements OnInit {
 
 
     onBalanceClick(balance:LocalBalance, event) {
-        this.rowClicked.next(balance);
+        this.rowClicked.emit(balance);
         event.stopPropagation();
         event.preventDefault();
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

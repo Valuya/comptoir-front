@@ -12,14 +12,18 @@ import {SaleHistoryView} from './history/historyView';
 import {AppHeader} from '../../components/app/header/appHeader';
 import {AppMenu} from '../../components/app/header/menu/appMenu';
 import {AppTab} from '../../components/app/header/tab/appTab';
+import {SaleDetailsView} from "./details/detailsView";
+import {ActiveSaleService} from "../../services/activeSale";
 
 @Component({
     selector: 'sales-view',
+    bindings: [ActiveSaleService],
     templateUrl: './routes/sales/salesView.html',
     directives: [AppHeader, AppMenu, AppTab, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/sale/:id', component: SaleView, as: 'Sale'},
+    {path: '/details/:id', component: SaleDetailsView, as: 'Details'},
     {path: '/actives', component: ActiveSalesView, as: 'Actives', useAsDefault: true},
     {path: '/history', component: SaleHistoryView, as: 'History'}
 ])

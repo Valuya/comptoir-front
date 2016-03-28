@@ -82,10 +82,9 @@ export class ItemVariantStockService {
             });
     }
 
-
-    fetchCurrentItemStock(itemVariant:LocalItemVariant, stock:LocalStock):Promise<LocalItemVariant> {
+    fetchCurrentItemStock(itemVariant:LocalItemVariant, stock:LocalStock):Promise<LocalItemVariantStock> {
         if (itemVariant == null || stock == null) {
-            return Promise.resolve(itemVariant);
+            return Promise.resolve(null);
         }
         var itemStockSearch = new ItemVariantStockSearch();
         itemStockSearch.companyRef = this.authService.getEmployeeCompanyRef();
@@ -104,10 +103,11 @@ export class ItemVariantStockService {
             .then((result:SearchResult<LocalItemVariantStock>)=> {
                 if (result.count > 0) {
                     var localStock = result.list.first();
-                    itemVariant = <LocalItemVariant>itemVariant.set('currentStock', localStock);
+                    //itemVariant = <LocalItemVariant>itemVariant.set('currentStock', localStock);
                     // TODO: store in cache?
+                    return localStock;
                 }
-                return itemVariant;
+                return null;
             });
     }
 

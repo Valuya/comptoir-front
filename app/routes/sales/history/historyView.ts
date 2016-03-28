@@ -66,6 +66,7 @@ export class SaleHistoryView {
             SaleColumn.ID,
             SaleColumn.REFERENCE,
             SaleColumn.DATETIME,
+            SaleColumn.CUSTOMER,
             SaleColumn.VAT_EXCLUSIVE_AMOUNT,
             SaleColumn.VAT_AMOUNT,
             SaleColumn.VAT_INCLUSIVE_AMOUNT
@@ -116,7 +117,7 @@ export class SaleHistoryView {
 
     onSaleClicked(sale:LocalSale) {
         var saleId = sale.id;
-        this.router.navigate(['/Sales/Sale', {id: saleId}]);
+        this.router.navigate(['/Sales/Details', {id: saleId}]);
     }
 
     onColumnAction(sale:LocalSale, col:SaleColumn) {

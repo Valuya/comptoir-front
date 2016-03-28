@@ -6,7 +6,8 @@
             {{ posOption.description?.get(language.locale) }}
         </option>
     </select>
-    <span [hidden]="posList.size > 1 || pos == null">
-        <strong>{{ pos?.description?.get(language.locale) }}</strong>
+    <span [hidden]="editable && (posList.size > 1 || pos == null)"
+          class="pos-output">
+        {{ pos?.description?.get(language.locale) }}
     </span>
 </form>

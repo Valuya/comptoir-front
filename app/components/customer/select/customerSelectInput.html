@@ -1,4 +1,5 @@
-<span class="customer-select-input" (focusout)="onFocusOut($event)">
+<span class="customer-select-input" (focusout)="onFocusOut($event)"
+    [hidden]="!editable">
     <div>
         <input #customerInput
                type="text"
@@ -17,7 +18,26 @@
              (focus)="onCustomerFocused(customer)"
              (keyup)="onSuggestionsKeyUp($event)"
              (click)="onCustomerSelected(customer)">
-            {{ customer.lastName }} {{ customer.firstName }}
+            <span [hidden]="customer.lastName == null">
+                {{ customer.lastName }}
+            </span>
+            <span [hidden]="customer.firstName == null">
+                {{ customer.firstName }}
+            </span>
         </div>
     </div>
+</span>
+<span [hidden]="editable">
+    <span *ngIf="selectedCustomer != null">
+        <span [hidden]="selectedCustomer.lastName == null">
+            {{ selectedCustomer.lastName }}
+        </span>
+        <span [hidden]="selectedCustomer.firstName == null">
+            {{ selectedCustomer.firstName }}
+        </span>
+    </span>
+    <span *ngIf="selectedCustomer == null"
+        [hidden]="emptyLabel == null">
+        {{ emptyLabel }}
+    </span>
 </span>

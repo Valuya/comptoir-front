@@ -1,0 +1,58 @@
+<div class="editCompany">
+
+    <form #companyForm="ngForm" (ngSubmit)="onFormSubmit()">
+        <div class="table">
+            <div>
+                <label for="editLanguageInput">Langue</label>
+                <lang-select id="editLanguageInput"
+                             [displayLanguage]="appLanguage"
+                             [selectedLanguage]="editLanguage"
+                             (languageChanged)="onLanguageChanged($event)"></lang-select>
+            </div>
+            <div>
+                <label for="companyName">Nom</label>
+                <span>
+                    <input type="text" id="companyName"
+                           localized [language]="editLanguage"
+                           [localeTexts]="companyModel.name"
+                           required>
+                </span>
+            </div>
+            <div>
+                <label for="companyDescription">Description</label>
+                <span>
+                    <input type="text" id="companyDescription"
+                           localized [language]="editLanguage"
+                           [localeTexts]="companyModel.description"
+                           required>
+                </span>
+            </div>
+            <div>
+                <label for="companyCountry">Pays</label>
+                <span>
+                    <select id="companyCountry"
+                            (input)="onCountrySelected($event)"
+                            [value]="companyModel.country?.code">
+                        <option *ngFor="#country of allCountries"
+                                [value]="country.code">
+                            {{ country.code }}
+                        </option>
+                    </select>
+                </span>
+            </div>
+            <div>
+                <label for="companyLoyaltyRate">Taux du bonus de fidelité</label>
+                <span>
+                    <input type="number" id="companyLoyaltyRate"
+                           [(ngModel)]="companyLoyaltyPercentage"
+                           min="0" max="100" step="1">%
+                </span>
+            </div>
+
+        </div>
+        <div class="actions">
+            <button type="submit" [disabled]="!companyForm.form.valid">Enregistrer</button>
+            <a (click)="onCancelClicked()" class="blueLink">Retour</a>
+        </div>
+    </form>
+</div>

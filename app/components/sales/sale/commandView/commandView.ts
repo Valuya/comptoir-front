@@ -23,7 +23,7 @@ import {CustomerSelectInputComponent} from "../../../customer/select/customerSel
 @Component({
     selector: 'command-view-header',
     inputs: ['noInput', 'validated'],
-    outputs: ['validateChanged', 'reopenClicked'],
+    outputs: ['validateChanged'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sales/sale/commandView/header.html',
     styleUrls: ['./components/sales/sale/commandView/commandView.css'],
@@ -36,7 +36,6 @@ export class CommandViewHeader {
     editingSaleDiscount:boolean = false;
     validated:boolean = false;
     validateChanged = new EventEmitter();
-    reopenClicked = new EventEmitter();
 
     constructor(saleService:ActiveSaleService,
                 errorService:ErrorService) {
@@ -107,9 +106,6 @@ export class CommandViewHeader {
         this.validateChanged.emit(false);
     }
 
-    doReopenSale() {
-        this.reopenClicked.emit(null)
-    }
 }
 
 // The component
@@ -134,8 +130,6 @@ export class CommandView {
     saleEmptied = new EventEmitter();
     @Output()
     validateChanged = new EventEmitter();
-    @Output()
-    reopened = new EventEmitter();
 
     editingReference:boolean;
     editingDateTime:boolean;
@@ -231,10 +225,6 @@ export class CommandView {
     onCancelNewDateTime() {
         this.editingDateTime = false;
         this.newSaleDateTimeString = null;
-    }
-
-    onReopenClicked() {
-        this.reopened.emit(null);
     }
 
     onEditCustomerClicked() {

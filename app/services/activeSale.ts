@@ -141,8 +141,8 @@ export class ActiveSaleService {
         }
         var authToken = this.authService.authToken;
         return this.saleService.closeSale(this.sale.id, authToken)
-            .then(()=> {
-                this.getNewSale();
+            .then((ref)=>{
+                return this.getSale(ref.id);
             });
     }
 
@@ -189,8 +189,9 @@ export class ActiveSaleService {
         var item = itemVariant.item;
         var multipleSale = item.multipleSale;
 
+        var itemSale:LocalItemVariantSale;
         if (!multipleSale) {
-            var itemSale:LocalItemVariantSale = this.saleItemsResult.list.find((itemSale)=> {
+            itemSale = this.saleItemsResult.list.find((itemSale)=> {
                 return itemSale.itemVariant.id === itemVariant.id;
             });
         }

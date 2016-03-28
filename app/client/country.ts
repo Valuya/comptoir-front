@@ -2,18 +2,17 @@
  * Created by cghislai on 06/08/15.
  */
 
-import {Inject, Injectable} from 'angular2/core';
-
-import {Country, CountryRef, CountryFactory} from './domain/country';
-import {ComptoirRequest} from './utils/request';
-import {COMPTOIR_SERVICE_URL} from '../config/service';
+import {Inject, Injectable} from "angular2/core";
+import {Country, CountryFactory} from "./domain/country";
+import {ComptoirRequest, ComptoirResponse} from "./utils/request";
+import {COMPTOIR_SERVICE_URL} from "../config/service";
 
 @Injectable()
 export class CountryClient {
 
     private static RESOURCE_PATH:string = "/country";
     serviceConfigUrl:string;
-    resourceCache:{[code: string]: Country};
+    resourceCache:{[code:string]:Country};
 
     constructor(@Inject(COMPTOIR_SERVICE_URL) serviceConfigUrl:string) {
         this.serviceConfigUrl = serviceConfigUrl;
@@ -55,6 +54,18 @@ export class CountryClient {
         var url = this.getCountryUrl(code);
         request.setup('GET', url, authToken);
         return request;
+    }
+
+    search(authToken:string):Promise<Immutable.List<Country>> {
+        var request = new ComptoirRequest();
+        var url = this.getCountryUrl() + "/search";
+        request.setup('POST', url, authToken);
+        return request.run()
+            .then((response:ComptoirResponse)=> {
+                var countries:Country[] = JSON.parse(response.text);
+                var countriesList = Immutable.List<Country>(countries);
+                return countriesList;
+            });
     }
 
 }

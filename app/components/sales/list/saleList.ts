@@ -13,6 +13,7 @@ import {AuthService} from '../../../services/auth';
 import {FocusableDirective} from '../../utils/focusable';
 
 import * as Immutable from 'immutable';
+import {CustomerSelectInputComponent} from "../../customer/select/customerSelectInput";
 
 
 /****
@@ -25,7 +26,7 @@ import * as Immutable from 'immutable';
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/sales/list/saleColumn.html',
     styleUrls: ['./components/sales/list/saleList.css'],
-    directives: [NgIf, NgSwitch, NgSwitchWhen],
+    directives: [NgIf, NgSwitch, NgSwitchWhen, CustomerSelectInputComponent],
     // eases styling
     encapsulation: ViewEncapsulation.None
 })
@@ -93,6 +94,7 @@ export class SaleColumn {
     static VAT_INCLUSIVE_AMOUNT:SaleColumn;
     static VAT_AMOUNT:SaleColumn;
     static CLOSED:SaleColumn;
+    static CUSTOMER:SaleColumn;
     static REFERENCE:SaleColumn;
     static ACTION_REMOVE:SaleColumn;
 
@@ -144,6 +146,11 @@ export class SaleColumn {
         SaleColumn.REFERENCE.name = 'ref';
         SaleColumn.REFERENCE.title = LocaleTextsFactory.toLocaleTexts({
             'fr': 'Référence'
+        });
+        SaleColumn.CUSTOMER = new SaleColumn();
+        SaleColumn.CUSTOMER.name = 'customer';
+        SaleColumn.CUSTOMER.title = LocaleTextsFactory.toLocaleTexts({
+            'fr': 'Client'
         });
 
         SaleColumn.ACTION_REMOVE = new SaleColumn();

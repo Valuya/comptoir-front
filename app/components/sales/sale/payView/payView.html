@@ -35,15 +35,15 @@
                       [class.exact]="toPayAmount == 0">
                     {{ -toPayAmount  | currency:'EUR':true:'.2-2'}}
                 </span>
-                <span class="action validateLink"
-                      [hidden]="noInput || stockList.size > 1"
-                      (click)="onValidateClicked()">
-                    Valider
-                </span>
                 <span class="action stockLink"
                       [hidden]="noInput || stockList.size <= 1"
-                      (click)="onChooseStockClicked()">
-                    Choix des stocks
+                      (click)="onConfirmationClicked()">
+                    Détails
+                </span>
+                <span class="action validateLink"
+                      [hidden]="noInput"
+                      (click)="onValidateClicked()">
+                    Valider
                 </span>
             </span>
         </div>

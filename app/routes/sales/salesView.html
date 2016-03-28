@@ -11,5 +11,8 @@
     <app-tab  [selectable]="true" [active]="isActive('./history')">
         <a [routerLink]="['./History']">Terminées</a>
     </app-tab>
+    <app-tab  [selectable]="false" [active]="isActive('./details')">
+        <a>Details</a>
+    </app-tab>
 </app-header>
 <router-outlet></router-outlet>

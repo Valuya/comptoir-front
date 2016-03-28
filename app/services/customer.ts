@@ -1,21 +1,17 @@
 /**
  * Created by cghislai on 06/08/15.
  */
-import {Injectable} from 'angular2/core';
-
-import {Customer, CustomerRef, CustomerSearch, CustomerFactory} from '../client/domain/customer';
-import {CompanyRef} from '../client/domain/company';
-
-import {LocalCustomer, LocalCustomerFactory} from '../client/localDomain/customer';
-import {LocalAccount} from '../client/localDomain/account';
-
-import {WithId} from '../client/utils/withId';
-import {SearchRequest, SearchResult} from '../client/utils/search';
-
-import {CustomerClient} from '../client/customer';
-
-import {AuthService} from './auth';
-import {CompanyService} from './company';
+import {Injectable} from "angular2/core";
+import {Customer} from "../client/domain/customer";
+import {CompanyRef} from "../client/domain/company";
+import {LocalCustomer, LocalCustomerFactory} from "../client/localDomain/customer";
+import {WithId} from "../client/utils/withId";
+import {SearchRequest, SearchResult} from "../client/utils/search";
+import {CustomerClient} from "../client/customer";
+import {AuthService} from "./auth";
+import {CompanyService} from "./company";
+import {WsUtils} from "../client/utils/wsClient";
+import {Http, Request} from "angular2/http";
 
 @Injectable()
 export class CustomerService {
@@ -23,13 +19,16 @@ export class CustomerService {
     customerClient:CustomerClient;
     authService:AuthService;
     companyService:CompanyService;
+    private http:Http;
 
     constructor(customerClient:CustomerClient,
                 authService:AuthService,
-                companyService:CompanyService) {
+                companyService:CompanyService,
+                http:Http) {
         this.customerClient = customerClient;
         this.authService = authService;
         this.companyService = companyService;
+        this.http = http;
     }
 
     get(id:number):Promise<LocalCustomer> {
@@ -71,6 +70,28 @@ export class CustomerService {
             });
     }
 
+    getLoyaltyBalance(id:number):Promise<number> {
+        var url = this.customerClient.webServiceUrl + this.customerClient.resourcePath + '/' + id + '/loyaltyBalance';
+        var options = WsUtils.getRequestOptions(this.getAuthToken());
+        options.method = 'GET';
+        options.url = url;
+        var request = this.http.request(new Request(options));
+
+        return request
+            .map(response=> {
+                if (response.text() == null || response.text().length <= 0) {
+                    return 0;
+                }
+                var amountValue:any = JSON.parse(response.text());
+                var amount = parseFloat(amountValue.value);
+                if (isNaN(amount)) {
+                    return 0;
+                }
+                return amount;
+            })
+            .toPromise();
+    }
+
     toLocalConverter(customer:Customer):Promise<LocalCustomer> {
         var localCustomerDesc:any = {};
         localCustomerDesc.address1 = customer.adress1;
@@ -94,6 +115,16 @@ export class CustomerService {
                     localCustomerDesc.company = company;
                 })
         );
+
+        if (customer.id != null) {
+            var id = customer.id;
+            taskList.push(
+                this.getLoyaltyBalance(id)
+                    .then((amount)=> {
+                        localCustomerDesc.loyaltyBalance = amount;
+                    })
+            );
+        }
         return Promise.all(taskList)
             .then(()=> {
                 return LocalCustomerFactory.createNewCustomer(localCustomerDesc);

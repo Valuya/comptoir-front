@@ -31,8 +31,15 @@
         </span>
     </template>
     <template [ngSwitchWhen]=" 'ref' ">
-        <span class="ref">
+        <span class="sale-ref">
              {{ sale.reference }}
+        </span>
+    </template>
+    <template [ngSwitchWhen]=" 'customer' ">
+        <span class="customer">
+             <customer-select-input [selectedCustomer]="sale.customer"
+                                    [editable]="false">
+             </customer-select-input>
         </span>
     </template>
     <template [ngSwitchWhen]=" 'action_remove' ">

@@ -25,4 +25,8 @@ export class CountryService {
     get(code:string, authToken:string):Promise<Country> {
         return this.countryClient.getFromCacheOrServer(code, authToken);
     }
+
+    search(authToken:string):Promise<Immutable.List<Country>> {
+        return this.countryClient.search(authToken);
+    }
 }

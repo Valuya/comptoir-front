@@ -4,7 +4,7 @@
 
 import {Component, ViewChild} from "angular2/core";
 import {NgIf} from "angular2/common";
-import {Router, RouteParams, Location, CanReuse} from "angular2/router";
+import {Router, RouteParams, Location, CanReuse, OnActivate} from "angular2/router";
 import {LocalSale} from "../../../client/localDomain/sale";
 import {LocalItemVariant} from "../../../client/localDomain/itemVariant";
 import {ErrorService} from "../../../services/error";
@@ -19,17 +19,16 @@ import {LocalStock} from "../../../client/localDomain/stock";
 import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
 import {StockService} from "../../../services/stock";
 import {StockSearch} from "../../../client/domain/stock";
-import {ChooseStocksView} from "../../../components/sales/sale/chooseStocksView/chooseStocksView";
+import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
 
 @Component({
     selector: 'sale-view',
-    bindings: [ActiveSaleService],
     templateUrl: './routes/sales/sale/saleView.html',
     styleUrls: ['./routes/sales/sale/saleView.css'],
-    directives: [ItemVariantSelectView, CommandView, PayView, ChooseStocksView, NgIf, PosSelect]
+    directives: [ItemVariantSelectView, CommandView, PayView, SaleDetailsComponent, NgIf, PosSelect]
 })
 
-export class SaleView implements CanReuse {
+export class SaleView implements CanReuse, OnActivate {
     activeSaleService:ActiveSaleService;
     errorService:ErrorService;
     authService:AuthService;
@@ -41,7 +40,6 @@ export class SaleView implements CanReuse {
 
     navigatingWithinSale:boolean;
     payStep:boolean;
-    stockStep:boolean;
 
     language:string;
 
@@ -80,11 +78,10 @@ export class SaleView implements CanReuse {
         return this.findSale()
             .then((sale)=> {
                 if (sale.closed) {
-                    this.payStep = true;
-                } else {
-                    this.payStep = false;
+                    this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+                    return null;
                 }
-                this.activeSaleService.sale = sale;
+                return sale;
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -160,31 +157,27 @@ export class SaleView implements CanReuse {
     }
 
     onCommandPaid() {
-        if (this.stockResult.count > 1) {
-            this.stockStep = true;
-            return;
-        }
         this.payStep = false;
-        this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+        this.activeSaleService.doCloseSale()
+            .then(()=> {
+                return this.activeSaleService.getNewSale();
+            })
+            .then(()=> {
+                this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+            });
     }
 
-    onStocksValidated() {
-        this.stockStep = false;
+    onSaleDetails() {
         this.payStep = false;
-        this.router.navigate(['/Sales/Sale', {id: 'new'}]);
+        this.router.navigate(['/Sales/Details', {id: this.activeSaleService.sale.id}]);
     }
 
     onValidateChanged(validated) {
         this.payStep = validated;
-        this.stockStep = false;
     }
 
     onSaleReopened() {
         this.payStep = false;
-        this.activeSaleService.doReopensale()
-            .catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
     }
 
     private findSale():Promise<any> {

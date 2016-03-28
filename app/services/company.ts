@@ -123,6 +123,7 @@ export class CompanyService {
         localCompanyDesc.description = company.description;
         localCompanyDesc.id = company.id;
         localCompanyDesc.name = company.name;
+        localCompanyDesc.customerLoyaltyRate = company.customerLoyaltyRate;
 
         var taskList = [];
         var countryRef = company.countryRef;
@@ -145,6 +146,7 @@ export class CompanyService {
         company.countryRef = new CountryRef(localCompany.country.code);
         company.description = localCompany.description;
         company.name = localCompany.name;
+        company.customerLoyaltyRate = localCompany.customerLoyaltyRate;
         return company;
     }
 

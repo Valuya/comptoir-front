@@ -12,13 +12,16 @@ export interface LocalCompany extends Immutable.Map<string, any> {
     id: number;
     name: LocaleTexts;
     description: LocaleTexts;
+    // tODO: LocalCountry
     country: Country;
+    customerLoyaltyRate: number;
 }
 var CompanyRecord = Immutable.Record({
     id: null,
     name: null,
     description: null,
-    country: null
+    country: null,
+    customerLoyaltyRate: null
 });
 
 export class LocalCompanyFactory {

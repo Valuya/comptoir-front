@@ -18,3 +18,27 @@
 .no-input {
   pointer-events: none;
 }
+header {
+  >*:not([hidden]) {
+    display: inline-block;
+  }
+}
+
+header:not(.coloredHeader) {
+  .actions {
+    float: right;
+    text-align: right;
+
+    .action:not([hidden]) {
+      @extend .actionlink;
+      font-weight: bolder;
+      display: inline-block;
+      padding: .5em;
+      border: .1em solid transparent;
+    }
+    .action:hover {
+      color: lightgray;
+      cursor: pointer;
+    }
+  }
+}

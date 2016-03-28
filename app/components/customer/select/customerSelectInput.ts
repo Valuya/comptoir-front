@@ -38,6 +38,10 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
     autoFocus:boolean = true;
     @Input()
     selectedCustomer:LocalCustomer;
+    @Input()
+    editable: boolean = true;
+    @Input()
+    emptyLabel: string = null;
 
     @Output()
     customerSelected = new EventEmitter();
