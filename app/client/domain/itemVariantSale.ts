@@ -28,6 +28,10 @@ export class ItemVariantSale {
 export class ItemVariantSaleRef {
     id: number;
     link: string;
+
+    constructor(id?: number) {
+        this.id = id;
+    }
 }
 
 export class ItemVariantSaleSearch {

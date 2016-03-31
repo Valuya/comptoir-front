@@ -111,6 +111,9 @@ export class SaleDetailsComponent {
     }
 
     doEdit() {
+        if (this.saleClosing) {
+            return;
+        }
         this.editAction.emit(null);
     }
 

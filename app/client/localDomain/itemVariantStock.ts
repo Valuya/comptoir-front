@@ -3,9 +3,9 @@
  */
 
 import {LocalItemVariant} from "./itemVariant";
-import {SaleRef} from "../domain/sale";
 import {LocalStock} from "./stock";
 import {StockChangeType, ItemVariantStockRef} from "../domain/itemVariantStock";
+import {ItemVariantSale} from "../domain/itemVariantSale";
 
 
 export interface LocalItemVariantStock extends Immutable.Map<string, any>  {
@@ -18,7 +18,8 @@ export interface LocalItemVariantStock extends Immutable.Map<string, any>  {
     comment: string;
     previousItemStockRef: ItemVariantStockRef;
     stockChangeType: StockChangeType;
-    stockChangeSaleRef: SaleRef;
+    stockChangeVariantSale: ItemVariantSale;
+    orderPosition: number;
 }
 
 var ItemVariantStockRecord = Immutable.Record({
@@ -31,7 +32,8 @@ var ItemVariantStockRecord = Immutable.Record({
     comment: null,
     previousItemStockRef: null,
     stockChangeType: null,
-    stockChangeSaleRef: null
+    stockChangeVariantSale: null,
+    orderPosition: null
 });
 
 export class LocalItemVariantStockFactory {

@@ -81,7 +81,8 @@ export class EditStockView {
         search.companyRef = this.authService.getEmployeeCompanyRef();
         this.itemVariantStockRequest.search = search;
         var sorts = {
-            'START_DATE_TIME': 'desc'
+            'START_DATE_TIME': 'desc',
+            'ORDER': 'desc'
         };
         var pagination = PaginationFactory.Pagination({
             firstIndex: 0,
