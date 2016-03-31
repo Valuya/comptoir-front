@@ -96,7 +96,6 @@ export class SaleDetailsView implements CanReuse, OnActivate {
         });
     }
 
-
     onSaleClosed() {
     }
 

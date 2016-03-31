@@ -142,7 +142,11 @@ export class ActiveSaleService {
         var authToken = this.authService.authToken;
         return this.saleService.closeSale(this.sale.id, authToken)
             .then((ref)=>{
-                return this.getSale(ref.id);
+                return this.saleService.fetch(ref.id);
+            })
+            .then((sale)=>{
+                this.sale = sale;
+                return sale;
             });
     }
 
@@ -157,7 +161,11 @@ export class ActiveSaleService {
         this.sale = <LocalSale>this.sale.set('closed', false);
         return this.saleService.reopenSale(this.sale.id)
             .then((ref)=> {
-                return this.getSale(ref.id);
+                return this.saleService.fetch(ref.id);
+            })
+            .then((sale)=>{
+                this.sale = sale;
+                return sale;
             });
     }
 
