@@ -45,6 +45,7 @@ export class SaleDetailsComponent {
     @Output()
     editAction = new EventEmitter();
 
+    private saleClosing: boolean;
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
     editableColumns:Immutable.List<ItemVariantSaleColumn>;
 
@@ -110,30 +111,43 @@ export class SaleDetailsComponent {
     }
 
     doEdit() {
+        if (this.saleClosing) {
+            return;
+        }
         this.editAction.emit(null);
     }
 
     doValidate() {
+        if (this.saleClosing) {
+            return;
+        }
+        this.saleClosing = true;
         this.activeSaleService.doCloseSale()
             .then(() => {
+                this.saleClosing = false;
+                this.validated.emit(true);
                 this.initColumns();
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
-        this.validated.emit(true);
     }
 
 
     doReopen() {
+        if (this.saleClosing) {
+            return;
+        }
+        this.saleClosing = true;
         this.activeSaleService.doReopensale()
             .then(() => {
+                this.saleClosing = false;
                 this.initColumns();
+                this.reopened.emit(true);
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
-        this.reopened.emit(true);
     }
 
     onColumnAction(event:ItemVariantSaleColumnActionEvent) {

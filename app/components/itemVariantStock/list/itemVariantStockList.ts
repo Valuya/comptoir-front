@@ -15,6 +15,7 @@ import {FocusableDirective} from '../../utils/focusable';
 
 import * as Immutable from 'immutable';
 import {LocalItemVariantStock} from "../../../client/localDomain/itemVariantStock";
+import {RouterLink} from "angular2/router";
 
 /****
  * Column component
@@ -24,7 +25,7 @@ import {LocalItemVariantStock} from "../../../client/localDomain/itemVariantStoc
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariantStock/list/itemVariantStockColumn.html',
     styleUrls: ['./components/itemVariantStock/list/itemVariantStockList.css'],
-    directives: [NgIf, NgFor, NgSwitch, NgSwitchWhen],
+    directives: [NgIf, NgFor, NgSwitch, NgSwitchWhen, RouterLink],
     // eases styling
     encapsulation: ViewEncapsulation.None
 })

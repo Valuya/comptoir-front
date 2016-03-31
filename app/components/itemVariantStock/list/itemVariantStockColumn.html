@@ -5,37 +5,43 @@
         </span>
     </template>
     <template [ngSwitchWhen]="'changeType' ">
-        <span class="changeType" >
-            {{ getChangeTypeLabel(itemVariantStock.stockChangeType) }}
+        <span class="changeType">
+            <span [hidden]="itemVariantStock.stockChangeVariantSale != null">
+                {{ getChangeTypeLabel(itemVariantStock.stockChangeType) }}
+            </span>
+            <a *ngIf="itemVariantStock.stockChangeVariantSale != null"
+               [routerLink]="['/Sales/Details', {id: itemVariantStock.stockChangeVariantSale.sale.id}]">
+                {{ getChangeTypeLabel(itemVariantStock.stockChangeType) }}
+            </a>
         </span>
     </template>
     <template [ngSwitchWhen]="'startDate' ">
-        <span class="date" >
+        <span class="date">
             {{ itemVariantStock.startDateTime | date:"dd/MM/yyyy HH:mm" }}
         </span>
     </template>
     <template [ngSwitchWhen]="'endDate' ">
-        <span class="date" >
+        <span class="date">
              {{ itemVariantStock.startDateTime | date:"dd/MM/yyyy HH:mm" }}
         </span>
     </template>
     <template [ngSwitchWhen]="'quantity' ">
-        <span class="quantity" >
+        <span class="quantity">
              {{ itemVariantStock.quantity }}
         </span>
     </template>
     <template [ngSwitchWhen]="'comment' ">
-        <span class="comment" >
+        <span class="comment">
              {{ itemVariantStock.comment }}
         </span>
     </template>
     <template [ngSwitchWhen]="'variant' ">
-        <span class="variant" >
+        <span class="variant">
             # {{ itemVariantStock.itemVariantRef }}
         </span>
     </template>
     <template [ngSwitchWhen]="'stock' ">
-        <span class="stock" >
+        <span class="stock">
             # {{ itemVariantStock.stockRef }}
         </span>
     </template>

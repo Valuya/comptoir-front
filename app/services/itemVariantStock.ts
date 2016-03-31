@@ -15,22 +15,27 @@ import {StockService} from "./stock";
 import {LocalItemVariant} from "../client/localDomain/itemVariant";
 import {LocalStock} from "../client/localDomain/stock";
 import {PaginationFactory} from "../client/utils/pagination";
+import {ItemVariantSaleService} from "./itemVariantSale";
+import {ItemVariantSaleRef} from "../client/domain/itemVariantSale";
 
 @Injectable()
 export class ItemVariantStockService {
     private itemVariantStockClient:ItemVariantStockClient;
     private authService:AuthService;
     private itemVariantService:ItemVariantService;
+    private itemVariantSaleService:ItemVariantSaleService;
     private stockService:StockService;
 
 
     constructor(itemVariantStockClient:ItemVariantStockClient,
                 authService:AuthService,
                 itemVariantService:ItemVariantService,
+                itemVariantSaleService:ItemVariantSaleService,
                 stockService:StockService) {
         this.itemVariantStockClient = itemVariantStockClient;
         this.authService = authService;
         this.itemVariantService = itemVariantService;
+        this.itemVariantSaleService = itemVariantSaleService;
         this.stockService = stockService;
     }
 
@@ -122,7 +127,7 @@ export class ItemVariantStockService {
         var stockChangeType = StockChangeType[itemVariantStock.stockChangeType];
         localItemStockDesc.stockChangeType = stockChangeType;
         localItemStockDesc.previousItemStockRef = itemVariantStock.previousItemStockRef;
-        localItemStockDesc.stockChangeSaleRef = itemVariantStock.stockChangeSaleRef;
+        localItemStockDesc.orderPosition = itemVariantStock.orderPosition;
 
         var taskList = [];
 
@@ -141,6 +146,15 @@ export class ItemVariantStockService {
                     localItemStockDesc.stock = localStock;
                 })
         );
+        var stockChangeVariantSaleRef = itemVariantStock.stockChangeVariantSaleRef;
+        if (stockChangeVariantSaleRef != null) {
+            taskList.push(
+                this.itemVariantSaleService.get(stockChangeVariantSaleRef.id)
+                    .then((localVariantSale)=> {
+                        localItemStockDesc.stockChangeVariantSale = localVariantSale;
+                    })
+            );
+        }
 
 
         return Promise.all(taskList)
@@ -167,8 +181,12 @@ export class ItemVariantStockService {
         itemStock.comment = localItemVariantStock.comment;
         var stockChangeType = StockChangeType[localItemVariantStock.stockChangeType];
         itemStock.stockChangeType = stockChangeType;
-        itemStock.stockChangeSaleRef = localItemVariantStock.stockChangeSaleRef;
+        var stockChangeVariantSale = localItemVariantStock.stockChangeVariantSale;
+        if (stockChangeVariantSale != null) {
+            itemStock.stockChangeVariantSaleRef = new ItemVariantSaleRef(stockChangeVariantSale.id);
+        }
         itemStock.previousItemStockRef = localItemVariantStock.previousItemStockRef;
+        itemStock.orderPosition = localItemVariantStock.orderPosition;
 
         return itemStock;
     }

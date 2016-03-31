@@ -7,6 +7,7 @@ import {ItemVariantRef} from "./itemVariant";
 import {SaleRef} from "./sale";
 import {LocaleTexts, LocaleTextsFactory} from "../utils/lang";
 import {StockRef} from "./stock";
+import {ItemVariantSaleRef} from "./itemVariantSale";
 
 
 export class ItemVariantStock {
@@ -19,7 +20,8 @@ export class ItemVariantStock {
     comment: string;
     previousItemStockRef: ItemVariantStockRef;
     stockChangeType: string;
-    stockChangeSaleRef: SaleRef;
+    stockChangeVariantSaleRef: ItemVariantSaleRef;
+    orderPosition: number;
 }
 
 export enum StockChangeType {

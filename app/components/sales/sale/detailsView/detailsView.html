@@ -10,11 +10,14 @@
 
         <div class="actions">
             <a class="action validate" (click)="doEdit()"
-               [hidden]="activeSaleService.sale?.closed">Choix des produits</a>
+               [hidden]="activeSaleService.sale?.closed"
+            [class.disabled]="saleClosing">Choix des produits</a>
             <a class="action validate" (click)="doValidate()"
-               [hidden]="activeSaleService.sale?.closed">Valider</a>
+               [hidden]="activeSaleService.sale?.closed"
+               [class.disabled]="saleClosing">Valider</a>
             <a class="action reopen" (click)="doReopen()"
-               [hidden]="!activeSaleService.sale?.closed">Réouvrir</a>
+               [hidden]="!activeSaleService.sale?.closed"
+               [class.disabled]="saleClosing">Réouvrir</a>
         </div>
     </header>
 
