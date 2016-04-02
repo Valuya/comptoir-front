@@ -17,6 +17,7 @@ import {AuthService} from "./auth";
 import {AccountingTransactionService} from "./accountingTransaction";
 import {CompanyService} from "./company";
 import {CustomerService} from "./customer";
+import {ApplicationRequestCache} from "../client/utils/applicationRequestCache";
 
 @Injectable()
 export class SaleService {
@@ -97,6 +98,7 @@ export class SaleService {
         options.method = 'PUT';
         options.url = url;
         var request = this.http.request(new Request(options));
+        request = ApplicationRequestCache.registerRequest(request);
 
         return request
             .map(response=> {
@@ -113,6 +115,7 @@ export class SaleService {
         options.method = 'PUT';
         options.url = url;
         var request = this.http.request(new Request(options));
+        request = ApplicationRequestCache.registerRequest(request);
 
         return request
             .map(response=> {
@@ -129,6 +132,7 @@ export class SaleService {
         options.method = 'GET';
         options.url = url;
         var request = this.http.request(new Request(options));
+        request =  ApplicationRequestCache.registerRequest(request);
 
         return request
             .map(response=>response.json())
@@ -146,6 +150,7 @@ export class SaleService {
         options.url = url;
         options.body = JSON.stringify(searchRequest.search, JSONFactory.toJSONReplacer);
         var request = this.http.request(new Request(options));
+        request =  ApplicationRequestCache.registerRequest(request);
 
         return request
             .map(response=>response.json())

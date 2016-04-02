@@ -89,7 +89,7 @@ export class ItemVariantService {
         var localVariantDesc:any = {};
         localVariantDesc.id = itemVariant.id;
         localVariantDesc.variantReference = itemVariant.variantReference;
-        localVariantDesc.pricing = Pricing[itemVariant.pricing];
+        localVariantDesc.pricing = itemVariant.pricing;
         localVariantDesc.pricingAmount = itemVariant.pricingAmount;
 
         localVariantDesc.attributeValues = [];

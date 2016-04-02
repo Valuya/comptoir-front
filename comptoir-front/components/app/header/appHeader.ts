@@ -3,6 +3,7 @@
  */
 import {Component} from 'angular2/core';
 import {AppMenu} from './menu/appMenu';
+import {ApplicationRequestCache} from "../../../client/utils/applicationRequestCache";
 
 @Component({
     selector: 'app-header',
@@ -15,5 +16,10 @@ export class AppHeader {
 
     title:string;
     inactive: boolean;
+    requestCache: ApplicationRequestCache;
+    
+    constructor() {
+        this.requestCache = ApplicationRequestCache.getInstance();
+    }
 
 }

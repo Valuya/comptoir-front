@@ -11,6 +11,7 @@ import {WsUtils} from "../client/utils/wsClient";
 import {BalanceClient} from "../client/client/balance";
 import {AuthService} from "./auth";
 import {AccountService} from "./account";
+import {ApplicationRequestCache} from "../client/utils/applicationRequestCache";
 
 @Injectable()
 export class BalanceService {
@@ -82,6 +83,8 @@ export class BalanceService {
         options.method = 'PUT';
 
         var request = this.balanceClient.http.request(url, options);
+        request = ApplicationRequestCache.registerRequest(request);
+
         return request
             .map((response)=> {
                 return <WsBalanceRef>response.json();

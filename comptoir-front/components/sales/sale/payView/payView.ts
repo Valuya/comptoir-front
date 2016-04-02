@@ -2,22 +2,18 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from 'angular2/core';
-import {NgFor, NgIf} from 'angular2/common';
-
-import {LocalSale} from '../../../../domain/sale';
-import {LocalAccount} from '../../../../domain/account';
-import {LocalAccountingEntry, LocalAccountingEntryFactory} from '../../../../domain/accountingEntry';
-
-import {NumberUtils} from '../../../../client/utils/number';
-import {LocaleTextsFactory, Language} from '../../../../client/utils/lang';
-
-import {ActiveSaleService} from '../../../../services/activeSale';
-import {ErrorService} from '../../../../services/error';
-import {AuthService} from '../../../../services/auth';
-
-import {FastInput} from '../../../utils/fastInput';
-import * as Immutable from 'immutable';
+import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from "angular2/core";
+import {NgFor, NgIf} from "angular2/common";
+import {LocalSale} from "../../../../domain/sale";
+import {LocalAccount} from "../../../../domain/account";
+import {LocalAccountingEntry, LocalAccountingEntryFactory} from "../../../../domain/accountingEntry";
+import {NumberUtils} from "../../../../client/utils/number";
+import {LocaleTextsFactory, Language} from "../../../../client/utils/lang";
+import {ActiveSaleService} from "../../../../services/activeSale";
+import {ErrorService} from "../../../../services/error";
+import {AuthService} from "../../../../services/auth";
+import {FastInput} from "../../../utils/fastInput";
+import * as Immutable from "immutable";
 import {LocalStock} from "../../../../domain/stock";
 
 @Component({
@@ -41,7 +37,7 @@ export class PayView {
     @Input()
     sale:LocalSale;
     @Input()
-    stockList: Immutable.List<LocalStock>;
+    stockList:Immutable.List<LocalStock>;
     @Input()
     accountingEntries:Immutable.List<LocalAccountingEntry>;
 
@@ -152,10 +148,12 @@ export class PayView {
     onValidateClicked() {
         this.cancelEditEntry();
         this.activeSaleService.doCloseSale()
+            .then(()=> {
+                this.paid.emit(true);
+            })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
-        this.paid.emit(true);
     }
 
     isConfirmationRequired() {

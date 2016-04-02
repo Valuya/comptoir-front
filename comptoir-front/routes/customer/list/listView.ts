@@ -31,7 +31,7 @@ export class CustomerListView {
     searchRequest:SearchRequest<LocalCustomer>;
     searchResult:SearchResult<LocalCustomer>;
     customerPerPage:number = 25;
-    columns: Immutable.List<CustomerColumn>;
+    columns:Immutable.List<CustomerColumn>;
 
     appLanguage:Language;
     loading:boolean;
@@ -50,14 +50,14 @@ export class CustomerListView {
         this.searchRequest.search = customerSearch;
         this.searchResult = new SearchResult<LocalCustomer>();
 
-        this.appLanguage= authService.getEmployeeLanguage();
+        this.appLanguage = authService.getEmployeeLanguage();
         this.columns = Immutable.List.of(
             CustomerColumn.FIRST_NAME,
             CustomerColumn.LAST_NAME,
             CustomerColumn.ZIP,
             CustomerColumn.CITY,
             CustomerColumn.EMAIL,
-            CustomerColumn.LOYALTY_BALANCE, 
+            CustomerColumn.LOYALTY_BALANCE,
             CustomerColumn.NOTES
             //CustomerColumn.ACTION_REMOVE // FIXME: implement in backend
         );
@@ -69,7 +69,18 @@ export class CustomerListView {
             .search(this.searchRequest)
             .then((result:SearchResult<LocalCustomer>) => {
                 this.searchResult = result;
-            }).catch((error)=> {
+                var taskList:Promise<LocalCustomer>[];
+                taskList = result.list.toSeq()
+                    .map((customer)=> {
+                        return this.customerService.getLoyaltyBalance(customer.id)
+                            .then((amount)=> {
+                                customer = <LocalCustomer>customer.set('loyaltyBalance', amount);
+                                return customer;
+                            });
+                    }).toList().toJS();
+                return Promise.all(taskList);
+            })
+            .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
     }
@@ -83,7 +94,7 @@ export class CustomerListView {
 
     onColumnAction(event) {
         var customer:LocalCustomer = event.customer;
-        var column:CustomerColumn= event.column;
+        var column:CustomerColumn = event.column;
         if (column === CustomerColumn.ACTION_REMOVE) {
             this.doRemoveCustomer(customer);
         }
@@ -101,7 +112,7 @@ export class CustomerListView {
             .then(function (result) {
                 thisView.searchCustomerList();
             }).catch((error)=> {
-                this.errorService.handleRequestError(error);
-            });
+            this.errorService.handleRequestError(error);
+        });
     }
 }

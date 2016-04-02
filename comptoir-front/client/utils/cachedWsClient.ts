@@ -2,20 +2,18 @@
  * Created by cghislai on 14/01/16.
  */
 
-import {Injectable, Inject} from 'angular2/core';
-import {Http, Headers, Request, RequestOptions, Response, URLSearchParams} from 'angular2/http';
-import {Observable} from 'rxjs/Rx';
-import * as Immutable from 'immutable';
-
-import {WithId} from './withId';
-import {JSONFactory} from './factory';
-import {Cancellation} from './cancellation';
-import {Pagination} from './pagination';
-import {SearchRequest, SearchResult} from './search';
-import {ComptoirRequest, ComptoirResponse, ComptoirError} from './request';
-import {WSClient, WsUtils} from './wsClient';
-import {WSResourceCache, WSResourceMemoryCache} from './wsResourceCache';
-import {WSRequestCache} from './wsRequestCache';
+import {Http, Request, Response, URLSearchParams} from "angular2/http";
+import {Observable} from "rxjs/Rx";
+import * as Immutable from "immutable";
+import {WithId} from "./withId";
+import {JSONFactory} from "./factory";
+import {Cancellation} from "./cancellation";
+import {Pagination} from "./pagination";
+import {SearchRequest, SearchResult} from "./search";
+import {WSClient, WsUtils} from "./wsClient";
+import {WSResourceCache, WSResourceMemoryCache} from "./wsResourceCache";
+import {WSRequestCache} from "./wsRequestCache";
+import {ApplicationRequestCache} from "./applicationRequestCache";
 
 
 export class CachedWSClient<T extends WithId> implements WSClient<T> {
@@ -77,6 +75,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
             request = this.http.request(new Request(options));
 
             this.requestCache.registerGetRequest(id, request);
+            request = ApplicationRequestCache.registerRequest(request);
             this.handleCancelRequest(request, cancellation);
         }
 
@@ -97,6 +96,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         options.url = url;
         var request = this.http.request(new Request(options));
 
+        request = ApplicationRequestCache.registerRequest(request);
         // TODO: cancel ongoing GET requests
         return request
             .do(()=> {
@@ -111,6 +111,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         options.url = url;
         options.body = JSON.stringify(entity, JSONFactory.toJSONReplacer);
         var request = this.http.request(new Request(options));
+        request = ApplicationRequestCache.registerRequest(request);
 
         return request
             .map((response:Response)=> {
@@ -125,6 +126,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         options.url = url;
         options.body = JSON.stringify(entity, JSONFactory.toJSONReplacer);
         var request = this.http.request(new Request(options));
+        request = ApplicationRequestCache.registerRequest(request);
 
         return request
             .do(()=> {
@@ -152,6 +154,8 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         options.body = JSON.stringify(searchRequest.search, JSONFactory.toJSONReplacer);
         var request = this.http.request(new Request(options));
         searchRequest.busy = true;
+        request = ApplicationRequestCache.registerRequest(request);
+
         return request
             .map((response:Response)=> {
                 var list:T[] = JSON.parse(response.text(), this.jsonReviver);

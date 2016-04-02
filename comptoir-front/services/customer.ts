@@ -12,6 +12,7 @@ import {AuthService} from "./auth";
 import {CompanyService} from "./company";
 import {WsUtils} from "../client/utils/wsClient";
 import {Http, Request} from "angular2/http";
+import {ApplicationRequestCache} from "../client/utils/applicationRequestCache";
 
 @Injectable()
 export class CustomerService {
@@ -76,7 +77,7 @@ export class CustomerService {
         options.method = 'GET';
         options.url = url;
         var request = this.http.request(new Request(options));
-
+        request =  ApplicationRequestCache.registerRequest(request);
         return request
             .map(response=> {
                 if (response.text() == null || response.text().length <= 0) {
@@ -116,15 +117,6 @@ export class CustomerService {
                 })
         );
 
-        if (customer.id != null) {
-            var id = customer.id;
-            taskList.push(
-                this.getLoyaltyBalance(id)
-                    .then((amount)=> {
-                        localCustomerDesc.loyaltyBalance = amount;
-                    })
-            );
-        }
         return Promise.all(taskList)
             .then(()=> {
                 return LocalCustomerFactory.createNewCustomer(localCustomerDesc);

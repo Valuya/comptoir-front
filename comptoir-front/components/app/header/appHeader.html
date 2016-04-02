@@ -5,4 +5,8 @@
             <ng-content></ng-content>
         </div>
     </div>
+    <div class="spinner">
+        <img src="resources/img/spinner-balls-white.gif"
+             [hidden]="!requestCache.busy">
+    </div>
 </header>
