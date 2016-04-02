@@ -4,7 +4,7 @@
 import {Component} from "angular2/core";
 import {NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Router} from "angular2/router";
-import {LocalCustomer} from "../../../domain/customer";
+import {Customer} from "../../../domain/thirdparty/customer";
 import {Language} from "../../../client/utils/lang";
 import {CustomerService} from "../../../services/customer";
 import {ErrorService} from "../../../services/error";
@@ -28,8 +28,8 @@ export class CustomerListView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest:SearchRequest<LocalCustomer>;
-    searchResult:SearchResult<LocalCustomer>;
+    searchRequest:SearchRequest<Customer>;
+    searchResult:SearchResult<Customer>;
     customerPerPage:number = 25;
     columns:Immutable.List<CustomerColumn>;
 
@@ -42,13 +42,13 @@ export class CustomerListView {
         this.errorService = appService;
         this.router = router;
 
-        this.searchRequest = new SearchRequest<LocalCustomer>();
+        this.searchRequest = new SearchRequest<Customer>();
         var customerSearch = new WsCustomerSearch();
         customerSearch.companyRef = authService.getEmployeeCompanyRef();
         var pagination = PaginationFactory.Pagination({firstIndex: 0, pageSize: this.customerPerPage});
         this.searchRequest.pagination = pagination;
         this.searchRequest.search = customerSearch;
-        this.searchResult = new SearchResult<LocalCustomer>();
+        this.searchResult = new SearchResult<Customer>();
 
         this.appLanguage = authService.getEmployeeLanguage();
         this.columns = Immutable.List.of(
@@ -67,14 +67,14 @@ export class CustomerListView {
     searchCustomerList() {
         this.customerService
             .search(this.searchRequest)
-            .then((result:SearchResult<LocalCustomer>) => {
+            .then((result:SearchResult<Customer>) => {
                 this.searchResult = result;
-                var taskList:Promise<LocalCustomer>[];
+                var taskList:Promise<Customer>[];
                 taskList = result.list.toSeq()
                     .map((customer)=> {
                         return this.customerService.getLoyaltyBalance(customer.id)
                             .then((amount)=> {
-                                customer = <LocalCustomer>customer.set('loyaltyBalance', amount);
+                                customer = <Customer>customer.set('loyaltyBalance', amount);
                                 return customer;
                             });
                     }).toList().toJS();
@@ -93,19 +93,19 @@ export class CustomerListView {
 
 
     onColumnAction(event) {
-        var customer:LocalCustomer = event.customer;
+        var customer:Customer = event.customer;
         var column:CustomerColumn = event.column;
         if (column === CustomerColumn.ACTION_REMOVE) {
             this.doRemoveCustomer(customer);
         }
     }
 
-    doEditCustomer(customer:LocalCustomer) {
+    doEditCustomer(customer:Customer) {
         var id = customer.id;
         this.router.navigate(['/Customer/Edit', {id: id}]);
     }
 
-    doRemoveCustomer(customer:LocalCustomer) {
+    doRemoveCustomer(customer:Customer) {
         var thisView = this;
         this.customerService
             .remove(customer.id)

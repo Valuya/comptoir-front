@@ -6,7 +6,7 @@ import {Component, ChangeDetectionStrategy, OnInit,
     EventEmitter, ViewEncapsulation} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
-import {LocalItem} from '../../../domain/item';
+import {Item} from '../../../domain/commercial/item';
 
 import {Language, LocaleTextsFactory} from '../../../client/utils/lang';
 
@@ -32,11 +32,11 @@ import * as Immutable from 'immutable';
 })
 export class ItemColumnComponent {
     action = new EventEmitter();
-    item:LocalItem;
+    item:Item;
     column:ItemColumn;
     lang:Language;
 
-    onColumnAction(item:LocalItem, column:ItemColumn, event) {
+    onColumnAction(item:Item, column:ItemColumn, event) {
         this.action.next({item: item, column: column});
         event.stopPropagation();
         event.preventDefault();
@@ -61,7 +61,7 @@ export class ItemColumnComponent {
 
 export class ItemList implements OnInit {
     // properties
-    items:Immutable.List<LocalItem>;
+    items:Immutable.List<Item>;
     columns:Immutable.List<ItemColumn>;
     itemSelectable:boolean;
     headersVisible:boolean;
@@ -86,13 +86,13 @@ export class ItemList implements OnInit {
     }
 
 
-    onItemClick(item:LocalItem, event) {
+    onItemClick(item:Item, event) {
         this.rowClicked.next(item);
         event.stopPropagation();
         event.preventDefault();
     }
 
-    onItemKeyDown(item: LocalItem, event) {
+    onItemKeyDown(item: Item, event) {
         // TODO: use event.key once supported
         switch (event.which) {
             case 13: {

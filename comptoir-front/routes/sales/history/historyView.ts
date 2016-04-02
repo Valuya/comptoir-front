@@ -4,8 +4,7 @@
 import {Component} from "angular2/core";
 import {NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Router} from "angular2/router";
-import {LocalSale} from "../../../domain/sale";
-import {LocalSalePrice, LocalSalePriceFactory} from "../../../domain/salePrice";
+import {Sale} from "../../../domain/commercial/sale";
 import {WsCompanyRef} from "../../../client/domain/company/company";
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../../client/utils/pagination";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
@@ -15,17 +14,18 @@ import {SaleService} from "../../../services/sale";
 import {Paginator} from "../../../components/utils/paginator/paginator";
 import {SaleListComponent, SaleColumn} from "../../../components/sales/list/saleList";
 import * as Immutable from "immutable";
-import {LocalCustomer} from "../../../domain/customer";
+import {Customer} from "../../../domain/thirdparty/customer";
 import {WsCustomerRef} from "../../../client/domain/thirdparty/customer";
 import {CustomerSelectInputComponent} from "../../../components/customer/select/customerSelectInput";
 import {WsSaleSearch} from "../../../client/domain/search/saleSearch";
+import {SalePrice, SalePriceFactory} from "../../../domain/commercial/salePrice";
 
 @Component({
     selector: 'sales-history-view',
     templateUrl: './routes/sales/history/historyView.html',
     styleUrls: ['./routes/sales/history/historyView.css'],
     directives: [SaleListComponent, NgIf, Paginator,
-        FORM_DIRECTIVES,CustomerSelectInputComponent]
+        FORM_DIRECTIVES, CustomerSelectInputComponent]
 })
 
 export class SaleHistoryView {
@@ -33,9 +33,9 @@ export class SaleHistoryView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest:SearchRequest<LocalSale>;
-    searchResult:SearchResult<LocalSale>;
-    totalPayedPrice:LocalSalePrice;
+    searchRequest:SearchRequest<Sale>;
+    searchResult:SearchResult<Sale>;
+    totalPayedPrice:SalePrice;
 
     columns:Immutable.List<SaleColumn>;
     salesPerPage:number = 25;
@@ -43,7 +43,7 @@ export class SaleHistoryView {
     loading:boolean;
     fromDateString:string;
     toDateString:string;
-    customerSearchCustomer: LocalCustomer;
+    customerSearchCustomer:Customer;
 
 
     constructor(saleService:SaleService, errorService:ErrorService,
@@ -53,14 +53,14 @@ export class SaleHistoryView {
         this.router = router;
 
 
-        this.searchRequest = new SearchRequest<LocalSale>();
+        this.searchRequest = new SearchRequest<Sale>();
         var saleSearch = new WsSaleSearch();
         saleSearch.companyRef = new WsCompanyRef(authService.auth.employee.company.id);
         saleSearch.closed = true;
         this.resetPagination();
         this.searchRequest.search = saleSearch;
-        this.searchResult = new SearchResult<LocalSale>();
-        this.totalPayedPrice = LocalSalePriceFactory.createNewSalePrice({base: 0, taxes: 0});
+        this.searchResult = new SearchResult<Sale>();
+        this.totalPayedPrice = SalePriceFactory.createNewSalePrice({base: 0, taxes: 0});
 
         this.columns = Immutable.List.of(
             SaleColumn.ID,
@@ -94,13 +94,13 @@ export class SaleHistoryView {
     searchSales() {
         var saleTask = this.saleService
             .search(this.searchRequest)
-            .then((result:SearchResult<LocalSale>) => {
+            .then((result:SearchResult<Sale>) => {
                 this.searchResult = result;
                 return null;
             });
         var payedTask = this.saleService
             .getSalesTotalPayed(this.searchRequest)
-            .then((result:LocalSalePrice)=> {
+            .then((result:SalePrice)=> {
                 this.totalPayedPrice = result;
                 return null;
             });
@@ -115,12 +115,12 @@ export class SaleHistoryView {
         this.searchSales();
     }
 
-    onSaleClicked(sale:LocalSale) {
+    onSaleClicked(sale:Sale) {
         var saleId = sale.id;
         this.router.navigate(['/Sales/Details', {id: saleId}]);
     }
 
-    onColumnAction(sale:LocalSale, col:SaleColumn) {
+    onColumnAction(sale:Sale, col:SaleColumn) {
     }
 
     updateDates() {
@@ -130,7 +130,7 @@ export class SaleHistoryView {
         this.searchRequest.search.toDateTime = toDate;
     }
 
-    onCustomerSelected(customer:LocalCustomer) {
+    onCustomerSelected(customer:Customer) {
         this.customerSearchCustomer = customer;
         var customerRef = new WsCustomerRef(customer.id);
         this.searchRequest.search.customerRef = customerRef;

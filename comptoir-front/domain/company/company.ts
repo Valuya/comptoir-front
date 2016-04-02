@@ -3,10 +3,10 @@
  */
 
 import * as Immutable from "immutable";
-import {LocaleTexts} from "../client/utils/lang";
-import {WsCountry} from "../client/domain/company/country";
+import {LocaleTexts} from "../../client/utils/lang";
+import {WsCountry} from "../../client/domain/company/country";
 
-export interface LocalCompany extends Immutable.Map<string, any> {
+export interface Company extends Immutable.Map<string, any> {
     id: number;
     name: LocaleTexts;
     description: LocaleTexts;
@@ -22,9 +22,9 @@ var CompanyRecord = Immutable.Record({
     customerLoyaltyRate: null
 });
 
-export class LocalCompanyFactory {
+export class CompanyFactory {
 
-    static createNewCompany(desc:any):LocalCompany {
+    static createNewCompany(desc:any):Company {
         return <any>CompanyRecord(desc);
     }
 }

@@ -3,7 +3,7 @@
  */
 import {Component, EventEmitter, OnInit} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
-import {LocalAccount, LocalAccountFactory} from "../../../domain/account";
+import {Account, AccountFactory} from "../../../domain/accounting/account";
 import {Language} from "../../../client/utils/lang";
 import {AuthService} from "../../../services/auth";
 import {AccountService} from "../../../services/account";
@@ -29,7 +29,7 @@ export class AccountsEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
-    account:LocalAccount;
+    account:Account;
     accountModel:any;
     paymentAccount:boolean;
 
@@ -56,7 +56,7 @@ export class AccountsEditComponent implements OnInit {
     }
 
     getAccountTypeLabel(accountType:AccountType) {
-        return LocalAccountFactory.getAccountTypeLabel(accountType).get(this.appLanguage.locale);
+        return AccountFactory.getAccountTypeLabel(accountType).get(this.appLanguage.locale);
     }
 
     isPaymentAccount() {
@@ -69,7 +69,7 @@ export class AccountsEditComponent implements OnInit {
             this.accountModel.cash = false;
         }
 
-        var account = LocalAccountFactory.createNewAccount(this.accountModel);
+        var account = AccountFactory.createNewAccount(this.accountModel);
         this.saveAccount(account)
             .then((account)=> {
                 this.saved.next(account);
@@ -83,12 +83,12 @@ export class AccountsEditComponent implements OnInit {
         this.cancelled.next(null);
     }
 
-    private saveAccount(account:LocalAccount):Promise<LocalAccount> {
+    private saveAccount(account:Account):Promise<Account> {
          return this.accountService.save(account)
             .then((ref)=> {
                 return this.accountService.get(ref.id);
             })
-            .then((account:LocalAccount)=> {
+            .then((account:Account)=> {
                 this.account = account;
                 this.accountModel = account.toJS();
                 return account;

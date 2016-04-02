@@ -4,9 +4,9 @@
 
 import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from "angular2/core";
 import {NgFor, NgIf} from "angular2/common";
-import {LocalSale} from "../../../../domain/sale";
-import {LocalAccount} from "../../../../domain/account";
-import {LocalAccountingEntry, LocalAccountingEntryFactory} from "../../../../domain/accountingEntry";
+import {Sale} from "../../../../domain/commercial/sale";
+import {Account} from "../../../../domain/accounting/account";
+import {AccountingEntry, AccountingEntryFactory} from "../../../../domain/accounting/accountingEntry";
 import {NumberUtils} from "../../../../client/utils/number";
 import {LocaleTextsFactory, Language} from "../../../../client/utils/lang";
 import {ActiveSaleService} from "../../../../services/activeSale";
@@ -14,7 +14,7 @@ import {ErrorService} from "../../../../services/error";
 import {AuthService} from "../../../../services/auth";
 import {FastInput} from "../../../utils/fastInput";
 import * as Immutable from "immutable";
-import {LocalStock} from "../../../../domain/stock";
+import {Stock} from "../../../../domain/stock/stock";
 
 @Component({
     selector: 'pay-view',
@@ -35,20 +35,20 @@ export class PayView {
     @Input()
     paidAmount:number;
     @Input()
-    sale:LocalSale;
+    sale:Sale;
     @Input()
-    stockList:Immutable.List<LocalStock>;
+    stockList:Immutable.List<Stock>;
     @Input()
-    accountingEntries:Immutable.List<LocalAccountingEntry>;
+    accountingEntries:Immutable.List<AccountingEntry>;
 
     @Output()
     paid = new EventEmitter();
     @Output()
     details = new EventEmitter();
 
-    editingEntry:LocalAccountingEntry;
+    editingEntry:AccountingEntry;
     language:Language;
-    accountList:Immutable.List<LocalAccount>;
+    accountList:Immutable.List<Account>;
 
     constructor(activeSaleService:ActiveSaleService,
                 errorService:ErrorService, authService:AuthService) {
@@ -67,7 +67,7 @@ export class PayView {
         return this.activeSaleService.accountingEntriesRequest.busy;
     }
 
-    isEditing(entry:LocalAccountingEntry) {
+    isEditing(entry:AccountingEntry) {
         return this.editingEntry != null && this.editingEntry.id === entry.id;
     }
 
@@ -82,7 +82,7 @@ export class PayView {
     }
 
 
-    addAccountingEntry(account:LocalAccount) {
+    addAccountingEntry(account:Account) {
         var localAccountingEntryDesc:any = {};
         localAccountingEntryDesc.account = account;
         localAccountingEntryDesc.amount = this.toPayAmount;
@@ -91,16 +91,16 @@ export class PayView {
         localAccountingEntryDesc.customer = this.sale.customer;
         localAccountingEntryDesc.description = LocaleTextsFactory.toLocaleTexts({});
         localAccountingEntryDesc.dateTime = new Date();
-        var localAccountingEntry = LocalAccountingEntryFactory.createAccountingEntry(localAccountingEntryDesc);
+        var localAccountingEntry = AccountingEntryFactory.createAccountingEntry(localAccountingEntryDesc);
         this.startEditEntry(localAccountingEntry);
     }
 
-    startEditEntry(localAccountingEntry:LocalAccountingEntry) {
+    startEditEntry(localAccountingEntry:AccountingEntry) {
         if (this.editingEntry != null) {
             this.cancelEditEntry();
         }
         if (localAccountingEntry.amount == null || localAccountingEntry.amount <= 0) {
-            this.editingEntry = <LocalAccountingEntry>localAccountingEntry.set('amount', this.toPayAmount);
+            this.editingEntry = <AccountingEntry>localAccountingEntry.set('amount', this.toPayAmount);
         } else {
             this.editingEntry = localAccountingEntry;
         }
@@ -124,7 +124,7 @@ export class PayView {
             return;
         }
         amount = NumberUtils.toFixedDecimals(amount, 2);
-        var entry = <LocalAccountingEntry>this.editingEntry.set('amount', amount);
+        var entry = <AccountingEntry>this.editingEntry.set('amount', amount);
 
         this.activeSaleService.doAddAccountingEntry(entry)
             .catch((error)=> {
@@ -137,7 +137,7 @@ export class PayView {
         this.editingEntry = null;
     }
 
-    removeEntry(entry:LocalAccountingEntry) {
+    removeEntry(entry:AccountingEntry) {
         return this.activeSaleService.doRemoveAccountingEntry(entry)
             .catch((error)=> {
                 this.errorService.handleRequestError(error);

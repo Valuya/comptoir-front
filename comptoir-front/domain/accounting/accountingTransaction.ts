@@ -2,13 +2,13 @@
  * Created by cghislai on 02/09/15.
  */
 
-import {LocalCompany} from "./company";
+import {Company} from "./../company/company";
 import * as Immutable from "immutable";
-import {AccountingTransactionType} from "../client/domain/util/accountingTransactionType";
+import {AccountingTransactionType} from "../../client/domain/util/accountingTransactionType";
 
-export interface LocalAccountingTransaction extends Immutable.Map<string, any> {
+export interface AccountingTransaction extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     dateTime:Date;
     accountingTransactionType:AccountingTransactionType;
 }
@@ -19,7 +19,7 @@ var AccountingtTansactionRecord = Immutable.Record({
     accountingTransactionType: null
 });
 
-export class LocalAccountingTransactionFactory {
+export class AccountingTransactionFactory {
 
     static createAccountingTransaction(desc:any) {
         return <any>AccountingtTansactionRecord(desc);

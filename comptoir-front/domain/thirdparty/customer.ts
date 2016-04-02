@@ -2,12 +2,12 @@
  * Created by cghislai on 14/08/15.
  */
 
-import {LocalCompany} from "./company";
+import {Company} from "./../company/company";
 
 
-export interface LocalCustomer extends Immutable.Map<string, any> {
+export interface Customer extends Immutable.Map<string, any> {
     id: number;
-    company:LocalCompany;
+    company:Company;
     firstName:string;
     lastName:string;
     address1:string;
@@ -38,9 +38,9 @@ var CustomerRecord = Immutable.Record({
     loyaltyBalance: null
 });
 
-export class LocalCustomerFactory {
+export class CustomerFactory {
 
-    static createNewCustomer(desc:any):LocalCustomer {
+    static createNewCustomer(desc:any):Customer {
         return <any>CustomerRecord(desc);
     }
 }

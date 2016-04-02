@@ -4,7 +4,7 @@
 import {Injectable} from "angular2/core";
 import {WsBalance, WsBalanceRef} from "../client/domain/accounting/balance";
 import {WsAccountRef} from "../client/domain/accounting/account";
-import {LocalBalance, LocalBalanceFactory} from "../domain/balance";
+import {Balance, BalanceFactory} from "../domain/accounting/balance";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {WsUtils} from "../client/utils/wsClient";
@@ -28,7 +28,7 @@ export class BalanceService {
         this.accountService = accountService;
     }
 
-    fetch(id:number):Promise<LocalBalance> {
+    fetch(id:number):Promise<Balance> {
         return this.balanceClient.doFetch(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsBalance)=> {
@@ -36,7 +36,7 @@ export class BalanceService {
             });
     }
 
-    get(id:number):Promise<LocalBalance> {
+    get(id:number):Promise<Balance> {
         return this.balanceClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsBalance)=> {
@@ -49,13 +49,13 @@ export class BalanceService {
             .toPromise();
     }
 
-    save(entity:LocalBalance):Promise<WithId> {
+    save(entity:Balance):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.balanceClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalBalance>):Promise<SearchResult<LocalBalance>> {
+    search(searchRequest:SearchRequest<Balance>):Promise<SearchResult<Balance>> {
         return this.balanceClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsBalance>)=> {
@@ -67,7 +67,7 @@ export class BalanceService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalBalance>();
+                        var localResult = new SearchResult<Balance>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -75,7 +75,7 @@ export class BalanceService {
             });
     }
 
-    closeBalance(localBalance:LocalBalance):Promise<WsBalanceRef> {
+    closeBalance(localBalance:Balance):Promise<WsBalanceRef> {
         var url = this.balanceClient.webServiceUrl + this.balanceClient.resourcePath + '/' + localBalance.id;
         url += "/state/CLOSED";
         var options = WsUtils.getRequestOptions(this.getAuthToken());
@@ -93,7 +93,7 @@ export class BalanceService {
     }
 
 
-    toLocalConverter(balance:WsBalance):Promise<LocalBalance> {
+    toLocalConverter(balance:WsBalance):Promise<Balance> {
         var localBalanceDesc:any = {};
         localBalanceDesc.id = balance.id;
         localBalanceDesc.balance = balance.balance;
@@ -112,11 +112,11 @@ export class BalanceService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalBalanceFactory.createNewBalance(localBalanceDesc);
+                return BalanceFactory.createNewBalance(localBalanceDesc);
             });
     }
 
-    fromLocalConverter(localBalance:LocalBalance):WsBalance {
+    fromLocalConverter(localBalance:Balance):WsBalance {
         var balance = new WsBalance();
         balance.accountRef = new WsAccountRef(localBalance.account.id);
         balance.balance = localBalance.balance;

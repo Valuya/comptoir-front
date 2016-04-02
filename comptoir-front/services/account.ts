@@ -2,7 +2,7 @@
  * Created by cghislai on 06/08/15.
  */
 import {Injectable} from "angular2/core";
-import {LocalAccount, LocalAccountFactory} from "../domain/account";
+import {Account, AccountFactory} from "../domain/accounting/account";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {AccountClient} from "../client/client/account";
@@ -18,7 +18,7 @@ export class AccountService {
     authService:AuthService;
     companyService:CompanyService;
 
-    lastUsedBalanceAccount:LocalAccount;
+    lastUsedBalanceAccount:Account;
 
     constructor(accountClient:AccountClient,
                 authService:AuthService,
@@ -29,7 +29,7 @@ export class AccountService {
 
     }
 
-    get(id:number):Promise<LocalAccount> {
+    get(id:number):Promise<Account> {
         return this.accountClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsAccount)=> {
@@ -42,13 +42,13 @@ export class AccountService {
             .toPromise();
     }
 
-    save(entity:LocalAccount):Promise<WithId> {
+    save(entity:Account):Promise<WithId> {
         var e:WsAccount = this.fromLocalConverter(entity);
         return this.accountClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalAccount>):Promise<SearchResult<LocalAccount>> {
+    search(searchRequest:SearchRequest<Account>):Promise<SearchResult<Account>> {
         return this.accountClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsAccount>)=> {
@@ -60,7 +60,7 @@ export class AccountService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalAccount>();
+                        var localResult = new SearchResult<Account>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -68,7 +68,7 @@ export class AccountService {
             });
     }
 
-    fromLocalConverter(localAccount:LocalAccount):WsAccount {
+    fromLocalConverter(localAccount:Account):WsAccount {
         var account = new WsAccount();
         account.accountingNumber = localAccount.accountingNumber;
         account.accountType = localAccount.accountType;
@@ -82,11 +82,11 @@ export class AccountService {
         return account;
     }
 
-    toLocalConverter(account:WsAccount):Promise<LocalAccount> {
+    toLocalConverter(account:WsAccount):Promise<Account> {
         var localAccountDesc:any = {};
         localAccountDesc.accountingNumber = account.accountingNumber;
         localAccountDesc.accountType = AccountType[account.accountType];
-        localAccountDesc.accountTypeLabel = LocalAccountFactory.getAccountTypeLabel(localAccountDesc.accountType);
+        localAccountDesc.accountTypeLabel = AccountFactory.getAccountTypeLabel(localAccountDesc.accountType);
         localAccountDesc.bic = account.bic;
         localAccountDesc.description = account.description;
         localAccountDesc.iban = account.iban;
@@ -107,7 +107,7 @@ export class AccountService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                var localAccount:LocalAccount = LocalAccountFactory.createNewAccount(localAccountDesc);
+                var localAccount:Account = AccountFactory.createNewAccount(localAccountDesc);
                 return localAccount;
             });
     }

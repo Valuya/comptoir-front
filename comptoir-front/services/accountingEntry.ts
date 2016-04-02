@@ -2,8 +2,8 @@
  * Created by cghislai on 29/07/15.
  */
 import {Injectable} from "angular2/core";
-import {LocalAccountingEntry, LocalAccountingEntryFactory} from "../domain/accountingEntry";
-import {LocalAccount} from "../domain/account";
+import {AccountingEntry, AccountingEntryFactory} from "../domain/accounting/accountingEntry";
+import {Account} from "../domain/accounting/account";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {AccountingEntryClient} from "../client/client/accountingEntry";
@@ -38,7 +38,7 @@ export class AccountingEntryService {
         this.customerService = customerService;
     }
 
-    get(id:number):Promise<LocalAccountingEntry> {
+    get(id:number):Promise<AccountingEntry> {
         return this.accountingEntryClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsAccountingEntry)=> {
@@ -51,13 +51,13 @@ export class AccountingEntryService {
             .toPromise();
     }
 
-    save(entity:LocalAccountingEntry):Promise<WithId> {
+    save(entity:AccountingEntry):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.accountingEntryClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalAccountingEntry>):Promise<SearchResult<LocalAccountingEntry>> {
+    search(searchRequest:SearchRequest<AccountingEntry>):Promise<SearchResult<AccountingEntry>> {
         return this.accountingEntryClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsAccountingEntry>)=> {
@@ -69,7 +69,7 @@ export class AccountingEntryService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalAccountingEntry>();
+                        var localResult = new SearchResult<AccountingEntry>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -77,7 +77,7 @@ export class AccountingEntryService {
             });
     }
 
-    toLocalConverter(accountingEntry:WsAccountingEntry):Promise<LocalAccountingEntry> {
+    toLocalConverter(accountingEntry:WsAccountingEntry):Promise<AccountingEntry> {
         var localAccountingEntryDesc:any = {};
         localAccountingEntryDesc.amount = accountingEntry.amount;
         localAccountingEntryDesc.dateTime = accountingEntry.dateTime;
@@ -93,7 +93,7 @@ export class AccountingEntryService {
 
         taskList.push(
             this.accountService.get(accountId)
-                .then((localAccount:LocalAccount)=> {
+                .then((localAccount:Account)=> {
                     localAccountingEntryDesc.account = localAccount;
                 })
         );
@@ -120,7 +120,7 @@ export class AccountingEntryService {
             var vatEntryId = vatAccountingEntryRef.id;
             taskList.push(
                 this.get(vatEntryId)
-                    .then((localEntry:LocalAccountingEntry)=> {
+                    .then((localEntry:AccountingEntry)=> {
                         localAccountingEntryDesc.vatAccountingEntry = localEntry;
                     })
             );
@@ -128,11 +128,11 @@ export class AccountingEntryService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalAccountingEntryFactory.createAccountingEntry(localAccountingEntryDesc);
+                return AccountingEntryFactory.createAccountingEntry(localAccountingEntryDesc);
             });
     }
 
-    fromLocalConverter(localAccountingEntry:LocalAccountingEntry):WsAccountingEntry {
+    fromLocalConverter(localAccountingEntry:AccountingEntry):WsAccountingEntry {
         var accountingEntry = new WsAccountingEntry();
         accountingEntry.accountingTransactionRef = localAccountingEntry.accountingTransactionRef;
         accountingEntry.accountRef = new WsAccountRef(localAccountingEntry.account.id);

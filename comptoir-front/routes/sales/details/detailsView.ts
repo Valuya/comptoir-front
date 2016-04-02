@@ -10,7 +10,7 @@ import {SaleService} from "../../../services/sale";
 import {AuthService} from "../../../services/auth";
 import {ActiveSaleService} from "../../../services/activeSale";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
-import {LocalStock} from "../../../domain/stock";
+import {Stock} from "../../../domain/stock/stock";
 import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
 import {StockService} from "../../../services/stock";
 import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
@@ -36,8 +36,8 @@ export class SaleDetailsView implements CanReuse, OnActivate {
 
     language:string;
 
-    stockRequest:SearchRequest<LocalStock>;
-    stockResult:SearchResult<LocalStock>;
+    stockRequest:SearchRequest<Stock>;
+    stockResult:SearchResult<Stock>;
     private stockService:StockService;
 
     constructor(activeSaleService:ActiveSaleService, errorService:ErrorService,
@@ -54,12 +54,12 @@ export class SaleDetailsView implements CanReuse, OnActivate {
         this.router = router;
         this.location = location;
 
-        this.stockRequest = new SearchRequest<LocalStock>();
+        this.stockRequest = new SearchRequest<Stock>();
         var search = new WsStockSearch();
         search.companyRef = this.authService.getEmployeeCompanyRef();
         search.active = true;
         this.stockRequest.search = search;
-        this.stockResult = new SearchResult<LocalStock>();
+        this.stockResult = new SearchResult<Stock>();
     }
 
     routerOnActivate() {

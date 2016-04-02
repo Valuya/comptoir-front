@@ -1,12 +1,12 @@
 /**
  * Created by cghislai on 08/09/15.
  */
-import {LocalAccount} from "./account";
+import {Account} from "./account";
 import * as Immutable from "immutable";
 
-export interface LocalBalance extends Immutable.Map<string, any> {
+export interface Balance extends Immutable.Map<string, any> {
     id:number;
-    account:LocalAccount;
+    account:Account;
     dateTime:Date;
     balance:number;
     comment:string;
@@ -21,9 +21,9 @@ var BalanceRecord = Immutable.Record({
     closed: null
 });
 
-export class LocalBalanceFactory {
+export class BalanceFactory {
 
-    static createNewBalance(desc:any):LocalBalance {
+    static createNewBalance(desc:any):Balance {
         return <any>BalanceRecord(desc);
     }
 

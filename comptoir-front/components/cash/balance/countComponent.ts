@@ -4,9 +4,9 @@
 import {Component, EventEmitter, ChangeDetectionStrategy, OnInit} from 'angular2/core';
 import {NgFor, NgIf} from 'angular2/common';
 
-import {LocalAccount} from '../../../domain/account';
-import {LocalBalance, LocalBalanceFactory} from '../../../domain/balance';
-import {LocalMoneyPile, ALL_CASH_TYPES, LocalMoneyPileFactory} from '../../../domain/moneyPile';
+import {Account} from '../../../domain/accounting/account';
+import {Balance, BalanceFactory} from '../../../domain/accounting/balance';
+import {MoneyPile, ALL_CASH_TYPES, MoneyPileFactory} from '../../../domain/cash/moneyPile';
 
 import {NumberUtils} from '../../../client/utils/number';
 
@@ -36,9 +36,9 @@ export class BalanceCountComponent implements OnInit {
     moneyPileService:MoneyPileService;
     balanceService:BalanceService;
 
-    account:LocalAccount;
-    balance:LocalBalance;
-    moneyPiles:Immutable.List<LocalMoneyPile>;
+    account:Account;
+    balance:Balance;
+    moneyPiles:Immutable.List<MoneyPile>;
 
     editingTotal:boolean;
 
@@ -60,15 +60,15 @@ export class BalanceCountComponent implements OnInit {
     initBalance() {
         this.moneyPiles = Immutable.List(ALL_CASH_TYPES)
             .map((cashType)=> {
-                return LocalMoneyPileFactory.createNewMoneyPile({
+                return MoneyPileFactory.createNewMoneyPile({
                     account: this.account,
                     unitCount: null,
-                    unitAmount: LocalMoneyPileFactory.getCashTypeUnitValue(cashType),
-                    label: LocalMoneyPileFactory.getCashTypeLabel(cashType)
+                    unitAmount: MoneyPileFactory.getCashTypeUnitValue(cashType),
+                    label: MoneyPileFactory.getCashTypeLabel(cashType)
                 });
             })
             .toList();
-        this.balance = LocalBalanceFactory.createNewBalance({
+        this.balance = BalanceFactory.createNewBalance({
             account: this.account,
             balance: 0,
             company: this.authService.getEmployeeCompany()
@@ -85,7 +85,7 @@ export class BalanceCountComponent implements OnInit {
 
         this.saveBalanceIfRequired()
             .then((balance)=> {
-                moneyPile = <LocalMoneyPile>moneyPile.set('balance', balance);
+                moneyPile = <MoneyPile>moneyPile.set('balance', balance);
                 return this.moneyPileService.save(moneyPile);
             })
             .then((ref:any)=> {
@@ -97,7 +97,7 @@ export class BalanceCountComponent implements OnInit {
             })
             .then((results)=> {
                 var newMoneyPile = results[0];
-                newMoneyPile = newMoneyPile.set('label', LocalMoneyPileFactory.getCashTypeLabel(CashType));
+                newMoneyPile = newMoneyPile.set('label', MoneyPileFactory.getCashTypeLabel(CashType));
                 var newBalance = results[1];
                 this.balance = newBalance;
                 this.moneyPiles = this.moneyPiles.set(listIndex, newMoneyPile);
@@ -120,13 +120,13 @@ export class BalanceCountComponent implements OnInit {
         // Refetch total
         return this.saveBalanceIfRequired()
             .then((balance)=> {
-                balance = <LocalBalance>balance.set('balance', null);
+                balance = <Balance>balance.set('balance', null);
                 return this.balanceService.save(balance);
             })
             .then((ref)=> {
                 return this.balanceService.get(ref.id);
             })
-            .then((balance:LocalBalance)=> {
+            .then((balance:Balance)=> {
                 this.balance = balance;
             });
     }
@@ -140,13 +140,13 @@ export class BalanceCountComponent implements OnInit {
         total = NumberUtils.toFixedDecimals(total, 2);
         var balanceJs = this.balance.toJS();
         balanceJs.balance = total;
-        var newBalance = LocalBalanceFactory.createNewBalance(balanceJs);
+        var newBalance = BalanceFactory.createNewBalance(balanceJs);
 
         this.balanceService.save(newBalance)
             .then((ref)=> {
                 return this.balanceService.get(ref.id);
             })
-            .then((balance:LocalBalance)=> {
+            .then((balance:Balance)=> {
                 this.balance = balance;
             })
             .catch((error)=> {
@@ -163,7 +163,7 @@ export class BalanceCountComponent implements OnInit {
             .then((ref)=> {
                 return this.balanceService.fetch(ref.id);
             })
-            .then((balance:LocalBalance)=> {
+            .then((balance:Balance)=> {
                 this.validated.emit(balance);
                 this.initBalance();
             })
@@ -172,7 +172,7 @@ export class BalanceCountComponent implements OnInit {
             });
     }
 
-    private saveBalanceIfRequired():Promise<LocalBalance> {
+    private saveBalanceIfRequired():Promise<Balance> {
         if (this.balance.id != null) {
             return Promise.resolve(this.balance);
         }
@@ -180,7 +180,7 @@ export class BalanceCountComponent implements OnInit {
             .then((ref)=> {
                 return this.balanceService.get(ref.id);
             })
-            .then((balance:LocalBalance)=> {
+            .then((balance:Balance)=> {
                 this.balance = balance;
                 return balance;
             });

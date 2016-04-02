@@ -5,7 +5,7 @@ import {Component} from 'angular2/core';
 import {NgIf} from 'angular2/common';
 import {RouteParams, Router, RouterLink} from 'angular2/router';
 
-import {LocalCustomer, LocalCustomerFactory} from '../../../domain/customer';
+import {Customer, CustomerFactory} from '../../../domain/thirdparty/customer';
 
 import {AuthService} from '../../../services/auth';
 import {CustomerService} from '../../../services/customer';
@@ -26,7 +26,7 @@ export class EditCustomerView {
     authService:AuthService;
     router:Router;
 
-    customer:LocalCustomer;
+    customer:Customer;
 
 
     constructor(customerService:CustomerService, authService:AuthService, appService:ErrorService,
@@ -62,7 +62,7 @@ export class EditCustomerView {
         var customerDesc: any = {};
         customerDesc.company = this.authService.getEmployeeCompany();
         customerDesc.description = new LocaleTexts();
-        this.customer = LocalCustomerFactory.createNewCustomer(customerDesc);
+        this.customer = CustomerFactory.createNewCustomer(customerDesc);
     }
 
     getCustomer(id:number) {

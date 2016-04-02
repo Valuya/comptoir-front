@@ -4,7 +4,7 @@
 import {Injectable} from "angular2/core";
 import {WsAttributeDefinition} from "../client/domain/commercial/attributeDefinition";
 import {WsCompanyRef} from "../client/domain/company/company";
-import {LocalAttributeDefinition, LocalAttributeDefinitionFactory} from "../domain/attributeDefinition";
+import {AttributeDefinition, AttributeDefinitionFactory} from "../domain/commercial/attributeDefinition";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {AttributeDefinitionClient} from "../client/client/attributeDefinition";
@@ -27,7 +27,7 @@ export class AttributeDefinitionService {
         this.companyService = companyService;
     }
 
-    get(id:number):Promise<LocalAttributeDefinition> {
+    get(id:number):Promise<AttributeDefinition> {
         return this.attributedefinitionClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsAttributeDefinition)=> {
@@ -40,13 +40,13 @@ export class AttributeDefinitionService {
             .toPromise();
     }
 
-    save(entity:LocalAttributeDefinition):Promise<WithId> {
+    save(entity:AttributeDefinition):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.attributedefinitionClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalAttributeDefinition>):Promise<SearchResult<LocalAttributeDefinition>> {
+    search(searchRequest:SearchRequest<AttributeDefinition>):Promise<SearchResult<AttributeDefinition>> {
         return this.attributedefinitionClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsAttributeDefinition>)=> {
@@ -58,7 +58,7 @@ export class AttributeDefinitionService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalAttributeDefinition>();
+                        var localResult = new SearchResult<AttributeDefinition>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -66,7 +66,7 @@ export class AttributeDefinitionService {
             });
     }
 
-    fromLocalConverter(localAttributeDefinition:LocalAttributeDefinition):WsAttributeDefinition {
+    fromLocalConverter(localAttributeDefinition:AttributeDefinition):WsAttributeDefinition {
         var attributeDefinition = new WsAttributeDefinition();
         if (localAttributeDefinition.company != null) {
             attributeDefinition.companyRef = new WsCompanyRef(localAttributeDefinition.company.id);
@@ -76,7 +76,7 @@ export class AttributeDefinitionService {
         return attributeDefinition;
     }
 
-    toLocalConverter(attributeDefinition:WsAttributeDefinition):Promise<LocalAttributeDefinition> {
+    toLocalConverter(attributeDefinition:WsAttributeDefinition):Promise<AttributeDefinition> {
         var localAttributeDefinitionDesc:any = {};
         localAttributeDefinitionDesc.id = attributeDefinition.id;
         localAttributeDefinitionDesc.name = attributeDefinition.name;
@@ -95,7 +95,7 @@ export class AttributeDefinitionService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalAttributeDefinitionFactory.createAttributeDefinition(localAttributeDefinitionDesc);
+                return AttributeDefinitionFactory.createAttributeDefinition(localAttributeDefinitionDesc);
             });
     }
 

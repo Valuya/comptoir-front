@@ -7,8 +7,8 @@ import {Injectable} from 'angular2/core';
 import {WsCompany, WsCompanyRef, WsCompanyFactory} from '../client/domain/company/company';
 import {WsCountryRef} from '../client/domain/company/country';
 
-import {LocalCompany, LocalCompanyFactory} from '../domain/company';
-import {LocalAccount} from '../domain/account';
+import {Company, CompanyFactory} from '../domain/company/company';
+import {Account} from '../domain/accounting/account';
 
 import {WithId} from '../client/utils/withId';
 import {SearchRequest, SearchResult} from '../client/utils/search';
@@ -20,9 +20,9 @@ import {CountryService} from './country';
 import {StockClient} from "../client/client/stock";
 import {CompanyService} from "./company";
 import {AuthService} from "./auth";
-import {LocalStock} from "../domain/stock";
+import {Stock} from "../domain/stock/stock";
 import {WsStock} from "../client/domain/stock/stock";
-import {LocalStockFactory} from "../domain/stock";
+import {StockFactory} from "../domain/stock/stock";
 
 /**
  * Required by AuthService: Auth -> Employee -> Company
@@ -43,7 +43,7 @@ export class StockService {
         this.companyService = companyService;
     }
 
-    get(id:number):Promise<LocalStock> {
+    get(id:number):Promise<Stock> {
         return this.stockClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsStock)=> {
@@ -56,13 +56,13 @@ export class StockService {
             .toPromise();
     }
 
-    save(entity:LocalStock):Promise<WithId> {
+    save(entity:Stock):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.stockClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalStock>):Promise<SearchResult<LocalStock>> {
+    search(searchRequest:SearchRequest<Stock>):Promise<SearchResult<Stock>> {
         return this.stockClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsStock>)=> {
@@ -74,7 +74,7 @@ export class StockService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalStock>();
+                        var localResult = new SearchResult<Stock>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -82,7 +82,7 @@ export class StockService {
             });
     }
     
-    toLocalConverter(stock:WsStock, authToken:string):Promise<LocalStock> {
+    toLocalConverter(stock:WsStock, authToken:string):Promise<Stock> {
         var localStockDesc:any = {};
         localStockDesc.description = stock.description;
         localStockDesc.id = stock.id;
@@ -99,11 +99,11 @@ export class StockService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalStockFactory.createNewStock(localStockDesc)
+                return StockFactory.createNewStock(localStockDesc)
             });
     }
 
-    fromLocalConverter(localStock:LocalStock):WsStock {
+    fromLocalConverter(localStock:Stock):WsStock {
         var stock = new WsStock();
         stock.id = localStock.id;
         stock.active = localStock.active;

@@ -3,13 +3,13 @@
  */
 
 
-import {LocalCompany} from "./company";
+import {Company} from "./../company/company";
 import * as Immutable from "immutable";
-import {LocaleTexts} from "../client/utils/lang";
+import {LocaleTexts} from "../../client/utils/lang";
 
-export interface LocalStock extends Immutable.Map<string, any> {
+export interface Stock extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     description: LocaleTexts;
     active:boolean;
 }
@@ -20,9 +20,9 @@ var StockRecord = Immutable.Record({
     active: null
 });
 
-export class LocalStockFactory {
+export class StockFactory {
 
-    static createNewStock(desc:any):LocalStock {
+    static createNewStock(desc:any):Stock {
         return <any>StockRecord(desc);
     }
 

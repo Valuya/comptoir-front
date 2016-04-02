@@ -4,7 +4,7 @@
 
 import * as Immutable from "immutable";
 
-export interface LocalCountry extends Immutable.Map<string, any> {
+export interface Country extends Immutable.Map<string, any> {
     code: string;
     defaultVatRate: number;
 }
@@ -13,9 +13,9 @@ var CountryRecord = Immutable.Record({
     defaultVatRate: null
 });
 
-export class LocalCountryFactory {
+export class CountryFactory {
 
-    static createNewCountry(desc:any):LocalCountry {
+    static createNewCountry(desc:any):Country {
         return <any>CountryRecord(desc);
     }
 }

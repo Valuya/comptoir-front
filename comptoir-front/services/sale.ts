@@ -6,8 +6,8 @@ import {Http, Request} from "angular2/http";
 import {WsSale, WsSaleRef} from "../client/domain/commercial/sale";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {WsCustomerRef} from "../client/domain/thirdparty/customer";
-import {LocalSale, LocalSaleFactory} from "../domain/sale";
-import {LocalSalePrice, LocalSalePriceFactory} from "../domain/salePrice";
+import {Sale, SaleFactory} from "../domain/commercial/sale";
+import {SalePrice, SalePriceFactory} from "../domain/commercial/salePrice";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {WsUtils} from "../client/utils/wsClient";
@@ -44,7 +44,7 @@ export class SaleService {
 
     }
 
-    fetch(id:number):Promise<LocalSale> {
+    fetch(id:number):Promise<Sale> {
         return this.saleClient.doFetch(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsSale)=> {
@@ -52,7 +52,7 @@ export class SaleService {
             });
     }
 
-    get(id:number):Promise<LocalSale> {
+    get(id:number):Promise<Sale> {
         return this.saleClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsSale)=> {
@@ -65,13 +65,13 @@ export class SaleService {
             .toPromise();
     }
 
-    save(entity:LocalSale):Promise<WithId> {
+    save(entity:Sale):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.saleClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalSale>):Promise<SearchResult<LocalSale>> {
+    search(searchRequest:SearchRequest<Sale>):Promise<SearchResult<Sale>> {
         return this.saleClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsSale>)=> {
@@ -83,7 +83,7 @@ export class SaleService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalSale>();
+                        var localResult = new SearchResult<Sale>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -143,7 +143,7 @@ export class SaleService {
             .toPromise();
     }
     
-    getSalesTotalPayed(searchRequest:SearchRequest<LocalSale>):Promise<LocalSalePrice> {
+    getSalesTotalPayed(searchRequest:SearchRequest<Sale>):Promise<SalePrice> {
         var url = this.saleClient.webServiceUrl + this.saleClient.resourcePath + '/searchTotalPayed';
         var options = WsUtils.getRequestOptions(this.getAuthToken());
         options.method = 'POST';
@@ -155,13 +155,13 @@ export class SaleService {
         return request
             .map(response=>response.json())
             .map(value=> {
-                var salePrice = LocalSalePriceFactory.createNewSalePrice(value);
+                var salePrice = SalePriceFactory.createNewSalePrice(value);
                 return salePrice;
             })
             .toPromise();
     }
 
-    toLocalConverter(sale:WsSale):Promise<LocalSale> {
+    toLocalConverter(sale:WsSale):Promise<Sale> {
         var localSaleDesc:any = {};
         localSaleDesc.id = sale.id;
         localSaleDesc.closed = sale.closed;
@@ -206,11 +206,11 @@ export class SaleService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalSaleFactory.createNewSale(localSaleDesc);
+                return SaleFactory.createNewSale(localSaleDesc);
             });
     }
 
-    fromLocalConverter(localSale:LocalSale):WsSale {
+    fromLocalConverter(localSale:Sale):WsSale {
         var sale = new WsSale();
         sale.id = localSale.id;
         sale.accountingTransactionRef = localSale.accountingTransactionRef;

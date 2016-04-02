@@ -8,7 +8,7 @@ import {Language, LocaleTexts, LocaleTextsFactory} from "../../../client/utils/l
 import {AuthService} from "../../../services/auth";
 import {FocusableDirective} from "../../utils/focusable";
 import * as Immutable from "immutable";
-import {LocalItemVariantStock} from "../../../domain/itemVariantStock";
+import {ItemVariantStock} from "../../../domain/stock/itemVariantStock";
 import {RouterLink} from "angular2/router";
 import {WsItemVariantStock} from "../../../client/domain/stock/itemVariantStock";
 import {StockChangeType} from "../../../client/domain/util/stockChangeType";
@@ -29,7 +29,7 @@ export class ItemVariantStockColumnComponent {
     @Output()
     action = new EventEmitter();
     @Input()
-    itemVariantStock:LocalItemVariantStock;
+    itemVariantStock:ItemVariantStock;
     @Input()
     column:ItemVariantStockColumn;
     @Input()
@@ -88,7 +88,7 @@ export class ItemVariantStockColumnComponent {
 export class ItemVariantStockList {
     // properties
     @Input()
-    itemVariantStockList:Immutable.List<LocalItemVariantStock>;
+    itemVariantStockList:Immutable.List<ItemVariantStock>;
     @Input()
     columns:Immutable.List<ItemVariantStockColumn>;
     @Input()

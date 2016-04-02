@@ -2,12 +2,12 @@
  * Created by cghislai on 08/09/15.
  */
 
-import {LocalEmployee} from "./employee";
+import {Employee} from "./../thirdparty/employee";
 import * as Immutable from "immutable";
 
-export interface LocalAuth extends Immutable.Map<string, any> {
+export interface Auth extends Immutable.Map<string, any> {
     id: number;
-    employee:LocalEmployee;
+    employee:Employee;
     token:string;
     refreshToken: string;
     expirationDateTime: Date;
@@ -20,9 +20,9 @@ var AuthRecord = Immutable.Record({
     expirationDateTime: null
 });
 
-export class LocalAuthFactory {
+export class AuthFactory {
 
-    static createNewAuth(desc:any):LocalAuth {
+    static createNewAuth(desc:any):Auth {
         return <any>AuthRecord(desc);
     }
 }

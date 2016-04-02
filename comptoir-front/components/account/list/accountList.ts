@@ -5,7 +5,7 @@
 import {Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
-import {LocalAccount} from '../../../domain/account';
+import {Account} from '../../../domain/accounting/account';
 
 import {Language, LocaleTextsFactory} from '../../../client/utils/lang';
 
@@ -31,11 +31,11 @@ import * as Immutable from 'immutable';
 })
 export class AccountColumnComponent {
     action = new EventEmitter();
-    account:LocalAccount;
+    account:Account;
     column:AccountColumn;
     lang:Language;
 
-    onColumnAction(account:LocalAccount, column:AccountColumn, event) {
+    onColumnAction(account:Account, column:AccountColumn, event) {
         this.action.next({account: account, column: column});
         event.stopPropagation();
         event.preventDefault();
@@ -60,7 +60,7 @@ export class AccountColumnComponent {
 
 export class AccountList implements OnInit {
     // properties
-    accounts:Immutable.List<LocalAccount>;
+    accounts:Immutable.List<Account>;
     columns:Immutable.List<AccountColumn>;
     rowSelectable:boolean;
     headersVisible:boolean;
@@ -83,7 +83,7 @@ export class AccountList implements OnInit {
         this.columnWeightToPercentage = 100.0 / totWeight;
     }
 
-    onAccountClick(account:LocalAccount, event) {
+    onAccountClick(account:Account, event) {
         this.rowClicked.next(account);
         event.stopPropagation();
         event.preventDefault();

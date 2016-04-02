@@ -20,9 +20,9 @@ import {ItemVariantService} from "../../../services/itemVariant";
 import {ItemVariantStockService} from "../../../services/itemVariantStock";
 import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
-import {LocalItem} from "../../../domain/item";
+import {Item} from "../../../domain/commercial/item";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
-import {LocalItemVariant} from "../../../domain/itemVariant";
+import {ItemVariant} from "../../../domain/commercial/itemVariant";
 import {WsItemRef} from "../../../client/domain/commercial/item";
 import {PaginationFactory} from "../../../client/utils/pagination";
 import {Observable} from "rxjs/Observable";
@@ -55,12 +55,12 @@ export class ItemVariantSelectView implements AfterViewInit {
     tableHeaders: boolean;
 
     keyboardTimeout:number = 200;
-    searchRequest:SearchRequest<LocalItem>;
-    searchResult:SearchResult<LocalItem>;
+    searchRequest:SearchRequest<Item>;
+    searchResult:SearchResult<Item>;
     columns:Immutable.List<ItemColumn>;
 
-    variantRequest:SearchRequest<LocalItemVariant>;
-    variantResult:SearchResult<LocalItemVariant>;
+    variantRequest:SearchRequest<ItemVariant>;
+    variantResult:SearchResult<ItemVariant>;
     variantColumns:Immutable.List<ItemVariantColumn>;
     variantSelection:boolean;
 
@@ -82,20 +82,20 @@ export class ItemVariantSelectView implements AfterViewInit {
         itemSearch.locale = authService.getEmployeeLanguage().locale;
         itemSearch.companyRef = authService.getEmployeeCompanyRef();
         var pagination = PaginationFactory.Pagination({firstIndex: 0, pageSize: 20});
-        this.searchRequest = new SearchRequest<LocalItem>();
+        this.searchRequest = new SearchRequest<Item>();
         this.searchRequest.search = itemSearch;
         this.searchRequest.pagination = pagination;
-        this.searchResult = new SearchResult<LocalItem>();
+        this.searchResult = new SearchResult<Item>();
 
         var variantSearch = new WsItemVariantSearch();
         variantSearch.itemSearch = new WsItemSearch();
         variantSearch.itemSearch.companyRef = authService.getEmployeeCompanyRef();
         variantSearch.itemSearch.locale = authService.getEmployeeLanguage().locale;
         var variantPagination = PaginationFactory.Pagination({firstIndex: 0, pageSize: 20});
-        this.variantRequest = new SearchRequest<LocalItemVariant>();
+        this.variantRequest = new SearchRequest<ItemVariant>();
         this.variantRequest.search = variantSearch;
         this.variantRequest.pagination = variantPagination;
-        this.variantResult = new SearchResult<LocalItemVariant>();
+        this.variantResult = new SearchResult<ItemVariant>();
         this.variantSelection = false;
 
         this.columns = Immutable.List.of(
@@ -174,7 +174,7 @@ export class ItemVariantSelectView implements AfterViewInit {
         this.inputFieldValue = null;
     }
 
-    onItemClicked(item:LocalItem) {
+    onItemClicked(item:Item) {
         this.itemClicked.emit(item);
         var variantSearch = this.variantRequest.search;
         var itemRef = new WsItemRef(item.id);
@@ -198,7 +198,7 @@ export class ItemVariantSelectView implements AfterViewInit {
             });
     }
 
-    onVariantSelected(variant:LocalItemVariant) {
+    onVariantSelected(variant:ItemVariant) {
         this.variantSelected.emit(variant);
         this.variantSelection = false;
         this.clearFilter();

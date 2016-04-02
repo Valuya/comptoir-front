@@ -3,17 +3,17 @@
  */
 
 
-import {LocalCompany} from "./company";
-import {LocalCustomer} from "./customer";
+import {Company} from "./../company/company";
+import {Customer} from "./../thirdparty/customer";
 import * as Immutable from "immutable";
-import {LocaleTexts} from "../client/utils/lang";
+import {LocaleTexts} from "../../client/utils/lang";
 
-export interface LocalPos extends Immutable.Map<string, any> {
+export interface Pos extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     name:string;
     description:LocaleTexts;
-    defaultCustomer:LocalCustomer;
+    defaultCustomer:Customer;
 }
 var PosRecord = Immutable.Record({
     id: null,
@@ -23,9 +23,9 @@ var PosRecord = Immutable.Record({
     defaultCustomer: null
 });
 
-export class LocalPosFactory {
+export class PosFactory {
 
-    static createNewPos(desc:any):LocalPos {
+    static createNewPos(desc:any):Pos {
         return <any>PosRecord(desc);
     }
 }

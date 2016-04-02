@@ -2,22 +2,22 @@
  * Created by cghislai on 01/09/15.
  */
 
-import {LocalAttributeValue} from "./attributeValue";
-import {LocalItem} from "./item";
-import {LocalPicture} from "./picture";
+import {AttributeValue} from "./attributeValue";
+import {Item} from "./item";
+import {Picture} from "./picture";
 import * as Immutable from "immutable";
-import {Pricing} from "../client/domain/util/pricing";
-import {LocaleTextsFactory, LocaleTexts} from "../client/utils/lang";
+import {Pricing} from "../../client/domain/util/pricing";
+import {LocaleTextsFactory, LocaleTexts} from "../../client/utils/lang";
 
-export interface LocalItemVariant extends Immutable.Map<string, any> {
+export interface ItemVariant extends Immutable.Map<string, any> {
     id:number;
     variantReference:string;
     pricing:Pricing;
     pricingAmount:number;
 
-    attributeValues:LocalAttributeValue[];
-    mainPicture:LocalPicture;
-    item:LocalItem;
+    attributeValues:AttributeValue[];
+    mainPicture:Picture;
+    item:Item;
 }
 var ItemVariantRecord = Immutable.Record({
     id: null,
@@ -29,8 +29,8 @@ var ItemVariantRecord = Immutable.Record({
     item: null
 });
 
-export class LocalItemVariantFactory {
-    static createNewItemVariant(desc:any):LocalItemVariant {
+export class ItemVariantFactory {
+    static createNewItemVariant(desc:any):ItemVariant {
         return <any>ItemVariantRecord(desc);
     }
 
@@ -47,16 +47,16 @@ export class LocalItemVariantFactory {
     static getPricingLabel(pricing:Pricing):LocaleTexts {
         switch (pricing) {
             case Pricing.ABSOLUTE:
-                return LocalItemVariantFactory.PRICING_ABSOLUTE_LABEL;
+                return ItemVariantFactory.PRICING_ABSOLUTE_LABEL;
             case Pricing.ADD_TO_BASE:
-                return LocalItemVariantFactory.PRICING_ADD_TO_BASE_LABEL;
+                return ItemVariantFactory.PRICING_ADD_TO_BASE_LABEL;
             case Pricing.PARENT_ITEM:
-                return LocalItemVariantFactory.PRICING_PARENT_ITEM_LABEL;
+                return ItemVariantFactory.PRICING_PARENT_ITEM_LABEL;
         }
         return null;
     }
 
-    static calcPrice(localVariant:LocalItemVariant, includeTaxes:boolean):number {
+    static calcPrice(localVariant:ItemVariant, includeTaxes:boolean):number {
         var vatExclusive:number = 0;
         switch (localVariant.pricing) {
             case Pricing.ABSOLUTE:

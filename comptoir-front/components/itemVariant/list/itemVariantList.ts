@@ -4,7 +4,7 @@
 
 import {Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation} from "angular2/core";
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from "angular2/common";
-import {LocalItemVariant, LocalItemVariantFactory} from "../../../domain/itemVariant";
+import {ItemVariant, ItemVariantFactory} from "../../../domain/commercial/itemVariant";
 import {Language, LocaleTextsFactory} from "../../../client/utils/lang";
 import {AuthService} from "../../../services/auth";
 import {FocusableDirective} from "../../utils/focusable";
@@ -28,22 +28,22 @@ import {Pricing} from "../../../client/domain/util/pricing";
 })
 export class ItemVariantColumnComponent {
     action = new EventEmitter();
-    itemVariant:LocalItemVariant;
+    itemVariant:ItemVariant;
     column:ItemVariantColumn;
     lang:Language;
 
-    onColumnAction(item:LocalItemVariant, column:ItemVariantColumn, event) {
+    onColumnAction(item:ItemVariant, column:ItemVariantColumn, event) {
         this.action.next({itemVariant: item, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
 
     getPricingLabel(pricing:Pricing) {
-        return LocalItemVariantFactory.getPricingLabel(pricing).get(this.lang.locale);
+        return ItemVariantFactory.getPricingLabel(pricing).get(this.lang.locale);
     }
 
-    getVariantPrice(itemVariant:LocalItemVariant) {
-        return LocalItemVariantFactory.calcPrice(itemVariant, true);
+    getVariantPrice(itemVariant:ItemVariant) {
+        return ItemVariantFactory.calcPrice(itemVariant, true);
     }
 }
 
@@ -64,7 +64,7 @@ export class ItemVariantColumnComponent {
 
 export class ItemVariantList implements OnInit {
     // properties
-    items:Immutable.List<LocalItemVariant>;
+    items:Immutable.List<ItemVariant>;
     columns:Immutable.List<ItemVariantColumn>;
     rowSelectable:boolean;
     headersVisible:boolean;
@@ -89,13 +89,13 @@ export class ItemVariantList implements OnInit {
         this.columnWeightToPercentage = 100.0 / totWeight;
     }
 
-    onItemClick(item:LocalItemVariant, event) {
+    onItemClick(item:ItemVariant, event) {
         this.rowClicked.next(item);
         event.stopPropagation();
         event.preventDefault();
     }
 
-    onItemKeyDown(item:LocalItemVariant, event) {
+    onItemKeyDown(item:ItemVariant, event) {
         // TODO: use event.key once supported
         switch (event.which) {
             case 13:

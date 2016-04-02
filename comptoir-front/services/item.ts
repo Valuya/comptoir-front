@@ -5,7 +5,7 @@ import {Injectable} from "angular2/core";
 import {WsItem} from "../client/domain/commercial/item";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {WsPictureRef} from "../client/domain/commercial/picture";
-import {LocalItem, LocalItemFactory} from "../domain/item";
+import {Item, ItemFactory} from "../domain/commercial/item";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {ItemClient} from "../client/client/item";
@@ -32,7 +32,7 @@ export class ItemService {
 
     }
 
-    get(id:number):Promise<LocalItem> {
+    get(id:number):Promise<Item> {
         return this.itemClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsItem)=> {
@@ -45,13 +45,13 @@ export class ItemService {
             .toPromise();
     }
 
-    save(entity:LocalItem):Promise<WithId> {
+    save(entity:Item):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.itemClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalItem>):Promise<SearchResult<LocalItem>> {
+    search(searchRequest:SearchRequest<Item>):Promise<SearchResult<Item>> {
         return this.itemClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsItem>)=> {
@@ -63,7 +63,7 @@ export class ItemService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalItem>();
+                        var localResult = new SearchResult<Item>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -71,7 +71,7 @@ export class ItemService {
             });
     }
 
-    toLocalConverter(item:WsItem):Promise<LocalItem> {
+    toLocalConverter(item:WsItem):Promise<Item> {
         var localItemDesc:any = {};
         localItemDesc.description = item.description;
         localItemDesc.id = item.id;
@@ -103,11 +103,11 @@ export class ItemService {
         }
         return Promise.all(taskList)
             .then(()=> {
-                return LocalItemFactory.createNewItem(localItemDesc);
+                return ItemFactory.createNewItem(localItemDesc);
             });
     }
 
-    fromLocalConverter(localItem:LocalItem):WsItem {
+    fromLocalConverter(localItem:Item):WsItem {
         var item = new WsItem();
         item.companyRef = new WsCompanyRef(localItem.company.id);
         item.description = localItem.description;

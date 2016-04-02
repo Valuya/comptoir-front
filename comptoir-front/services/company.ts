@@ -7,8 +7,8 @@ import {Injectable} from 'angular2/core';
 import {WsCompany, WsCompanyRef, WsCompanyFactory} from '../client/domain/company/company';
 import {WsCountryRef} from '../client/domain/company/country';
 
-import {LocalCompany, LocalCompanyFactory} from '../domain/company';
-import {LocalAccount} from '../domain/account';
+import {Company, CompanyFactory} from '../domain/company/company';
+import {Account} from '../domain/accounting/account';
 
 import {WithId} from '../client/utils/withId';
 import {SearchRequest, SearchResult} from '../client/utils/search';
@@ -34,7 +34,7 @@ export class CompanyService {
         this.countryService = countryService;
     }
 
-    get(id:number, authToken:string):Promise<LocalCompany> {
+    get(id:number, authToken:string):Promise<Company> {
         return this.companyClient.doGet(id, authToken)
             .toPromise()
             .then((entity:WsCompany)=> {
@@ -47,13 +47,13 @@ export class CompanyService {
             .toPromise();
     }
 
-    save(entity:LocalCompany, authToken:string):Promise<WithId> {
+    save(entity:Company, authToken:string):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.companyClient.doSave(e, authToken)
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalCompany>, authToken:string):Promise<SearchResult<LocalCompany>> {
+    search(searchRequest:SearchRequest<Company>, authToken:string):Promise<SearchResult<Company>> {
         return this.companyClient.doSearch(searchRequest, authToken)
             .toPromise()
             .then((result:SearchResult<WsCompany>)=> {
@@ -65,7 +65,7 @@ export class CompanyService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalCompany>();
+                        var localResult = new SearchResult<Company>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -118,7 +118,7 @@ export class CompanyService {
     }
 
 
-    toLocalConverter(company:WsCompany, authToken:string):Promise<LocalCompany> {
+    toLocalConverter(company:WsCompany, authToken:string):Promise<Company> {
         var localCompanyDesc:any = {};
         localCompanyDesc.description = company.description;
         localCompanyDesc.id = company.id;
@@ -136,11 +136,11 @@ export class CompanyService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalCompanyFactory.createNewCompany(localCompanyDesc);
+                return CompanyFactory.createNewCompany(localCompanyDesc);
             });
     }
 
-    fromLocalConverter(localCompany:LocalCompany):WsCompany {
+    fromLocalConverter(localCompany:Company):WsCompany {
         var company = new WsCompany();
         company.id = localCompany.id;
         company.countryRef = new WsCountryRef(localCompany.country.code);

@@ -4,7 +4,7 @@
 import {Injectable} from "angular2/core";
 import {WsAttributeValue} from "../client/domain/commercial/attributeValue";
 import {WsAttributeDefinitionRef} from "../client/domain/commercial/attributeDefinition";
-import {LocalAttributeValue, LocalAttributeValueFactory} from "../domain/attributeValue";
+import {AttributeValue, AttributeValueFactory} from "../domain/commercial/attributeValue";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {AttributeValueClient} from "../client/client/attributeValue";
@@ -27,7 +27,7 @@ export class AttributeValueService {
 
     }
 
-    get(id:number):Promise<LocalAttributeValue> {
+    get(id:number):Promise<AttributeValue> {
         return this.attributeValueClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsAttributeValue)=> {
@@ -40,13 +40,13 @@ export class AttributeValueService {
             .toPromise();
     }
 
-    save(entity:LocalAttributeValue):Promise<WithId> {
+    save(entity:AttributeValue):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.attributeValueClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalAttributeValue>):Promise<SearchResult<LocalAttributeValue>> {
+    search(searchRequest:SearchRequest<AttributeValue>):Promise<SearchResult<AttributeValue>> {
         return this.attributeValueClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsAttributeValue>)=> {
@@ -58,7 +58,7 @@ export class AttributeValueService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalAttributeValue>();
+                        var localResult = new SearchResult<AttributeValue>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -66,7 +66,7 @@ export class AttributeValueService {
             });
     }
 
-    fromLocalConverter(localAttributeValue:LocalAttributeValue):WsAttributeValue {
+    fromLocalConverter(localAttributeValue:AttributeValue):WsAttributeValue {
         var attrValue = new WsAttributeValue();
         attrValue.id = localAttributeValue.id;
         attrValue.value = localAttributeValue.value;
@@ -76,7 +76,7 @@ export class AttributeValueService {
         return attrValue;
     }
 
-    toLocalConverter(attributeValue:WsAttributeValue):Promise<LocalAttributeValue> {
+    toLocalConverter(attributeValue:WsAttributeValue):Promise<AttributeValue> {
         var localValueDesc:any = {};
         localValueDesc.id = attributeValue.id;
         localValueDesc.value = attributeValue.value;
@@ -93,7 +93,7 @@ export class AttributeValueService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalAttributeValueFactory.createAttributeValue(localValueDesc);
+                return AttributeValueFactory.createAttributeValue(localValueDesc);
             });
     }
 

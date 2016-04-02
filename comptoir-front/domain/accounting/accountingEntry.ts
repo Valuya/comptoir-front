@@ -2,25 +2,25 @@
  * Created by cghislai on 02/09/15.
  */
 
-import {LocalAccount} from "./account";
-import {LocalCompany} from "./company";
+import {Account} from "./account";
+import {Company} from "./../company/company";
 import * as Immutable from "immutable";
-import {LocaleTexts} from "../client/utils/lang";
-import {WsAccountingEntryRef} from "../client/domain/accounting/accountingEntry";
-import {WsCustomer} from "../client/domain/thirdparty/customer";
+import {LocaleTexts} from "../../client/utils/lang";
+import {WsAccountingEntryRef} from "../../client/domain/accounting/accountingEntry";
+import {WsCustomer} from "../../client/domain/thirdparty/customer";
 
-export interface LocalAccountingEntry extends Immutable.Map<string, any> {
+export interface AccountingEntry extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     amount:number;
     vatRate:number;
     dateTime:Date;
     description:LocaleTexts;
     accountingTransactionRef:WsAccountingEntryRef;
-    vatAccountingEntry:LocalAccountingEntry;
+    vatAccountingEntry:AccountingEntry;
     customer:WsCustomer;
 
-    account:LocalAccount;
+    account:Account;
 }
 var AccountingEntryRecord = Immutable.Record({
     id: null,
@@ -35,7 +35,7 @@ var AccountingEntryRecord = Immutable.Record({
     account: null
 });
 
-export class LocalAccountingEntryFactory {
+export class AccountingEntryFactory {
 
     static createAccountingEntry(desc:any) {
         return <any>AccountingEntryRecord(desc);

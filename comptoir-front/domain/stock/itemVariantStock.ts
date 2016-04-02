@@ -2,19 +2,19 @@
  * Created by cghislai on 14/08/15.
  */
 
-import {LocalItemVariant} from "./itemVariant";
-import {LocalStock} from "./stock";
-import {WsItemVariantStockRef} from "../client/domain/stock/itemVariantStock";
-import {StockChangeType} from "../client/domain/util/stockChangeType";
-import {WsItemVariantSale} from "../client/domain/commercial/itemVariantSale";
+import {ItemVariant} from "./../commercial/itemVariant";
+import {Stock} from "./stock";
+import {WsItemVariantStockRef} from "../../client/domain/stock/itemVariantStock";
+import {StockChangeType} from "../../client/domain/util/stockChangeType";
+import {WsItemVariantSale} from "../../client/domain/commercial/itemVariantSale";
 
 
-export interface LocalItemVariantStock extends Immutable.Map<string, any>  {
+export interface ItemVariantStock extends Immutable.Map<string, any>  {
     id: number;
     startDateTime: Date;
     endDateTime: Date;
-    itemVariant: LocalItemVariant;
-    stock: LocalStock;
+    itemVariant: ItemVariant;
+    stock: Stock;
     quantity: number;
     comment: string;
     previousItemStockRef: WsItemVariantStockRef;
@@ -37,9 +37,9 @@ var ItemVariantStockRecord = Immutable.Record({
     orderPosition: null
 });
 
-export class LocalItemVariantStockFactory {
+export class ItemVariantStockFactory {
 
-    static createNewItemVariantStock(desc:any):LocalItemVariantStock {
+    static createNewItemVariantStock(desc:any):ItemVariantStock {
         return <any>ItemVariantStockRecord(desc);
     }
 }

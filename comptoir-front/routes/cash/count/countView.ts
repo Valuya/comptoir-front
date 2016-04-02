@@ -4,8 +4,8 @@
 import {Component} from "angular2/core";
 import {NgIf, NgFor} from "angular2/common";
 import {CanReuse, OnReuse, OnActivate, Router} from "angular2/router";
-import {LocalAccount} from "../../../domain/account";
-import {LocalBalance} from "../../../domain/balance";
+import {Account} from "../../../domain/accounting/account";
+import {Balance} from "../../../domain/accounting/balance";
 import {WsPos, WsPosRef} from "../../../client/domain/commercial/pos";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
 import {Language} from "../../../client/utils/lang";
@@ -38,15 +38,15 @@ export class CountCashView implements CanReuse, OnReuse, OnActivate {
 
     pos:WsPos;
 
-    accountSearchRequest:SearchRequest<LocalAccount>;
-    accountSearchResult:SearchResult<LocalAccount>;
-    paymentAccountList:Immutable.List<LocalAccount>;
-    account:LocalAccount;
+    accountSearchRequest:SearchRequest<Account>;
+    accountSearchResult:SearchResult<Account>;
+    paymentAccountList:Immutable.List<Account>;
+    account:Account;
     accountId:number;
 
-    balanceSearchRequest:SearchRequest<LocalBalance>;
-    balanceSearchResult:SearchResult<LocalBalance>;
-    lastBalance:LocalBalance;
+    balanceSearchRequest:SearchRequest<Balance>;
+    balanceSearchResult:SearchResult<Balance>;
+    lastBalance:Balance;
 
     appLanguage:Language;
     router:Router;
@@ -61,10 +61,10 @@ export class CountCashView implements CanReuse, OnReuse, OnActivate {
         this.authService = authService;
         this.router = router;
 
-        this.accountSearchRequest = new SearchRequest<LocalAccount>();
-        this.accountSearchResult = new SearchResult<LocalAccount>();
-        this.balanceSearchRequest = new SearchRequest<LocalBalance>();
-        this.balanceSearchResult = new SearchResult<LocalBalance>();
+        this.accountSearchRequest = new SearchRequest<Account>();
+        this.accountSearchResult = new SearchResult<Account>();
+        this.balanceSearchRequest = new SearchRequest<Balance>();
+        this.balanceSearchResult = new SearchResult<Balance>();
 
         this.appLanguage = authService.getEmployeeLanguage();
         this.accountId = null;
@@ -99,7 +99,7 @@ export class CountCashView implements CanReuse, OnReuse, OnActivate {
         this.lastBalance = null;
 
         return this.accountService.search(this.accountSearchRequest)
-            .then((result:SearchResult<LocalAccount>)=> {
+            .then((result:SearchResult<Account>)=> {
                 this.accountSearchResult = result;
                 this.paymentAccountList = result.list;
                 if (this.account == null && this.paymentAccountList.size === 1) {
@@ -121,7 +121,7 @@ export class CountCashView implements CanReuse, OnReuse, OnActivate {
     }
 
 
-    setAccount(account:LocalAccount) {
+    setAccount(account:Account) {
         this.account = account;
         if (account == null) {
             return;
@@ -165,7 +165,7 @@ export class CountCashView implements CanReuse, OnReuse, OnActivate {
         this.balanceSearchRequest.search = balanceSearch;
         this.balanceSearchRequest.pagination = pagination;
         this.balanceService.search(this.balanceSearchRequest)
-            .then((result:SearchResult<LocalBalance>)=> {
+            .then((result:SearchResult<Balance>)=> {
                 this.balanceSearchResult = result;
                 this.lastBalance = result.list.first();
             }).catch((error)=> {

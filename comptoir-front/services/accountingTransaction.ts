@@ -5,9 +5,9 @@ import {Injectable} from "angular2/core";
 import {WsAccountingTransaction} from "../client/domain/accounting/accountingTransaction";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {
-    LocalAccountingTransaction,
-    LocalAccountingTransactionFactory
-} from "../domain/accountingTransaction";
+    AccountingTransaction,
+    AccountingTransactionFactory
+} from "../domain/accounting/accountingTransaction";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {AccountingTransactionClient} from "../client/client/accountingTransaction";
@@ -29,7 +29,7 @@ export class AccountingTransactionService {
         this.companyService = companyService;
     }
 
-    get(id:number):Promise<LocalAccountingTransaction> {
+    get(id:number):Promise<AccountingTransaction> {
         return this.accountingTransactionClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsAccountingTransaction)=> {
@@ -42,13 +42,13 @@ export class AccountingTransactionService {
             .toPromise();
     }
 
-    save(entity:LocalAccountingTransaction):Promise<WithId> {
+    save(entity:AccountingTransaction):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.accountingTransactionClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalAccountingTransaction>):Promise<SearchResult<LocalAccountingTransaction>> {
+    search(searchRequest:SearchRequest<AccountingTransaction>):Promise<SearchResult<AccountingTransaction>> {
         return this.accountingTransactionClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsAccountingTransaction>)=> {
@@ -60,7 +60,7 @@ export class AccountingTransactionService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalAccountingTransaction>();
+                        var localResult = new SearchResult<AccountingTransaction>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -68,7 +68,7 @@ export class AccountingTransactionService {
             });
     }
 
-    fromLocalConverter(localAccountingTransaction:LocalAccountingTransaction):WsAccountingTransaction {
+    fromLocalConverter(localAccountingTransaction:AccountingTransaction):WsAccountingTransaction {
         var accountingTransaction = new WsAccountingTransaction();
         accountingTransaction.accountingTransactionType = localAccountingTransaction.accountingTransactionType;
         if (localAccountingTransaction.company != null) {
@@ -79,7 +79,7 @@ export class AccountingTransactionService {
         return accountingTransaction;
     }
 
-    toLocalConverter(accountingTransaction:WsAccountingTransaction):Promise<LocalAccountingTransaction> {
+    toLocalConverter(accountingTransaction:WsAccountingTransaction):Promise<AccountingTransaction> {
         var localAccountingTransactionDesc:any = {};
         localAccountingTransactionDesc.id = accountingTransaction.id;
         localAccountingTransactionDesc.dateTime = accountingTransaction.dateTime;
@@ -99,7 +99,7 @@ export class AccountingTransactionService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalAccountingTransactionFactory.createAccountingTransaction(localAccountingTransactionDesc);
+                return AccountingTransactionFactory.createAccountingTransaction(localAccountingTransactionDesc);
             });
     }
 

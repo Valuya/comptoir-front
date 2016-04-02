@@ -2,13 +2,13 @@
  * Created by cghislai on 08/09/15.
  */
 
-import {LocalItemVariant} from "./itemVariant";
-import {LocalSale} from "./sale";
+import {ItemVariant} from "./itemVariant";
+import {Sale} from "./sale";
 import * as Immutable from "immutable";
-import {LocalStock} from "./stock";
-import {LocaleTexts} from "../client/utils/lang";
+import {Stock} from "./../stock/stock";
+import {LocaleTexts} from "../../client/utils/lang";
 
-export interface LocalItemVariantSale extends Immutable.Map<string, any> {
+export interface ItemVariantSale extends Immutable.Map<string, any> {
     id:number;
     dateTime:Date;
     quantity:number;
@@ -17,9 +17,9 @@ export interface LocalItemVariantSale extends Immutable.Map<string, any> {
     vatRate:number;
     discountRatio:number;
     total:number;
-    itemVariant:LocalItemVariant;
-    sale:LocalSale;
-    stock: LocalStock;
+    itemVariant:ItemVariant;
+    sale:Sale;
+    stock: Stock;
     includeCustomerLoyalty: boolean;
 }
 var ItemVariantSaleRecord = Immutable.Record({
@@ -37,9 +37,9 @@ var ItemVariantSaleRecord = Immutable.Record({
     includeCustomerLoyalty: null
 });
 
-export class LocalItemVariantSaleFactory {
+export class ItemVariantSaleFactory {
 
-    static createNewItemVariantSale(desc:any):LocalItemVariantSale {
+    static createNewItemVariantSale(desc:any):ItemVariantSale {
         return <any>ItemVariantSaleRecord(desc);
     }
 }

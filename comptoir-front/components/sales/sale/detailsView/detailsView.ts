@@ -10,9 +10,9 @@ import {
     ItemVariantSaleColumn, ItemVariantSaleList,
     ItemVariantSaleColumnActionEvent, ItemVariantSaleColumnAction
 } from "../../../itemVariantSale/list/itemVariantSaleList";
-import {LocalStock} from "../../../../domain/stock";
-import {LocalItemVariantSale} from "../../../../domain/itemVariantSale";
-import {LocalCustomer} from "../../../../domain/customer";
+import {Stock} from "../../../../domain/stock/stock";
+import {ItemVariantSale} from "../../../../domain/commercial/itemVariantSale";
+import {Customer} from "../../../../domain/thirdparty/customer";
 import {NumberUtils} from "../../../../client/utils/number";
 import {FORM_DIRECTIVES} from "angular2/common";
 import {FastInput} from "../../../utils/fastInput";
@@ -34,7 +34,7 @@ export class SaleDetailsComponent {
     errorService:ErrorService;
 
     @Input()
-    stockList:Immutable.List<LocalStock>;
+    stockList:Immutable.List<Stock>;
 
     @Output()
     validated = new EventEmitter();
@@ -103,7 +103,7 @@ export class SaleDetailsComponent {
         ]);
     }
 
-    onVariantUpdated(variant:LocalItemVariantSale) {
+    onVariantUpdated(variant:ItemVariantSale) {
         this.activeSaleService.doUpdateItem(variant)
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -158,7 +158,7 @@ export class SaleDetailsComponent {
         }
     }
 
-    doRemoveItem(localItemVariantSale:LocalItemVariantSale) {
+    doRemoveItem(localItemVariantSale:ItemVariantSale) {
         this.activeSaleService.doRemoveItem(localItemVariantSale)
             .then(()=> {
                 var searchResult = this.activeSaleService.saleItemsResult;
@@ -203,7 +203,7 @@ export class SaleDetailsComponent {
         this.newSaleDateTimeString = null;
     }
 
-    onNewCustomerSelected(customer:LocalCustomer) {
+    onNewCustomerSelected(customer:Customer) {
         this.activeSaleService.doSetSaleCustomer(customer);
     }
 

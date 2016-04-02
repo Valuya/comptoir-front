@@ -3,16 +3,16 @@
  */
 
 
-import {LocalCompany} from "./company";
-import {LocalCustomer} from "./customer";
+import {Company} from "./../company/company";
+import {Customer} from "./../thirdparty/customer";
 import * as Immutable from "immutable";
-import {WsInvoiceRef} from "../client/domain/commercial/invoice";
-import {WsAccountingTransactionRef} from "../client/domain/accounting/accountingTransaction";
+import {WsInvoiceRef} from "../../client/domain/commercial/invoice";
+import {WsAccountingTransactionRef} from "../../client/domain/accounting/accountingTransaction";
 
-export interface LocalSale extends Immutable.Map<string, any> {
+export interface Sale extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
-    customer:LocalCustomer;
+    company:Company;
+    customer:Customer;
     dateTime:Date;
     invoiceRef:WsInvoiceRef; // Keep ref to avoid cyclic dependencies
     vatExclusiveAmount:number;
@@ -41,9 +41,9 @@ var SaleRecord = Immutable.Record({
     discountAmount: null
 });
 
-export class LocalSaleFactory {
+export class SaleFactory {
 
-    static createNewSale(desc:any):LocalSale {
+    static createNewSale(desc:any):Sale {
         return <any>SaleRecord(desc);
     }
 

@@ -5,7 +5,7 @@ import {Component} from 'angular2/core';
 import {NgIf} from 'angular2/common';
 import {RouteParams, Router, RouterLink} from 'angular2/router';
 
-import {LocalPos, LocalPosFactory} from '../../../domain/pos';
+import {Pos, PosFactory} from '../../../domain/commercial/pos';
 
 import {AuthService} from '../../../services/auth';
 import {PosService} from '../../../services/pos';
@@ -26,7 +26,7 @@ export class EditPosView {
     authService:AuthService;
     router:Router;
 
-    pos:LocalPos;
+    pos:Pos;
 
 
     constructor(posService:PosService, authService:AuthService, appService:ErrorService,
@@ -62,7 +62,7 @@ export class EditPosView {
         var posDesc: any = {};
         posDesc.company = this.authService.getEmployeeCompany();
         posDesc.description = new LocaleTexts();
-        this.pos = LocalPosFactory.createNewPos(posDesc);
+        this.pos = PosFactory.createNewPos(posDesc);
     }
 
     getPos(id:number) {

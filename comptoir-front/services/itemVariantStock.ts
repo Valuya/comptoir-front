@@ -5,15 +5,15 @@ import {Injectable} from "angular2/core";
 import {WsItemVariantStock} from "../client/domain/stock/itemVariantStock";
 import {WsItemVariantRef} from "../client/domain/commercial/itemVariant";
 import {WsStockRef} from "../client/domain/stock/stock";
-import {LocalItemVariantStock, LocalItemVariantStockFactory} from "../domain/itemVariantStock";
+import {ItemVariantStock, ItemVariantStockFactory} from "../domain/stock/itemVariantStock";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {ItemVariantStockClient} from "../client/client/itemVariantStock";
 import {AuthService} from "./auth";
 import {ItemVariantService} from "./itemVariant";
 import {StockService} from "./stock";
-import {LocalItemVariant} from "../domain/itemVariant";
-import {LocalStock} from "../domain/stock";
+import {ItemVariant} from "../domain/commercial/itemVariant";
+import {Stock} from "../domain/stock/stock";
 import {PaginationFactory} from "../client/utils/pagination";
 import {ItemVariantSaleService} from "./itemVariantSale";
 import {WsItemVariantSaleRef} from "../client/domain/commercial/itemVariantSale";
@@ -42,7 +42,7 @@ export class ItemVariantStockService {
     }
 
 
-    fetch(id:number):Promise<LocalItemVariantStock> {
+    fetch(id:number):Promise<ItemVariantStock> {
         return this.itemVariantStockClient.doFetch(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsItemVariantStock)=> {
@@ -50,7 +50,7 @@ export class ItemVariantStockService {
             });
     }
 
-    get(id:number):Promise<LocalItemVariantStock> {
+    get(id:number):Promise<ItemVariantStock> {
         return this.itemVariantStockClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsItemVariantStock)=> {
@@ -63,13 +63,13 @@ export class ItemVariantStockService {
             .toPromise();
     }
 
-    save(entity:LocalItemVariantStock):Promise<WithId> {
+    save(entity:ItemVariantStock):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.itemVariantStockClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalItemVariantStock>):Promise<SearchResult<LocalItemVariantStock>> {
+    search(searchRequest:SearchRequest<ItemVariantStock>):Promise<SearchResult<ItemVariantStock>> {
         return this.itemVariantStockClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsItemVariantStock>)=> {
@@ -81,7 +81,7 @@ export class ItemVariantStockService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalItemVariantStock>();
+                        var localResult = new SearchResult<ItemVariantStock>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -89,7 +89,7 @@ export class ItemVariantStockService {
             });
     }
 
-    fetchCurrentItemStock(itemVariant:LocalItemVariant, stock:LocalStock):Promise<LocalItemVariantStock> {
+    fetchCurrentItemStock(itemVariant:ItemVariant, stock:Stock):Promise<ItemVariantStock> {
         if (itemVariant == null || stock == null) {
             return Promise.resolve(null);
         }
@@ -99,7 +99,7 @@ export class ItemVariantStockService {
         itemStockSearch.stockRef = new WsStockRef(stock.id);
         itemStockSearch.atDateTime = new Date();
 
-        var searchRequest = new SearchRequest<LocalItemVariantStock>();
+        var searchRequest = new SearchRequest<ItemVariantStock>();
         searchRequest.search = itemStockSearch;
         searchRequest.pagination = PaginationFactory.Pagination({
             firstIndex: 0,
@@ -107,7 +107,7 @@ export class ItemVariantStockService {
         });
 
         return this.search(searchRequest)
-            .then((result:SearchResult<LocalItemVariantStock>)=> {
+            .then((result:SearchResult<ItemVariantStock>)=> {
                 if (result.count > 0) {
                     var localStock = result.list.first();
                     //itemVariant = <LocalItemVariant>itemVariant.set('currentStock', localStock);
@@ -119,7 +119,7 @@ export class ItemVariantStockService {
     }
 
 
-    toLocalConverter(itemVariantStock:WsItemVariantStock):Promise<LocalItemVariantStock> {
+    toLocalConverter(itemVariantStock:WsItemVariantStock):Promise<ItemVariantStock> {
         var localItemStockDesc:any = {};
         localItemStockDesc.id = itemVariantStock.id;
         localItemStockDesc.startDateTime = itemVariantStock.startDateTime;
@@ -161,11 +161,11 @@ export class ItemVariantStockService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalItemVariantStockFactory.createNewItemVariantStock(localItemStockDesc);
+                return ItemVariantStockFactory.createNewItemVariantStock(localItemStockDesc);
             });
     }
 
-    fromLocalConverter(localItemVariantStock:LocalItemVariantStock):WsItemVariantStock {
+    fromLocalConverter(localItemVariantStock:ItemVariantStock):WsItemVariantStock {
         var itemStock = new WsItemVariantStock();
         itemStock.id = localItemVariantStock.id;
         itemStock.startDateTime = localItemVariantStock.startDateTime;

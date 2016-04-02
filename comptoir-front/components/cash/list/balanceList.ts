@@ -6,7 +6,7 @@ import {Component,ChangeDetectionStrategy, OnInit,
     EventEmitter, ViewEncapsulation} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
-import {LocalBalance} from '../../../domain/balance';
+import {Balance} from '../../../domain/accounting/balance';
 
 import {Language, LocaleTextsFactory} from '../../../client/utils/lang';
 
@@ -32,11 +32,11 @@ import * as Immutable from 'immutable';
 })
 export class BalanceColumnComponent {
     action = new EventEmitter();
-    balance:LocalBalance;
+    balance:Balance;
     column:BalanceColumn;
     lang:Language;
 
-    onColumnAction(balance:LocalBalance, column:BalanceColumn, event) {
+    onColumnAction(balance:Balance, column:BalanceColumn, event) {
         this.action.emit({balance: balance, column: column});
         event.stopPropagation();
         event.preventDefault();
@@ -61,7 +61,7 @@ export class BalanceColumnComponent {
 
 export class BalanceList implements OnInit {
     // properties
-    balances:Immutable.List<LocalBalance>;
+    balances:Immutable.List<Balance>;
     columns:Immutable.List<BalanceColumn>;
     rowSelectable:boolean;
     headersVisible:boolean;
@@ -86,7 +86,7 @@ export class BalanceList implements OnInit {
     }
 
 
-    onBalanceClick(balance:LocalBalance, event) {
+    onBalanceClick(balance:Balance, event) {
         this.rowClicked.emit(balance);
         event.stopPropagation();
         event.preventDefault();

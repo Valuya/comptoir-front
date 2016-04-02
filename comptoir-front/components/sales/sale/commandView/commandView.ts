@@ -5,8 +5,8 @@
 import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from "angular2/core";
 import {NgIf, FORM_DIRECTIVES} from "angular2/common";
 import * as Immutable from "immutable";
-import {LocalSale} from "../../../../domain/sale";
-import {LocalItemVariantSale} from "../../../../domain/itemVariantSale";
+import {Sale} from "../../../../domain/commercial/sale";
+import {ItemVariantSale} from "../../../../domain/commercial/itemVariantSale";
 import {NumberUtils} from "../../../../client/utils/number";
 import {ActiveSaleService} from "../../../../services/activeSale";
 import {ErrorService} from "../../../../services/error";
@@ -17,7 +17,7 @@ import {
     ItemVariantSaleColumnAction,
     ItemVariantSaleColumnActionEvent
 } from "../../../itemVariantSale/list/itemVariantSaleList";
-import {LocalCustomer} from "../../../../domain/customer";
+import {Customer} from "../../../../domain/thirdparty/customer";
 import {CustomerSelectInputComponent} from "../../../customer/select/customerSelectInput";
 
 @Component({
@@ -48,7 +48,7 @@ export class CommandViewHeader {
         return sale != null && sale.id == null;
     }
 
-    get sale():LocalSale {
+    get sale():Sale {
         return this.activeSaleService.sale;
     }
 
@@ -136,7 +136,7 @@ export class CommandView {
     editingCustomer:boolean;
     newSaleReference:string;
     newSaleDateTimeString:string;
-    newCustomer:LocalCustomer;
+    newCustomer:Customer;
 
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
 
@@ -161,7 +161,7 @@ export class CommandView {
         this.validateChanged.emit(validated);
     }
 
-    onVariantUpdated(variant:LocalItemVariantSale) {
+    onVariantUpdated(variant:ItemVariantSale) {
         this.activeSaleService.doUpdateItem(variant)
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -176,7 +176,7 @@ export class CommandView {
         }
     }
 
-    doRemoveItem(localItemVariantSale:LocalItemVariantSale) {
+    doRemoveItem(localItemVariantSale:ItemVariantSale) {
         this.activeSaleService.doRemoveItem(localItemVariantSale)
             .then(()=> {
                 var searchResult = this.activeSaleService.saleItemsResult;
@@ -232,7 +232,7 @@ export class CommandView {
         this.newCustomer = this.activeSaleService.sale.customer;
     }
 
-    onNewCustomerSelected(customer:LocalCustomer) {
+    onNewCustomerSelected(customer:Customer) {
         this.newCustomer = customer;
         this.onConfirmNewCustomer();
     }

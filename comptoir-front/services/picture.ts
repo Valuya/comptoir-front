@@ -4,7 +4,7 @@
 import {Injectable} from "angular2/core";
 import {WsPicture} from "../client/domain/commercial/picture";
 import {WsCompanyRef} from "../client/domain/company/company";
-import {LocalPicture, LocalPictureFactory} from "../domain/picture";
+import {Picture, PictureFactory} from "../domain/commercial/picture";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {PictureClient} from "../client/client/picture";
@@ -28,7 +28,7 @@ export class PictureService {
 
     }
 
-    get(id:number):Promise<LocalPicture> {
+    get(id:number):Promise<Picture> {
         return this.pictureClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsPicture)=> {
@@ -41,13 +41,13 @@ export class PictureService {
             .toPromise();
     }
 
-    save(entity:LocalPicture):Promise<WithId> {
+    save(entity:Picture):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.pictureClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalPicture>):Promise<SearchResult<LocalPicture>> {
+    search(searchRequest:SearchRequest<Picture>):Promise<SearchResult<Picture>> {
         return this.pictureClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsPicture>)=> {
@@ -59,7 +59,7 @@ export class PictureService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalPicture>();
+                        var localResult = new SearchResult<Picture>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -67,12 +67,12 @@ export class PictureService {
             });
     }
 
-    toLocalConverter(picture:WsPicture):Promise<LocalPicture> {
+    toLocalConverter(picture:WsPicture):Promise<Picture> {
         var localPictureDesc:any = {};
         localPictureDesc.id = picture.id;
         localPictureDesc.data = picture.data;
         localPictureDesc.contentType = picture.contentType;
-        localPictureDesc.dataURI = LocalPictureFactory.toDataURI(picture);
+        localPictureDesc.dataURI = PictureFactory.toDataURI(picture);
 
         var taskList = [];
         var companyRef = picture.companyRef;
@@ -86,18 +86,18 @@ export class PictureService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalPictureFactory.createNewPicture(localPictureDesc);
+                return PictureFactory.createNewPicture(localPictureDesc);
             });
     }
 
-    fromLocalConverter(localPicture:LocalPicture):WsPicture {
+    fromLocalConverter(localPicture:Picture):WsPicture {
         var picture = new WsPicture();
         picture.id = localPicture.id;
         picture.companyRef = new WsCompanyRef(localPicture.company.id);
         picture.data = localPicture.data;
         picture.contentType = localPicture.contentType;
         if (localPicture.dataURI != null) {
-            LocalPictureFactory.fromDataURI(localPicture.dataURI, picture);
+            PictureFactory.fromDataURI(localPicture.dataURI, picture);
         }
         return picture;
     }

@@ -2,14 +2,14 @@
  * Created by cghislai on 01/09/15.
  */
 
-import {LocalCompany} from "./company";
-import {LocalPicture} from "./picture";
+import {Company} from "./../company/company";
+import {Picture} from "./picture";
 import * as Immutable from "immutable";
-import {LocaleTexts} from "../client/utils/lang";
+import {LocaleTexts} from "../../client/utils/lang";
 
-export interface LocalItem extends Immutable.Map<string, any> {
+export interface Item extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     reference:string;
     name:LocaleTexts;
     description:LocaleTexts;
@@ -17,7 +17,7 @@ export interface LocalItem extends Immutable.Map<string, any> {
     vatExclusive:number;
     vatRate:number;
 
-    mainPicture:LocalPicture;
+    mainPicture:Picture;
     multipleSale: boolean;
 }
 
@@ -33,9 +33,9 @@ var ItemRecord = Immutable.Record({
     multipleSale: null
 });
 
-export class LocalItemFactory {
+export class ItemFactory {
 
-    static createNewItem(desc:any):LocalItem {
+    static createNewItem(desc:any):Item {
         return <any>ItemRecord(desc);
     }
 }

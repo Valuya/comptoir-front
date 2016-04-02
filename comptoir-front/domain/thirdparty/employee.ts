@@ -2,13 +2,13 @@
  * Created by cghislai on 08/09/15.
  */
 
-import {LocalCompany} from "./company";
+import {Company} from "./../company/company";
 import * as Immutable from "immutable";
 
-export interface LocalEmployee extends Immutable.Map<string, any> {
+export interface Employee extends Immutable.Map<string, any> {
     id: number;
     active: boolean;
-    company: LocalCompany;
+    company: Company;
     login: string;
     firstName: string;
     lastName: string;
@@ -23,9 +23,9 @@ var EmployeeRecord = Immutable.Record({
     lastName: null,
     locale: null
 });
-export class LocalEmployeeFactory {
+export class EmployeeFactory {
 
-    static createNewEmployee(desc:any):LocalEmployee {
+    static createNewEmployee(desc:any):Employee {
         return <any>EmployeeRecord(desc);
     }
 }

@@ -2,14 +2,14 @@
  * Created by cghislai on 02/09/15.
  */
 
-import {LocalCompany} from "./company";
+import {Company} from "./../company/company";
 import * as Immutable from "immutable";
-import {LocaleTexts, LocaleTextsFactory} from "../client/utils/lang";
-import {AccountType} from "../client/domain/util/accountType";
+import {LocaleTexts, LocaleTextsFactory} from "../../client/utils/lang";
+import {AccountType} from "../../client/domain/util/accountType";
 
-export interface LocalAccount extends Immutable.Map<string, any> {
+export interface Account extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     accountingNumber:string;
     iban:string;
     bic:string;
@@ -33,7 +33,7 @@ var AccountRecord = Immutable.Record({
     cash: null
 });
 
-export class LocalAccountFactory {
+export class AccountFactory {
 
 
     static ACCOUNT_TYPE_OTHER_LABEL = LocaleTextsFactory.toLocaleTexts({
@@ -50,21 +50,21 @@ export class LocalAccountFactory {
         switch (accountType) {
             case AccountType.OTHER:
             {
-                return LocalAccountFactory.ACCOUNT_TYPE_OTHER_LABEL;
+                return AccountFactory.ACCOUNT_TYPE_OTHER_LABEL;
             }
             case AccountType.PAYMENT:
             {
-                return LocalAccountFactory.ACCOUNT_TYPE_PAIMENT_LABEL;
+                return AccountFactory.ACCOUNT_TYPE_PAIMENT_LABEL;
             }
             case AccountType.VAT:
             {
-                return LocalAccountFactory.ACCOUNT_TYPE_VAT_LABEL;
+                return AccountFactory.ACCOUNT_TYPE_VAT_LABEL;
             }
         }
         return null;
     }
 
-    static createNewAccount(desc:any):LocalAccount {
+    static createNewAccount(desc:any):Account {
         return <any>AccountRecord(desc);
     }
 

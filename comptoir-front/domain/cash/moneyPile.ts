@@ -3,19 +3,19 @@
  */
 
 
-import {LocalAccount} from "./account";
-import {LocalBalance} from "./balance";
+import {Account} from "./../accounting/account";
+import {Balance} from "./../accounting/balance";
 import * as Immutable from "immutable";
-import {LocaleTexts, LocaleTextsFactory} from "../client/utils/lang";
+import {LocaleTexts, LocaleTextsFactory} from "../../client/utils/lang";
 
-export interface LocalMoneyPile extends Immutable.Map<string, any> {
+export interface MoneyPile extends Immutable.Map<string, any> {
     id:number;
-    account:LocalAccount;
+    account:Account;
     dateTime:Date;
     unitAmount:number;
     unitCount:number;
     total:number;
-    balance:LocalBalance;
+    balance:Balance;
     //
     label: LocaleTexts;
 }
@@ -30,9 +30,9 @@ var MoneyPileRecord = Immutable.Record({
     label: null
 });
 
-export class LocalMoneyPileFactory {
+export class MoneyPileFactory {
 
-    static createNewMoneyPile(desc:any):LocalMoneyPile {
+    static createNewMoneyPile(desc:any):MoneyPile {
         return <any>MoneyPileRecord(desc);
     }
 

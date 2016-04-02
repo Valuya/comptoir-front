@@ -5,7 +5,7 @@ import {Component} from 'angular2/core';
 import {NgIf, FORM_DIRECTIVES} from 'angular2/common';
 import {Router} from 'angular2/router';
 
-import {LocalSale} from '../../../domain/sale';
+import {Sale} from '../../../domain/commercial/sale';
 import {WsCompanyRef} from '../../../client/domain/company/company';
 
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from '../../../client/utils/pagination';
@@ -31,8 +31,8 @@ export class ActiveSalesView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest:SearchRequest<LocalSale>;
-    searchResult:SearchResult<LocalSale>;
+    searchRequest:SearchRequest<Sale>;
+    searchResult:SearchResult<Sale>;
     columns:SaleColumn[];
     salesPerPage:number = 25;
 
@@ -45,7 +45,7 @@ export class ActiveSalesView {
         this.errorService = errorService;
         this.router = router;
 
-        this.searchRequest = new SearchRequest<LocalSale>();
+        this.searchRequest = new SearchRequest<Sale>();
         var saleSearch = new WsSaleSearch();
         saleSearch.companyRef = new WsCompanyRef(authService.auth.employee.company.id);
         saleSearch.closed = false;
@@ -58,7 +58,7 @@ export class ActiveSalesView {
         });
         this.searchRequest.pagination = pagination;
         this.searchRequest.search = saleSearch;
-        this.searchResult = new SearchResult<LocalSale>();
+        this.searchResult = new SearchResult<Sale>();
 
         this.columns = [
             SaleColumn.ID,
@@ -87,7 +87,7 @@ export class ActiveSalesView {
         this.searchSales();
     }
 
-    onSaleClicked(sale:LocalSale) {
+    onSaleClicked(sale:Sale) {
         this.doSwitchToSale(sale);
     }
 
@@ -99,12 +99,12 @@ export class ActiveSalesView {
         }
     }
 
-    doSwitchToSale(sale:LocalSale) {
+    doSwitchToSale(sale:Sale) {
         var id = sale.id;
         this.router.navigate(['/Sales/Sale', {id: id}]);
     }
 
-    doRemoveSale(sale:LocalSale) {
+    doRemoveSale(sale:Sale) {
         this.saleService.remove(sale.id)
             .then((result)=> {
                 this.searchSales();

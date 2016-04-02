@@ -12,8 +12,8 @@ import {RequiredValidator, PasswordValidator} from '../../components/utils/valid
 import {LocalizedDirective} from '../../components/utils/localizedInput';
 
 import {WsCountry} from '../../client/domain/company/country';
-import {LocalCompany, LocalCompanyFactory} from '../../domain/company';
-import {LocalEmployee, LocalEmployeeFactory} from '../../domain/employee';
+import {Company, CompanyFactory} from '../../domain/company/company';
+import {Employee, EmployeeFactory} from '../../domain/thirdparty/employee';
 import {Language, LanguageFactory, LocaleTextsFactory, NewLanguage} from '../../client/utils/lang';
 
 import {AuthService} from '../../services/auth';
@@ -39,7 +39,7 @@ export class RegisterView {
     employeeService: EmployeeService;
     router:Router;
 
-    company: LocalCompany;
+    company: Company;
     companySaved: boolean;
     editingEmployee: any;
     password: string;
@@ -57,7 +57,7 @@ export class RegisterView {
 
         this.appLanguage = NewLanguage(LanguageFactory.DEFAULT_LANGUAGE.toJS());
 
-        this.company = LocalCompanyFactory.createNewCompany({
+        this.company = CompanyFactory.createNewCompany({
             name: LocaleTextsFactory.toLocaleTexts({}),
             description: LocaleTextsFactory.toLocaleTexts({})
         });
@@ -65,7 +65,7 @@ export class RegisterView {
         this.editingEmployee.language = NewLanguage(LanguageFactory.DEFAULT_LANGUAGE.toJS());
     }
 
-    onCompanySaved(company: LocalCompany) {
+    onCompanySaved(company: Company) {
         this.company = company;
         this.companySaved = true;
     }
@@ -75,10 +75,10 @@ export class RegisterView {
     }
     doRegister() {
         var registration = new WsRegistration();
-        var localCompany:LocalCompany = LocalCompanyFactory.createNewCompany(this.company);
+        var localCompany:Company = CompanyFactory.createNewCompany(this.company);
         var company = this.companyService.fromLocalConverter(localCompany);
         this.editingEmployee.locale = this.editingEmployee.language.locale;
-        var localEmployee:LocalEmployee = LocalEmployeeFactory.createNewEmployee(this.editingEmployee);
+        var localEmployee:Employee = EmployeeFactory.createNewEmployee(this.editingEmployee);
         var employee = this.employeeService.fromLocalConverter(localEmployee);
         registration.company =company;
         registration.employee = employee;

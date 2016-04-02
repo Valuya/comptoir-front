@@ -15,7 +15,7 @@ import {
     OnChanges, SimpleChange
 } from "angular2/core";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
-import {LocalCustomer} from "../../../domain/customer";
+import {Customer} from "../../../domain/thirdparty/customer";
 import {AuthService} from "../../../services/auth";
 import {CustomerService} from "../../../services/customer";
 import {Observable} from "rxjs/Observable";
@@ -37,7 +37,7 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
     @Input()
     autoFocus:boolean = true;
     @Input()
-    selectedCustomer:LocalCustomer;
+    selectedCustomer:Customer;
     @Input()
     editable: boolean = true;
     @Input()
@@ -53,12 +53,12 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
 
     private authService:AuthService;
     private customerService:CustomerService;
-    private searchRequest:SearchRequest<LocalCustomer>;
-    private searchResult:SearchResult<LocalCustomer>;
+    private searchRequest:SearchRequest<Customer>;
+    private searchResult:SearchResult<Customer>;
     private keyboardTimeout = 200;
 
 
-    private focusedSuggestion:LocalCustomer;
+    private focusedSuggestion:Customer;
     private suggestionsHidden:boolean;
     private handleFocusOut:boolean = true;
 
@@ -66,7 +66,7 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
                 customerService:CustomerService) {
         this.authService = authService;
         this.customerService = customerService;
-        this.searchRequest = new SearchRequest<LocalCustomer>();
+        this.searchRequest = new SearchRequest<Customer>();
         var search = new WsCustomerSearch();
         search.companyRef = authService.getEmployeeCompanyRef();
         this.searchRequest.search = search;
@@ -79,7 +79,7 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
         });
         this.searchRequest.pagination = pagination;
 
-        this.searchResult = new SearchResult<LocalCustomer>();
+        this.searchResult = new SearchResult<Customer>();
     }
 
 
@@ -137,7 +137,7 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
         this.searchRequest.search.multiSearch = null;
     }
 
-    onCustomerFocused(customer:LocalCustomer) {
+    onCustomerFocused(customer:Customer) {
         this.focusedSuggestion = customer;
     }
 
@@ -177,7 +177,7 @@ export class CustomerSelectInputComponent implements AfterViewInit, OnChanges {
         }
     }
 
-    private onCustomerSelected(customer:LocalCustomer) {
+    private onCustomerSelected(customer:Customer) {
         this.focusedSuggestion = customer;
         this.selectedCustomer = customer;
         this.onSuggestionSelected();

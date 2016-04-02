@@ -14,7 +14,7 @@ import {LocalizedDirective} from '../../utils/localizedInput';
 import {RequiredValidator} from '../../utils/validators';
 import {FormMessage} from '../../utils/formMessage/formMessage';
 import {StockService} from "../../../services/stock";
-import {LocalStock} from "../../../domain/stock";
+import {Stock} from "../../../domain/stock/stock";
 import {WsStockRef} from "../../../client/domain/stock/stock";
 
 
@@ -32,7 +32,7 @@ export class StockEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
-    stock:LocalStock;
+    stock:Stock;
     stockModel:any;
 
     editLanguage:Language;
@@ -70,12 +70,12 @@ export class StockEditComponent implements OnInit {
     }
 
 
-    private saveStock(stock:LocalStock):Promise<LocalStock> {
+    private saveStock(stock:Stock):Promise<Stock> {
         return this.stockService.save(stock)
             .then((ref:WsStockRef)=> {
                 return this.stockService.get(ref.id);
             })
-            .then((stock:LocalStock)=> {
+            .then((stock:Stock)=> {
                 this.stock = stock;
                 this.stockModel = stock.toJS();
                 return stock;

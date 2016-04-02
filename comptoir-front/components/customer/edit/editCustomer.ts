@@ -3,7 +3,7 @@
  */
 import {Component, EventEmitter, OnInit} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
-import {LocalCustomer, LocalCustomerFactory} from "../../../domain/customer";
+import {Customer, CustomerFactory} from "../../../domain/thirdparty/customer";
 import {WsCustomerRef, WsCustomerFactory} from "../../../client/domain/thirdparty/customer";
 import {Language} from "../../../client/utils/lang";
 import {AuthService} from "../../../services/auth";
@@ -29,7 +29,7 @@ export class CustomersEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
-    customer:LocalCustomer;
+    customer:Customer;
     customerModel:any;
 
     editLanguage:Language;
@@ -53,7 +53,7 @@ export class CustomersEditComponent implements OnInit {
 
 
     onFormSubmit() {
-        var newCustomer = LocalCustomerFactory.createNewCustomer(this.customerModel);
+        var newCustomer = CustomerFactory.createNewCustomer(this.customerModel);
         this.saveCustomer(newCustomer)
             .then((customer)=> {
                 this.saved.emit(customer);
@@ -68,12 +68,12 @@ export class CustomersEditComponent implements OnInit {
     }
 
 
-    private saveCustomer(customer:LocalCustomer):Promise<LocalCustomer> {
+    private saveCustomer(customer:Customer):Promise<Customer> {
         return this.customerService.save(customer)
             .then((ref:WsCustomerRef)=> {
                 return this.customerService.get(ref.id);
             })
-            .then((customer:LocalCustomer)=> {
+            .then((customer:Customer)=> {
                 this.customer = customer;
                 this.customerModel = customer.toJS();
                 return customer;

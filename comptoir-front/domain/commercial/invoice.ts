@@ -2,16 +2,16 @@
  * Created by cghislai on 08/09/15.
  */
 
-import {LocalCompany} from "./company";
-import {LocalSale} from "./sale";
+import {Company} from "./../company/company";
+import {Sale} from "./sale";
 import * as Immutable from "immutable";
 
-export interface LocalInvoice extends Immutable.Map<string, any> {
+export interface Invoice extends Immutable.Map<string, any> {
     id: number;
-    company: LocalCompany;
+    company: Company;
     number: string;
     note: string;
-    sale: LocalSale;
+    sale: Sale;
 }
 var InvoiceRecord = Immutable.Record({
     id: null,
@@ -20,9 +20,9 @@ var InvoiceRecord = Immutable.Record({
     note: null,
     sale: null
 });
-export class LocalInvoiceFactory {
+export class InvoiceFactory {
 
-    static createNewInvoice(desc:any):LocalInvoice {
+    static createNewInvoice(desc:any):Invoice {
         return <any>InvoiceRecord(desc);
     }
 }

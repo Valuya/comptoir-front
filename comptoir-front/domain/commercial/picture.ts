@@ -3,13 +3,13 @@
  */
 
 
-import {LocalCompany} from "./company";
+import {Company} from "./../company/company";
 import * as Immutable from "immutable";
-import {WsPicture} from "../client/domain/commercial/picture";
+import {WsPicture} from "../../client/domain/commercial/picture";
 
-export interface LocalPicture extends Immutable.Map<string, any> {
+export interface Picture extends Immutable.Map<string, any> {
     id:number;
-    company:LocalCompany;
+    company:Company;
     data:string;
     contentType:string;
     dataURI:string;
@@ -22,9 +22,9 @@ var PictureRecord = Immutable.Record({
     dataURI: null
 });
 
-export class LocalPictureFactory {
+export class PictureFactory {
 
-    static createNewPicture(desc:any):LocalPicture {
+    static createNewPicture(desc:any):Picture {
         return <any>PictureRecord(desc);
     }
 

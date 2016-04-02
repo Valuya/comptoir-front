@@ -4,8 +4,8 @@
 import {Component} from "angular2/core";
 import {NgIf} from "angular2/common";
 import {RouteParams, Router, RouterLink, OnActivate} from "angular2/router";
-import {LocalItemVariant, LocalItemVariantFactory} from "../../../../domain/itemVariant";
-import {LocalItem} from "../../../../domain/item";
+import {ItemVariant, ItemVariantFactory} from "../../../../domain/commercial/itemVariant";
+import {Item} from "../../../../domain/commercial/item";
 import {ItemService} from "../../../../services/item";
 import {ItemVariantService} from "../../../../services/itemVariant";
 import {ErrorService} from "../../../../services/error";
@@ -27,8 +27,8 @@ export class ItemVariantEditView implements OnActivate {
     router:Router;
     routeParams:RouteParams;
 
-    item:LocalItem;
-    itemVariant:LocalItemVariant;
+    item:Item;
+    itemVariant:ItemVariant;
 
     constructor(itemVariantService:ItemVariantService, itemService:ItemService,
                 authService:AuthService, errorService:ErrorService,
@@ -94,12 +94,12 @@ export class ItemVariantEditView implements OnActivate {
         itemVariantDesc.item = this.item;
         itemVariantDesc.pricingAmount = 0;
         itemVariantDesc.company = this.authService.getEmployeeCompany();
-        this.itemVariant = LocalItemVariantFactory.createNewItemVariant(itemVariantDesc);
+        this.itemVariant = ItemVariantFactory.createNewItemVariant(itemVariantDesc);
     }
 
     getItemVariant(id:number) {
         this.itemVariantService.get(id)
-            .then((itemVariant:LocalItemVariant)=> {
+            .then((itemVariant:ItemVariant)=> {
                 this.itemVariant = itemVariant;
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);

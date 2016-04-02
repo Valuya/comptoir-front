@@ -4,7 +4,7 @@
 import {Component} from "angular2/core";
 import {NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Router} from "angular2/router";
-import {LocalPos} from "../../../domain/pos";
+import {Pos} from "../../../domain/commercial/pos";
 import {Language} from "../../../client/utils/lang";
 import {PosService} from "../../../services/pos";
 import {ErrorService} from "../../../services/error";
@@ -28,8 +28,8 @@ export class PosListView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest:SearchRequest<LocalPos>;
-    searchResult:SearchResult<LocalPos>;
+    searchRequest:SearchRequest<Pos>;
+    searchResult:SearchResult<Pos>;
     posPerPage:number = 25;
     columns: Immutable.List<PosColumn>;
 
@@ -42,13 +42,13 @@ export class PosListView {
         this.errorService = appService;
         this.router = router;
 
-        this.searchRequest = new SearchRequest<LocalPos>();
+        this.searchRequest = new SearchRequest<Pos>();
         var posSearch = new WsPosSearch();
         posSearch.companyRef = authService.getEmployeeCompanyRef();
         var pagination = PaginationFactory.Pagination({firstIndex: 0, pageSize: this.posPerPage});
         this.searchRequest.pagination = pagination;
         this.searchRequest.search = posSearch;
-        this.searchResult = new SearchResult<LocalPos>();
+        this.searchResult = new SearchResult<Pos>();
 
         this.appLanguage= authService.getEmployeeLanguage();
         this.columns = Immutable.List.of(
@@ -62,7 +62,7 @@ export class PosListView {
     searchPosList() {
         this.posService
             .search(this.searchRequest)
-            .then((result:SearchResult<LocalPos>) => {
+            .then((result:SearchResult<Pos>) => {
                 this.searchResult = result;
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -77,19 +77,19 @@ export class PosListView {
 
 
     onColumnAction(event) {
-        var pos:LocalPos = event.pos;
+        var pos:Pos = event.pos;
         var column:PosColumn= event.column;
         if (column === PosColumn.ACTION_REMOVE) {
             this.doRemovePos(pos);
         }
     }
 
-    doEditPos(pos:LocalPos) {
+    doEditPos(pos:Pos) {
         var id = pos.id;
         this.router.navigate(['/Pos/Edit', {id: id}]);
     }
 
-    doRemovePos(pos:LocalPos) {
+    doRemovePos(pos:Pos) {
         var thisView = this;
         this.posService
             .remove(pos.id)

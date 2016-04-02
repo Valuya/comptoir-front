@@ -4,7 +4,7 @@
 import {Injectable} from "angular2/core";
 import {WsCustomer} from "../client/domain/thirdparty/customer";
 import {WsCompanyRef} from "../client/domain/company/company";
-import {LocalCustomer, LocalCustomerFactory} from "../domain/customer";
+import {Customer, CustomerFactory} from "../domain/thirdparty/customer";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {CustomerClient} from "../client/client/customer";
@@ -32,7 +32,7 @@ export class CustomerService {
         this.http = http;
     }
 
-    get(id:number):Promise<LocalCustomer> {
+    get(id:number):Promise<Customer> {
         return this.customerClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsCustomer)=> {
@@ -45,13 +45,13 @@ export class CustomerService {
             .toPromise();
     }
 
-    save(entity:LocalCustomer):Promise<WithId> {
+    save(entity:Customer):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.customerClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalCustomer>):Promise<SearchResult<LocalCustomer>> {
+    search(searchRequest:SearchRequest<Customer>):Promise<SearchResult<Customer>> {
         return this.customerClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsCustomer>)=> {
@@ -63,7 +63,7 @@ export class CustomerService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalCustomer>();
+                        var localResult = new SearchResult<Customer>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -93,7 +93,7 @@ export class CustomerService {
             .toPromise();
     }
 
-    toLocalConverter(customer:WsCustomer):Promise<LocalCustomer> {
+    toLocalConverter(customer:WsCustomer):Promise<Customer> {
         var localCustomerDesc:any = {};
         localCustomerDesc.address1 = customer.adress1;
         localCustomerDesc.address2 = customer.adress2;
@@ -119,11 +119,11 @@ export class CustomerService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalCustomerFactory.createNewCustomer(localCustomerDesc);
+                return CustomerFactory.createNewCustomer(localCustomerDesc);
             });
     }
 
-    fromLocalConverter(localCustomer:LocalCustomer):WsCustomer {
+    fromLocalConverter(localCustomer:Customer):WsCustomer {
         var customer = new WsCustomer();
         customer.adress1 = localCustomer.address1;
         customer.adress2 = localCustomer.address2;

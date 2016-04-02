@@ -4,9 +4,9 @@
 import {Component, EventEmitter, OnInit, ChangeDetectionStrategy} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Router, RouterLink} from "angular2/router";
-import {LocalPicture, LocalPictureFactory} from "../../../domain/picture";
-import {LocalItem, LocalItemFactory} from "../../../domain/item";
-import {LocalItemVariant} from "../../../domain/itemVariant";
+import {Picture, PictureFactory} from "../../../domain/commercial/picture";
+import {Item, ItemFactory} from "../../../domain/commercial/item";
+import {ItemVariant} from "../../../domain/commercial/itemVariant";
 import {WsCompanyRef} from "../../../client/domain/company/company";
 import {WsItemRef} from "../../../client/domain/commercial/item";
 import {Language} from "../../../client/utils/lang";
@@ -45,7 +45,7 @@ export class ItemEditComponent implements OnInit {
     authService:AuthService;
     pictureService:PictureService;
 
-    item:LocalItem;
+    item:Item;
     itemJS:any;
 
     itemTotalPrice:number;
@@ -56,8 +56,8 @@ export class ItemEditComponent implements OnInit {
     appLanguage:Language;
     editLanguage:Language;
 
-    itemVariantSearchRequest:SearchRequest<LocalItemVariant>;
-    itemVariantSearchResult:SearchResult<LocalItemVariant>;
+    itemVariantSearchRequest:SearchRequest<ItemVariant>;
+    itemVariantSearchResult:SearchResult<ItemVariant>;
     itemVariantListColumns:Immutable.List<ItemVariantColumn>;
 
     saved = new EventEmitter();
@@ -85,7 +85,7 @@ export class ItemEditComponent implements OnInit {
             ItemVariantColumn.TOTAL_PRICE,
             ItemVariantColumn.ACTION_REMOVE
         );
-        this.itemVariantSearchRequest = new SearchRequest<LocalItemVariant>();
+        this.itemVariantSearchRequest = new SearchRequest<ItemVariant>();
 
     }
 
@@ -149,12 +149,12 @@ export class ItemEditComponent implements OnInit {
             };
             reader.readAsDataURL(file);
         }).then((data:string)=> {
-                var mainPicture:LocalPicture = LocalPictureFactory.createNewPicture({
+                var mainPicture:Picture = PictureFactory.createNewPicture({
                     dataURI: data,
                     company: this.authService.getEmployeeCompany()
                 });
                 if (thisView.item.mainPicture != null) {
-                    mainPicture = <LocalPicture>thisView.item.mainPicture.merge(mainPicture);
+                    mainPicture = <Picture>thisView.item.mainPicture.merge(mainPicture);
                 }
                 thisView.itemJS.mainPicture = mainPicture.toJS();
                 thisView.itemPictureTouched = true;
@@ -209,7 +209,7 @@ export class ItemEditComponent implements OnInit {
         });
     }
 
-    onVariantRowSelected(localVariant:LocalItemVariant) {
+    onVariantRowSelected(localVariant:ItemVariant) {
         var variantId = localVariant.id;
         var itemId = this.item.id;
         var nextTask = Promise.resolve();
@@ -227,7 +227,7 @@ export class ItemEditComponent implements OnInit {
 
     onVariantColumnAction(event) {
         var column = event.column;
-        var itemVariant:LocalItemVariant = event.itemVariant;
+        var itemVariant:ItemVariant = event.itemVariant;
         if (column === ItemVariantColumn.ACTION_REMOVE) {
             this.itemVariantService.remove(itemVariant.id)
                 .then(()=> {
@@ -239,17 +239,17 @@ export class ItemEditComponent implements OnInit {
         }
     }
 
-    private saveItem():Promise<LocalItem> {
+    private saveItem():Promise<Item> {
         if (this.itemPictureTouched) {
-            var picture = LocalPictureFactory.createNewPicture(this.itemJS.mainPicture);
+            var picture = PictureFactory.createNewPicture(this.itemJS.mainPicture);
             return this.pictureService.save(picture)
-                .then((localPic:LocalPicture)=> {
+                .then((localPic:Picture)=> {
                     this.itemJS.mainPicture = localPic;
-                    var item = LocalItemFactory.createNewItem(this.itemJS);
+                    var item = ItemFactory.createNewItem(this.itemJS);
                     return this.itemService.save(item);
                 });
         } else {
-            var item = LocalItemFactory.createNewItem(this.itemJS);
+            var item = ItemFactory.createNewItem(this.itemJS);
             return this.itemService.save(item);
         }
     }

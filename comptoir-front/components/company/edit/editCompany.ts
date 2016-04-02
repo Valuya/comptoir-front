@@ -3,7 +3,7 @@
  */
 import {Component, EventEmitter, OnInit, Input, Output} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
-import {LocalCompany, LocalCompanyFactory} from "../../../domain/company";
+import {Company, CompanyFactory} from "../../../domain/company/company";
 import {WsCompanyRef} from "../../../client/domain/company/company";
 import {Language, LanguageFactory, NewLanguage} from "../../../client/utils/lang";
 import {AuthService} from "../../../services/auth";
@@ -32,7 +32,7 @@ export class CompanyEditComponent implements OnInit {
     countryService:CountryService;
 
     @Input()
-    company:LocalCompany;
+    company:Company;
 
     companyModel:any;
     companyLoyaltyPercentage:number;
@@ -69,7 +69,7 @@ export class CompanyEditComponent implements OnInit {
     onFormSubmit() {
         var loyaltyrate = NumberUtils.toFixedDecimals(this.companyLoyaltyPercentage / 100, 2);
         this.companyModel.customerLoyaltyRate = loyaltyrate;
-        var newCompany = LocalCompanyFactory.createNewCompany(this.companyModel);
+        var newCompany = CompanyFactory.createNewCompany(this.companyModel);
 
         this.saveCompany(newCompany)
             .then((company)=> {
@@ -111,7 +111,7 @@ export class CompanyEditComponent implements OnInit {
             });
     }
 
-    private saveCompany(company:LocalCompany):Promise<LocalCompany> {
+    private saveCompany(company:Company):Promise<Company> {
         var authToken = this.authService.authToken;
 
 
@@ -119,7 +119,7 @@ export class CompanyEditComponent implements OnInit {
             .then((ref:WsCompanyRef)=> {
                 return this.companyService.get(ref.id, authToken);
             })
-            .then((company:LocalCompany)=> {
+            .then((company:Company)=> {
                 this.company = company;
                 this.companyModel = company.toJS();
                 this.setLoyaltyPercentage(company.customerLoyaltyRate);

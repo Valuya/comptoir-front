@@ -5,7 +5,7 @@
 import {Component, ChangeDetectionStrategy,EventEmitter, ViewEncapsulation} from 'angular2/core';
 import { NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
-import {LocalSale} from '../../../domain/sale';
+import {Sale} from '../../../domain/commercial/sale';
 import {Language, LocaleTexts, LocaleTextsFactory} from '../../../client/utils/lang';
 
 import {AuthService} from '../../../services/auth';
@@ -32,11 +32,11 @@ import {CustomerSelectInputComponent} from "../../customer/select/customerSelect
 })
 export class SaleColumnComponent {
     action = new EventEmitter();
-    sale:LocalSale;
+    sale:Sale;
     column:SaleColumn;
     lang:Language;
 
-    onColumnAction(sale:LocalSale, column:SaleColumn, event) {
+    onColumnAction(sale:Sale, column:SaleColumn, event) {
         this.action.next({sale: sale, column: column});
         event.stopPropagation();
         event.preventDefault();
@@ -61,7 +61,7 @@ export class SaleColumnComponent {
 
 export class SaleListComponent {
     // properties
-    sales:Immutable.List<LocalSale>;
+    sales:Immutable.List<Sale>;
     columns:Immutable.List<SaleColumn>;
     selectable:boolean;
     headers:boolean;
@@ -74,7 +74,7 @@ export class SaleListComponent {
         this.language = authService.getEmployeeLanguage();
     }
 
-    onSaleClick(sale:LocalSale, event) {
+    onSaleClick(sale:Sale, event) {
         this.saleClicked.next(sale);
         event.stopPropagation();
         event.preventDefault();

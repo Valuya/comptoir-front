@@ -4,7 +4,7 @@
 import {Component, ChangeDetectionStrategy} from "angular2/core";
 import {NgIf} from "angular2/common";
 import {RouteParams, Router, RouterLink, OnActivate} from "angular2/router";
-import {LocalItem, LocalItemFactory} from "../../../domain/item";
+import {Item, ItemFactory} from "../../../domain/commercial/item";
 import {LocaleTextsFactory} from "../../../client/utils/lang";
 import {ItemService} from "../../../services/item";
 import {ErrorService} from "../../../services/error";
@@ -26,7 +26,7 @@ export class ItemEditView implements OnActivate {
     router:Router;
     routeParams:RouteParams;
 
-    item:LocalItem;
+    item:Item;
 
 
     constructor(itemService:ItemService, errorService:ErrorService,
@@ -70,14 +70,14 @@ export class ItemEditView implements OnActivate {
         var country = company.country;
         var vatRate = country.defaultVatRate;
         itemDesc.vatRate = vatRate;
-        this.item = LocalItemFactory.createNewItem(itemDesc);
+        this.item = ItemFactory.createNewItem(itemDesc);
 
 
     }
 
     getItem(id:number) {
         this.itemService.get(id)
-            .then((item:LocalItem)=> {
+            .then((item:Item)=> {
                 this.item = item;
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);

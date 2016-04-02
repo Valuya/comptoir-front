@@ -5,7 +5,7 @@ import {Injectable} from "angular2/core";
 import {WsMoneyPile} from "../client/domain/cash/moneyPile";
 import {WsAccountRef} from "../client/domain/accounting/account";
 import {WsBalanceRef} from "../client/domain/accounting/balance";
-import {LocalMoneyPile, LocalMoneyPileFactory} from "../domain/moneyPile";
+import {MoneyPile, MoneyPileFactory} from "../domain/cash/moneyPile";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {MoneyPileClient} from "../client/client/moneyPile";
@@ -32,7 +32,7 @@ export class MoneyPileService {
         this.balanceService = balanceService;
     }
 
-    get(id:number):Promise<LocalMoneyPile> {
+    get(id:number):Promise<MoneyPile> {
         return this.moneyPileClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsMoneyPile)=> {
@@ -45,13 +45,13 @@ export class MoneyPileService {
             .toPromise();
     }
 
-    save(entity:LocalMoneyPile):Promise<WithId> {
+    save(entity:MoneyPile):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.moneyPileClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalMoneyPile>):Promise<SearchResult<LocalMoneyPile>> {
+    search(searchRequest:SearchRequest<MoneyPile>):Promise<SearchResult<MoneyPile>> {
         return this.moneyPileClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsMoneyPile>)=> {
@@ -63,7 +63,7 @@ export class MoneyPileService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalMoneyPile>();
+                        var localResult = new SearchResult<MoneyPile>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -71,7 +71,7 @@ export class MoneyPileService {
             });
     }
 
-    toLocalConverter(moneyPile:WsMoneyPile):Promise<LocalMoneyPile> {
+    toLocalConverter(moneyPile:WsMoneyPile):Promise<MoneyPile> {
         var localMoneyPileDesc:any = {};
         localMoneyPileDesc.unitCount = moneyPile.count;
         localMoneyPileDesc.dateTime = moneyPile.dateTime;
@@ -99,12 +99,12 @@ export class MoneyPileService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalMoneyPileFactory.createNewMoneyPile(localMoneyPileDesc);
+                return MoneyPileFactory.createNewMoneyPile(localMoneyPileDesc);
             });
     }
 
 
-    fromLocalConverter(localMoneyPile:LocalMoneyPile):WsMoneyPile {
+    fromLocalConverter(localMoneyPile:MoneyPile):WsMoneyPile {
         var moneyPile = new WsMoneyPile();
         moneyPile.accountRef = new WsAccountRef(localMoneyPile.account.id);
         moneyPile.balanceRef = new WsBalanceRef(localMoneyPile.balance.id);

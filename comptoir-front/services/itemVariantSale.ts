@@ -5,7 +5,7 @@ import {Injectable} from "angular2/core";
 import {WsItemVariantSale} from "../client/domain/commercial/itemVariantSale";
 import {WsItemVariantRef} from "../client/domain/commercial/itemVariant";
 import {WsSaleRef} from "../client/domain/commercial/sale";
-import {LocalItemVariantSale, LocalItemVariantSaleFactory} from "../domain/itemVariantSale";
+import {ItemVariantSale, ItemVariantSaleFactory} from "../domain/commercial/itemVariantSale";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {ItemVariantSaleClient} from "../client/client/itemVariantSale";
@@ -37,7 +37,7 @@ export class ItemVariantSaleService {
     }
 
 
-    fetch(id:number):Promise<LocalItemVariantSale> {
+    fetch(id:number):Promise<ItemVariantSale> {
         return this.itemVariantSaleClient.doFetch(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsItemVariantSale)=> {
@@ -45,7 +45,7 @@ export class ItemVariantSaleService {
             });
     }
 
-    get(id:number):Promise<LocalItemVariantSale> {
+    get(id:number):Promise<ItemVariantSale> {
         return this.itemVariantSaleClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsItemVariantSale)=> {
@@ -58,13 +58,13 @@ export class ItemVariantSaleService {
             .toPromise();
     }
 
-    save(entity:LocalItemVariantSale):Promise<WithId> {
+    save(entity:ItemVariantSale):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.itemVariantSaleClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalItemVariantSale>):Promise<SearchResult<LocalItemVariantSale>> {
+    search(searchRequest:SearchRequest<ItemVariantSale>):Promise<SearchResult<ItemVariantSale>> {
         return this.itemVariantSaleClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsItemVariantSale>)=> {
@@ -76,7 +76,7 @@ export class ItemVariantSaleService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalItemVariantSale>();
+                        var localResult = new SearchResult<ItemVariantSale>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -84,7 +84,7 @@ export class ItemVariantSaleService {
             });
     }
 
-    toLocalConverter(itemVariantSale:WsItemVariantSale):Promise<LocalItemVariantSale> {
+    toLocalConverter(itemVariantSale:WsItemVariantSale):Promise<ItemVariantSale> {
         var localItemSaleDesc:any = {};
         localItemSaleDesc.comment = itemVariantSale.comment;
         localItemSaleDesc.dateTime = itemVariantSale.dateTime;
@@ -126,11 +126,11 @@ export class ItemVariantSaleService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalItemVariantSaleFactory.createNewItemVariantSale(localItemSaleDesc);
+                return ItemVariantSaleFactory.createNewItemVariantSale(localItemSaleDesc);
             });
     }
 
-    fromLocalConverter(localItemVariantSale:LocalItemVariantSale):WsItemVariantSale {
+    fromLocalConverter(localItemVariantSale:ItemVariantSale):WsItemVariantSale {
         var itemSale = new WsItemVariantSale();
         itemSale.comment = localItemVariantSale.comment;
         itemSale.dateTime = localItemVariantSale.dateTime;

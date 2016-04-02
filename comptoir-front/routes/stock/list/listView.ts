@@ -6,7 +6,7 @@ import {NgIf, FORM_DIRECTIVES} from 'angular2/common';
 import {Router} from 'angular2/router';
 
 
-import {LocalStock} from '../../../domain/stock';
+import {Stock} from '../../../domain/stock/stock';
 import {Language} from '../../../client/utils/lang';
 
 import {StockService} from '../../../services/stock';
@@ -34,8 +34,8 @@ export class StockListView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest:SearchRequest<LocalStock>;
-    searchResult:SearchResult<LocalStock>;
+    searchRequest:SearchRequest<Stock>;
+    searchResult:SearchResult<Stock>;
     stockPerPage:number = 25;
     columns: Immutable.List<StockColumn>;
 
@@ -48,14 +48,14 @@ export class StockListView {
         this.errorService = appService;
         this.router = router;
 
-        this.searchRequest = new SearchRequest<LocalStock>();
+        this.searchRequest = new SearchRequest<Stock>();
         var stockSearch = new WsStockSearch();
         stockSearch.companyRef = authService.getEmployeeCompanyRef();
         stockSearch.active = true;
         var pagination = PaginationFactory.Pagination({firstIndex: 0, pageSize: this.stockPerPage});
         this.searchRequest.pagination = pagination;
         this.searchRequest.search = stockSearch;
-        this.searchResult = new SearchResult<LocalStock>();
+        this.searchResult = new SearchResult<Stock>();
 
         this.appLanguage= authService.getEmployeeLanguage();
         this.columns = Immutable.List.of(
@@ -68,7 +68,7 @@ export class StockListView {
     searchStockList() {
         this.stockService
             .search(this.searchRequest)
-            .then((result:SearchResult<LocalStock>) => {
+            .then((result:SearchResult<Stock>) => {
                 this.searchResult = result;
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -83,19 +83,19 @@ export class StockListView {
 
 
     onColumnAction(event) {
-        var stock:LocalStock = event.stock;
+        var stock:Stock = event.stock;
         var column:StockColumn= event.column;
         if (column === StockColumn.ACTION_REMOVE) {
             this.doRemoveStock(stock);
         }
     }
 
-    doEditStock(stock:LocalStock) {
+    doEditStock(stock:Stock) {
         var id = stock.id;
         this.router.navigate(['/Stock/Edit', {id: id}]);
     }
 
-    doRemoveStock(stock:LocalStock) {
+    doRemoveStock(stock:Stock) {
         var thisView = this;
         this.stockService
             .remove(stock.id)

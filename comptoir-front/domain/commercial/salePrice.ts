@@ -5,7 +5,7 @@
 
 import * as Immutable from "immutable";
 
-export interface LocalSalePrice extends Immutable.Map<string, any> {
+export interface SalePrice extends Immutable.Map<string, any> {
    base: number;
     taxes: number;
 }
@@ -14,9 +14,9 @@ var SalePriceRecord = Immutable.Record({
     taxes: null
 });
 
-export class LocalSalePriceFactory {
+export class SalePriceFactory {
 
-    static createNewSalePrice(desc:any):LocalSalePrice {
+    static createNewSalePrice(desc:any):SalePrice {
         return <any>SalePriceRecord(desc);
     }
 

@@ -4,7 +4,7 @@
 import {Component} from "angular2/core";
 import {Router} from "angular2/router";
 import {WsCompanyRef} from "../../../client/domain/company/company";
-import {LocalAccount} from "../../../domain/account";
+import {Account} from "../../../domain/accounting/account";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
 import {Language} from "../../../client/utils/lang";
 import {PaginationFactory, ApplyPageChangeEvent, PageChangeEvent} from "../../../client/utils/pagination";
@@ -28,8 +28,8 @@ export class AccountsListView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest:SearchRequest<LocalAccount>;
-    searchResult:SearchResult<LocalAccount>;
+    searchRequest:SearchRequest<Account>;
+    searchResult:SearchResult<Account>;
     columns:Immutable.List<AccountColumn>;
     accountsPerPage:number = 25;
 
@@ -41,14 +41,14 @@ export class AccountsListView {
         this.errorService = errorService;
         this.router = router;
 
-        this.searchRequest = new SearchRequest<LocalAccount>();
+        this.searchRequest = new SearchRequest<Account>();
         var accountSearch = new WsAccountSearch();
         accountSearch.companyRef = new WsCompanyRef(authService.auth.employee.company.id);
 
         var pagination = PaginationFactory.Pagination({firstIndex: 0, pageSize: this.accountsPerPage});
         this.searchRequest.search = accountSearch;
         this.searchRequest.pagination = pagination;
-        this.searchResult = new SearchResult<LocalAccount>();
+        this.searchResult = new SearchResult<Account>();
 
         this.language = authService.getEmployeeLanguage();
         this.columns = Immutable.List.of(
@@ -66,7 +66,7 @@ export class AccountsListView {
     searchAccounts() {
         this.accountService
             .search(this.searchRequest)
-            .then((result:SearchResult<LocalAccount>)=> {
+            .then((result:SearchResult<Account>)=> {
                 this.searchResult = result;
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -79,19 +79,19 @@ export class AccountsListView {
     }
 
     onColumnAction(event) {
-        var account:LocalAccount = event.account;
+        var account:Account = event.account;
         var column:AccountColumn = event.column;
         if (column === AccountColumn.ACTION_REMOVE) {
             this.doRemoveAccount(account);
         }
     }
 
-    doEditAccount(account:LocalAccount) {
+    doEditAccount(account:Account) {
         var id = account.id;
         this.router.navigate(['/Accounts/Edit', {id: id}]);
     }
 
-    doRemoveAccount(account:LocalAccount) {
+    doRemoveAccount(account:Account) {
         var thisView = this;
         this.accountService
             .remove(account.id)

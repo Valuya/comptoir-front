@@ -4,7 +4,7 @@
 import {Injectable} from 'angular2/core';
 
 import {WsCountry, WsCountryFactory} from '../client/domain/company/country';
-import {LocalCountry, LocalCountryFactory} from '../domain/country';
+import {Country, CountryFactory} from '../domain/company/country';
 
 
 import {CountryClient} from '../client/client/country';

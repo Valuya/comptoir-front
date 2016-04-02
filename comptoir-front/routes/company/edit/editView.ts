@@ -4,7 +4,7 @@
 import {Component} from "angular2/core";
 import {NgIf} from "angular2/common";
 import {RouteParams, Router, RouterLink} from "angular2/router";
-import {LocalCompany} from "../../../domain/company";
+import {Company} from "../../../domain/company/company";
 import {AuthService} from "../../../services/auth";
 import {CompanyService} from "../../../services/company";
 import {ErrorService} from "../../../services/error";
@@ -22,7 +22,7 @@ export class EditCompanyView {
     authService:AuthService;
     router:Router;
 
-    company:LocalCompany;
+    company:Company;
 
 
     constructor(companyService:CompanyService, authService:AuthService, appService:ErrorService,

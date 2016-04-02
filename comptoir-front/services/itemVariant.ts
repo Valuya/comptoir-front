@@ -6,7 +6,7 @@ import {WsItemVariant} from "../client/domain/commercial/itemVariant";
 import {WsAttributeValueRef} from "../client/domain/commercial/attributeValue";
 import {WsItemRef} from "../client/domain/commercial/item";
 import {WsPictureRef} from "../client/domain/commercial/picture";
-import {LocalItemVariant, LocalItemVariantFactory} from "../domain/itemVariant";
+import {ItemVariant, ItemVariantFactory} from "../domain/commercial/itemVariant";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {ItemVariantClient} from "../client/client/itemVariant";
@@ -38,7 +38,7 @@ export class ItemVariantService {
 
     }
 
-    get(id:number):Promise<LocalItemVariant> {
+    get(id:number):Promise<ItemVariant> {
         return  this.itemVariantClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsItemVariant)=> {
@@ -46,7 +46,7 @@ export class ItemVariantService {
             });
     }
 
-    fetch(id: number) : Promise<LocalItemVariant> {
+    fetch(id: number) : Promise<ItemVariant> {
         return this.itemVariantClient.doFetch(id, this.getAuthToken())
             .toPromise()
             .then((entity: WsItemVariant)=>{
@@ -59,13 +59,13 @@ export class ItemVariantService {
             .toPromise();
     }
 
-    save(entity:LocalItemVariant):Promise<WithId> {
+    save(entity:ItemVariant):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return  this.itemVariantClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalItemVariant>):Promise<SearchResult<LocalItemVariant>> {
+    search(searchRequest:SearchRequest<ItemVariant>):Promise<SearchResult<ItemVariant>> {
         return  this.itemVariantClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsItemVariant>)=> {
@@ -77,7 +77,7 @@ export class ItemVariantService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalItemVariant>();
+                        var localResult = new SearchResult<ItemVariant>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -85,7 +85,7 @@ export class ItemVariantService {
             });
     }
 
-    toLocalConverter(itemVariant:WsItemVariant):Promise<LocalItemVariant> {
+    toLocalConverter(itemVariant:WsItemVariant):Promise<ItemVariant> {
         var localVariantDesc:any = {};
         localVariantDesc.id = itemVariant.id;
         localVariantDesc.variantReference = itemVariant.variantReference;
@@ -128,11 +128,11 @@ export class ItemVariantService {
 
         return Promise.all(taskList)
             .then(()=> {
-                return LocalItemVariantFactory.createNewItemVariant(localVariantDesc);
+                return ItemVariantFactory.createNewItemVariant(localVariantDesc);
             });
     }
 
-    fromLocalConverter(localItemVariant:LocalItemVariant):WsItemVariant {
+    fromLocalConverter(localItemVariant:ItemVariant):WsItemVariant {
         var itemVariant:WsItemVariant = new WsItemVariant();
         itemVariant.attributeValueRefs = [];
         for (var localAttribute of localItemVariant.attributeValues) {

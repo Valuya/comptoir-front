@@ -5,8 +5,8 @@
 import {Component, ViewChild} from "angular2/core";
 import {NgIf} from "angular2/common";
 import {Router, RouteParams, Location, CanReuse, OnActivate} from "angular2/router";
-import {LocalSale} from "../../../domain/sale";
-import {LocalItemVariant} from "../../../domain/itemVariant";
+import {Sale} from "../../../domain/commercial/sale";
+import {ItemVariant} from "../../../domain/commercial/itemVariant";
 import {ErrorService} from "../../../services/error";
 import {SaleService} from "../../../services/sale";
 import {AuthService} from "../../../services/auth";
@@ -15,7 +15,7 @@ import {CommandView} from "../../../components/sales/sale/commandView/commandVie
 import {PayView} from "../../../components/sales/sale/payView/payView";
 import {PosSelect} from "../../../components/pos/posSelect/posSelect";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
-import {LocalStock} from "../../../domain/stock";
+import {Stock} from "../../../domain/stock/stock";
 import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
 import {StockService} from "../../../services/stock";
 import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
@@ -46,8 +46,8 @@ export class SaleView implements CanReuse, OnActivate {
     @ViewChild(PayView)
     payView:PayView;
 
-    stockRequest:SearchRequest<LocalStock>;
-    stockResult:SearchResult<LocalStock>;
+    stockRequest:SearchRequest<Stock>;
+    stockResult:SearchResult<Stock>;
     private stockService:StockService;
 
     constructor(activeSaleService:ActiveSaleService, errorService:ErrorService,
@@ -65,12 +65,12 @@ export class SaleView implements CanReuse, OnActivate {
         this.location = location;
 
         this.navigatingWithinSale = false;
-        this.stockRequest = new SearchRequest<LocalStock>();
+        this.stockRequest = new SearchRequest<Stock>();
         var search = new WsStockSearch();
         search.companyRef = this.authService.getEmployeeCompanyRef();
         search.active = true;
         this.stockRequest.search = search;
-        this.stockResult = new SearchResult<LocalStock>();
+        this.stockResult = new SearchResult<Stock>();
     }
 
     routerOnActivate() {
@@ -132,7 +132,7 @@ export class SaleView implements CanReuse, OnActivate {
         });
     }
 
-    onItemClicked(item:LocalItemVariant) {
+    onItemClicked(item:ItemVariant) {
         var itemList = document.getElementById('saleItemList');
         itemList.focus();
 
@@ -202,10 +202,10 @@ export class SaleView implements CanReuse, OnActivate {
         }
     }
 
-    private getActiveSale():Promise<LocalSale> {
+    private getActiveSale():Promise<Sale> {
         var activeSale = this.activeSaleService.sale;
 
-        var saleTask:Promise<LocalSale>;
+        var saleTask:Promise<Sale>;
         if (activeSale != null) {
             saleTask = Promise.resolve(activeSale);
         } else {

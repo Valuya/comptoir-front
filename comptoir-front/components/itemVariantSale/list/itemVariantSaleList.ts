@@ -9,11 +9,11 @@ import {Language, LocaleTexts, LocaleTextsFactory} from "../../../client/utils/l
 import {AuthService} from "../../../services/auth";
 import {FocusableDirective} from "../../utils/focusable";
 import * as Immutable from "immutable";
-import {LocalItemVariantSale} from "../../../domain/itemVariantSale";
+import {ItemVariantSale} from "../../../domain/commercial/itemVariantSale";
 import {FastInput} from "../../utils/fastInput";
 import {NumberUtils} from "../../../client/utils/number";
-import {LocalSale} from "../../../domain/sale";
-import {LocalStock} from "../../../domain/stock";
+import {Sale} from "../../../domain/commercial/sale";
+import {Stock} from "../../../domain/stock/stock";
 
 /****
  * Column component
@@ -30,7 +30,7 @@ export class ItemVariantSaleColumnComponent {
     @Output()
     action = new EventEmitter();
     @Input()
-    itemVariantSale:LocalItemVariantSale;
+    itemVariantSale:ItemVariantSale;
     @Input()
     column:ItemVariantSaleColumn;
     @Input()
@@ -42,13 +42,13 @@ export class ItemVariantSaleColumnComponent {
     @Input()
     editingSubColumn:ItemVariantSaleColumn;
     @Input()
-    stockList:Immutable.List<LocalStock>;
+    stockList:Immutable.List<Stock>;
     @Input()
     actionsVisible:boolean;
     @Input()
     confirmButtonsVisible:boolean;
 
-    onColumnAction(itemVariantSale:LocalItemVariantSale, column:ItemVariantSaleColumn, event, action?:string, value?:any) {
+    onColumnAction(itemVariantSale:ItemVariantSale, column:ItemVariantSaleColumn, event, action?:string, value?:any) {
         var actionEvent = new ItemVariantSaleColumnActionEvent();
         actionEvent.itemVariantSale = itemVariantSale;
         actionEvent.column = column;
@@ -63,19 +63,19 @@ export class ItemVariantSaleColumnComponent {
         }
     }
 
-    calcPriceVatInclusive(item:LocalItemVariantSale) {
+    calcPriceVatInclusive(item:ItemVariantSale) {
         var price = item.vatExclusive * (1 + item.vatRate);
         return price;
     }
 
-    calcTotalVatInclusive(item:LocalItemVariantSale) {
+    calcTotalVatInclusive(item:ItemVariantSale) {
         var price = item.total;
         var vat = item.itemVariant.item.vatRate;
         price *= (1 + vat);
         return price;
     }
 
-    hasComment(localItemVariantSale:LocalItemVariantSale) {
+    hasComment(localItemVariantSale:ItemVariantSale) {
         if (localItemVariantSale.comment == null) {
             return false;
         }
@@ -123,7 +123,7 @@ export class ItemVariantSaleColumnComponent {
 
 
 export class ItemVariantSaleColumnActionEvent {
-    itemVariantSale:LocalItemVariantSale;
+    itemVariantSale:ItemVariantSale;
     column:ItemVariantSaleColumn;
     action:ItemVariantSaleColumnAction;
     event:any;
@@ -147,9 +147,9 @@ export class ItemVariantSaleColumnActionEvent {
 export class ItemVariantSaleList {
     // properties
     @Input()
-    sale:LocalSale;
+    sale:Sale;
     @Input()
-    itemVariantSaleList:Immutable.List<LocalItemVariantSale>;
+    itemVariantSaleList:Immutable.List<ItemVariantSale>;
     @Input()
     columns:Immutable.List<ItemVariantSaleColumn>;
     @Input()
@@ -169,7 +169,7 @@ export class ItemVariantSaleList {
     @Input()
     editableColumns:Immutable.List<ItemVariantSaleColumn>;
     @Input()
-    stockList:Immutable.List<LocalStock>;
+    stockList:Immutable.List<Stock>;
 
     @Output()
     rowClicked = new EventEmitter();
@@ -182,7 +182,7 @@ export class ItemVariantSaleList {
     editing:boolean;
     editingColumn:ItemVariantSaleColumn;
     editingSubColumn:ItemVariantSaleColumn;
-    editingVariantSale:LocalItemVariantSale;
+    editingVariantSale:ItemVariantSale;
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();
@@ -325,7 +325,7 @@ export class ItemVariantSaleList {
         this.editingVariantSale = null;
     }
 
-    private onAddComment(variantSale:LocalItemVariantSale) {
+    private onAddComment(variantSale:ItemVariantSale) {
         this.columns.toSeq()
             .forEach((column)=> {
                 if (!this.isColumnEditable(column)) {
@@ -352,7 +352,7 @@ export class ItemVariantSaleList {
             });
     }
 
-    private onAddDiscount(variantSale:LocalItemVariantSale) {
+    private onAddDiscount(variantSale:ItemVariantSale) {
         this.columns.toSeq()
             .forEach((column)=> {
                 switch (column) {
@@ -385,53 +385,53 @@ export class ItemVariantSaleList {
         }
     }
 
-    updateComment(localItemVariantSale:LocalItemVariantSale, comment:string):LocalItemVariantSale {
+    updateComment(localItemVariantSale:ItemVariantSale, comment:string):ItemVariantSale {
         var commentTexts = localItemVariantSale.comment;
         commentTexts[this.language.locale] = comment;
-        return <LocalItemVariantSale>localItemVariantSale.set('comment', commentTexts);
+        return <ItemVariantSale>localItemVariantSale.set('comment', commentTexts);
     }
 
-    updateQuantity(localItemVariantSale:LocalItemVariantSale, quantityString:string):LocalItemVariantSale {
+    updateQuantity(localItemVariantSale:ItemVariantSale, quantityString:string):ItemVariantSale {
         var quantity = parseInt(quantityString);
         if (isNaN(quantity)) {
             quantity = 1;
         } else if (quantity < 1) {
             quantity = 1;
         }
-        return <LocalItemVariantSale>localItemVariantSale.set('quantity', quantity);
+        return <ItemVariantSale>localItemVariantSale.set('quantity', quantity);
     }
 
-    updatePrice(localItemVariantSale:LocalItemVariantSale, priceString:string):LocalItemVariantSale {
+    updatePrice(localItemVariantSale:ItemVariantSale, priceString:string):ItemVariantSale {
         var price = parseFloat(priceString);
         if (isNaN(price)) {
             return;
         }
         var vatExclusive = NumberUtils.toFixedDecimals(price / ( 1 + localItemVariantSale.vatRate), 4);
-        return <LocalItemVariantSale>localItemVariantSale.set('vatExclusive', vatExclusive);
+        return <ItemVariantSale>localItemVariantSale.set('vatExclusive', vatExclusive);
     }
 
-    updateDiscount(localItemVariantSale:LocalItemVariantSale, discountString:string):LocalItemVariantSale {
+    updateDiscount(localItemVariantSale:ItemVariantSale, discountString:string):ItemVariantSale {
         var discountPercentage = parseInt(discountString);
         if (isNaN(discountPercentage)) {
             discountPercentage = 0;
         }
         var discountRatio = NumberUtils.toFixedDecimals(discountPercentage / 100, 2);
-        return <LocalItemVariantSale>localItemVariantSale.set('discountRatio', discountRatio);
+        return <ItemVariantSale>localItemVariantSale.set('discountRatio', discountRatio);
     }
 
-    updateStock(localItemVariantSale:LocalItemVariantSale, stockId: number):LocalItemVariantSale {
+    updateStock(localItemVariantSale:ItemVariantSale, stockId: number):ItemVariantSale {
         var stock = this.stockList.toSeq().filter((listStock)=>{
             return listStock.id == stockId;
         }).first();
-        return <LocalItemVariantSale>localItemVariantSale.set('stock', stock);
+        return <ItemVariantSale>localItemVariantSale.set('stock', stock);
     }
-    updateCustomerLoyalty(localItemVariantSale:LocalItemVariantSale, customerLoyalty: string | boolean):LocalItemVariantSale {
+    updateCustomerLoyalty(localItemVariantSale:ItemVariantSale, customerLoyalty: string | boolean):ItemVariantSale {
         if (typeof customerLoyalty == 'string') {
             if (customerLoyalty == "true") {
                 customerLoyalty = true;
             }
         }
-        return <LocalItemVariantSale>localItemVariantSale.set('includeCustomerLoyalty', customerLoyalty);
+        return <ItemVariantSale>localItemVariantSale.set('includeCustomerLoyalty', customerLoyalty);
     }
 
 }

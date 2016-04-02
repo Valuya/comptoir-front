@@ -4,7 +4,7 @@
 import {Component} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Router} from "angular2/router";
-import {LocalItem} from "../../../domain/item";
+import {Item} from "../../../domain/commercial/item";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../../client/utils/pagination";
 import {ErrorService} from "../../../services/error";
@@ -27,8 +27,8 @@ export class ItemsListView {
     errorService:ErrorService;
     router:Router;
 
-    searchRequest: SearchRequest<LocalItem>;
-    searchResult:SearchResult<LocalItem>;
+    searchRequest: SearchRequest<Item>;
+    searchResult:SearchResult<Item>;
     columns:Immutable.List<ItemColumn>;
     itemsPerPage:number = 25;
 
@@ -42,7 +42,7 @@ export class ItemsListView {
         this.itemService = itemService;
         this.errorService = appService;
 
-        this.searchRequest = new SearchRequest<LocalItem>();
+        this.searchRequest = new SearchRequest<Item>();
         var itemSearch = new WsItemSearch();
         itemSearch.companyRef = authService.getEmployeeCompanyRef();
         itemSearch.locale = authService.getEmployeeLanguage().locale;
@@ -64,7 +64,7 @@ export class ItemsListView {
 
     searchItems() {
         this.itemService.search(this.searchRequest)
-            .then((result:SearchResult<LocalItem>)=> {
+            .then((result:SearchResult<Item>)=> {
                 this.searchResult = result;
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -77,19 +77,19 @@ export class ItemsListView {
     }
 
     onColumnAction(event) {
-        var item:LocalItem = event.item;
+        var item:Item = event.item;
         var column:ItemColumn = event.column;
         if (column === ItemColumn.ACTION_REMOVE) {
             this.doRemoveItem(item);
         }
     }
 
-    doEditItem(item:LocalItem) {
+    doEditItem(item:Item) {
         var id = item.id;
         this.router.navigate(['/Items/Edit/EditItem', {itemId: id}]);
     }
 
-    doRemoveItem(item:LocalItem) {
+    doRemoveItem(item:Item) {
         this.itemService.remove(item.id)
             .then(()=> {
                 this.searchItems();

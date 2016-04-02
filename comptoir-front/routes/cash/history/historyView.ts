@@ -6,7 +6,7 @@ import {Component} from 'angular2/core';
 import {NgIf} from 'angular2/common';
 
 import {WsCompanyRef} from '../../../client/domain/company/company';
-import {LocalBalance} from '../../../domain/balance';
+import {Balance} from '../../../domain/accounting/balance';
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from '../../../client/utils/pagination';
 import {SearchResult, SearchRequest} from '../../../client/utils/search';
 
@@ -30,8 +30,8 @@ export class CashHistoryView {
     balanceService:BalanceService;
     errorService:ErrorService;
 
-    searchRequest:SearchRequest<LocalBalance>;
-    searchResult:SearchResult<LocalBalance>;
+    searchRequest:SearchRequest<Balance>;
+    searchResult:SearchResult<Balance>;
     itemsPerPage:number = 25;
 
     columns: Immutable.List<BalanceColumn>;
@@ -40,7 +40,7 @@ export class CashHistoryView {
         this.errorService = errorService;
         this.balanceService = balanceService;
 
-        this.searchRequest = new SearchRequest<LocalBalance>();
+        this.searchRequest = new SearchRequest<Balance>();
         var balanceSearch = new WsBalanceSearch();
         balanceSearch.companyRef = new WsCompanyRef(authService.auth.employee.company.id);
         var pagination = PaginationFactory.Pagination({
@@ -52,7 +52,7 @@ export class CashHistoryView {
         });
         this.searchRequest.pagination = pagination;
         this.searchRequest.search = balanceSearch;
-        this.searchResult = new SearchResult<LocalBalance>();
+        this.searchResult = new SearchResult<Balance>();
 
         this.columns = Immutable.List.of(
             BalanceColumn.DATETIME,

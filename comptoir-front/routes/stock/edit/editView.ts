@@ -4,15 +4,15 @@
 import {Component} from "angular2/core";
 import {NgIf, NgForm, NgFor, FORM_DIRECTIVES} from "angular2/common";
 import {RouteParams, Router, RouterLink} from "angular2/router";
-import {LocalStock, LocalStockFactory} from "../../../domain/stock";
+import {Stock, StockFactory} from "../../../domain/stock/stock";
 import {AuthService} from "../../../services/auth";
 import {StockService} from "../../../services/stock";
 import {ErrorService} from "../../../services/error";
 import {LocaleTexts, Language} from "../../../client/utils/lang";
 import {StockEditComponent} from "../../../components/stock/edit/editStock";
 import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
-import {LocalItemVariant} from "../../../domain/itemVariant";
-import {LocalItemVariantStock, LocalItemVariantStockFactory} from "../../../domain/itemVariantStock";
+import {ItemVariant} from "../../../domain/commercial/itemVariant";
+import {ItemVariantStock, ItemVariantStockFactory} from "../../../domain/stock/itemVariantStock";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
 import {
     WsItemVariantStockRef
@@ -47,13 +47,13 @@ export class EditStockView {
     variantStockService:ItemVariantStockService;
     router:Router;
 
-    stock:LocalStock;
+    stock:Stock;
     displayLanguage: Language;
 
-    itemVariant: LocalItemVariant;
-    itemVariantCurrentStock: LocalItemVariantStock;
-    itemVariantStockRequest: SearchRequest<LocalItemVariantStock>;
-    itemVariantStockResult: SearchResult<LocalItemVariantStock>;
+    itemVariant: ItemVariant;
+    itemVariantCurrentStock: ItemVariantStock;
+    itemVariantStockRequest: SearchRequest<ItemVariantStock>;
+    itemVariantStockResult: SearchResult<ItemVariantStock>;
     editingVariantStockDesc: any;
 
     variantStockListColumns:  Immutable.List<ItemVariantStockColumn>;
@@ -77,7 +77,7 @@ export class EditStockView {
             ItemVariantStockColumn.QUANTITY
         ]);
 
-        this.itemVariantStockRequest = new SearchRequest<LocalItemVariantStock>();
+        this.itemVariantStockRequest = new SearchRequest<ItemVariantStock>();
         var search = new WsItemVariantStockSearch();
         search.companyRef = this.authService.getEmployeeCompanyRef();
         this.itemVariantStockRequest.search = search;
@@ -91,12 +91,12 @@ export class EditStockView {
             sorts: sorts
         });
         this.itemVariantStockRequest.pagination = pagination;
-        this.itemVariantStockResult = new SearchResult<LocalItemVariantStock>();
+        this.itemVariantStockResult = new SearchResult<ItemVariantStock>();
 
         this.findStock(routeParams);
     }
 
-    findStock(routeParams:RouteParams): Promise<LocalStock> {
+    findStock(routeParams:RouteParams): Promise<Stock> {
         if (routeParams == null || routeParams.params == null) {
             return this.getNewStock();
         }
@@ -111,12 +111,12 @@ export class EditStockView {
         return this.getStock(stockId);
     }
 
-    getNewStock() : Promise<LocalStock> {
+    getNewStock() : Promise<Stock> {
         var stockDesc: any = {};
         stockDesc.company = this.authService.getEmployeeCompany();
         stockDesc.description = new LocaleTexts();
         stockDesc.active = true;
-        this.stock = LocalStockFactory.createNewStock(stockDesc);
+        this.stock = StockFactory.createNewStock(stockDesc);
         return Promise.resolve(this.stock);
     }
 
@@ -141,7 +141,7 @@ export class EditStockView {
         this.router.navigate(['/Stock/List']);
     }
 
-    onVariantSelected(variant: LocalItemVariant) {
+    onVariantSelected(variant: ItemVariant) {
         this.itemVariant =variant;
         this.searchVariantStocks();
 
@@ -174,7 +174,7 @@ export class EditStockView {
 
     onCreateInitialStock() {
         this.editingVariantStockDesc.stockChangeType = StockChangeType.INITIAL;
-        var variantStock = LocalItemVariantStockFactory.createNewItemVariantStock(this.editingVariantStockDesc);
+        var variantStock = ItemVariantStockFactory.createNewItemVariantStock(this.editingVariantStockDesc);
 
         this.variantStockService.save(variantStock)
             .then(()=>{
@@ -191,7 +191,7 @@ export class EditStockView {
     onCreateAdjustmentStock() {
         this.editingVariantStockDesc.stockChangeType = StockChangeType.ADJUSTMENT;
         this.editingVariantStockDesc.previousItemStockRef = new WsItemVariantStockRef(this.itemVariantCurrentStock.id);
-        var variantStock = LocalItemVariantStockFactory.createNewItemVariantStock(this.editingVariantStockDesc);
+        var variantStock = ItemVariantStockFactory.createNewItemVariantStock(this.editingVariantStockDesc);
 
         this.variantStockService.save(variantStock)
             .then(()=>{

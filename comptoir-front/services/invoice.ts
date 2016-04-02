@@ -5,7 +5,7 @@ import {Injectable} from "angular2/core";
 import {WsInvoice} from "../client/domain/commercial/invoice";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {WsSaleRef} from "../client/domain/commercial/sale";
-import {LocalInvoice, LocalInvoiceFactory} from "../domain/invoice";
+import {Invoice, InvoiceFactory} from "../domain/commercial/invoice";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {InvoiceClient} from "../client/client/invoice";
@@ -31,7 +31,7 @@ export class InvoiceService {
         this.saleService = saleService;
     }
 
-    get(id:number):Promise<LocalInvoice> {
+    get(id:number):Promise<Invoice> {
         return this.invoiceClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsInvoice)=> {
@@ -44,13 +44,13 @@ export class InvoiceService {
             .toPromise();
     }
 
-    save(entity:LocalInvoice):Promise<WithId> {
+    save(entity:Invoice):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.invoiceClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalInvoice>):Promise<SearchResult<LocalInvoice>> {
+    search(searchRequest:SearchRequest<Invoice>):Promise<SearchResult<Invoice>> {
         return this.invoiceClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsInvoice>)=> {
@@ -62,7 +62,7 @@ export class InvoiceService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalInvoice>();
+                        var localResult = new SearchResult<Invoice>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -70,7 +70,7 @@ export class InvoiceService {
             });
     }
 
-    toLocalConverter(invoice:WsInvoice):Promise<LocalInvoice> {
+    toLocalConverter(invoice:WsInvoice):Promise<Invoice> {
         var localInvoiceDesc:any = {};
         localInvoiceDesc.id = invoice.id;
         localInvoiceDesc.note = invoice.note;
@@ -95,11 +95,11 @@ export class InvoiceService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalInvoiceFactory.createNewInvoice(localInvoiceDesc);
+                return InvoiceFactory.createNewInvoice(localInvoiceDesc);
             });
     }
 
-    fromLocalConverter(localInvoice:LocalInvoice):WsInvoice {
+    fromLocalConverter(localInvoice:Invoice):WsInvoice {
         var invoice = new WsInvoice();
         ;
         if (localInvoice.company != null) {

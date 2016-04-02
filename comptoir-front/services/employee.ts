@@ -6,8 +6,8 @@ import {Injectable} from 'angular2/core';
 
 import {WsCompanyRef} from '../client/domain/company/company';
 
-import {LocalEmployee, LocalEmployeeFactory} from '../domain/employee';
-import {LocalAccount} from '../domain/account';
+import {Employee, EmployeeFactory} from '../domain/thirdparty/employee';
+import {Account} from '../domain/accounting/account';
 
 import {WithId} from '../client/utils/withId';
 import {SearchRequest, SearchResult} from '../client/utils/search';
@@ -33,7 +33,7 @@ export class EmployeeService {
         this.companyService = companyService;
     }
 
-    get(id:number, authToken:string):Promise<LocalEmployee> {
+    get(id:number, authToken:string):Promise<Employee> {
         return this.employeeClient.doGet(id, authToken)
             .toPromise()
             .then((entity:WsEmployee)=> {
@@ -46,13 +46,13 @@ export class EmployeeService {
             .toPromise();
     }
 
-    save(entity:LocalEmployee, authToken:string):Promise<WithId> {
+    save(entity:Employee, authToken:string):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return this.employeeClient.doSave(e, authToken)
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalEmployee>, authToken:string):Promise<SearchResult<LocalEmployee>> {
+    search(searchRequest:SearchRequest<Employee>, authToken:string):Promise<SearchResult<Employee>> {
         return this.employeeClient.doSearch(searchRequest, authToken)
             .toPromise()
             .then((result:SearchResult<WsEmployee>)=> {
@@ -64,7 +64,7 @@ export class EmployeeService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalEmployee>();
+                        var localResult = new SearchResult<Employee>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -72,7 +72,7 @@ export class EmployeeService {
             });
     }
 
-    toLocalConverter(employee:WsEmployee, authToken:string):Promise<LocalEmployee> {
+    toLocalConverter(employee:WsEmployee, authToken:string):Promise<Employee> {
         var localEmployeeDesc:any = {};
         localEmployeeDesc.active = employee.active;
         localEmployeeDesc.firstName = employee.firstName;
@@ -92,11 +92,11 @@ export class EmployeeService {
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalEmployeeFactory.createNewEmployee(localEmployeeDesc);
+                return EmployeeFactory.createNewEmployee(localEmployeeDesc);
             });
     }
 
-    fromLocalConverter(localEmployee:LocalEmployee):WsEmployee {
+    fromLocalConverter(localEmployee:Employee):WsEmployee {
         var employee = new WsEmployee();
         employee.active = localEmployee.active;
         if (localEmployee.company != null) {

@@ -3,9 +3,9 @@
  */
 import {Injectable} from "angular2/core";
 import {WsAuth, WsAuthFactory} from "../client/domain/auth/auth";
-import {LocalAuth, LocalAuthFactory} from "../domain/auth";
-import {LocalEmployee} from "../domain/employee";
-import {LocalCompany} from "../domain/company";
+import {Auth, AuthFactory} from "../domain/auth/auth";
+import {Employee} from "../domain/thirdparty/employee";
+import {Company} from "../domain/company/company";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {WsEmployeeRef} from "../client/domain/thirdparty/employee";
 import {Language, LanguageFactory} from "../client/utils/lang";
@@ -29,7 +29,7 @@ export class AuthService {
     employeeService:EmployeeService;
 
     authToken:string;
-    auth:LocalAuth;
+    auth:Auth;
     registrationRequest:ComptoirRequest;
 
     loginRequired:boolean;
@@ -44,11 +44,11 @@ export class AuthService {
         this.loadFromStorage();
     }
 
-    public login(login:string, hashedPassword:string):Promise<LocalEmployee> {
+    public login(login:string, hashedPassword:string):Promise<Employee> {
         return this.client.login(login, hashedPassword)
             .then((response:WsAuth) => {
                 return this.toLocalAuth(response, response.token);
-            }).then((localAuth:LocalAuth)=> {
+            }).then((localAuth:Auth)=> {
                 if (localAuth.employee == null || localAuth.token == null) {
                     throw 'Invalid auth retrieved';
                 }
@@ -58,7 +58,7 @@ export class AuthService {
     }
 
     // Register then log in
-    public register(registration:WsRegistration):Promise<LocalEmployee> {
+    public register(registration:WsRegistration):Promise<Employee> {
         if (this.registrationRequest != null) {
             console.log("Registration already running");
             return;
@@ -91,7 +91,7 @@ export class AuthService {
         return LanguageFactory.DEFAULT_LANGUAGE;
     }
 
-    public getEmployeeCompany():LocalCompany {
+    public getEmployeeCompany():Company {
         if (this.auth == null) {
             return null;
         }
@@ -146,7 +146,7 @@ export class AuthService {
         return this.client.refreshToken(refreshToken)
             .then((auth)=> {
                 return this.toLocalAuth(auth, auth.token)
-            }).then((localAuth:LocalAuth)=> {
+            }).then((localAuth:Auth)=> {
                 this.saveAuth(localAuth);
             });
     }
@@ -198,7 +198,7 @@ export class AuthService {
         }
 
         this.loadingPromise = this.toLocalAuth(auth, auth.token)
-            .then((localAuth:LocalAuth)=> {
+            .then((localAuth:Auth)=> {
                 this.auth = localAuth;
                 this.loadingPromise = null;
                 return this.checkRefreshToken();
@@ -211,7 +211,7 @@ export class AuthService {
         localStorage.setItem(AuthService.STORAGE_AUTH_KEY, null);
     }
 
-    private saveAuth(auth:LocalAuth) {
+    private saveAuth(auth:Auth) {
         if (Immutable.is(this.auth, auth)) {
             return;
         }
@@ -239,7 +239,7 @@ export class AuthService {
         }, checkExpireTimeDiff)
     }
 
-    toLocalAuth(auth:WsAuth, authToken:string):Promise<LocalAuth> {
+    toLocalAuth(auth:WsAuth, authToken:string):Promise<Auth> {
         var localAuthDesc:any = {};
         localAuthDesc.id = auth.id;
         localAuthDesc.token = auth.token;
@@ -251,17 +251,17 @@ export class AuthService {
 
         taskList.push(
             this.employeeService.get(employeeRef.id, authToken)
-                .then((localEmployee:LocalEmployee)=> {
+                .then((localEmployee:Employee)=> {
                     localAuthDesc.employee = localEmployee;
                 })
         );
         return Promise.all(taskList)
             .then(()=> {
-                return LocalAuthFactory.createNewAuth(localAuthDesc);
+                return AuthFactory.createNewAuth(localAuthDesc);
             });
     }
 
-    fromLocalAuth(localAuth:LocalAuth):WsAuth {
+    fromLocalAuth(localAuth:Auth):WsAuth {
         var auth = new WsAuth();
         auth.id = localAuth.id;
         auth.token = localAuth.token;

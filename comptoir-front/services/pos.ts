@@ -6,7 +6,7 @@ import {Injectable} from 'angular2/core';
 import {WsCompanyRef} from '../client/domain/company/company';
 import {WsCustomerRef} from '../client/domain/thirdparty/customer';
 
-import {LocalPos, LocalPosFactory} from '../domain/pos';
+import {Pos, PosFactory} from '../domain/commercial/pos';
 
 import {WithId} from '../client/utils/withId';
 import {SearchRequest, SearchResult} from '../client/utils/search';
@@ -22,7 +22,7 @@ import {WsPos} from "../client/domain/commercial/pos";
 export class PosService {
 
 
-    lastUsedPos:LocalPos;
+    lastUsedPos:Pos;
     private posClient:PosClient;
     private authService:AuthService;
     private companyService:CompanyService;
@@ -39,7 +39,7 @@ export class PosService {
 
     }
 
-    get(id:number):Promise<LocalPos> {
+    get(id:number):Promise<Pos> {
         return  this.posClient.doGet(id, this.getAuthToken())
             .toPromise()
             .then((entity:WsPos)=> {
@@ -52,13 +52,13 @@ export class PosService {
             .toPromise();
     }
 
-    save(entity:LocalPos):Promise<WithId> {
+    save(entity:Pos):Promise<WithId> {
         var e = this.fromLocalConverter(entity);
         return  this.posClient.doSave(e, this.getAuthToken())
             .toPromise();
     }
 
-    search(searchRequest:SearchRequest<LocalPos>):Promise<SearchResult<LocalPos>> {
+    search(searchRequest:SearchRequest<Pos>):Promise<SearchResult<Pos>> {
         return  this.posClient.doSearch(searchRequest, this.getAuthToken())
             .toPromise()
             .then((result:SearchResult<WsPos>)=> {
@@ -70,7 +70,7 @@ export class PosService {
                 });
                 return Promise.all(taskList)
                     .then((results)=> {
-                        var localResult = new SearchResult<LocalPos>();
+                        var localResult = new SearchResult<Pos>();
                         localResult.count = result.count;
                         localResult.list = Immutable.List(results);
                         return localResult;
@@ -78,7 +78,7 @@ export class PosService {
             });
     }
 
-    toLocalConverter(pos:WsPos):Promise<LocalPos> {
+    toLocalConverter(pos:WsPos):Promise<Pos> {
         var localPosDesc:any = {};
         localPosDesc.description = pos.description;
         localPosDesc.id = pos.id;
@@ -105,11 +105,11 @@ export class PosService {
         }
         return Promise.all(taskList)
             .then(()=> {
-                return LocalPosFactory.createNewPos(localPosDesc);
+                return PosFactory.createNewPos(localPosDesc);
             });
     }
 
-    fromLocalConverter(localPos:LocalPos):WsPos {
+    fromLocalConverter(localPos:Pos):WsPos {
         var pos = new WsPos();
         pos.id = localPos.id;
         pos.companyRef = new WsCompanyRef(localPos.company.id);
