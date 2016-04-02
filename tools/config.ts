@@ -12,7 +12,7 @@ export const PORT = argv['port'] || 5555;
 export const LIVE_RELOAD_PORT = argv['reload-port'] || 4002;
 export const APP_BASE = argv['base'] || '';
 
-export const APP_SRC = 'app';
+export const APP_SRC = 'comptoir-front';
 export const APP_DEST = 'dist';
 export const ANGULAR_BUNDLES = './node_modules/angular2/bundles';
 export const VERSION = version();

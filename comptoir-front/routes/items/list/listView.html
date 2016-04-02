@@ -1,0 +1,32 @@
+<div class="listPage pageContent">
+    <h1 class="pageTitle">Liste des produits</h1>
+
+    <img class="busy"
+         src="resources/img/spinner-bars-black.gif"
+         [hidden]="!searchRequest.busy">
+
+    <div class="topActions">
+        <span class="input">
+            <input [(ngModel)]="searchRequest.search.multiSearch" autofocus
+                   placeholder="Filtrer les produits"
+                   (input)="handleFilterKeyUp($event)">
+        </span>
+    </div>
+
+    <paginator *ngIf="searchResult != undefined"
+               [totalCount]="searchResult.count"
+               [pageSize]="itemsPerPage"
+               [showPrevNextLink]="true" [showFirstLastLink]="true"
+               (pageChange)="onPageChanged($event)"></paginator>
+
+    <item-list
+            *ngIf="searchResult != undefined"
+            [items]="searchResult.list"
+            [columns]="columns"
+            [rowSelectable]="true"
+            [headersVisible]="true"
+            (columnAction)="onColumnAction($event)"
+            (rowClicked)="doEditItem($event)">
+
+    </item-list>
+</div>

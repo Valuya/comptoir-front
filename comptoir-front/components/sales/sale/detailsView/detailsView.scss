@@ -1,0 +1,136 @@
+@import '../../../../resources/styles/_main';
+
+.sale-details-view {
+  margin: .5em;
+}
+
+header.sale-header {
+
+  display: table;
+  margin: 1.3em 1em;
+  width: 100%;
+
+  > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .closedLabel {
+    font-size: .9em;
+    font-weight: normal;
+    margin-left: 1em;
+
+  }
+
+  .actions {
+    padding: 1em;
+    text-align: right;
+
+    .action {
+      @extend .boxedHoverableLink;
+    }
+  }
+}
+
+form {
+  text-align: center;
+
+  label {
+    font-weight: bold;
+
+    &:not(.inline) {
+      display: block;
+    }
+    &.inline {
+      padding-right: .5em;
+    }
+  }
+
+  edit-link {
+    &.editing {
+      position: absolute;
+      z-index: 1;
+      background-color: rgba(255, 255, 255, .9);
+    }
+  }
+
+  > .bloc {
+    display: inline-block;
+    max-width: 49%;
+    margin: 1.5em;
+    vertical-align: top;
+    text-align: left;
+
+    &.active {
+
+    }
+
+    > div {
+      display: table-row;
+      &.sale-reference {
+        >* {
+          height: 3em;
+        }
+      }
+
+      >*:not([hidden]) {
+        display: table-cell;
+        padding: .5em;
+        vertical-align: top;
+      }
+      >:nth-child(1) {
+        margin-right: 2em;
+      }
+      >:nth-child(2) {
+        min-width: 15em;
+      }
+    }
+  }
+
+
+
+  .output-field {
+    border: 1px solid lightgray;
+    padding: .2em;
+  }
+  .sale-reference:not([hidden]) {
+    min-width: 10em;
+    height: 3em;
+    display: inline-block;
+  }
+  .edit-reference-area:not([hidden]) {
+    height: 3em;
+    display: inline-block;
+  }
+
+  .discount-amount {
+    font-size: .9em;
+    margin-left: 1em;
+  }
+
+  .edit-time-field {
+    font-size: .8em;
+    display: inline-block;
+  }
+  .editActions {
+    float: right;
+    > i {
+      &:hover {
+        cursor: pointer;
+      }
+      &.green {
+        color: green;
+        &:hover {
+          color: lighten(green, 30%);
+        }
+      }
+      &.red {
+        color: red;
+        &:hover {
+          color: lighten(red, 30%);
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,178 @@
+@import '../../../resources/styles/_dataTable';
+@import '../../../resources/styles/_main';
+
+.itemVariantSaleList {
+  position: relative;
+
+  table.dataTable {
+    table-layout: auto !important;
+
+    td, th {
+      white-space: nowrap;
+
+      &.variantName, &.variantNameComment {
+        min-width: 5em;
+        max-width: 12em;
+      }
+      &.quantity {
+        padding-right: 1em;
+      }
+      &.actions:not(.noactions) {
+        width: 4em;
+      }
+      &.totalPrice, &.discountTotalPrice {
+        width: 1%;
+        padding: 0 .5em;
+      }
+      &.stock {
+        width: 10em;
+      }
+      &.quantityPrice {
+        min-width: 6em;
+      }
+
+      .nolink {
+        pointer-events: none;
+      }
+      .unneeded {
+        display: none;
+      }
+
+      tfoot td:last-child {
+        width: 1%;
+        white-space: nowrap;
+      }
+    }
+
+    tr {
+      &.dirty {
+        background-color: #F2F5F7;
+      }
+
+      &:hover {
+        .quantityPrice.unneeded {
+          &:not(.nolink) {
+            display: inline-block !important;
+          }
+        }
+      }
+    }
+    tfoot {
+      border-top: 1px solid black;
+      font-size: 1em;
+
+      tr {
+        th {
+          text-align: right;
+          font-weight: normal;
+        }
+        &.details {
+          font-size: .8em;
+          color: gray;
+        }
+        .total {
+          font-size: 1.1em;
+          font-weight: bold;
+          padding-left: 1em;
+        }
+      }
+
+    }
+  }
+}
+
+.column {
+  .unneeded, [hidden] {
+    display: none;
+  }
+
+
+  .name {
+  }
+
+
+  .ref {
+    text-align: left;
+  }
+
+  .description {
+    .attributeValue {
+      font-size: .8em;
+      color: #555555;
+
+      &:not(:last-child) {
+        &::after {
+          content: ' | ';
+          font-size: 1em;
+        }
+      }
+      .def {
+        padding: 0;
+        font-weight: bold;
+        &::after {
+          content: ':';
+        }
+      }
+      .value {
+        font-weight: lighter;;
+      }
+    }
+  }
+
+  .comment {
+    font-size: .8em;
+    font-weight: normal;
+    @media screen {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .commentLink {
+      color: gray !important;
+      &.unneeded {
+        display: none;
+      }
+    }
+    input {
+      width: 98%;
+    }
+  }
+
+  .quantityPrice {
+    &.unneeded {
+      display: none;
+    }
+    .quantity {
+      padding-right: .2em;
+    }
+  }
+  .quantity {
+    .quantityLink {
+      font-size: .8em;
+      &.unneeded {
+        display: none;
+      }
+    }
+    input {
+      font-size: .8em;
+      width: 3em;
+    }
+  }
+  .price, .totalPrice {
+    font-size: .9em;
+    input {
+      font-size: .8em;
+      width: 4em;
+    }
+  }
+  .discount {
+    font-size: .8em;
+    input {
+      font-size: .8em;
+      width: 2.5em;
+    }
+    .green {
+      color: darkgreen;
+    }
+  }
+
+}

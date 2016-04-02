@@ -1,0 +1,31 @@
+@import "../../../resources/styles/main";
+
+.edit-link-component {
+
+  [hidden] {
+    display: none;
+  }
+
+  &.editable {
+    >.output {
+      @extend .actionlink;
+    }
+    >.edit-actions > * {
+      @extend .actionlink;
+    }
+  }
+
+  &.editing {
+    >.output {
+      display: none;
+    }
+  }
+  &:not(.editing) {
+    >.input {
+      display: none;
+    }
+    >.edit-actions {
+      display: none;
+    }
+  }
+}

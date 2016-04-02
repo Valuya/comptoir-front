@@ -15,7 +15,7 @@
         "./app/app.ts"
     ],
     "filesGlob": [
-        "./app/**/*.ts",
+        "./comptoir-front/**/*.ts",
         "./gulpfile.ts",
         "./tools/**/*.ts"
     ],

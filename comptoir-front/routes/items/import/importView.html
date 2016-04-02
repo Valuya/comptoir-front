@@ -1,0 +1,48 @@
+<div class="pageContent">
+    <h1 class="pageTitle">Importer des produits</h1>
+
+    <form #f="ngForm" (ngSubmit)="onSubmit()"
+          enctype="multipart/form-data" >
+
+        <input type="file" id="file" accept="*/*" #fileInput
+               name="fileInput"
+               (change)="onFileSelected(f, $event)"
+               required hidden>
+        <div class="boxedLink" (click)="fileInput.click()">
+            <span [hidden]="toUploadFile == null">
+                Choisir un autre fichier
+            </span>
+            <span [hidden]="toUploadFile != null">
+                Choisir un fichier
+            </span>
+        </div>
+        <div class="fileInfo"*ngIf="toUploadFile != null">
+            <h2 >Fichier à importer</h2>
+            <table><tr>
+                <td><label>Nom:</label></td>
+                <td>{{ toUploadFile.name}}</td>
+            </tr><tr>
+                <td><label>Taille:</label></td>
+                <td>{{ toUploadFileSizeLabel}}</td>
+            </tr><tr>
+                <td><label>Type:</label></td>
+                <td>{{ toUploadFile.type}}</td>
+            </tr></table>
+        </div>
+        <div class="uploadProgress" [hidden]="!uploadInProgress">
+            <span class="busy">
+                <img src="resources/img/spinner-bars-black.gif">
+            </span>
+            <span>
+                {{ uploadPercentage | number:'.0' }} %
+            </span>
+        </div>
+        <div class="actions">
+            <button type="submit" class="boxedLink"
+                    [disabled]="uploadInProgress ||toUploadFile == null ">
+                Importer
+            </button>
+        </div>
+    </form>
+
+</div>

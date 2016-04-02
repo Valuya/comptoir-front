@@ -1,0 +1,44 @@
+@import '../../../resources/styles/_main';
+
+.filter {
+  padding: .5em;
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  input {
+    width:15em;
+  }
+  input, button {
+    font-size: 1em;
+  }
+}
+
+.no-input {
+  pointer-events: none;
+}
+header {
+  >*:not([hidden]) {
+    display: inline-block;
+  }
+}
+
+header:not(.coloredHeader) {
+  .actions {
+    float: right;
+    text-align: right;
+
+    .action:not([hidden]) {
+      @extend .actionlink;
+      font-weight: bolder;
+      display: inline-block;
+      padding: .5em;
+      border: .1em solid transparent;
+    }
+    .action:hover {
+      color: lightgray;
+      cursor: pointer;
+    }
+  }
+}

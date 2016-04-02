@@ -1,0 +1,27 @@
+@import '../../../resources/styles/_boxedLink';
+
+form {
+  display: inline-block;
+}
+
+.fileInfo {
+  font-size: .8em;
+  margin: 1em;
+  border: .1em solid lightgray;
+  padding: .5em;
+
+  h2 {
+    margin: .1em;
+    font-size: .9em;
+  }
+  table {
+    width: 100%;
+    td:first-child {
+      text-align: left;
+    }
+    td:last-child {
+      text-align: right;
+    }
+  }
+
+}

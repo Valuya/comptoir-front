@@ -1,0 +1,121 @@
+<div class="formPage pageContent stock-edit">
+    <span class="backLink">
+        <div class="boxedHoverableLink"
+             (click)="onCancelled()">
+            Retour
+        </div>
+    </span>
+    <h1 class="pageTitle">
+        Édition du stock
+        <span *ngIf="stock?.description != null">
+            : {{ stock.description[displayLanguage.locale] }}
+        </span>
+    </h1>
+
+    <div class="row">
+        <div class="stock-edit-panel"
+             [hidden]="itemVariant != null">
+            <stock-edit-component *ngIf="stock != null"
+                                  [stock]="stock"
+                                  (saved)="onSaved($event)"
+                                  (cancelled)="onCancelled()"></stock-edit-component>
+        </div>
+
+        <div class="item-select-panel"
+             [hidden]="stock?.id == null">
+            <item-variant-select [stock]="stock"
+                                 [coloredHeader]="false"
+                                 [tableHeaders]="true"
+                                 (variantSelected)="onVariantSelected($event)"
+            ></item-variant-select>
+        </div>
+
+        <div class="item-stock-panel"
+             *ngIf="itemVariant != null">
+            <div class="header">
+                <span class="valignAnchor"></span>
+                <span class="ref">
+                    <span class="itemRef">{{ itemVariant.item.reference }}</span>
+                    <span class="variantRef">{{ itemVariant.variantReference }}</span>
+                </span>
+                <span class="name">
+                    {{ itemVariant.item.name[displayLanguage.locale] }}
+                </span>
+                <span class="stock">
+                    <img class="busy"
+                         src="resources/img/spinner-bars-black.gif"
+                         [hidden]="!itemVariantStockRequest.busy">
+                    {{ itemVariantCurrentStock?.quantity }}
+                </span>
+            </div>
+
+            <div [hidden]="itemVariantStockResult.count > 0"
+                 class="initial-stock-panel">
+                <form id="initialVariantStockForm" #initialStockForm="ngForm"
+                      *ngIf="editingVariantStockDesc != null"
+                      (ngSubmit)="onCreateInitialStock()">
+                    <div class="table">
+                        <div>
+                            <label for="initialQuantity">Quantité:</label>
+                            <input id="initialQuantity" type="number"
+                                   min="0" step="1"
+                                   ngControl="quantity"
+                                   validate-required
+                                   [(ngModel)]="editingVariantStockDesc.quantity">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="submit"
+                                [disabled]="!initialStockForm.form.valid">
+                            Enregistrer le stock initial
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <paginator *ngIf="itemVariantStockResult != undefined"
+                       [totalCount]="itemVariantStockResult.count"
+                       [pageSize]="itemsPerPage"
+                       [showPrevNextLink]="true" [showFirstLastLink]="true"
+                       (pageChange)="onPageChanged($event)"></paginator>
+
+            <div [hidden]="itemVariantStockResult.count < 1">
+                <item-variant-stock-list [columns]="variantStockListColumns"
+                                         [headersVisible]="true"
+                                         [rowSelectable]="false"
+                                         [itemVariantStockList]="itemVariantStockResult.list">
+                </item-variant-stock-list>
+
+                <form id="adjustementStockForm" #stockForm="ngForm"
+                      *ngIf="editingVariantStockDesc != null"
+                      (ngSubmit)="onCreateAdjustmentStock()">
+                    <div class="table">
+                        <div>
+                            <label for="quantity">Quantité:</label>
+                            <input id="quantity" type="number"
+                                   min="0" step="1"
+                                   ngControl="quantity"
+                                   validate-required
+                                   [(ngModel)]="editingVariantStockDesc.quantity">
+                        </div>
+                        <div>
+                            <label for="comment">Commentaire:</label>
+                            <input id="comment"
+                                   ngControl="comment"
+                                   required validate-required
+                                   [(ngModel)]="editingVariantStockDesc.comment">
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="submit"
+                                [disabled]="!stockForm.form.valid">
+                            Enregistrer l'ajustement
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
