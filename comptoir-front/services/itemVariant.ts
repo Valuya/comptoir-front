@@ -14,7 +14,6 @@ import {AuthService} from "./auth";
 import {AttributeValueService} from "./attributeValue";
 import {ItemService} from "./item";
 import {PictureService} from "./picture";
-import {Pricing} from "../client/domain/util/pricing";
 
 @Injectable()
 export class ItemVariantService {

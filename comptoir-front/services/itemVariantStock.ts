@@ -126,8 +126,7 @@ export class ItemVariantStockService {
         localItemStockDesc.endDateTime = itemVariantStock.endDateTime;
         localItemStockDesc.quantity = itemVariantStock.quantity;
         localItemStockDesc.comment = itemVariantStock.comment;
-        var stockChangeType = StockChangeType[itemVariantStock.stockChangeType];
-        localItemStockDesc.stockChangeType = stockChangeType;
+        localItemStockDesc.stockChangeType = itemVariantStock.stockChangeType;
         localItemStockDesc.previousItemStockRef = itemVariantStock.previousItemStockRef;
         localItemStockDesc.orderPosition = itemVariantStock.orderPosition;
 

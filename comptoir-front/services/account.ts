@@ -85,7 +85,7 @@ export class AccountService {
     toLocalConverter(account:WsAccount):Promise<Account> {
         var localAccountDesc:any = {};
         localAccountDesc.accountingNumber = account.accountingNumber;
-        localAccountDesc.accountType = AccountType[account.accountType];
+        localAccountDesc.accountType = account.accountType;
         localAccountDesc.accountTypeLabel = AccountFactory.getAccountTypeLabel(localAccountDesc.accountType);
         localAccountDesc.bic = account.bic;
         localAccountDesc.description = account.description;
