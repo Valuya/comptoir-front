@@ -4,11 +4,6 @@
              [class.inactive]="noInput"
              [hidden]="toPayAmount <= 0">
             <h1>À payer</h1>
-            <span class="busy">
-                <span class="valignAnchor"></span>
-                <img src="resources/img/spinner-bars-white.gif"
-                     [hidden]="!isSearching()"/>
-            </span>
             <span class="actions">
                 <span class="valignAnchor"></span>
                 <span class="total single">
@@ -22,11 +17,6 @@
              [hidden]="toPayAmount > 0">
             <h1 [hidden]="noInput">À rendre</h1>
             <h1 [hidden]="!noInput">Rendu</h1>
-            <span class="busy">
-                <span class="valignAnchor"></span>
-                <img src="resources/img/spinner-bars-white.gif"
-                     [hidden]="!isSearching()"/>
-            </span>
 
             <span class="actions">
                 <span class="valignAnchor"></span>

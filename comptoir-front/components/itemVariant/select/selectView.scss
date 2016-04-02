@@ -15,6 +15,12 @@
   }
 }
 
+.busy {
+  img {
+    width: 1em;
+    height: 1em;
+  }
+}
 .no-input {
   pointer-events: none;
 }
