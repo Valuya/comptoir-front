@@ -158,10 +158,7 @@ export class SaleView implements CanReuse, OnActivate {
 
     onCommandPaid() {
         this.payStep = false;
-        this.activeSaleService.getNewSale()
-            .then(()=> {
-                this.router.navigate(['/Sales/Sale', {id: 'new'}]);
-            });
+        this.router.navigate(['/Sales/Sale', {id: 'new'}]);
     }
 
     onSaleDetails() {

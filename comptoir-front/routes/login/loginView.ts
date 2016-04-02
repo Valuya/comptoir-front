@@ -2,18 +2,15 @@
  * Created by cghislai on 28/08/15.
  */
 
-import {Component} from 'angular2/core';
-import {FORM_DIRECTIVES} from 'angular2/common';
-import {Router, RouterLink} from 'angular2/router';
-
-import {AppHeader} from '../../components/app/header/appHeader';
-import {FormMessage} from '../../components/utils/formMessage/formMessage';
-import {RequiredValidator} from '../../components/utils/validators';
-
-import {AuthService} from '../../services/auth';
-import {ErrorService} from '../../services/error';
-import {MD5} from '../../components/utils/md5';
-
+import {Component} from "angular2/core";
+import {FORM_DIRECTIVES} from "angular2/common";
+import {Router, RouterLink} from "angular2/router";
+import {AppHeader} from "../../components/app/header/appHeader";
+import {FormMessage} from "../../components/utils/formMessage/formMessage";
+import {RequiredValidator} from "../../components/utils/validators";
+import {AuthService} from "../../services/auth";
+import {ErrorService} from "../../services/error";
+import {MD5} from "../../components/utils/md5";
 
 
 @Component({
@@ -24,18 +21,19 @@ import {MD5} from '../../components/utils/md5';
 })
 export class LoginView {
     authService:AuthService;
-    errorService: ErrorService;
-    router: Router;
+    errorService:ErrorService;
+    router:Router;
 
-    login: string;
-    password: string;
+    login:string;
+    password:string;
     introText:string;
 
-    invalidCredentials: boolean;
+    busy:boolean;
+    invalidCredentials:boolean;
 
     // TODO: RouteData for introText
     constructor(authService:AuthService,
-                errorService: ErrorService,
+                errorService:ErrorService,
                 router:Router) {
         this.authService = authService;
         this.errorService = errorService;
@@ -47,14 +45,18 @@ export class LoginView {
         var hashedPassword = MD5.encode(this.password);
         var thisView = this;
 
+        this.busy = true;
         this.authService.login(this.login, hashedPassword)
             .then(function (employee) {
+                this.busy = false;
                 thisView.router.navigate(['/Sales/Sale', {id: 'active'}]);
-            }).catch(function (error) {
-                if(error.code === 401) {
+            })
+            .catch(function (error) {
+                this.busy = false;
+                if (error.code === 401) {
                     thisView.invalidCredentials = true;
                     return;
-                } else if (error.code === 404)  {
+                } else if (error.code === 404) {
                     thisView.invalidCredentials = true;
                     return;
                 }

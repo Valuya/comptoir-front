@@ -27,7 +27,11 @@
                 </span>
             </div>
         <div class="actions">
-            <button type="submit">Se connecter</button>
+            <button type="submit">
+                <img [hidden]="!busy"
+                     src="resources/img/spinner-bars-black.gif">
+                Se connecter
+            </button>
             <form-message [error]="true" [hidden]="!invalidCredentials"
                          message="Login/mot de passe invalide."></form-message>
         </div>
