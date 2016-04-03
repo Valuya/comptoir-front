@@ -1,5 +1,6 @@
-import {WsCompany} from "../company/company";
-import {WsEmployee} from "./employee";
+import {WsCompany, WsCompanyFactory} from "../company/company";
+import {WsEmployee, WsEmployeeFactory} from "./employee";
+import {LocaleTextsFactory} from "../../utils/lang";
 /**
  * Created by cghislai on 02/04/16.
  */
@@ -11,10 +12,14 @@ export class WsRegistration {
 }
 
 export class WsRegistrationFactory {
-    public static fronJSONReviver = (key, value)=>{
-        return value;
-    };
-    public static toJSONReviver = (key, value)=>{
+
+    public static toJSONReplacer = (key, value)=>{
+        switch (key) {
+            // FIXME: company description
+            case 'description':
+            case 'name':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+        }
         return value;
     };
 }

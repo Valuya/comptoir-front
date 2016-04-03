@@ -50,7 +50,7 @@ export class AuthClient {
 
     register(registration:WsRegistration):Promise<WsCompanyRef> {
         var request = new ComptoirRequest();
-        var registrationJSON = JSON.stringify(registration, WsRegistrationFactory.toJSONReviver);
+        var registrationJSON = JSON.stringify(registration, WsRegistrationFactory.toJSONReplacer);
         return request
             .post(registrationJSON, this.getRegisterUrl(), null)
             .then((response)=> {
@@ -63,7 +63,8 @@ export class AuthClient {
         var request = new ComptoirRequest();
         var url = this.getRegisterUrl();
         request.setup('POST', url, null);
-        request.setupData(registration);
+        var registrationJSON = JSON.stringify(registration, WsRegistrationFactory.toJSONReplacer);
+        request.setupData(registrationJSON);
         return request;
     }
 

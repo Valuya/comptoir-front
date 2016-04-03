@@ -20,6 +20,9 @@ import {ItemVariantSelectView} from "../../../components/itemVariant/select/sele
 import {StockService} from "../../../services/stock";
 import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
+import {WsPosSearch} from "../../../client/domain/search/posSearch";
+import {Pos} from "../../../domain/commercial/pos";
+import {PosService} from "../../../services/pos";
 
 @Component({
     selector: 'sale-view',
@@ -49,16 +52,19 @@ export class SaleView implements CanReuse, OnActivate {
     stockRequest:SearchRequest<Stock>;
     stockResult:SearchResult<Stock>;
     private stockService:StockService;
+    private posService:PosService;
+    private posList: Immutable.List<Pos>;
 
     constructor(activeSaleService:ActiveSaleService, errorService:ErrorService,
                 authService:AuthService, saleService:SaleService,
-                stockService:StockService,
+                stockService:StockService, posService: PosService,
                 routeParams:RouteParams, router:Router, location:Location) {
         this.activeSaleService = activeSaleService;
         this.authService = authService;
         this.errorService = errorService;
         this.saleService = saleService;
         this.stockService = stockService;
+        this.posService = posService;
 
         this.routeParams = routeParams;
         this.router = router;
@@ -71,6 +77,19 @@ export class SaleView implements CanReuse, OnActivate {
         search.active = true;
         this.stockRequest.search = search;
         this.stockResult = new SearchResult<Stock>();
+        this.searchPos();
+    }
+
+
+    private searchPos() {
+        var posSearch = new WsPosSearch();
+        posSearch.companyRef = this.authService.getEmployeeCompanyRef();
+        var posRequest = new SearchRequest<Pos>();
+        posRequest.search = posSearch;
+        this.posService.search(posRequest)
+            .then((result)=>{
+                this.posList = result.list;
+            })
     }
 
     routerOnActivate() {

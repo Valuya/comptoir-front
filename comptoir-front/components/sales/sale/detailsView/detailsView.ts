@@ -19,6 +19,11 @@ import {FastInput} from "../../../utils/fastInput";
 import {CustomerSelectInputComponent} from "../../../customer/select/customerSelectInput";
 import {PosSelect} from "../../../pos/posSelect/posSelect";
 import {EditLinkComponent} from "../../../utils/editLink/editLink";
+import {PosService} from "../../../../services/pos";
+import {Pos} from "../../../../domain/commercial/pos";
+import {WsPosSearch} from "../../../../client/domain/search/posSearch";
+import {AuthService} from "../../../../services/auth";
+import {SearchRequest} from "../../../../client/utils/search";
 
 // The component
 @Component({
@@ -32,6 +37,8 @@ import {EditLinkComponent} from "../../../utils/editLink/editLink";
 export class SaleDetailsComponent {
     activeSaleService:ActiveSaleService;
     errorService:ErrorService;
+    posService: PosService;
+    authService: AuthService;
 
     @Input()
     stockList:Immutable.List<Stock>;
@@ -48,15 +55,20 @@ export class SaleDetailsComponent {
     private saleClosing: boolean;
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
     editableColumns:Immutable.List<ItemVariantSaleColumn>;
+    posList: Immutable.List<Pos>;
 
     newSaleReference:string;
     newSaleDateTimeString:string;
     newSaleDiscount:number;
 
     constructor(saleService:ActiveSaleService,
-                errorService:ErrorService) {
+                errorService:ErrorService,
+                posService: PosService,
+                authService: AuthService) {
         this.activeSaleService = saleService;
         this.errorService = errorService;
+        this.posService = posService;
+        this.authService = authService;
 
         this.variantSaleColumns = Immutable.List([
             ItemVariantSaleColumn.VARIANT_REF,
@@ -70,6 +82,18 @@ export class SaleDetailsComponent {
         ]);
 
         this.initColumns();
+        this.searchPos();
+    }
+    
+    private searchPos() {
+        var posSearch = new WsPosSearch();
+        posSearch.companyRef = this.authService.getEmployeeCompanyRef();
+        var posRequest = new SearchRequest<Pos>();
+        posRequest.search = posSearch;
+        this.posService.search(posRequest)
+            .then((result)=>{
+                this.posList = result.list;
+            })
     }
 
     private initColumns() {
@@ -94,13 +118,15 @@ export class SaleDetailsComponent {
         this.variantSaleColumns = this.variantSaleColumns.push(ItemVariantSaleColumn.ACTIONS);
         this.editableColumns = Immutable.List([
             ItemVariantSaleColumn.VARIANT_NAME_COMMENT,
-            ItemVariantSaleColumn.STOCK,
             ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY,
             ItemVariantSaleColumn.QUANTITY,
             ItemVariantSaleColumn.UNIT_PRICE,
             ItemVariantSaleColumn.DISCOUNT,
             ItemVariantSaleColumn.ACTIONS
         ]);
+        if (this.stockList != null && !this.stockList.isEmpty()) {
+            this.editableColumns = this.editableColumns.push(ItemVariantSaleColumn.STOCK);
+        }
     }
 
     onVariantUpdated(variant:ItemVariantSale) {

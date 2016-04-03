@@ -21,7 +21,7 @@ import {ErrorService} from '../../services/error';
 import {CompanyService} from '../../services/company';
 import {EmployeeService} from '../../services/employee';
 import {CompanyEditComponent} from "../../components/company/edit/editCompany";
-import {WsCompanyFactory} from "../../client/domain/company/company";
+import {WsCompanyFactory, WsCompany} from "../../client/domain/company/company";
 import {WsRegistration} from "../../client/domain/thirdparty/registration";
 
 @Component({
@@ -76,7 +76,7 @@ export class RegisterView {
     doRegister() {
         var registration = new WsRegistration();
         var localCompany:Company = CompanyFactory.createNewCompany(this.company);
-        var company = this.companyService.fromLocalConverter(localCompany);
+        var company:WsCompany = this.companyService.fromLocalConverter(localCompany);
         this.editingEmployee.locale = this.editingEmployee.language.locale;
         var localEmployee:Employee = EmployeeFactory.createNewEmployee(this.editingEmployee);
         var employee = this.employeeService.fromLocalConverter(localEmployee);
