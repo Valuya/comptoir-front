@@ -25,4 +25,12 @@ export class WsAttributeDefinitionFactory {
         }
         return value;
     };
+
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'name':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+        }
+        return value;
+    };
 }

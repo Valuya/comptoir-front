@@ -6,7 +6,6 @@ import {Http, Request, Response, URLSearchParams} from "angular2/http";
 import {Observable} from "rxjs/Rx";
 import * as Immutable from "immutable";
 import {WithId} from "./withId";
-import {JSONFactory} from "./factory";
 import {Cancellation} from "./cancellation";
 import {Pagination} from "./pagination";
 import {SearchRequest, SearchResult} from "./search";
@@ -21,7 +20,8 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
     resourcePath:string;
     webServiceUrl:string;
     http:Http;
-    jsonReviver:(key, value)=>any;
+    fromJSONReviver:(key, value)=>any;
+    toJSONReplacer:(key, value)=>any;
 
     private resourceCache:WSResourceCache<T>;
     private requestCache:WSRequestCache<T>;
@@ -81,7 +81,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
 
         return request
             .map((response:Response)=> {
-                return <T> JSON.parse(response.text(), this.jsonReviver);
+                return <T> JSON.parse(response.text(), this.fromJSONReviver);
             })
             .do((entity:T)=> {
                 this.resourceCache.putInCache(entity);
@@ -109,7 +109,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         var options = WsUtils.getRequestOptions(authToken);
         options.method = 'POST';
         options.url = url;
-        options.body = JSON.stringify(entity, JSONFactory.toJSONReplacer);
+        options.body = JSON.stringify(entity, this.toJSONReplacer);
         var request = this.http.request(new Request(options));
         request = ApplicationRequestCache.registerRequest(request);
 
@@ -124,7 +124,7 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         var options = WsUtils.getRequestOptions(authToken);
         options.method = 'PUT';
         options.url = url;
-        options.body = JSON.stringify(entity, JSONFactory.toJSONReplacer);
+        options.body = JSON.stringify(entity, this.toJSONReplacer);
         var request = this.http.request(new Request(options));
         request = ApplicationRequestCache.registerRequest(request);
 
@@ -151,14 +151,15 @@ export class CachedWSClient<T extends WithId> implements WSClient<T> {
         options.method = 'POST';
         options.url = url;
         options.search = this.createSearchParams(searchRequest.pagination);
-        options.body = JSON.stringify(searchRequest.search, JSONFactory.toJSONReplacer);
+        // FIXME: search JSON replacer?
+        options.body = JSON.stringify(searchRequest.search, this.toJSONReplacer);
         var request = this.http.request(new Request(options));
         searchRequest.busy = true;
         request = ApplicationRequestCache.registerRequest(request);
 
         return request
             .map((response:Response)=> {
-                var list:T[] = JSON.parse(response.text(), this.jsonReviver);
+                var list:T[] = JSON.parse(response.text(), this.fromJSONReviver);
                 var count:number = parseInt(response.headers.get(WsUtils.HEADER_TOTAL_COUNT));
                 var result:SearchResult<T> = new SearchResult<T>();
                 result.count = isNaN(count) ? 0 : count;

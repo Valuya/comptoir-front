@@ -26,7 +26,7 @@ import {RequiredValidator} from "../../utils/validators";
 import {LocalizedDirective} from "../../utils/localizedInput";
 import * as Immutable from "immutable";
 import {AttributeDefinitionSearch} from "../../../client/domain/search/attributeDefinitionSearch";
-import {Pricing} from "../../../client/domain/util/pricing";
+import {Pricing, ALL_PRICINGS} from "../../../client/domain/util/pricing";
 
 @Component({
     selector: 'edit-item-variant-component',
@@ -78,11 +78,7 @@ export class ItemVariantEditComponent implements OnInit {
 
         this.appLanguage = authService.getEmployeeLanguage();
         this.editLanguage = authService.getEmployeeLanguage();
-        this.allPricings = Immutable.List([
-            Pricing.ABSOLUTE,
-            Pricing.ADD_TO_BASE,
-            Pricing.PARENT_ITEM
-        ]);
+        this.allPricings = Immutable.List(ALL_PRICINGS);
         this.unsavedAttributes = Immutable.List([]);
 
         this.resetNewAttributeValue();
@@ -114,7 +110,7 @@ export class ItemVariantEditComponent implements OnInit {
         var itemVariant = ItemVariantFactory.createNewItemVariant(this.itemVariantModel);
         this.saveItemVariant(itemVariant)
             .then((itemVariant)=> {
-                this.saved.next(itemVariant);
+                this.saved.emit(itemVariant);
             }).catch((error)=> {
             this.errorService.handleRequestError(error);
         });
@@ -123,7 +119,7 @@ export class ItemVariantEditComponent implements OnInit {
 
     // TODO: add warning for pending changes
     public onCancelClicked() {
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 
     onPictureFileSelected(event) {

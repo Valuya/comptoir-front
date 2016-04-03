@@ -17,6 +17,8 @@ export class AccountingEntryClient extends CachedWSClient<WsAccountingEntry> {
         this.http = http;
         this.resourcePath = '/accountingEntry';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsAccountingEntryFactory.fromJSONReviver;
+        this.fromJSONReviver = WsAccountingEntryFactory.fromJSONReviver;
+        this.toJSONReplacer = WsAccountingEntryFactory.toJSONReplacer;
+
     }
 }

@@ -27,5 +27,13 @@ export class WsCompanyFactory {
         }
         return value;
     };
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'name':
+            case 'description':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+        }
+        return value;
+    };
 
 }

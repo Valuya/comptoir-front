@@ -17,6 +17,7 @@ export class AccountingTransactionClient extends CachedWSClient<WsAccountingTran
         this.http = http;
         this.resourcePath = '/accountingTransaction';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsAccountingTransactionFactory.fromJSONReviver;
+        this.fromJSONReviver = WsAccountingTransactionFactory.fromJSONReviver;
+        this.toJSONReplacer = WsAccountingTransactionFactory.toJSONReplacer;
     }
 }

@@ -9,3 +9,12 @@ export class WsRegistration {
     employee:WsEmployee;
     employeePassword:string;
 }
+
+export class WsRegistrationFactory {
+    public static fronJSONReviver = (key, value)=>{
+        return value;
+    };
+    public static toJSONReviver = (key, value)=>{
+        return value;
+    };
+}

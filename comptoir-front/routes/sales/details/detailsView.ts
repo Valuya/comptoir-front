@@ -2,7 +2,7 @@
  * Created by cghislai on 28/08/15.
  */
 
-import {Component} from "angular2/core";
+import {Component, Output} from "angular2/core";
 import {NgIf} from "angular2/common";
 import {Router, RouteParams, Location, CanReuse, OnActivate} from "angular2/router";
 import {ErrorService} from "../../../services/error";
@@ -15,6 +15,7 @@ import {ItemVariantSelectView} from "../../../components/itemVariant/select/sele
 import {StockService} from "../../../services/stock";
 import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
+import {EventEmitter} from "events";
 
 @Component({
     selector: 'sale-details-view',
@@ -91,9 +92,10 @@ export class SaleDetailsView implements CanReuse, OnActivate {
         this.activeSaleService.doCancelSale()
             .then(()=> {
                 this.router.navigate(['/Sales/Sale', {id: 'new'}]);
-            }).catch((error)=> {
-            this.errorService.handleRequestError(error);
-        });
+            })
+            .catch((error)=> {
+                this.errorService.handleRequestError(error);
+            });
     }
 
     onSaleClosed() {

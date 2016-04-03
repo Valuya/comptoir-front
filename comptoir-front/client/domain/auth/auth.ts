@@ -20,5 +20,12 @@ export class WsAuthFactory {
         }
         return value;
     };
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'expirationDateTime':
+                return value;
+        }
+        return value;
+    };
 
 }

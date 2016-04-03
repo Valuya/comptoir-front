@@ -39,4 +39,15 @@ export class WsItemVariantStockFactory {
         return value;
     }
 
+    static toJSONReplacer = (key, value)=>{
+        switch (key) {
+            case 'stockChangeType':
+                return StockChangeType[value];
+            case 'startDateTime':
+            case 'endDateTime':
+                return value;
+        }
+        return value;
+    }
+
 }

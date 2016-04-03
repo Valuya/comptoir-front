@@ -18,6 +18,7 @@ export class ItemVariantStockClient extends CachedWSClient<WsItemVariantStock> {
         this.http = http;
         this.resourcePath = '/itemVariantStock';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsItemVariantStockFactory.fromJSONReviver;
+        this.fromJSONReviver = WsItemVariantStockFactory.fromJSONReviver;
+        this.toJSONReplacer = WsItemVariantStockFactory.toJSONReplacer;
     }
 }

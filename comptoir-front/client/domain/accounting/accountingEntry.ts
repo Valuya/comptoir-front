@@ -37,4 +37,13 @@ export class WsAccountingEntryFactory {
         }
         return value;
     }
+    static toJSONReplacer = (key, value)=>{
+        switch (key) {
+            case 'description':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+            case 'dateTime':
+                return value;
+        }
+        return value;
+    }
 }

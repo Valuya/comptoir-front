@@ -26,4 +26,13 @@ export class WsAccountingTransactionFactory {
         }
         return value;
     }
+    static toJSONReplacer = (key, value)=>{
+        switch (key) {
+            case 'accountingTransactionType':
+                return AccountingTransactionType[value];
+            case 'dateTime':
+                return value;
+        }
+        return value;
+    }
 }

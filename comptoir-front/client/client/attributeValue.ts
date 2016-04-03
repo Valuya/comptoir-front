@@ -17,6 +17,7 @@ export class AttributeValueClient extends CachedWSClient<WsAttributeValue> {
         this.http = http;
         this.resourcePath = '/attribute/value';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsAttributeValueFactory.fromJSONReviver;
+        this.fromJSONReviver = WsAttributeValueFactory.fromJSONReviver;
+        this.toJSONReplacer = WsAttributeValueFactory.toJSONReplacer;
     }
 }

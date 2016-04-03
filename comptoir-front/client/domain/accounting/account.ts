@@ -35,4 +35,14 @@ export class WsAccountFactory {
         }
         return value;
     }
+
+    static toJSONReplacer = (key, value)=>{
+        switch (key) {
+            case 'description':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+            case 'accountType':
+                return AccountType[value];
+        }
+        return value;
+    }
 }
