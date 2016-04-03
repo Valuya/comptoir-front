@@ -110,7 +110,8 @@ export class ActiveSaleService {
                 this.sale = sale;
                 this.paidAmount = 0;
                 this.accountingEntriesResult = new SearchResult<AccountingEntry>();
-                this.saleItemsResult = new SearchResult<ItemVariantSale>();
+                this.saleItemsResult.count = 0;
+                this.saleItemsResult.list = Immutable.List([]);
                 return sale;
             });
     }
