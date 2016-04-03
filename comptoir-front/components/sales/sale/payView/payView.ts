@@ -73,6 +73,12 @@ export class PayView {
 
     fetchAccountList() {
         this.accountList = this.activeSaleService.accountsResult.list;
+        if (this.editingEntry != null) {
+            var account = this.editingEntry.account;
+            if (!this.accountList.contains(account)) {
+                this.cancelEditEntry();
+            }
+        }
     }
 
 

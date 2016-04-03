@@ -4,7 +4,7 @@
                          (validateChanged)="onValidateChanged($event)"></command-view-header>
 
     <item-variant-sale-list [rowSelectable]="false"
-                            [headersVisible]="true"
+                            [headersVisible]="activeSaleService.saleItemsResult.count > 0"
                             [footerVisible]="true"
                             [footerTotalColIndex]="3"
                             [columns]="variantSaleColumns"
@@ -44,24 +44,6 @@
                        title="Supprimer"
                        *ngIf="activeSaleService.sale.customer != null"
                        (click)="onRemoveSaleCustomer()"></i>
-                </span>
-            </span>
-        </form>
-
-        <form class="sale-form sale-time" [hidden]="newSale">
-            <label for="saleTime" class="inline">Date</label>
-            <a class="actionlink time" id="saleTime"
-               (click)="onEditTimeClicked()"
-               [hidden]="editingDateTime">
-                {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
-            </a>
-            <span [hidden]="!editingDateTime">
-                <input type="datetime-local" autofocus
-                       [(ngModel)]="newSaleDateTimeString"
-                       class="edit-time-field">
-                <span class="editActions">
-                            <i class="fa fa-check green" (click)="onConfirmNewDateTime()"></i>
-                            <i class="fa fa-times red" (click)="onCancelNewDateTime()"></i>
                 </span>
             </span>
         </form>

@@ -107,5 +107,8 @@
              (click)="addAccountingEntry(account)">
             {{ account.description.get(language.locale) }}
         </div>
+        <div [hidden]="!accountList.isEmpty()">
+            Aucun compte pour ce point de vente
+        </div>
     </div>
 </div>

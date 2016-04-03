@@ -1,0 +1,14 @@
+<div class="attribute-definition-suggestions"
+     #suggestionsDiv
+     [hidden]="searchResult.count < 1 || suggestionsHidden">
+    <div class="definition-suggestion"
+         *ngFor="#definition of searchResult.list"
+         focusable="true"
+         (focus)="onDefinitionFocused(definition)"
+         (keyup)="onSuggestionsKeyUp($event)"
+         (click)="onSuggestionSelected(definition)">
+            <span [hidden]="definition.name == null">
+                {{ definition.name[language.locale] }}
+            </span>
+    </div>
+</div>

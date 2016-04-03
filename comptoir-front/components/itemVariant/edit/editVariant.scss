@@ -53,13 +53,22 @@ div.pageContent {
       > * {
         display: inline-block;
       }
-
-      .definition {
+      .attributeDefinition {
+        display: inline-block;
         width: 40%;
-        font-size: .9em;
-        font-weight: bold;
+        attribute-definition-suggestions:not([hidden]) {
+          position: absolute;
+          display: block;
+        }
+        input.definition {
+          display: block;
+          width: 90%;
+          font-size: .9em;
+          font-weight: bold;
 
+        }
       }
+
       .value {
         width: 40%;
         text-align: right;
