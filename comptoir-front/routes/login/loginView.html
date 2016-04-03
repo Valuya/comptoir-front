@@ -10,11 +10,12 @@
     <form (submit)="doLogin($event)">
             <div>
                 <span>
-                    <input ngControl="login" id="login"
+                    <input ngControl="loginControl" id="loginControl"
                            [(ngModel)]="login"
+                           #loginControl
                            type="text" placeholder="Login" autofocus
                             validate-required>
-                    <form-message for="login" checkErrors="['required']"></form-message>
+                    <form-message for="loginControl" checkErrors="['required']"></form-message>
                 </span>
             </div>
             <div>

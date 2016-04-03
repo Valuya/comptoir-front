@@ -77,7 +77,7 @@ export class SaleView implements CanReuse, OnActivate {
         this.searchStocks();
         return this.findSale()
             .then((sale)=> {
-                if (sale.closed) {
+                if (sale == null || sale.closed) {
                     this.router.navigate(['/Sales/Sale', {id: 'new'}]);
                     return null;
                 }

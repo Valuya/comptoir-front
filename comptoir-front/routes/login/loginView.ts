@@ -43,24 +43,24 @@ export class LoginView {
 
     doLogin(event) {
         var hashedPassword = MD5.encode(this.password);
-        var thisView = this;
 
         this.busy = true;
+        this.invalidCredentials = false;
         this.authService.login(this.login, hashedPassword)
-            .then(function (employee) {
+            .then((employee)=> {
                 this.busy = false;
-                thisView.router.navigate(['/Sales/Sale', {id: 'active'}]);
+                this.router.navigate(['/Sales/Sale', {id: 'active'}]);
             })
-            .catch(function (error) {
+            .catch((error) => {
                 this.busy = false;
                 if (error.code === 401) {
-                    thisView.invalidCredentials = true;
+                    this.invalidCredentials = true;
                     return;
                 } else if (error.code === 404) {
-                    thisView.invalidCredentials = true;
+                    this.invalidCredentials = true;
                     return;
                 }
-                thisView.errorService.handleRequestError(error);
+                this.errorService.handleRequestError(error);
             });
     }
 }
