@@ -21,6 +21,9 @@ export class WsPictureFactory {
     static fromJSONReviver = (key, value)=> {
         return value;
     }
+    static toJSONReplacer = (key, value)=> {
+        return value;
+    }
 
 
 }

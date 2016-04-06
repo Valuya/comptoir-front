@@ -37,5 +37,13 @@ export class WsSaleFactory {
         return value;
     }
 
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'dateTime':
+                return value;
+        }
+        return value;
+    }
+
 
 }

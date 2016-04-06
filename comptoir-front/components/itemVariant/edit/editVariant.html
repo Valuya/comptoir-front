@@ -38,7 +38,7 @@
                     <select id="pricing"
                             [ngModel]="itemVariantModel.pricing"
                             (change)="onPricingChanged($event)"
-                            ngControl="pricing" >
+                            ngControl="pricing">
                         <option *ngFor="#pricing of allPricings"
                                 [value]="pricing">
                             {{ getPricingLabel(pricing) }}
@@ -55,7 +55,7 @@
                                [ngModel]="itemVariantModel.pricingAmount"
                                (input)="setPricingAmount($event)"
                                validate-required
-                               type="number" min="0" step="0.01"  size="5"
+                               type="number" min="0" step="0.01" size="5"
                                ngControl="pricingAmount">
                         €
                     <form-message for="pricingAmount"
@@ -124,11 +124,23 @@
                              (languageChanged)="editLanguage = $event"></lang-select>
             </div>
             <div class="attribute">
-                <input class="definition"
-                       required
-                       placeholder="Clef"
-                       localized [language]="editLanguage"
-                       [localeTexts]="newAttributeValue.attributeDefinition.name">
+                <div class="attributeDefinition">
+                    <input class="definition"
+                           required
+                           placeholder="Clef"
+                           ngControl="definitionInput"
+                           id="definitionInput"
+                           #definitinInputElement
+                           localized [language]="editLanguage"
+                           [localeTexts]="newAttributeValue.attributeDefinition?.name">
+                    <attribute-definition-suggestions
+                            for="definitionInput"
+                            [forceSelection]="false"
+                            [language]="editLanguage"
+                            (definitionSelected)="onDefinitionSelected($event, definitinInputElement)">
+                    </attribute-definition-suggestions>
+                </div>
+
                 <input class="value"
                        required
                        placeholder="Valeur"

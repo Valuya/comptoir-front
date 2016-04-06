@@ -23,5 +23,8 @@ export class WsEmployeeFactory {
     static fromJSONReviver = (key, value)=> {
         return value;
     };
+    static toJSONReplacer = (key, value)=> {
+        return value;
+    };
 
 }

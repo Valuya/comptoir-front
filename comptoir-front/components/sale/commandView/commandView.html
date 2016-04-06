@@ -3,6 +3,17 @@
                         [validated]="validated || noInput "
                         (validateChanged)="onValidateChanged($event)"></commandview-header>
 
+    <item-variant-sale-list [rowSelectable]="false"
+                            [headersVisible]="activeSaleService.saleItemsResult.count > 0"
+                            [footerVisible]="true"
+                            [footerTotalColIndex]="3"
+                            [columns]="variantSaleColumns"
+                            [itemVariantSaleList]="activeSaleService.saleItemsResult.list"
+                            [editable]="!validated"
+                            [actionsVisible]="!validated && !noInput"
+                            [sale]="activeSaleService.sale"
+                            (columnAction)="onColumnAction($event)"
+                            (variantUpdated)="onVariantUpdated($event)"></item-variant-sale-list>
     <itemvariantsale-list [rowSelectable]="false"
                           [headersVisible]="true"
                           [footerVisible]="true"
@@ -44,24 +55,6 @@
                        title="Supprimer"
                        *ngIf="activeSaleService.sale.customer != null"
                        (click)="onRemoveSaleCustomer()"></i>
-                </span>
-            </span>
-        </form>
-
-        <form class="sale-form sale-time" [hidden]="newSale">
-            <label for="saleTime" class="inline">Date</label>
-            <a class="actionlink time" id="saleTime"
-               (click)="onEditTimeClicked()"
-               [hidden]="editingDateTime">
-                {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
-            </a>
-            <span [hidden]="!editingDateTime">
-                <input type="datetime-local" autofocus
-                       [(ngModel)]="newSaleDateTimeString"
-                       class="edit-time-field">
-                <span class="editActions">
-                            <i class="fa fa-check green" (click)="onConfirmNewDateTime()"></i>
-                            <i class="fa fa-times red" (click)="onCancelNewDateTime()"></i>
                 </span>
             </span>
         </form>

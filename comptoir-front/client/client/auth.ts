@@ -9,7 +9,9 @@ import {WsAuth, WsAuthFactory} from './../domain/auth/auth';
 import {WsCompanyRef} from './../domain/company/company';
 import {ComptoirRequest} from './../utils/request';
 import {COMPTOIR_SERVICE_URL} from '../../config/service';
-import {WsRegistration} from "./../domain/thirdparty/registration";
+import {WsRegistration, WsRegistrationFactory} from "./../domain/thirdparty/registration";
+import {WsLoginCredentials, WsLoginCredentialsFactory} from "../domain/auth/loginCredentials";
+import {ApplicationRequestCache} from "../utils/applicationRequestCache";
 
 export class AuthClient {
     serviceConfigUrl:string;
@@ -32,13 +34,14 @@ export class AuthClient {
 
     login(login:string, password:string):Promise<WsAuth> {
         var request = new ComptoirRequest();
-        var body = {
-            'login': login,
-            'passwordHash': password
-        };
+        
+        var body = new WsLoginCredentials();
+        body.login = login;
+        body.passwordHash = password;
+        var bodyJSON = JSON.stringify(body, WsLoginCredentialsFactory.toJSONReviver);
 
         return request
-            .post(body, this.getLoginUrl(), null)
+            .post(bodyJSON, this.getLoginUrl(), null)
             .then(function (response) {
                 var auth:WsAuth = JSON.parse(response.text, WsAuthFactory.fromJSONReviver);
                 return auth;
@@ -47,8 +50,9 @@ export class AuthClient {
 
     register(registration:WsRegistration):Promise<WsCompanyRef> {
         var request = new ComptoirRequest();
+        var registrationJSON = JSON.stringify(registration, WsRegistrationFactory.toJSONReplacer);
         return request
-            .post(registration, this.getRegisterUrl(), null)
+            .post(registrationJSON, this.getRegisterUrl(), null)
             .then((response)=> {
                 var companyRef:WsCompanyRef = JSON.parse(response.text);
                 return companyRef;
@@ -59,7 +63,8 @@ export class AuthClient {
         var request = new ComptoirRequest();
         var url = this.getRegisterUrl();
         request.setup('POST', url, null);
-        request.setupData(registration);
+        var registrationJSON = JSON.stringify(registration, WsRegistrationFactory.toJSONReplacer);
+        request.setupData(registrationJSON);
         return request;
     }
 

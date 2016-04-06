@@ -17,6 +17,7 @@ export class StockClient extends CachedWSClient<WsStock> {
         this.http = http;
         this.resourcePath = '/stock';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsStockFactory.fromJSONReviver;
+        this.fromJSONReviver = WsStockFactory.fromJSONReviver;
+        this.toJSONReplacer = WsStockFactory.toJSONReplacer;
     }
 }

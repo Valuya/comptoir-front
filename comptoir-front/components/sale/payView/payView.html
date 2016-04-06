@@ -25,8 +25,8 @@
                       [class.exact]="toPayAmount == 0">
                     {{ -toPayAmount  | currency:'EUR':true:'.2-2'}}
                 </span>
-                <span class="action stockLink"
-                      [hidden]="noInput || stockList.size <= 1"
+                <span class="action details"
+                      [hidden]="noInput"
                       (click)="onConfirmationClicked()">
                     Détails
                 </span>
@@ -106,6 +106,9 @@
              class="boxedHoverableLink"
              (click)="addAccountingEntry(account)">
             {{ account.description.get(language.locale) }}
+        </div>
+        <div [hidden]="!accountList.isEmpty()">
+            Aucun compte pour ce point de vente
         </div>
     </div>
 </div>

@@ -17,6 +17,7 @@ export class BalanceClient extends CachedWSClient<WsBalance> {
         this.http = http;
         this.resourcePath = '/balance';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsBalanceFactory.fromJSONReviver;
+        this.fromJSONReviver = WsBalanceFactory.fromJSONReviver;
+        this.toJSONReplacer = WsBalanceFactory.toJSONReplacer;
     }
 }

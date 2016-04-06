@@ -83,7 +83,7 @@ export class PosSelectComponent {
     setPos(pos:Pos) {
         this.pos = pos;
         this.posService.lastUsedPos = this.pos;
-        this.posChanged.next(pos);
+        this.posChanged.emit(pos);
     }
 
 }

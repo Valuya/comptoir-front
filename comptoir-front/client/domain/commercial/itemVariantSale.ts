@@ -38,5 +38,14 @@ export class WsItemVariantSaleFactory {
         }
         return value;
     }
+    static toJSONReplacer = (key, value)=>{
+        switch (key) {
+            case 'dateTime':
+                return value;
+            case 'comment':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+        }
+        return value;
+    }
 
 }

@@ -1,5 +1,5 @@
 <div class="saleView">
-    <div class="header" [hidden]="saleClosed">
+    <div class="header" [hidden]="saleClosed || posList?.size <= 1">
         <span>Point de vente :</span>
         <span>
             <pos-select (posChanged)="onPosChanged($event)"

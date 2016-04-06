@@ -17,6 +17,7 @@ export class SaleClient extends CachedWSClient<WsSale> {
         this.http = http;
         this.resourcePath = '/sale';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsSaleFactory.fromJSONReviver;
+        this.fromJSONReviver = WsSaleFactory.fromJSONReviver;
+        this.toJSONReplacer = WsSaleFactory.toJSONReplacer;
     }
 }

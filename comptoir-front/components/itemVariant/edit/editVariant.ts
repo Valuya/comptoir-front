@@ -1,16 +1,16 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, EventEmitter, OnInit, ChangeDetectionStrategy} from "angular2/core";
+import {
+    Component, EventEmitter, OnInit, ChangeDetectionStrategy, ElementRef, ViewQuery,
+    ViewChild
+} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {RouterLink} from "angular2/router";
 import {Picture, PictureFactory} from "../../../domain/commercial/picture";
 import {AttributeValue, AttributeValueFactory} from "../../../domain/commercial/attributeValue";
 import {ItemVariant, ItemVariantFactory} from "../../../domain/commercial/itemVariant";
-import {
-    AttributeDefinition,
-    AttributeDefinitionFactory
-} from "../../../domain/commercial/attributeDefinition";
+import {AttributeDefinition, AttributeDefinitionFactory} from "../../../domain/commercial/attributeDefinition";
 import {Language, LocaleTextsFactory} from "../../../client/utils/lang";
 import {NumberUtils} from "../../../client/utils/number";
 import {SearchRequest, SearchResult} from "../../../client/utils/search";
@@ -25,8 +25,9 @@ import {FormMessageComponent} from "../../utils/formMessage/formMessage";
 import {RequiredValidator} from "../../utils/validators";
 import {LocalizedInputDirective} from "../../lang/localizedInput/localizedInput";
 import * as Immutable from "immutable";
-import {AttributeDefinitionSearch} from "../../../client/domain/search/attributeDefinitionSearch";
-import {Pricing} from "../../../client/domain/util/pricing";
+import {WsAttributeDefinitionSearch} from "../../../client/domain/search/attributeDefinitionSearch";
+import {Pricing, ALL_PRICINGS} from "../../../client/domain/util/pricing";
+import {AttributeDefinitionSuggestionsComponent} from "../../attributeDefinition/suggestions/attributeDefinitionSuggestions";
 
 @Component({
     selector: 'itemvariant-edit',
@@ -37,7 +38,7 @@ import {Pricing} from "../../../client/domain/util/pricing";
     styleUrls: ['./components/itemVariant/edit/editVariant.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES,
         RouterLink, LangSelectComponent, LocalizedInputDirective, FormMessageComponent,
-        RequiredValidator]
+        RequiredValidator, AttributeDefinitionSuggestionsComponent]
 })
 export class ItemVariantEditComponent implements OnInit {
     itemVariantService:ItemVariantService;
@@ -78,11 +79,7 @@ export class ItemVariantEditComponent implements OnInit {
 
         this.appLanguage = authService.getEmployeeLanguage();
         this.editLanguage = authService.getEmployeeLanguage();
-        this.allPricings = Immutable.List([
-            Pricing.ABSOLUTE,
-            Pricing.ADD_TO_BASE,
-            Pricing.PARENT_ITEM
-        ]);
+        this.allPricings = Immutable.List(ALL_PRICINGS);
         this.unsavedAttributes = Immutable.List([]);
 
         this.resetNewAttributeValue();
@@ -109,12 +106,26 @@ export class ItemVariantEditComponent implements OnInit {
         return ItemVariantFactory.getPricingLabel(pricing).get(this.appLanguage.locale);
     }
 
+    onDefinitionSelected(value:AttributeDefinition| string, element: HTMLInputElement) {
+        if (value == null || typeof value == 'string') {
+            var locale = this.editLanguage.locale;
+            var nameTexts = {};
+            if (element) {
+                nameTexts[locale] = element.value;
+            }
+            this.newAttributeValue = <AttributeValue>this.newAttributeValue.set('attributeDefinition', AttributeDefinitionFactory.createAttributeDefinition({
+                name: LocaleTextsFactory.toLocaleTexts(nameTexts)
+            }));
+            return;
+        }
+        this.newAttributeValue = <AttributeValue>this.newAttributeValue.set('attributeDefinition', value);
+    }
 
     public onFormSubmit() {
         var itemVariant = ItemVariantFactory.createNewItemVariant(this.itemVariantModel);
         this.saveItemVariant(itemVariant)
             .then((itemVariant)=> {
-                this.saved.next(itemVariant);
+                this.saved.emit(itemVariant);
             }).catch((error)=> {
             this.errorService.handleRequestError(error);
         });
@@ -123,7 +134,7 @@ export class ItemVariantEditComponent implements OnInit {
 
     // TODO: add warning for pending changes
     public onCancelClicked() {
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 
     onPictureFileSelected(event) {
@@ -325,7 +336,7 @@ export class ItemVariantEditComponent implements OnInit {
 
     private searchAttributeDefinitionForName(name:string):Promise<AttributeDefinition> {
         var attributeDefRequest = new SearchRequest<AttributeDefinition>();
-        var search = new AttributeDefinitionSearch();
+        var search = new WsAttributeDefinitionSearch();
         search.companyRef = this.authService.getEmployeeCompanyRef();
         search.nameContains = name;
         attributeDefRequest.search = search;

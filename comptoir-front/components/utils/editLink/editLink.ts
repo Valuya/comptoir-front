@@ -34,6 +34,7 @@ import {CORE_DIRECTIVES} from "angular2/common";
     encapsulation: ViewEncapsulation.None
 })
 export class EditLinkComponent {
+    private static editingComponent: EditLinkComponent;
     private editing:boolean;
 
     @Output()
@@ -59,6 +60,10 @@ export class EditLinkComponent {
         if (this.editing || !this.editable) {
             return;
         }
+        if (EditLinkComponent.editingComponent != null) {
+            EditLinkComponent.editingComponent.doCancel();
+        }
+        EditLinkComponent.editingComponent = this;
         this.editing = true;
         event.stopImmediatePropagation();
         this.editAction.emit(null);

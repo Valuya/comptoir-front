@@ -17,6 +17,7 @@ export class PosClient extends CachedWSClient<WsPos> {
         this.http = http;
         this.resourcePath = '/pos';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsPosFactory.fromJSONReviver;
+        this.fromJSONReviver = WsPosFactory.fromJSONReviver;
+        this.toJSONReplacer = WsPosFactory.toJSONReplacer;
     }
 }

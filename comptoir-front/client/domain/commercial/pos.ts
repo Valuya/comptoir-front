@@ -28,5 +28,12 @@ export class WsPosFactory {
         }
         return value;
     }
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'description':
+            return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+        }
+        return value;
+    }
 
 }

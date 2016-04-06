@@ -17,6 +17,7 @@ export class PictureClient extends CachedWSClient<WsPicture> {
         this.http = http;
         this.resourcePath = '/picture';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsPictureFactory.fromJSONReviver;
+        this.fromJSONReviver = WsPictureFactory.fromJSONReviver;
+        this.toJSONReplacer = WsPictureFactory.toJSONReplacer;
     }
 }

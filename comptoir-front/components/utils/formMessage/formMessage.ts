@@ -1,17 +1,17 @@
 /**
  * Created by cghislai on 28/08/15.
  */
-import {Component, Host} from "angular2/core";
-import {NgForm, AbstractControl} from "angular2/common";
+import {Component, Host, Input, OnInit, AfterContentChecked} from "angular2/core";
+import {NgForm, AbstractControl, FORM_DIRECTIVES} from "angular2/common";
 import {AuthService} from "../../../services/auth";
 
 @Component({
     selector: 'form-message',
-    inputs: ['controlPath: for', 'checkErrors', 'message', 'error', 'info'],
     templateUrl: './components/utils/formMessage/formMessage.html',
-    styleUrls: ['./components/utils/formMessage/formMessage.css']
+    styleUrls: ['./components/utils/formMessage/formMessage.css'],
+    directives: [FORM_DIRECTIVES]
 })
-export class FormMessageComponent {
+export class FormMessageComponent implements AfterContentChecked {
     static ERROR_MESSAGES = {
         'required': {
             'fr': 'Veuillez entrer une valeur',
@@ -22,21 +22,31 @@ export class FormMessageComponent {
         }
     };
 
+    @Input("for")
     controlPath:string;
+    @Input()
     checkErrors:string;
+    @Input()
     message:string;
-    inlinePos:string = 'false';
+    @Input()
     error:boolean = true;
+    @Input()
     info:boolean = false;
+
     formDir:NgForm;
     formControl:AbstractControl;
+
     private authService:AuthService;
 
 
-    constructor(@Host() formDir:NgForm,
-                authService:AuthService) {
+    constructor(@Host() formDir:NgForm, authService:AuthService) {
         this.formDir = formDir;
         this.authService = authService;
+        this.checkControl();
+    }
+
+    ngAfterContentChecked() {
+        this.checkControl();
     }
 
     checkControl() {
@@ -45,24 +55,23 @@ export class FormMessageComponent {
         }
     }
 
-    get control() {
-        this.checkControl();
-        return this.formControl;
-    }
-
-    get errorMessage() {
+    getControlErrorMessage() {
+        if (this.formControl == null) {
+            return null;
+        }
         if (this.checkErrors == null) {
-            return this.message;
+            return null;
         }
         var errorsString = this.checkErrors.replace(/'/g, "\"");
         var errorArray = JSON.parse(errorsString);
         for (var i = 0; i < errorArray.length; ++i) {
-            if (this.control.hasError(errorArray[i])) {
+            if (this.formControl.hasError(errorArray[i])) {
                 return this.getMessage(errorArray[i]);
             }
         }
         return null;
     }
+
 
     isPresent(c:AbstractControl) {
         if (c == null) {

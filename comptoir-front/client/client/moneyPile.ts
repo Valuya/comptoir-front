@@ -17,6 +17,7 @@ export class MoneyPileClient extends CachedWSClient<WsMoneyPile> {
         this.http = http;
         this.resourcePath = '/moneyPile';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = MoneyPileFactory.fromJSONReviver;
+        this.fromJSONReviver = MoneyPileFactory.fromJSONReviver;
+        this.toJSONReplacer = MoneyPileFactory.toJSONReplacer;
     }
 }

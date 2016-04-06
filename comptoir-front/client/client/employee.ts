@@ -17,6 +17,7 @@ export class EmployeeClient extends CachedWSClient<WsEmployee> {
         this.http = http;
         this.resourcePath = '/employee';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsEmployeeFactory.fromJSONReviver;
+        this.fromJSONReviver = WsEmployeeFactory.fromJSONReviver;
+        this.toJSONReplacer = WsEmployeeFactory.toJSONReplacer;
     }
 }

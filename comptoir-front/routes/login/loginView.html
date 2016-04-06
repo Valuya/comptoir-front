@@ -10,11 +10,12 @@
     <form (submit)="doLogin($event)">
             <div>
                 <span>
-                    <input ngControl="login" id="login"
+                    <input ngControl="loginControl" id="loginControl"
                            [(ngModel)]="login"
+                           #loginControl
                            type="text" placeholder="Login" autofocus
                             validate-required>
-                    <form-message for="login" checkErrors="['required']"></form-message>
+                    <form-message for="loginControl" checkErrors="['required']"></form-message>
                 </span>
             </div>
             <div>
@@ -27,7 +28,11 @@
                 </span>
             </div>
         <div class="actions">
-            <button type="submit">Se connecter</button>
+            <button type="submit">
+                <img [hidden]="!busy"
+                     src="resources/img/spinner-bars-black.gif">
+                Se connecter
+            </button>
             <form-message [error]="true" [hidden]="!invalidCredentials"
                          message="Login/mot de passe invalide."></form-message>
         </div>

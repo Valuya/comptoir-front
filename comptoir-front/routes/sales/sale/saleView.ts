@@ -20,6 +20,9 @@ import {ItemVariantSelectComponent} from "../../../components/itemVariant/select
 import {StockService} from "../../../services/stock";
 import {SaleDetailsComponent} from "../../../components/sale/details/saleDetails";
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
+import {WsPosSearch} from "../../../client/domain/search/posSearch";
+import {Pos} from "../../../domain/commercial/pos";
+import {PosService} from "../../../services/pos";
 
 @Component({
     templateUrl: './routes/sales/sale/saleView.html',
@@ -48,16 +51,19 @@ export class SaleView implements CanReuse, OnActivate {
     stockRequest:SearchRequest<Stock>;
     stockResult:SearchResult<Stock>;
     private stockService:StockService;
+    private posService:PosService;
+    private posList: Immutable.List<Pos>;
 
     constructor(activeSaleService:ActiveSaleService, errorService:ErrorService,
                 authService:AuthService, saleService:SaleService,
-                stockService:StockService,
+                stockService:StockService, posService: PosService,
                 routeParams:RouteParams, router:Router, location:Location) {
         this.activeSaleService = activeSaleService;
         this.authService = authService;
         this.errorService = errorService;
         this.saleService = saleService;
         this.stockService = stockService;
+        this.posService = posService;
 
         this.routeParams = routeParams;
         this.router = router;
@@ -70,13 +76,27 @@ export class SaleView implements CanReuse, OnActivate {
         search.active = true;
         this.stockRequest.search = search;
         this.stockResult = new SearchResult<Stock>();
+        this.searchPos();
+    }
+
+
+    private searchPos() {
+        var posSearch = new WsPosSearch();
+        posSearch.companyRef = this.authService.getEmployeeCompanyRef();
+        var posRequest = new SearchRequest<Pos>();
+        posRequest.search = posSearch;
+        this.posService.search(posRequest)
+            .then((result)=>{
+                this.posList = result.list;
+            })
     }
 
     routerOnActivate() {
+        this.activeSaleService.sale = null;
         this.searchStocks();
         return this.findSale()
             .then((sale)=> {
-                if (sale.closed) {
+                if (sale == null || sale.closed) {
                     this.router.navigate(['/Sales/Sale', {id: 'new'}]);
                     return null;
                 }
@@ -157,10 +177,7 @@ export class SaleView implements CanReuse, OnActivate {
 
     onCommandPaid() {
         this.payStep = false;
-        this.activeSaleService.getNewSale()
-            .then(()=> {
-                this.router.navigate(['/Sales/Sale', {id: 'new'}]);
-            });
+        this.router.navigate(['/Sales/Sale', {id: 'new'}]);
     }
 
     onSaleDetails() {

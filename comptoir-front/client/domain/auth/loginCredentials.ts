@@ -8,7 +8,10 @@ export class WsLoginCredentials {
 }
 
 export class WsLoginCredentialsFactory {
-    public static fronJSONReviver = (key, value)=>{
+    public static fromJSONReviver = (key, value)=>{
         return value;
-    }
+    };
+    public static toJSONReviver = (key, value)=>{
+        return value;
+    };
 }

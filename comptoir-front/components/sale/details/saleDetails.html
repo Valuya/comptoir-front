@@ -93,7 +93,7 @@
         <div class="bloc" [class.active]="!activeSaleService.sale?.closed">
             <div class="pos">
                 <label for="pos">Point de vente</label>
-                <edit-link [editable]="!activeSaleService.sale?.closed"
+                <edit-link [editable]="!activeSaleService.sale?.closed && posList?.size > 1"
                            id="pos" #posInput>
                     <span class="output">
                         <pos-select [editable]="false"

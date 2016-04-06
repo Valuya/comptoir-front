@@ -45,10 +45,8 @@ export class CommandView {
     validateChanged = new EventEmitter();
 
     editingReference:boolean;
-    editingDateTime:boolean;
     editingCustomer:boolean;
     newSaleReference:string;
-    newSaleDateTimeString:string;
     newCustomer:Customer;
 
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
@@ -116,28 +114,6 @@ export class CommandView {
     onCancelNewReference() {
         this.editingReference = false;
         this.newSaleReference = null;
-    }
-
-    onEditTimeClicked() {
-        var dateTime = this.activeSaleService.sale.dateTime;
-        var isoString = dateTime.toISOString();
-        // input[type=datetime-local] required in chrome for the calendar widget.
-        // On the other hand, this does not accept timezone values, so strip it off
-        var zIndex = isoString.indexOf('Z');
-        this.newSaleDateTimeString = isoString.substring(0, zIndex);
-        this.editingDateTime = true;
-    }
-
-    onConfirmNewDateTime() {
-        var date:Date = new Date(this.newSaleDateTimeString);
-        this.activeSaleService.doSetSaleDateTime(date);
-        this.editingDateTime = false;
-        this.newSaleDateTimeString = null;
-    }
-
-    onCancelNewDateTime() {
-        this.editingDateTime = false;
-        this.newSaleDateTimeString = null;
     }
 
     onEditCustomerClicked() {

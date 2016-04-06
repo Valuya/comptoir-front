@@ -16,10 +16,10 @@
         <div class="description">
             <span class="attributeValue"
                   *ngFor="#attr of itemVariantSale.itemVariant.attributeValues">
-                  <span class="def">
+                <span class="def" [attr.title]="attr.attributeDefinition.name.get(lang.locale)">
                     {{ attr.attributeDefinition.name.get(lang.locale) }}
                 </span>
-                <span class="value">
+                <span class="value" [attr.title]="attr.value.get(lang.locale) ">
                     {{ attr.value.get(lang.locale) }}
                 </span>
             </span>
@@ -81,7 +81,8 @@
     </template>
 
     <template [ngSwitchWhen]="'variantRef' ">
-        <span class="ref"><span class="itemRef">{{ itemVariantSale.itemVariant.item.reference }}</span><span class="variantRef">{{ itemVariantSale.itemVariant.variantReference }}</span></span>
+        <span class="ref"><span class="itemRef">{{ itemVariantSale.itemVariant.item.reference }}</span><span
+                class="variantRef">{{ itemVariantSale.itemVariant.variantReference }}</span></span>
     </template>
     <template [ngSwitchWhen]="'quantity' ">
          <span class="quantity"

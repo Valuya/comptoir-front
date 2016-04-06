@@ -9,7 +9,6 @@ import {AccountClient} from "../client/client/account";
 import {AuthService} from "./auth";
 import {CompanyService} from "./company";
 import {WsAccount} from "../client/domain/accounting/account";
-import {AccountType} from "../client/domain/util/accountType";
 import {WsCompanyRef} from "../client/domain/company/company";
 
 @Injectable()

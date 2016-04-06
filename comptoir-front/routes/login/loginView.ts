@@ -30,11 +30,12 @@ export class LoginView {
     password: string;
     introText:string;
 
-    invalidCredentials: boolean;
+    busy:boolean;
+    invalidCredentials:boolean;
 
     // TODO: RouteData for introText
     constructor(authService:AuthService,
-                errorService: ErrorService,
+                errorService:ErrorService,
                 router:Router) {
         this.authService = authService;
         this.errorService = errorService;
@@ -44,20 +45,24 @@ export class LoginView {
 
     doLogin(event) {
         var hashedPassword = MD5.encode(this.password);
-        var thisView = this;
 
+        this.busy = true;
+        this.invalidCredentials = false;
         this.authService.login(this.login, hashedPassword)
-            .then(function (employee) {
-                thisView.router.navigate(['/Sales/Sale', {id: 'active'}]);
-            }).catch(function (error) {
-                if(error.code === 401) {
-                    thisView.invalidCredentials = true;
+            .then((employee)=> {
+                this.busy = false;
+                this.router.navigate(['/Sales/Sale', {id: 'active'}]);
+            })
+            .catch((error) => {
+                this.busy = false;
+                if (error.code === 401) {
+                    this.invalidCredentials = true;
                     return;
-                } else if (error.code === 404)  {
-                    thisView.invalidCredentials = true;
+                } else if (error.code === 404) {
+                    this.invalidCredentials = true;
                     return;
                 }
-                thisView.errorService.handleRequestError(error);
+                this.errorService.handleRequestError(error);
             });
     }
 }

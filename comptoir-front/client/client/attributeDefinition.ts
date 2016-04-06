@@ -17,6 +17,7 @@ export class AttributeDefinitionClient extends CachedWSClient<WsAttributeDefinit
         this.http = http;
         this.resourcePath = '/attribute/definition';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsAttributeDefinitionFactory.fromJSONReviver;
+        this.fromJSONReviver = WsAttributeDefinitionFactory.fromJSONReviver;
+        this.toJSONReplacer = WsAttributeDefinitionFactory.toJSONReplacer;
     }
 }

@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input} from "angular2/core";
+import {Component, EventEmitter, ChangeDetectionStrategy, Output, Input, OnChanges, SimpleChange} from "angular2/core";
 import * as Immutable from "immutable";
 import {ActiveSaleService} from "../../../services/activeSale";
 import {ErrorService} from "../../../services/error";
@@ -21,6 +21,11 @@ import {FastInputDirective} from "../../utils/fastInput";
 import {CustomerSelectComponent} from "../../customer/select/customerSelect";
 import {PosSelectComponent} from "../../pos/posSelect/posSelect";
 import {EditLinkComponent} from "../../utils/editLink/editLink";
+import {PosService} from "../../../services/pos";
+import {Pos} from "../../../domain/commercial/pos";
+import {WsPosSearch} from "../../../client/domain/search/posSearch";
+import {AuthService} from "../../../services/auth";
+import {SearchRequest} from "../../../client/utils/search";
 
 // The component
 @Component({
@@ -31,9 +36,11 @@ import {EditLinkComponent} from "../../utils/editLink/editLink";
     directives: [ItemVariantSaleListComponent, FORM_DIRECTIVES, FastInputDirective,
         CustomerSelectComponent, PosSelectComponent, EditLinkComponent]
 })
-export class SaleDetailsComponent {
+export class SaleDetailsComponent implements OnChanges {
     activeSaleService:ActiveSaleService;
     errorService:ErrorService;
+    posService:PosService;
+    authService:AuthService;
 
     @Input()
     stockList:Immutable.List<Stock>;
@@ -47,18 +54,23 @@ export class SaleDetailsComponent {
     @Output()
     editAction = new EventEmitter();
 
-    private saleClosing: boolean;
+    private saleClosing:boolean;
     variantSaleColumns:Immutable.List<ItemVariantSaleColumn>;
     editableColumns:Immutable.List<ItemVariantSaleColumn>;
+    posList:Immutable.List<Pos>;
 
     newSaleReference:string;
     newSaleDateTimeString:string;
     newSaleDiscount:number;
 
     constructor(saleService:ActiveSaleService,
-                errorService:ErrorService) {
+                errorService:ErrorService,
+                posService:PosService,
+                authService:AuthService) {
         this.activeSaleService = saleService;
         this.errorService = errorService;
+        this.posService = posService;
+        this.authService = authService;
 
         this.variantSaleColumns = Immutable.List([
             ItemVariantSaleColumn.VARIANT_REF,
@@ -72,6 +84,26 @@ export class SaleDetailsComponent {
         ]);
 
         this.initColumns();
+        this.searchPos();
+    }
+
+    ngOnChanges(changes:{[key:string]:SimpleChange;}) {
+        for (var key in changes) {
+            if (key == 'stockList') {
+                this.checkStockColumnEditable();
+            }
+        }
+    }
+
+    private searchPos() {
+        var posSearch = new WsPosSearch();
+        posSearch.companyRef = this.authService.getEmployeeCompanyRef();
+        var posRequest = new SearchRequest<Pos>();
+        posRequest.search = posSearch;
+        this.posService.search(posRequest)
+            .then((result)=> {
+                this.posList = result.list;
+            })
     }
 
     private initColumns() {
@@ -96,13 +128,19 @@ export class SaleDetailsComponent {
         this.variantSaleColumns = this.variantSaleColumns.push(ItemVariantSaleColumn.ACTIONS);
         this.editableColumns = Immutable.List([
             ItemVariantSaleColumn.VARIANT_NAME_COMMENT,
-            ItemVariantSaleColumn.STOCK,
             ItemVariantSaleColumn.INCLUDE_CUSTOMER_LOYALTY,
             ItemVariantSaleColumn.QUANTITY,
             ItemVariantSaleColumn.UNIT_PRICE,
             ItemVariantSaleColumn.DISCOUNT,
             ItemVariantSaleColumn.ACTIONS
         ]);
+        this.checkStockColumnEditable();
+    }
+
+    private checkStockColumnEditable() {
+        if (this.stockList != null && !this.stockList.isEmpty()) {
+            this.editableColumns = this.editableColumns.push(ItemVariantSaleColumn.STOCK);
+        }
     }
 
     onVariantUpdated(variant:ItemVariantSale) {

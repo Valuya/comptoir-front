@@ -25,4 +25,11 @@ export class WsAttributeValueFactory {
         }
         return value;
     };
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'value':
+                return LocaleTextsFactory.toJSONArrayLocaleTextsTransformer(value);
+        }
+        return value;
+    };
 }

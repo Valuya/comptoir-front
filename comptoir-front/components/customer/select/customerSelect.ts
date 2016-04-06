@@ -249,10 +249,14 @@ export class CustomerSelectComponent implements AfterViewInit, OnChanges {
     }
 
     private setSearchText() {
+        this.customerText = "";
         if (this.selectedCustomer != null) {
-            this.customerText = this.selectedCustomer.lastName + " " + this.selectedCustomer.firstName;
-        } else {
-            this.customerText = "";
+            if (this.selectedCustomer.lastName != null) {
+                this.customerText += this.selectedCustomer.lastName+" ";
+            }
+            if (this.selectedCustomer.firstName) {
+                this.customerText += this.selectedCustomer.firstName;
+            }
         }
     }
 }

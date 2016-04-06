@@ -9,7 +9,6 @@ import {Company} from "../domain/company/company";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {WsEmployeeRef} from "../client/domain/thirdparty/employee";
 import {Language, LanguageFactory} from "../client/utils/lang";
-import {JSONFactory} from "../client/utils/factory";
 import {ComptoirRequest, ComptoirResponse} from "../client/utils/request";
 import {AuthClient} from "../client/client/auth";
 import {EmployeeService} from "./employee";
@@ -223,7 +222,7 @@ export class AuthService {
         this.auth = auth;
         this.authToken = auth.token;
         var wsAuth = this.fromLocalAuth(auth);
-        var jsonString = JSON.stringify(wsAuth, JSONFactory.toJSONReplacer);
+        var jsonString = JSON.stringify(wsAuth, WsAuthFactory.toJSONReplacer);
         localStorage.setItem(AuthService.STORAGE_AUTH_KEY, jsonString);
 
         var self = this;

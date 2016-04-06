@@ -3,7 +3,7 @@
  */
 import {Injectable} from "angular2/core";
 import {Http, Request} from "angular2/http";
-import {WsSale, WsSaleRef} from "../client/domain/commercial/sale";
+import {WsSale, WsSaleRef, WsSaleFactory} from "../client/domain/commercial/sale";
 import {WsCompanyRef} from "../client/domain/company/company";
 import {WsCustomerRef} from "../client/domain/thirdparty/customer";
 import {Sale, SaleFactory} from "../domain/commercial/sale";
@@ -11,7 +11,6 @@ import {SalePrice, SalePriceFactory} from "../domain/commercial/salePrice";
 import {WithId} from "../client/utils/withId";
 import {SearchRequest, SearchResult} from "../client/utils/search";
 import {WsUtils} from "../client/utils/wsClient";
-import {JSONFactory} from "../client/utils/factory";
 import {SaleClient} from "../client/client/sale";
 import {AuthService} from "./auth";
 import {AccountingTransactionService} from "./accountingTransaction";
@@ -148,7 +147,7 @@ export class SaleService {
         var options = WsUtils.getRequestOptions(this.getAuthToken());
         options.method = 'POST';
         options.url = url;
-        options.body = JSON.stringify(searchRequest.search, JSONFactory.toJSONReplacer);
+        options.body = JSON.stringify(searchRequest.search, WsSaleFactory.toJSONReplacer);
         var request = this.http.request(new Request(options));
         request =  ApplicationRequestCache.registerRequest(request);
 

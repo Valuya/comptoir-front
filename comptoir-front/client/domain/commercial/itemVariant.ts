@@ -36,4 +36,12 @@ export class WsItemVariantFactory {
         return value;
     };
 
+    static toJSONReplacer = (key, value)=> {
+        switch (key) {
+            case 'pricing':
+                return Pricing[value];
+        }
+        return value;
+    };
+
 }

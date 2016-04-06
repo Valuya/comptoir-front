@@ -17,6 +17,7 @@ export class InvoiceClient extends CachedWSClient<WsInvoice> {
         this.http = http;
         this.resourcePath = '/invoice';
         this.webServiceUrl = serviceUrl;
-        this.jsonReviver = WsInvoiceFactory.fromJSONReviver;
+        this.fromJSONReviver = WsInvoiceFactory.fromJSONReviver;
+        this.toJSONReplacer = WsInvoiceFactory.toJSONReplacer;
     }
 }

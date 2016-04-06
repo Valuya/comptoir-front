@@ -79,6 +79,9 @@ export class CustomerListView {
                     }).toList().toJS();
                 return Promise.all(taskList);
             })
+            .then((results)=>{
+                this.searchResult.list = Immutable.List(results);
+            })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
             });

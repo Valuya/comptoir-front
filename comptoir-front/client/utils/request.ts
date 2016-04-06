@@ -1,7 +1,6 @@
 /**
  * Created by cghislai on 04/08/15.
  */
-import {JSONFactory} from "./factory";
 
 export class ComptoirResponse {
     text:string;
@@ -36,7 +35,7 @@ export class ComptoirRequest {
     private method:string;
     private url:string;
     private authToken:string;
-    private objectToSend:any;
+    private jsonBody:string;
     private contentType:string;
     private acceptContentType:string;
     private charset:string;
@@ -58,13 +57,13 @@ export class ComptoirRequest {
         return this.run();
     }
 
-    put(jsonObject:any, url:string, authToken:string):Promise<ComptoirResponse> {
+    put(jsonObject:string, url:string, authToken:string):Promise<ComptoirResponse> {
         this.setup('PUT', url, authToken);
         this.setupData(jsonObject);
         return this.run();
     }
 
-    post(jsoObject:any, url:string, authToken:string):Promise<ComptoirResponse> {
+    post(jsoObject:string, url:string, authToken:string):Promise<ComptoirResponse> {
         this.setup('POST', url, authToken);
         this.setupData(jsoObject);
         return this.run();
@@ -89,7 +88,7 @@ export class ComptoirRequest {
     }
 
     setupData(obj:any) {
-        this.objectToSend = obj;
+        this.jsonBody = obj;
     }
 
     getDebugString() {
@@ -148,9 +147,8 @@ export class ComptoirRequest {
                     this.request.setRequestHeader(ComptoirRequest.HEADER_OAUTH_TOKEN, 'Bearer ' + this.authToken);
                 }
 
-                if (this.objectToSend != null) {
-                    var stringifiedJSON = JSON.stringify(this.objectToSend, JSONFactory.toJSONReplacer);
-                    this.request.send(stringifiedJSON);
+                if (this.jsonBody != null) {
+                    this.request.send(this.jsonBody);
                 } else {
                     this.request.send();
                 }
