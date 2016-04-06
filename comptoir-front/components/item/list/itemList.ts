@@ -42,7 +42,7 @@ export class ItemColumnComponent {
     action = new EventEmitter();
 
     onColumnAction(item:Item, column:ItemColumn, event) {
-        this.action.next({item: item, column: column});
+        this.action.emit({item: item, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -96,7 +96,7 @@ export class ItemListComponent implements OnInit {
 
 
     onItemClick(item:Item, event) {
-        this.rowClicked.next(item);
+        this.rowClicked.emit(item);
         event.stopPropagation();
         event.preventDefault();
     }

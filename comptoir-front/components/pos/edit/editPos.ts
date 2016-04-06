@@ -60,7 +60,7 @@ export class PosEditComponent implements OnInit {
     onFormSubmit() {
         this.savePos(this.pos)
             .then((pos)=> {
-                this.saved.next(pos);
+                this.saved.emit(pos);
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -68,7 +68,7 @@ export class PosEditComponent implements OnInit {
     }
 
     onCancelClicked() {
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 
 

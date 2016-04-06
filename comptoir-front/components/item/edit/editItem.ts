@@ -125,14 +125,14 @@ export class ItemEditComponent implements OnInit {
     public doSaveItem() {
         this.saveItem()
             .then((item)=> {
-                this.saved.next(item);
+                this.saved.emit(item);
             }).catch((error)=> {
                 this.errorService.handleRequestError(error);
             });
     }
 
     public doCancel() {
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 
     onPictureFileSelected(event) {

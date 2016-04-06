@@ -41,7 +41,7 @@ export class AccountColumnComponent {
     lang:Language;
 
     onColumnAction(account:Account, column:AccountColumn, event) {
-        this.action.next({account: account, column: column});
+        this.action.emit({account: account, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -94,13 +94,13 @@ export class AccountListComponent implements OnInit {
     }
 
     onAccountClick(account:Account, event) {
-        this.rowClicked.next(account);
+        this.rowClicked.emit(account);
         event.stopPropagation();
         event.preventDefault();
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

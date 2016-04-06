@@ -37,6 +37,6 @@ export class DialogComponent {
 
     doClose() {
         this.visible = false;
-        this.close.next(null);
+        this.close.emit(null);
     }
 }

@@ -117,7 +117,7 @@ export class PaginatorComponent implements OnInit, OnChanges {
         pageChange.pageIndex = pageIndex;
         pageChange.pageSize = pageSize;
 
-        this.pageChange.next(pageChange);
+        this.pageChange.emit(pageChange);
     }
 
 }

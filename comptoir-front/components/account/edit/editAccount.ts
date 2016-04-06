@@ -74,7 +74,7 @@ export class AccountsEditComponent implements OnInit {
         var account = AccountFactory.createNewAccount(this.accountModel);
         this.saveAccount(account)
             .then((account)=> {
-                this.saved.next(account);
+                this.saved.emit(account);
             })
             .catch((error)=> {
                 this.errorService.handleRequestError(error);
@@ -82,7 +82,7 @@ export class AccountsEditComponent implements OnInit {
     }
 
     onCancelClicked() {
-        this.cancelled.next(null);
+        this.cancelled.emit(null);
     }
 
     private saveAccount(account:Account):Promise<Account> {

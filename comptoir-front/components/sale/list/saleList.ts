@@ -39,7 +39,7 @@ export class SaleColumnComponent {
     action = new EventEmitter();
 
     onColumnAction(sale:Sale, column:SaleColumn, event) {
-        this.action.next({sale: sale, column: column});
+        this.action.emit({sale: sale, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -81,13 +81,13 @@ export class SaleListComponent {
     }
 
     onSaleClick(sale:Sale, event) {
-        this.rowClicked.next(sale);
+        this.rowClicked.emit(sale);
         event.stopPropagation();
         event.preventDefault();
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

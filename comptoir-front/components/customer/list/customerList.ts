@@ -39,7 +39,7 @@ export class CustomerColumnComponent {
     action = new EventEmitter();
 
     onColumnAction(customer:WsCustomer, column:CustomerColumn, event) {
-        this.action.next({customer: customer, column: column});
+        this.action.emit({customer: customer, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -81,13 +81,13 @@ export class CustomerListComponent {
 
 
     onCustomerClick(item:WsCustomer, event) {
-        this.rowClicked.next(item);
+        this.rowClicked.emit(item);
         event.stopPropagation();
         event.preventDefault();
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

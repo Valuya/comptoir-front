@@ -40,7 +40,7 @@ export class LangSelectComponent {
 
     onLanguageSelected(language:Language) {
         this.selectedLanguage = language;
-        this.languageChanged.next(language);
+        this.languageChanged.emit(language);
     }
 
     getId(locale:string) {
@@ -86,7 +86,7 @@ export class LangSelectControl implements ControlValueAccessor {
 
     onLanguageSelected(language:Language) {
         this.selectedLanguage = language;
-        this.languageChanged.next(language);
+        this.languageChanged.emit(language);
         this.onChange(language);
     }
 

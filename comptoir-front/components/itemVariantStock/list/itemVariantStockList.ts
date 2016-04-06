@@ -108,7 +108,7 @@ export class ItemVariantStockListComponent {
 
 
     onItemVariantStockClick(item:WsItemVariantStock, event) {
-        this.rowClicked.next(item);
+        this.rowClicked.emit(item);
         event.stopPropagation();
         event.preventDefault();
     }

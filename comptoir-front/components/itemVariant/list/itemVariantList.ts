@@ -38,7 +38,7 @@ export class ItemVariantColumnComponent {
     action = new EventEmitter();
 
     onColumnAction(item:ItemVariant, column:ItemVariantColumn, event) {
-        this.action.next({itemVariant: item, column: column});
+        this.action.emit({itemVariant: item, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -100,7 +100,7 @@ export class ItemVariantListComponent implements OnInit {
     }
 
     onItemClick(item:ItemVariant, event) {
-        this.rowClicked.next(item);
+        this.rowClicked.emit(item);
         event.stopPropagation();
         event.preventDefault();
     }
@@ -144,7 +144,7 @@ export class ItemVariantListComponent implements OnInit {
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

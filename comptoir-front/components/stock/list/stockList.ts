@@ -38,7 +38,7 @@ export class StockColumnComponent {
     action = new EventEmitter();
 
     onColumnAction(stock:WsStock, column:StockColumn, event) {
-        this.action.next({stock: stock, column: column});
+        this.action.emit({stock: stock, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -86,7 +86,7 @@ export class StockListComponent {
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }

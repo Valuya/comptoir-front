@@ -38,7 +38,7 @@ export class PosColumnComponent {
     action = new EventEmitter();
 
     onColumnAction(pos:WsPos, column:PosColumn, event) {
-        this.action.next({pos: pos, column: column});
+        this.action.emit({pos: pos, column: column});
         event.stopPropagation();
         event.preventDefault();
     }
@@ -81,13 +81,13 @@ export class PosListComponent {
 
 
     onPosClick(item:WsPos, event) {
-        this.rowClicked.next(item);
+        this.rowClicked.emit(item);
         event.stopPropagation();
         event.preventDefault();
     }
 
     onColumnAction(event:any) {
-        this.columnAction.next(event);
+        this.columnAction.emit(event);
     }
 
 }
