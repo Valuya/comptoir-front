@@ -48,16 +48,6 @@ runSequence('clean.dist',
     'build.index',
     done));
 
-gulp.task('build.watch', done =>
-runSequence('build',
-    'watch',
-    done));
-
-gulp.task('build.test.watch', done =>
-runSequence('build.test',
-    'watch.test',
-    done));
-
 // --------------
 // Test.
 gulp.task('test', done =>
@@ -67,12 +57,4 @@ runSequence('clean.test',
     'karma.start',
     done));
 
-
-// --------------
-// Serve.
-gulp.task('serve', done =>
-runSequence('build',
-    'server.start',
-    'watch.serve',
-    done));
 

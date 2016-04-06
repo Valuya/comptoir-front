@@ -1,8 +1,3 @@
-/*
- * Our custom types
- */
 
-/*
- * tsd generated types
- */
-/// <reference path="../tools/typings/tsd/tsd.d.ts" />
+///<reference path="../node_modules/angular2/typings/browser.d.ts"/>
+///<reference path="../node_modules/immutable/dist/immutable.d.ts"/>

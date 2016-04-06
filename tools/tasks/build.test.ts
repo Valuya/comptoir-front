@@ -1,6 +1,5 @@
 import {join} from 'path';
 import {PATH, APP_SRC} from '../config';
-import {tsProjectFn} from '../utils';
 
 export = function buildTest(gulp, plugins) {
   return function () {
@@ -19,3 +18,9 @@ export = function buildTest(gulp, plugins) {
       .pipe(gulp.dest(PATH.dest.test));
   };
 };
+
+function tsProjectFn(plugins) {
+    return plugins.typescript.createProject('tsconfig.json', {
+        typescript: require('typescript')
+    });
+}

@@ -1,6 +1,6 @@
 import {join} from 'path';
 import {PATH, APP_SRC} from '../config';
-import {templateLocals, tsProjectFn} from '../utils';
+import {templateLocals} from '../utils';
 
 export = function buildJSDev(gulp, plugins) {
   return function () {
@@ -22,3 +22,9 @@ export = function buildJSDev(gulp, plugins) {
       .pipe(gulp.dest(PATH.dest.dev.all));
   };
 };
+
+function tsProjectFn(plugins) {
+    return plugins.typescript.createProject('tsconfig.json', {
+        typescript: require('typescript')
+    });
+}

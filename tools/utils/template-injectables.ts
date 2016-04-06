@@ -1,5 +1,4 @@
-import * as slash from 'slash';
-import {join} from 'path';
+import {join, basename} from 'path';
 import {APP_BASE, PATH, VERSION} from '../config';
 
 let injectables: string[] = [];
@@ -12,7 +11,7 @@ export function registerInjectableAssetsRef(paths: string[], target: string = ''
   injectables = injectables.concat(
     paths
       .filter(path => !/(\.map)$/.test(path))
-      .map(path => join(target, slash(path).split('/').pop()))
+      .map(path => join(target, basename(path)))
   );
 }
 

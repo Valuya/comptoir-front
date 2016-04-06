@@ -12,12 +12,12 @@
         "sourceMap": true
     },
     "files": [
-        "./app/app.ts"
     ],
     "filesGlob": [
         "./comptoir-front/**/*.ts",
         "./gulpfile.ts",
-        "./tools/**/*.ts"
+        "./tools/**/*.ts",
+        "./typings/main.d.ts"
     ],
     "compileOnSave": false
 }

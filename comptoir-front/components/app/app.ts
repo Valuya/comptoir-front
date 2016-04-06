@@ -19,7 +19,6 @@ import {CashView} from '../../routes/cash/cashView';
 import {PosView} from '../../routes/pos/posView';
 import {StockView} from "../../routes/stock/stockView";
 import {CustomerView} from "../../routes/customer/customerView";
-import {EditCompanyView} from "../../routes/company/edit/editView";
 import {CompanyView} from "../../routes/company/companyView";
 
 

@@ -15,7 +15,6 @@ import {ItemVariantSelectComponent} from "../../../components/itemVariant/select
 import {StockService} from "../../../services/stock";
 import {SaleDetailsComponent} from "../../../components/sale/details/saleDetails";
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
-import {EventEmitter} from "events";
 
 @Component({
     bindings: [ActiveSaleService],
