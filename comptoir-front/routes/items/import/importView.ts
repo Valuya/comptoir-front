@@ -14,7 +14,6 @@ import {CompanyService} from '../../../services/company';
 
 
 @Component({
-    selector: 'import-items',
     templateUrl: './routes/items/import/importView.html',
     styleUrls: ['./routes/items/import/importView.css'],
     directives: [NgIf, FORM_DIRECTIVES, RouterLink]

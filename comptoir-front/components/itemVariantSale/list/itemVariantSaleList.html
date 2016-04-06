@@ -21,17 +21,17 @@
                 [class.noactions]="!actionsVisible"
                 [class.right]="col.alignRight"
                 [class.center]="col.alignCenter">
-                <item-variant-sale-column (action)="onColumnAction($event)"
-                                          [itemVariantSale]="variantSale"
-                                          [column]="col"
-                                          [editable]="editable || isColumnEditable(col)"
-                                          [editing]="editingVariantSale == variantSale && (editingColumn == col || col.name == 'actions')"
-                                          [editingSubColumn]="editingSubColumn"
-                                          [lang]="language"
-                                          [actionsVisible]="actionsVisible"
-                                          [confirmButtonsVisible]="confirmButtonsVisible"
-                                          [stockList]="stockList">
-                </item-variant-sale-column>
+                <itemvariantsale-column (action)="onColumnAction($event)"
+                                        [itemVariantSale]="variantSale"
+                                        [column]="col"
+                                        [editable]="editable || isColumnEditable(col)"
+                                        [editing]="editingVariantSale == variantSale && (editingColumn == col || col.name == 'actions')"
+                                        [editingSubColumn]="editingSubColumn"
+                                        [lang]="language"
+                                        [actionsVisible]="actionsVisible"
+                                        [confirmButtonsVisible]="confirmButtonsVisible"
+                                        [stockList]="stockList">
+                </itemvariantsale-column>
             </td>
         </tr>
         </tbody>

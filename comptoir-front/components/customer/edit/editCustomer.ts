@@ -9,20 +9,20 @@ import {Language} from "../../../client/utils/lang";
 import {AuthService} from "../../../services/auth";
 import {CustomerService} from "../../../services/customer";
 import {ErrorService} from "../../../services/error";
-import {LangSelect} from "../../lang/langSelect/langSelect";
-import {LocalizedDirective} from "../../utils/localizedInput";
+import {LangSelectComponent} from "../../lang/langSelect/langSelect";
+import {LocalizedInputDirective} from "../../lang/localizedInput/localizedInput";
 import {RequiredValidator} from "../../utils/validators";
-import {FormMessage} from "../../utils/formMessage/formMessage";
+import {FormMessageComponent} from "../../utils/formMessage/formMessage";
 
 
 @Component({
-    selector: 'customer-edit-component',
+    selector: 'customer-edit',
     inputs: ['customer'],
     outputs: ['saved', 'cancelled'],
     templateUrl: './components/customer/edit/editCustomer.html',
     styleUrls: ['./components/customer/edit/editCustomer.css'],
-    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelect, LocalizedDirective,
-        RequiredValidator, FormMessage]
+    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
+        RequiredValidator, FormMessageComponent]
 })
 export class CustomersEditComponent implements OnInit {
     customerService:CustomerService;

@@ -2,7 +2,7 @@
  * Created by cghislai on 28/08/15.
  */
 import {Component} from 'angular2/core';
-import {AppMenu} from './menu/appMenu';
+import {AppMenuComponent} from './menu/appMenu';
 import {ApplicationRequestCache} from "../../../client/utils/applicationRequestCache";
 
 @Component({
@@ -10,9 +10,9 @@ import {ApplicationRequestCache} from "../../../client/utils/applicationRequestC
     inputs: ['title', 'inactive'],
     templateUrl: './components/app/header/appHeader.html',
     styleUrls: ['./components/app/header/appHeader.css'],
-    directives: [AppMenu]
+    directives: [AppMenuComponent]
 })
-export class AppHeader {
+export class AppHeaderComponent {
 
     title:string;
     inactive: boolean;

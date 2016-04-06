@@ -5,17 +5,16 @@
 import {Component} from 'angular2/core';
 import {RouteConfig,RouterOutlet,RouterLink, Location} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {AppTab} from '../../components/app/header/tab/appTab';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {AppTabComponent} from '../../components/app/header/tab/appTab';
 
 import {EditItemRedirect} from './edit/editRedirect';
 import {ItemsListView} from './list/listView';
 import {ItemsImportView} from './import/importView';
 
 @Component({
-    selector: 'items-view',
     templateUrl: './routes/items/itemsView.html',
-    directives: [AppHeader, AppTab, RouterOutlet, RouterLink]
+    directives: [AppHeaderComponent, AppTabComponent, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/edit/...', component: EditItemRedirect, as: 'Edit'},

@@ -11,7 +11,6 @@ import {ErrorService} from "../../../services/error";
 import {CompanyEditComponent} from "../../../components/company/edit/editCompany";
 
 @Component({
-    selector: 'edit-company',
     templateUrl: './routes/company/edit/editView.html',
     styleUrls: ['./routes/company/edit/editView.css'],
     directives: [NgIf, RouterLink, CompanyEditComponent]

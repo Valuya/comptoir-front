@@ -11,7 +11,7 @@ import {RouterLink} from 'angular2/router';
     styleUrls: ['./components/app/header/menu/appMenu.css'],
     directives: [RouterLink]
 })
-export class AppMenu {
+export class AppMenuComponent {
     title:string;
     inactive:boolean;
     menuVisible:boolean;

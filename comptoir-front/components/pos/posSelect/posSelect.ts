@@ -20,7 +20,7 @@ import {WsPosSearch} from "../../../client/domain/search/posSearch";
     directives: [NgFor, NgIf],
     encapsulation: ViewEncapsulation.None
 })
-export class PosSelect {
+export class PosSelectComponent {
     posService:PosService;
     authService:AuthService;
     errorService:ErrorService;

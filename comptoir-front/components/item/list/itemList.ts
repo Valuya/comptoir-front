@@ -59,7 +59,7 @@ export class ItemColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, ItemColumnComponent]
 })
 
-export class ItemList implements OnInit {
+export class ItemListComponent implements OnInit {
     // properties
     items:Immutable.List<Item>;
     columns:Immutable.List<ItemColumn>;

@@ -12,13 +12,12 @@ import {PosService} from '../../../services/pos';
 import {ErrorService} from '../../../services/error';
 
 import {LocaleTexts} from '../../../client/utils/lang';
-import {PossEditComponent} from '../../../components/pos/edit/editPos';
+import {PosEditComponent} from '../../../components/pos/edit/editPos';
 
 @Component({
-    selector: 'edit-pos',
     templateUrl: './routes/pos/edit/editView.html',
     styleUrls: ['./routes/pos/edit/editView.css'],
-    directives: [NgIf, RouterLink, PossEditComponent]
+    directives: [NgIf, RouterLink, PosEditComponent]
 })
 export class EditPosView {
     posService:PosService;

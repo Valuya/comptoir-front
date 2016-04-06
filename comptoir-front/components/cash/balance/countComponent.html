@@ -1,8 +1,8 @@
 <div class="balanceCount">
     <div *ngFor="#moneyPile of moneyPiles">
-        <money-pile-count [moneyPile]="moneyPile"
-                          (changed)="onMoneyPileChanged($event)">
-        </money-pile-count>
+        <moneypile-count [moneyPile]="moneyPile"
+                         (changed)="onMoneyPileChanged($event)">
+        </moneypile-count>
     </div>
     <div class="totalRow">
             <span class="total" [hidden]="balance == null">

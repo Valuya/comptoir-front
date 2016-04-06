@@ -13,22 +13,22 @@ import {AuthService} from '../../../services/auth';
 import {PosService} from '../../../services/pos';
 import {ErrorService} from '../../../services/error';
 
-import {LangSelect} from '../../lang/langSelect/langSelect';
-import {LocalizedDirective} from '../../utils/localizedInput';
+import {LangSelectComponent} from '../../lang/langSelect/langSelect';
+import {LocalizedInputDirective} from '../../lang/localizedInput/localizedInput';
 import {RequiredValidator} from '../../utils/validators';
-import {FormMessage} from '../../utils/formMessage/formMessage';
+import {FormMessageComponent} from '../../utils/formMessage/formMessage';
 
 
 @Component({
-    selector: 'pos-edit-component',
+    selector: 'pos-edit',
     inputs: ['pos'],
     outputs: ['saved', 'cancelled'],
     templateUrl: './components/pos/edit/editPos.html',
     styleUrls: ['./components/pos/edit/editPos.css'],
-    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelect, LocalizedDirective,
-        RequiredValidator, FormMessage]
+    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
+        RequiredValidator, FormMessageComponent]
 })
-export class PossEditComponent implements OnInit {
+export class PosEditComponent implements OnInit {
     posService:PosService;
     errorService:ErrorService;
     authService:AuthService;

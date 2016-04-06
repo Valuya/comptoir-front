@@ -10,7 +10,7 @@ import {Component, ViewEncapsulation} from 'angular2/core';
     styleUrls: ['./components/app/header/tab/appTab.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class AppTab {
+export class AppTabComponent {
     active: boolean;
     selectable: boolean;
 }

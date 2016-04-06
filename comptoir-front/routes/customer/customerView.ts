@@ -5,17 +5,16 @@
 import {Component} from 'angular2/core';
 import {RouteConfig,RouterOutlet,RouterLink, Location} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {AppTab} from '../../components/app/header/tab/appTab';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {AppTabComponent} from '../../components/app/header/tab/appTab';
 
 
 import {CustomerListView} from './list/listView';
 import {EditCustomerView} from './edit/editView';
 
 @Component({
-    selector: 'customer-view',
     templateUrl: './routes/customer/customerView.html',
-    directives: [AppHeader, AppTab, RouterOutlet, RouterLink]
+    directives: [AppHeaderComponent, AppTabComponent, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/edit/:id', component: EditCustomerView, as: 'Edit'},

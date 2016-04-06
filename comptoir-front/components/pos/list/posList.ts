@@ -57,7 +57,7 @@ export class PosColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, PosColumnComponent]
 })
 
-export class PosList {
+export class PosListComponent {
     // properties
     posList:Immutable.List<WsPos>;
     columns:Immutable.List<PosColumn>;

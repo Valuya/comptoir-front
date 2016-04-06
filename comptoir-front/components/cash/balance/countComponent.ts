@@ -16,18 +16,18 @@ import {ErrorService} from '../../../services/error';
 import {AuthService} from '../../../services/auth';
 
 import {MoneyPileCountComponent} from '../../cash/moneyPile/moneyPileCount';
-import {FastInput} from '../../utils/fastInput';
+import {FastInputDirective} from '../../utils/fastInput';
 
 import * as Immutable from 'immutable';
 
 @Component({
-    selector: 'balance-count-component',
+    selector: 'balance-count',
     inputs: ['account'],
     outputs: ['validated', 'cancelled'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/cash/balance/countComponent.html',
     styleUrls: ['./components/cash/balance/countComponent.css'],
-    directives: [NgFor, NgIf, MoneyPileCountComponent, FastInput]
+    directives: [NgFor, NgIf, MoneyPileCountComponent, FastInputDirective]
 })
 
 export class BalanceCountComponent implements OnInit {

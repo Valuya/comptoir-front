@@ -11,16 +11,15 @@ import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../../client/utils/pagination";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
-import {Paginator} from "../../../components/utils/paginator/paginator";
-import {PosList, PosColumn} from "../../../components/pos/list/posList";
+import {PaginatorComponent} from "../../../components/utils/paginator/paginator";
+import {PosListComponent, PosColumn} from "../../../components/pos/list/posList";
 import * as Immutable from "immutable";
 import {WsPosSearch} from "../../../client/domain/search/posSearch";
 
 @Component({
-    selector: 'pos-list-view',
     templateUrl: './routes/pos/list/listView.html',
     styleUrls: ['./routes/pos/list/listView.css'],
-    directives: [NgIf, Paginator, FORM_DIRECTIVES, PosList]
+    directives: [NgIf, PaginatorComponent, FORM_DIRECTIVES, PosListComponent]
 })
 
 export class PosListView {

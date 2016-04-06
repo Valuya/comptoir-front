@@ -10,7 +10,7 @@ import {StockService} from "../../../services/stock";
 import {ErrorService} from "../../../services/error";
 import {LocaleTexts, Language} from "../../../client/utils/lang";
 import {StockEditComponent} from "../../../components/stock/edit/editStock";
-import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
+import {ItemVariantSelectComponent} from "../../../components/itemVariant/select/itemVariantSelect";
 import {ItemVariant} from "../../../domain/commercial/itemVariant";
 import {ItemVariantStock, ItemVariantStockFactory} from "../../../domain/stock/itemVariantStock";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
@@ -24,21 +24,20 @@ import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../..
 import {ItemVariantColumnComponent} from "../../../components/itemVariant/list/itemVariantList";
 import {
     ItemVariantStockColumn,
-    ItemVariantStockList
+    ItemVariantStockListComponent
 } from "../../../components/itemVariantStock/list/itemVariantStockList";
 import {RequiredValidator} from "../../../components/utils/validators";
-import {Paginator} from "../../../components/utils/paginator/paginator";
+import {PaginatorComponent} from "../../../components/utils/paginator/paginator";
 import {WsItemVariantStockSearch} from "../../../client/domain/search/itemVariantStockSearch";
 import {StockChangeType} from "../../../client/domain/util/stockChangeType";
 
 @Component({
-    selector: 'edit-stock',
     templateUrl: './routes/stock/edit/editView.html',
     styleUrls: ['./routes/stock/edit/editView.css'],
     directives: [NgIf, NgFor, RouterLink, NgForm, StockEditComponent,
-        ItemVariantSelectView, ItemVariantColumnComponent,
-        Paginator,
-        ItemVariantStockList, RequiredValidator, FORM_DIRECTIVES]
+        ItemVariantSelectComponent, ItemVariantColumnComponent,
+        PaginatorComponent,
+        ItemVariantStockListComponent, RequiredValidator, FORM_DIRECTIVES]
 })
 export class EditStockView {
     stockService:StockService;

@@ -6,8 +6,8 @@ import {Component} from 'angular2/core';
 import {FORM_DIRECTIVES} from 'angular2/common';
 import {Router, RouterLink} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {FormMessage} from '../../components/utils/formMessage/formMessage';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {FormMessageComponent} from '../../components/utils/formMessage/formMessage';
 import {RequiredValidator} from '../../components/utils/validators';
 
 import {AuthService} from '../../services/auth';
@@ -17,10 +17,9 @@ import {MD5} from '../../components/utils/md5';
 
 
 @Component({
-    selector: "login-view",
     templateUrl: './routes/login/loginView.html',
     styleUrls: ['./routes/login/loginView.css'],
-    directives: [FORM_DIRECTIVES, RouterLink, AppHeader, FormMessage, RequiredValidator]
+    directives: [FORM_DIRECTIVES, RouterLink, AppHeaderComponent, FormMessageComponent, RequiredValidator]
 })
 export class LoginView {
     authService:AuthService;

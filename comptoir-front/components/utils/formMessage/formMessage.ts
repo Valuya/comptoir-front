@@ -11,7 +11,7 @@ import {AuthService} from "../../../services/auth";
     templateUrl: './components/utils/formMessage/formMessage.html',
     styleUrls: ['./components/utils/formMessage/formMessage.css']
 })
-export class FormMessage {
+export class FormMessageComponent {
     static ERROR_MESSAGES = {
         'required': {
             'fr': 'Veuillez entrer une valeur',
@@ -76,7 +76,7 @@ export class FormMessage {
         if (this.message != null) {
             return this.message;
         }
-        var messages = FormMessage.ERROR_MESSAGES[error];
+        var messages = FormMessageComponent.ERROR_MESSAGES[error];
         if (messages == null) {
             return null;
         }

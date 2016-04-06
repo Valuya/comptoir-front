@@ -17,7 +17,7 @@ import {PageChangeEvent} from '../../../client/utils/pagination';
     directives: [NgFor]
 })
 
-export class Paginator implements OnInit, OnChanges {
+export class PaginatorComponent implements OnInit, OnChanges {
     pageCount:number;
     pageSize: number;
     totalCount: number;

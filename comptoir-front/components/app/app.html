@@ -8,8 +8,8 @@
         <router-outlet></router-outlet>
     </div>
 
-    <dialogview modal="true" closable="true" title="Erreur" *ngIf="errorService.hasError"
-                (close)="errorService.dismissError()">
+    <dialog modal="true" closable="true" title="Erreur" *ngIf="errorService.hasError"
+            (close)="errorService.dismissError()">
         <p [innerHtml]="errorService.errorHeader">
         </p>
         <p class="errorMessage"
@@ -17,5 +17,5 @@
         </p>
         <p [innerHtml]="errorService.errorFooter">
         </p>
-    </dialogview>
+    </dialog>
 </div>

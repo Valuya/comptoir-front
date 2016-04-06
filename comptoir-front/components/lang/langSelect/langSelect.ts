@@ -19,7 +19,7 @@ import * as Immutable from 'immutable';
     styleUrls: ['./components/lang/langSelect/langSelect.css'],
     directives: [NgFor, NgIf]
 })
-export class LangSelect {
+export class LangSelectComponent {
 
     displayLanguage:Language;
     selectedLanguage:Language;

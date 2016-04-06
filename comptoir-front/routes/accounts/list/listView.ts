@@ -11,16 +11,15 @@ import {PaginationFactory, ApplyPageChangeEvent, PageChangeEvent} from "../../..
 import {AccountService} from "../../../services/account";
 import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
-import {Paginator} from "../../../components/utils/paginator/paginator";
-import {AccountList, AccountColumn} from "../../../components/account/list/accountList";
+import {PaginatorComponent} from "../../../components/utils/paginator/paginator";
+import {AccountListComponent, AccountColumn} from "../../../components/account/list/accountList";
 import * as Immutable from "immutable";
 import {WsAccountSearch} from "../../../client/domain/search/accountSearch";
 
 @Component({
-    selector: 'account-list-view',
     templateUrl: './routes/accounts/list/listView.html',
     styleUrls: ['./routes/accounts/list/listView.css'],
-    directives: [AccountList, Paginator]
+    directives: [AccountListComponent, PaginatorComponent]
 })
 
 export class AccountsListView {

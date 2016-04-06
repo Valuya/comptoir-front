@@ -5,14 +5,14 @@ import {Component, EventEmitter, Attribute} from 'angular2/core';
 import {NgIf} from 'angular2/common';
 
 @Component({
-    selector: 'dialogview',
+    selector: 'dialog',
     inputs: ['modal', 'closable', 'title'],
     outputs: ['close'],
     templateUrl: './components/utils/dialog/dialog.html',
     styleUrls: ['./components/utils/dialog/dialog.css'],
     directives: [NgIf]
 })
-export class DialogView {
+export class DialogComponent {
     isModal:boolean;
     isClosable:boolean;
     visible:boolean;

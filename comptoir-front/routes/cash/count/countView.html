@@ -49,11 +49,11 @@
     </div>
 
     <div class="mainPane rightPane">
-        <balance-count-component *ngIf="account != null"
-                                 [account]="account"
-                                 (validated)="onBalanceValidated($event)"
-                                 (cancelled)="onBalanceCancelled()">
+        <balance-count *ngIf="account != null"
+                       [account]="account"
+                       (validated)="onBalanceValidated($event)"
+                       (cancelled)="onBalanceCancelled()">
 
-        </balance-count-component>
+        </balance-count>
     </div>
 </div>

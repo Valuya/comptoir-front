@@ -11,17 +11,16 @@ import {AuthService} from "../../../services/auth";
 import {ActiveSaleService} from "../../../services/activeSale";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
 import {Stock} from "../../../domain/stock/stock";
-import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
+import {ItemVariantSelectComponent} from "../../../components/itemVariant/select/itemVariantSelect";
 import {StockService} from "../../../services/stock";
-import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
+import {SaleDetailsComponent} from "../../../components/sale/details/saleDetails";
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
 
 @Component({
-    selector: 'sale-details-view',
     bindings: [ActiveSaleService],
     templateUrl: './routes/sales/details/detailsView.html',
     styleUrls: ['./routes/sales/details/detailsView.css'],
-    directives: [ItemVariantSelectView, SaleDetailsComponent, NgIf]
+    directives: [ItemVariantSelectComponent, SaleDetailsComponent, NgIf]
 })
 
 export class SaleDetailsView implements CanReuse, OnActivate {

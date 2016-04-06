@@ -19,12 +19,12 @@
             <td *ngFor="#col of columns"
                 [class.right]="col.alignRight"
                 [class.center]="col.alignCenter">
-                <item-variant-stock-column class="column"
-                                           (action)="onColumnAction($event)"
-                                           [itemVariantStock]="variantStock"
-                                           [column]="col"
-                                           [lang]="language">
-                </item-variant-stock-column>
+                <itemvariantstock-column class="column"
+                                         (action)="onColumnAction($event)"
+                                         [itemVariantStock]="variantStock"
+                                         [column]="col"
+                                         [lang]="language">
+                </itemvariantstock-column>
             </td>
         </tr>
         </tbody>

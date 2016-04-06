@@ -9,16 +9,16 @@ import {Language} from '../../../client/utils/lang';
 
 import {AuthService} from '../../../services/auth';
 
-import {FastInput} from '../../utils/fastInput';
+import {FastInputDirective} from '../../utils/fastInput';
 
 
 @Component({
-    selector: 'money-pile-count',
+    selector: 'moneypile-count',
     inputs: ['moneyPile'],
     outputs: ['changed'],
     templateUrl: './components/cash/moneyPile/moneyPileCount.html',
     styleUrls: ['./components/cash/moneyPile/moneyPileCount.css'],
-    directives: [FastInput],
+    directives: [FastInputDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoneyPileCountComponent {

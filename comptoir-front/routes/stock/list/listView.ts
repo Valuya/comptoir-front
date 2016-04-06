@@ -15,18 +15,17 @@ import {AuthService} from '../../../services/auth';
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from '../../../client/utils/pagination';
 import {SearchResult, SearchRequest} from '../../../client/utils/search';
 
-import {Paginator} from '../../../components/utils/paginator/paginator';
+import {PaginatorComponent} from '../../../components/utils/paginator/paginator';
 
-import {StockList, StockColumn} from '../../../components/stock/list/stockList';
+import {StockListComponent, StockColumn} from '../../../components/stock/list/stockList';
 
 import * as Immutable from 'immutable';
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
 
 @Component({
-    selector: 'stock-list-view',
     templateUrl: './routes/stock/list/listView.html',
     styleUrls: ['./routes/stock/list/listView.css'],
-    directives: [NgIf, Paginator, FORM_DIRECTIVES, StockList]
+    directives: [NgIf, PaginatorComponent, FORM_DIRECTIVES, StockListComponent]
 })
 
 export class StockListView {

@@ -15,15 +15,14 @@ import {ErrorService} from '../../../services/error';
 import {AuthService} from '../../../services/auth';
 import {SaleService} from '../../../services/sale';
 
-import {Paginator} from '../../../components/utils/paginator/paginator';
-import {SaleListComponent, SaleColumn} from '../../../components/sales/list/saleList';
+import {PaginatorComponent} from '../../../components/utils/paginator/paginator';
+import {SaleListComponent, SaleColumn} from '../../../components/sale/list/saleList';
 import {WsSaleSearch} from "../../../client/domain/search/saleSearch";
 
 @Component({
-    selector: 'sales-active-view',
     templateUrl: './routes/sales/actives/listView.html',
     styleUrls: ['./routes/sales/actives/listView.css'],
-    directives: [SaleListComponent, NgIf, Paginator, FORM_DIRECTIVES]
+    directives: [SaleListComponent, NgIf, PaginatorComponent, FORM_DIRECTIVES]
 })
 
 export class ActiveSalesView {
@@ -35,8 +34,6 @@ export class ActiveSalesView {
     searchResult:SearchResult<Sale>;
     columns:SaleColumn[];
     salesPerPage:number = 25;
-
-    loading:boolean;
 
 
     constructor(saleService:SaleService, errorService:ErrorService,

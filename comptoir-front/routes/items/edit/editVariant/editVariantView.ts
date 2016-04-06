@@ -14,7 +14,6 @@ import {ItemVariantEditComponent} from "../../../../components/itemVariant/edit/
 import {Pricing} from "../../../../client/domain/util/pricing";
 
 @Component({
-    selector: 'editItemVariant',
     templateUrl: './routes/items/edit/editVariant/editVariantView.html',
     styleUrls: ['./routes/items/edit/editVariant/editVariantView.css'],
     directives: [NgIf, RouterLink, ItemVariantEditComponent]

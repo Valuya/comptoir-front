@@ -57,7 +57,7 @@ export class CustomerColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, CustomerColumnComponent]
 })
 
-export class CustomerList {
+export class CustomerListComponent {
     // properties
     customerList:Immutable.List<WsCustomer>;
     columns:Immutable.List<CustomerColumn>;

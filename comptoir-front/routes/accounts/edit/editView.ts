@@ -15,7 +15,6 @@ import {ErrorService} from '../../../services/error';
 import {AccountsEditComponent} from '../../../components/account/edit/editAccount';
 
 @Component({
-    selector: 'edit-account',
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './routes/accounts/edit/editView.html',
     styleUrls: ['./routes/accounts/edit/editView.css'],

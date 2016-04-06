@@ -5,16 +5,15 @@
 import {Component} from 'angular2/core';
 import {RouteConfig,RouterOutlet,RouterLink, Location} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {AppTab} from '../../components/app/header/tab/appTab';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {AppTabComponent} from '../../components/app/header/tab/appTab';
 
 
 import {EditCompanyView} from './edit/editView';
 
 @Component({
-    selector: 'company-view',
     templateUrl: './routes/company/companyView.html',
-    directives: [AppHeader, AppTab, RouterOutlet, RouterLink]
+    directives: [AppHeaderComponent, AppTabComponent, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/edit', component: EditCompanyView, as: 'Edit', useAsDefault: true}

@@ -5,11 +5,11 @@ import {Component} from 'angular2/core';
 import {FORM_DIRECTIVES, NgFor} from 'angular2/common';
 import {Router, RouterLink} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {FormMessage} from '../../components/utils/formMessage/formMessage';
-import {LangSelect, LangSelectControl} from '../../components/lang/langSelect/langSelect';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {FormMessageComponent} from '../../components/utils/formMessage/formMessage';
+import {LangSelectComponent, LangSelectControl} from '../../components/lang/langSelect/langSelect';
 import {RequiredValidator, PasswordValidator} from '../../components/utils/validators';
-import {LocalizedDirective} from '../../components/utils/localizedInput';
+import {LocalizedInputDirective} from '../../components/lang/localizedInput/localizedInput';
 
 import {WsCountry} from '../../client/domain/company/country';
 import {Company, CompanyFactory} from '../../domain/company/company';
@@ -25,11 +25,10 @@ import {WsCompanyFactory} from "../../client/domain/company/company";
 import {WsRegistration} from "../../client/domain/thirdparty/registration";
 
 @Component({
-    selector: 'register-view',
     templateUrl: './routes/register/register.html',
     styleUrls: ['./routes/register/register.css'],
-    directives: [FORM_DIRECTIVES, NgFor,  RouterLink, AppHeader, FormMessage,
-        LangSelect, LangSelectControl, LocalizedDirective,
+    directives: [FORM_DIRECTIVES, NgFor,  RouterLink, AppHeaderComponent, FormMessageComponent,
+        LangSelectComponent, LangSelectControl, LocalizedInputDirective,
         RequiredValidator, PasswordValidator, CompanyEditComponent]
 })
 export class RegisterView {

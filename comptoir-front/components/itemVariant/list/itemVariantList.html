@@ -22,12 +22,12 @@
                 width="{{col.weight * columnWeightToPercentage}}%"
                 [class.right]="col.alignRight"
                 [class.center]="col.alignCenter">
-                <item-variant-column class="column"
-                        (action)="onColumnAction($event)"
-                        [itemVariant]="item"
-                        [column]="col"
-                        [lang]="language">
-                </item-variant-column>
+                <itemvariant-column class="column"
+                                    (action)="onColumnAction($event)"
+                                    [itemVariant]="item"
+                                    [column]="col"
+                                    [lang]="language">
+                </itemvariant-column>
             </td>
         </tr>
         </tbody>

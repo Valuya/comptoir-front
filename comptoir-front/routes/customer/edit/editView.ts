@@ -15,7 +15,6 @@ import {LocaleTexts} from '../../../client/utils/lang';
 import {CustomersEditComponent} from '../../../components/customer/edit/editCustomer';
 
 @Component({
-    selector: 'edit-customer',
     templateUrl: './routes/customer/edit/editView.html',
     styleUrls: ['./routes/customer/edit/editView.css'],
     directives: [NgIf, RouterLink, CustomersEditComponent]

@@ -7,10 +7,10 @@
         <h2>Compagnie</h2>
 
         <div *ngIf="!companySaved">
-            <company-edit-component [company]="company"
-                                    (cancelled)="onCancelled()"
-                                    (saved)="onCompanySaved($event)">
-            </company-edit-component>
+            <company-edit [company]="company"
+                          (cancelled)="onCancelled()"
+                          (saved)="onCompanySaved($event)">
+            </company-edit>
         </div>
         <div *ngIf="companySaved">
             {{ company.name[appLanguage.locale] }}

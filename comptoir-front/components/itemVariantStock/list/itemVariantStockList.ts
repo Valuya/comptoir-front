@@ -17,7 +17,7 @@ import {StockChangeType} from "../../../client/domain/util/stockChangeType";
  * Column component
  */
 @Component({
-    selector: 'item-variant-stock-column',
+    selector: 'itemvariantstock-column',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariantStock/list/itemVariantStockColumn.html',
     styleUrls: ['./components/itemVariantStock/list/itemVariantStockList.css'],
@@ -78,14 +78,14 @@ export class ItemVariantStockColumnComponent {
  */
 
 @Component({
-    selector: 'item-variant-stock-list',
+    selector: 'itemvariantstock-list',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariantStock/list/itemVariantStockList.html',
     styleUrls: ['./components/itemVariantStock/list/itemVariantStockList.css'],
     directives: [NgFor, NgIf, FocusableDirective, ItemVariantStockColumnComponent]
 })
 
-export class ItemVariantStockList {
+export class ItemVariantStockListComponent {
     // properties
     @Input()
     itemVariantStockList:Immutable.List<ItemVariantStock>;

@@ -16,7 +16,7 @@ import {Pricing} from "../../../client/domain/util/pricing";
  * Column component
  */
 @Component({
-    selector: 'item-variant-column',
+    selector: 'itemvariant-column',
     inputs: ['itemVariant', 'column', 'lang'],
     outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +53,7 @@ export class ItemVariantColumnComponent {
  */
 
 @Component({
-    selector: 'item-variant-list',
+    selector: 'itemvariant-list',
     inputs: ['items', 'columns', 'rowSelectable', 'headersVisible'],
     outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,7 +62,7 @@ export class ItemVariantColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, ItemVariantColumnComponent]
 })
 
-export class ItemVariantList implements OnInit {
+export class ItemVariantListComponent implements OnInit {
     // properties
     items:Immutable.List<ItemVariant>;
     columns:Immutable.List<ItemVariantColumn>;

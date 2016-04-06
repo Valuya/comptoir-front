@@ -9,21 +9,21 @@ import {Language, LanguageFactory, NewLanguage} from "../../../client/utils/lang
 import {AuthService} from "../../../services/auth";
 import {CompanyService} from "../../../services/company";
 import {ErrorService} from "../../../services/error";
-import {LangSelect} from "../../lang/langSelect/langSelect";
-import {LocalizedDirective} from "../../utils/localizedInput";
+import {LangSelectComponent} from "../../lang/langSelect/langSelect";
+import {LocalizedInputDirective} from "../../lang/localizedInput/localizedInput";
 import {RequiredValidator} from "../../utils/validators";
-import {FormMessage} from "../../utils/formMessage/formMessage";
+import {FormMessageComponent} from "../../utils/formMessage/formMessage";
 import {NumberUtils} from "../../../client/utils/number";
 import {WsCountry} from "../../../client/domain/company/country";
 import {CountryService} from "../../../services/country";
 
 
 @Component({
-    selector: 'company-edit-component',
+    selector: 'company-edit',
     templateUrl: './components/company/edit/editCompany.html',
     styleUrls: ['./components/company/edit/editCompany.css'],
-    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelect, LocalizedDirective,
-        RequiredValidator, FormMessage]
+    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
+        RequiredValidator, FormMessageComponent]
 })
 export class CompanyEditComponent implements OnInit {
     companyService:CompanyService;

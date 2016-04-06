@@ -9,23 +9,23 @@ import {Language} from '../../../client/utils/lang';
 import {AuthService} from '../../../services/auth';
 import {ErrorService} from '../../../services/error';
 
-import {LangSelect} from '../../lang/langSelect/langSelect';
-import {LocalizedDirective} from '../../utils/localizedInput';
+import {LangSelectComponent} from '../../lang/langSelect/langSelect';
+import {LocalizedInputDirective} from '../../lang/localizedInput/localizedInput';
 import {RequiredValidator} from '../../utils/validators';
-import {FormMessage} from '../../utils/formMessage/formMessage';
+import {FormMessageComponent} from '../../utils/formMessage/formMessage';
 import {StockService} from "../../../services/stock";
 import {Stock} from "../../../domain/stock/stock";
 import {WsStockRef} from "../../../client/domain/stock/stock";
 
 
 @Component({
-    selector: 'stock-edit-component',
+    selector: 'stock-edit',
     inputs: ['stock'],
     outputs: ['saved', 'cancelled'],
     templateUrl: './components/stock/edit/editStock.html',
     styleUrls: ['./components/stock/edit/editStock.css'],
-    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelect, LocalizedDirective,
-        RequiredValidator, FormMessage]
+    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
+        RequiredValidator, FormMessageComponent]
 })
 export class StockEditComponent implements OnInit {
     stockService:StockService;

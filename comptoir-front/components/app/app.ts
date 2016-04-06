@@ -8,7 +8,7 @@ import {AuthService} from '../../services/auth';
 import {ApplicationService} from '../../services/application';
 import {ErrorService} from '../../services/error';
 
-import {DialogView} from '../../components/utils/dialog/dialog';
+import {DialogComponent} from '../../components/utils/dialog/dialog';
 
 import {LoginView} from '../../routes/login/loginView';
 import {RegisterView} from '../../routes/register/register';
@@ -27,7 +27,7 @@ import {CompanyView} from "../../routes/company/companyView";
     selector: 'app',
     templateUrl: './components/app/app.html',
     styleUrls: ['./components/app/app.css'],
-    directives: [ROUTER_DIRECTIVES, NgIf, DialogView],
+    directives: [ROUTER_DIRECTIVES, NgIf, DialogComponent],
     viewProviders: [
         SERVICES_PROVIDERS
     ]
@@ -45,7 +45,7 @@ import {CompanyView} from "../../routes/company/companyView";
     {path: '/customer/...', component: CustomerView, name: 'Customer'},
     {path: '/company/...', component: CompanyView, name: 'Company'}
 ])
-export class App {
+export class AppComponent {
     appService:ApplicationService;
     authService:AuthService;
     errorService:ErrorService;

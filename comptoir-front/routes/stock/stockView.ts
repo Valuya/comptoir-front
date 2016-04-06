@@ -5,8 +5,8 @@
 import {Component} from 'angular2/core';
 import {RouteConfig,RouterOutlet,RouterLink, Location} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {AppTab} from '../../components/app/header/tab/appTab';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {AppTabComponent} from '../../components/app/header/tab/appTab';
 
 
 import {StockListView} from './list/listView';
@@ -15,7 +15,7 @@ import {EditStockView} from './edit/editView';
 @Component({
     selector: 'stock-view',
     templateUrl: './routes/stock/stockView.html',
-    directives: [AppHeader, AppTab, RouterOutlet, RouterLink]
+    directives: [AppHeaderComponent, AppTabComponent, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/edit/:id', component: EditStockView, as: 'Edit'},

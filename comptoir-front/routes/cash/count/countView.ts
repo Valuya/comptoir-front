@@ -15,7 +15,7 @@ import {PosService} from "../../../services/pos";
 import {AccountService} from "../../../services/account";
 import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
-import {PosSelect} from "../../../components/pos/posSelect/posSelect";
+import {PosSelectComponent} from "../../../components/pos/posSelect/posSelect";
 import {BalanceCountComponent} from "../../../components/cash/balance/countComponent";
 import {WsAccountSearch} from "../../../client/domain/search/accountSearch";
 import {AccountType} from "../../../client/domain/util/accountType";
@@ -23,10 +23,9 @@ import {WsBalanceSearch} from "../../../client/domain/search/balanceSearch";
 import {WsAccountRef} from "../../../client/domain/accounting/account";
 
 @Component({
-    selector: 'count-cash-view',
     templateUrl: './routes/cash/count/countView.html',
     styleUrls: ['./routes/cash/count/countView.css'],
-    directives: [NgIf, NgFor, PosSelect, BalanceCountComponent]
+    directives: [NgIf, NgFor, PosSelectComponent, BalanceCountComponent]
 })
 
 export class CountCashView implements CanReuse, OnReuse, OnActivate {

@@ -14,17 +14,16 @@ import {AuthService} from '../../../services/auth';
 import {ErrorService} from '../../../services/error';
 import {BalanceService} from '../../../services/balance';
 
-import {Paginator} from '../../../components/utils/paginator/paginator';
-import {BalanceList, BalanceColumn} from '../../../components/cash/list/balanceList';
+import {PaginatorComponent} from '../../../components/utils/paginator/paginator';
+import {BalanceListComponent, BalanceColumn} from '../../../components/cash/list/balanceList';
 
 import * as Immutable from 'immutable';
 import {WsBalanceSearch} from "../../../client/domain/search/balanceSearch";
 
 @Component({
-    selector: 'historyCashView',
     templateUrl: './routes/cash/history/historyView.html',
     styleUrls: ['./routes/cash/history/historyView.css'],
-    directives: [Paginator, NgIf, BalanceList]
+    directives: [PaginatorComponent, NgIf, BalanceListComponent]
 })
 export class CashHistoryView {
     balanceService:BalanceService;

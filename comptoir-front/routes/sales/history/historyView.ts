@@ -11,21 +11,20 @@ import {SearchRequest, SearchResult} from "../../../client/utils/search";
 import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
 import {SaleService} from "../../../services/sale";
-import {Paginator} from "../../../components/utils/paginator/paginator";
-import {SaleListComponent, SaleColumn} from "../../../components/sales/list/saleList";
+import {PaginatorComponent} from "../../../components/utils/paginator/paginator";
+import {SaleListComponent, SaleColumn} from "../../../components/sale/list/saleList";
 import * as Immutable from "immutable";
 import {Customer} from "../../../domain/thirdparty/customer";
 import {WsCustomerRef} from "../../../client/domain/thirdparty/customer";
-import {CustomerSelectInputComponent} from "../../../components/customer/select/customerSelectInput";
+import {CustomerSelectComponent} from "../../../components/customer/select/customerSelect";
 import {WsSaleSearch} from "../../../client/domain/search/saleSearch";
 import {SalePrice, SalePriceFactory} from "../../../domain/commercial/salePrice";
 
 @Component({
-    selector: 'sales-history-view',
     templateUrl: './routes/sales/history/historyView.html',
     styleUrls: ['./routes/sales/history/historyView.css'],
-    directives: [SaleListComponent, NgIf, Paginator,
-        FORM_DIRECTIVES, CustomerSelectInputComponent]
+    directives: [SaleListComponent, NgIf, PaginatorComponent,
+        FORM_DIRECTIVES, CustomerSelectComponent]
 })
 
 export class SaleHistoryView {

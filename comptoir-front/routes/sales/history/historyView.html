@@ -14,12 +14,12 @@
         </div>
         <div class="customer-filter">
             <label for="customer-select">Client:</label>
-            <customer-select-input
+            <customer-select
                     id="customer-select"
                     [selectedCustomer]="customerSearchCustomer"
                     [autoFocus]="false"
                     (customerSelected)="onCustomerSelected($event)"
-            ></customer-select-input>
+            ></customer-select>
             <span class="actionlink red"
                   [hidden]="searchRequest.search.customerRef == null">
                 <i class="fa fa-minus red"

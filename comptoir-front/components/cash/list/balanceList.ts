@@ -59,7 +59,7 @@ export class BalanceColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, BalanceColumnComponent]
 })
 
-export class BalanceList implements OnInit {
+export class BalanceListComponent implements OnInit {
     // properties
     balances:Immutable.List<Balance>;
     columns:Immutable.List<BalanceColumn>;

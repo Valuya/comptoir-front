@@ -9,11 +9,10 @@ import {LocaleTextsFactory} from "../../../client/utils/lang";
 import {ItemService} from "../../../services/item";
 import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
-import {ItemEditComponent} from "../../../components/item/edit/editView";
+import {ItemEditComponent} from "../../../components/item/edit/editItem";
 
 
 @Component({
-    selector: 'edit-item',
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './routes/items/edit/editView.html',
     styleUrls: ['./routes/items/edit/editView.css'],

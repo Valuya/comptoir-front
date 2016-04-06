@@ -10,7 +10,7 @@ import {AuthService} from "../../../services/auth";
 import {FocusableDirective} from "../../utils/focusable";
 import * as Immutable from "immutable";
 import {ItemVariantSale} from "../../../domain/commercial/itemVariantSale";
-import {FastInput} from "../../utils/fastInput";
+import {FastInputDirective} from "../../utils/fastInput";
 import {NumberUtils} from "../../../client/utils/number";
 import {Sale} from "../../../domain/commercial/sale";
 import {Stock} from "../../../domain/stock/stock";
@@ -19,11 +19,11 @@ import {Stock} from "../../../domain/stock/stock";
  * Column component
  */
 @Component({
-    selector: 'item-variant-sale-column',
+    selector: 'itemvariantsale-column',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariantSale/list/itemVariantSaleColumn.html',
     styleUrls: ['./components/itemVariantSale/list/itemVariantSaleList.css'],
-    directives: [NgIf, NgFor, NgSwitch, NgSwitchWhen, FastInput],
+    directives: [NgIf, NgFor, NgSwitch, NgSwitchWhen, FastInputDirective],
     encapsulation: ViewEncapsulation.None
 })
 export class ItemVariantSaleColumnComponent {
@@ -136,7 +136,7 @@ export class ItemVariantSaleColumnActionEvent {
  */
 
 @Component({
-    selector: 'item-variant-sale-list',
+    selector: 'itemvariantsale-list',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariantSale/list/itemVariantSaleList.html',
     styleUrls: ['./components/itemVariantSale/list/itemVariantSaleList.css'],
@@ -144,7 +144,7 @@ export class ItemVariantSaleColumnActionEvent {
     encapsulation: ViewEncapsulation.None
 })
 
-export class ItemVariantSaleList {
+export class ItemVariantSaleListComponent {
     // properties
     @Input()
     sale:Sale;
@@ -267,7 +267,7 @@ export class ItemVariantSaleList {
                 this.onColumnCancelAction();
                 return;
             }
-            input.dispatchEvent(FastInput.VALIDATE_EVENT);
+            input.dispatchEvent(FastInputDirective.VALIDATE_EVENT);
             return;
         }
         // Update column for controls that trigger CONFIRM directly

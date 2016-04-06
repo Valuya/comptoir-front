@@ -1,10 +1,10 @@
 <div class="pageContent" >
     <h1 class="pageTitle">Édition du produit</h1>
 
-    <edit-item-component
+    <edit-item
             *ngIf="item != null"
             [item]="item"
             (saved)="onSaved($event)"
             (cancelled)="onCancelled()">
-    </edit-item-component>
+    </edit-item>
 </div>

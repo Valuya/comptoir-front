@@ -1,0 +1,165 @@
+<div class="sale-details-view">
+    <header class="sale-header">
+        <h1>
+            Vente #{{activeSaleService.sale?.id}}
+            <span class="closedLabel"
+                  [hidden]="!activeSaleService.sale?.closed">
+                Terminée
+            </span>
+        </h1>
+
+        <div class="actions">
+            <a class="action validate" (click)="doEdit()"
+               [hidden]="activeSaleService.sale?.closed"
+            [class.disabled]="saleClosing">Choix des produits</a>
+            <a class="action validate" (click)="doValidate()"
+               [hidden]="activeSaleService.sale?.closed"
+               [class.disabled]="saleClosing">Valider</a>
+            <a class="action reopen" (click)="doReopen()"
+               [hidden]="!activeSaleService.sale?.closed"
+               [class.disabled]="saleClosing">Réouvrir</a>
+        </div>
+    </header>
+
+    <h2>Détails</h2>
+    <form #detailsForm="ngForm">
+        <div class="bloc active">
+            <div class="customer">
+                <label for="customer">Client</label>
+                <edit-link [showRemoveAction]="true"
+                           [showConfirmAction]="false"
+                           [editable]="true"
+                           id="customer"
+                           #customerEditLink
+                           (confirmAction)="onNewCustomerSelected()"
+                           (removeAction)="customerEditLink.doCancel(); onRemoveSaleCustomer()">
+                    <span class="output">
+                        <customer-select [selectedCustomer]="activeSaleService.sale?.customer"
+                                         emptyLabel="Aucun client"
+                                         [editable]="false">
+                        </customer-select>
+                    </span>
+                    <span class="input">
+                        <customer-select [selectedCustomer]="activeSaleService.sale?.customer"
+                                         (customerSelected)="customerEditLink.doCancel(); onNewCustomerSelected($event)"
+                                         [editable]="true">
+                        </customer-select>
+                    </span>
+                </edit-link>
+            </div>
+
+            <div class="date">
+                <label for="saleTime">Date</label>
+                <edit-link [editable]="true"
+                           id="saleTime"
+                           #dateInput
+                           (editAction)="onEditTimeClicked()"
+                           (cancelAction)="onCancelNewDateTime()"
+                           (confirmAction)="onConfirmNewDateTime()">
+                    <span class="output">
+                        {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
+                    </span>
+                    <span class="input">
+                        <input type="datetime-local" autofocus
+                               [(ngModel)]="newSaleDateTimeString"
+                               class="edit-time-field">
+                    </span>
+                </edit-link>
+            </div>
+
+            <div class="sale-reference">
+                <label for="saleReference">Référence</label>
+                <edit-link [editable]="true"
+                           id="saleReference"
+                           #saleReferenceInput
+                           (editAction)="onEditRefClicked()"
+                           (cancelAction)="onCancelNewReference()"
+                           (confirmAction)="onConfirmNewReference()">
+                    <span class="output">
+                        <span class="output-field sale-reference">
+                            {{activeSaleService.sale.reference}}
+                        </span>
+                    </span>
+                    <span class="input">
+                        <textarea [(ngModel)]="newSaleReference"
+                                  id="activeSaleService.sale.reference"
+                                  class="edit-reference-area"
+                                  autofocus></textarea>
+                    </span>
+                </edit-link>
+            </div>
+        </div>
+
+        <div class="bloc" [class.active]="!activeSaleService.sale?.closed">
+            <div class="pos">
+                <label for="pos">Point de vente</label>
+                <edit-link [editable]="!activeSaleService.sale?.closed"
+                           id="pos" #posInput>
+                    <span class="output">
+                        <pos-select [editable]="false"
+                                    [pos]="activeSaleService.pos">
+                        </pos-select>
+                    </span>
+                    <span class="input">
+                        <pos-select [editable]="true"
+                                    (posChanged)="posInput.doCancel(); onPosChanged($event)"
+                                    [pos]="activeSaleService.pos">
+                        </pos-select>
+                    </span>
+                </edit-link>
+            </div>
+
+            <div class="sale-reduction">
+                <label for="saleReduction" class="inline">Réduction</label>
+                <span>
+                    <edit-link [editable]="!activeSaleService.sale?.closed"
+                               id="saleReduction" #discountInput
+                               (editAction)="onEditDiscountClicked()"
+                               (confirmAction)="onConfirmNewDiscount()"
+                               (cancelAction)="onCancelNewDiscount()">
+                        <span class="output">
+                            <span class="discount-ratio">
+                                {{ activeSaleService.sale.discountRatio * 100 | number:'.0' }} %
+                            </span>
+                        </span>
+                        <span class="input">
+                            <input [(ngModel)]="newSaleDiscount"
+                                   (fastChange)="discountInput.doCancel(); onConfirmNewDiscount($event)"
+                                   (cancelled)="discountInput.doCancel(); onCancelNewDiscount()"
+                                   type="number" min="1" max="100" step="1"
+                                   size="2" fast-input/> %
+                        </span>
+                    </edit-link>
+                    <span class="discount-amount output-field" [hidden]="newSaleDiscount != null">
+                        {{activeSaleService.sale.discountAmount | currency:'EUR':true:'.2-2' }}
+                    </span>
+                </span>
+            </div>
+
+            <div class="total">
+                <label for="saleTotal" class="inline">Total</label>
+                <span id="saleTotal">
+                    {{ (activeSaleService.sale.vatExclusiveAmount + activeSaleService.sale.vatAmount ) | currency:'EUR':true:'.2-2' }}
+                </span>
+            </div>
+            <div class="paid">
+                <label for="salePaid" class="inline">Total payé</label>
+                <span id="salePaid">
+                    {{ activeSaleService.paidAmount | currency:'EUR':true:'.2-2' }}
+                </span>
+            </div>
+        </div>
+    </form>
+
+    <h2>Produits</h2>
+    <itemvariantsale-list [rowSelectable]="false"
+                          [headersVisible]="true"
+                          [footerVisible]="false"
+                          [columns]="variantSaleColumns"
+                          [itemVariantSaleList]="activeSaleService.saleItemsResult.list"
+                          [editableColumns]="editableColumns"
+                          [stockList]="stockList"
+                          (columnAction)="onColumnAction($event)"
+                          (variantUpdated)="onVariantUpdated($event)"></itemvariantsale-list>
+
+</div>

@@ -1,0 +1,92 @@
+<div class="commandView">
+    <commandview-header [noInput]="noInput"
+                        [validated]="validated || noInput "
+                        (validateChanged)="onValidateChanged($event)"></commandview-header>
+
+    <itemvariantsale-list [rowSelectable]="false"
+                          [headersVisible]="true"
+                          [footerVisible]="true"
+                          [footerTotalColIndex]="3"
+                          [columns]="variantSaleColumns"
+                          [itemVariantSaleList]="activeSaleService.saleItemsResult.list"
+                          [editable]="!validated"
+                          [actionsVisible]="!validated && !noInput"
+                          [sale]="activeSaleService.sale"
+                          (columnAction)="onColumnAction($event)"
+                          (variantUpdated)="onVariantUpdated($event)"></itemvariantsale-list>
+
+    <div class="info-panel">
+        <form class="sale-form sale-customer">
+            <label for="customer" class="inline">Client</label>
+            <a class="customer actionlink"
+               id="customer"
+               (click)="onEditCustomerClicked()"
+               [hidden]="editingCustomer">
+            <span *ngIf="activeSaleService.sale.customer != null">
+                {{activeSaleService.sale.customer.lastName }} {{activeSaleService.sale.customer.firstName }}
+            </span>
+            <span [hidden]="activeSaleService.sale.customer != null">
+                Aucun client
+            </span>
+            </a>
+            <span [hidden]="!editingCustomer">
+                <customer-select
+                        #customerSelect
+                        *ngIf="editingCustomer"
+                        [selectedCustomer]="activeSaleService.sale.customer"
+                        (customerSelected)="onNewCustomerSelected($event)"
+                ></customer-select>
+                <span class="editActions">
+                    <i class="fa fa-times red"
+                       title="Annuler"
+                       (click)="onCancelNewCustomer()"></i>
+                    <i class="fa fa-minus red"
+                       title="Supprimer"
+                       *ngIf="activeSaleService.sale.customer != null"
+                       (click)="onRemoveSaleCustomer()"></i>
+                </span>
+            </span>
+        </form>
+
+        <form class="sale-form sale-time" [hidden]="newSale">
+            <label for="saleTime" class="inline">Date</label>
+            <a class="actionlink time" id="saleTime"
+               (click)="onEditTimeClicked()"
+               [hidden]="editingDateTime">
+                {{ activeSaleService.sale.dateTime | date:'dd/MM/yyyy HH:mm' }}
+            </a>
+            <span [hidden]="!editingDateTime">
+                <input type="datetime-local" autofocus
+                       [(ngModel)]="newSaleDateTimeString"
+                       class="edit-time-field">
+                <span class="editActions">
+                            <i class="fa fa-check green" (click)="onConfirmNewDateTime()"></i>
+                            <i class="fa fa-times red" (click)="onCancelNewDateTime()"></i>
+                </span>
+            </span>
+        </form>
+
+        <form class="sale-form sale-reference">
+            <label for="saleReference">Référence</label>
+            <div class="output-field reference"
+                 id="saleReference"
+                 (click)="onEditRefClicked()"
+                 [hidden]="editingReference">
+                {{activeSaleService.sale.reference}}
+            </div>
+            <div [hidden]="!editingReference">
+            <textarea [(ngModel)]="newSaleReference"
+                      id="editSaleReference"
+                      class="edit-reference-area"
+                      autofocus></textarea>
+            <span class="editActions">
+                        <i class="fa fa-check green" (click)="onConfirmNewReference()"></i>
+                        <i class="fa fa-times red" (click)="onCancelNewReference()"></i>
+            </span>
+            </div>
+        </form>
+
+
+    </div>
+
+</div>

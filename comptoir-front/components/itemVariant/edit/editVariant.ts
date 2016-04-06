@@ -20,23 +20,23 @@ import {AttributeValueService} from "../../../services/attributeValue";
 import {PictureService} from "../../../services/picture";
 import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
-import {LangSelect} from "../../lang/langSelect/langSelect";
-import {FormMessage} from "../../utils/formMessage/formMessage";
+import {LangSelectComponent} from "../../lang/langSelect/langSelect";
+import {FormMessageComponent} from "../../utils/formMessage/formMessage";
 import {RequiredValidator} from "../../utils/validators";
-import {LocalizedDirective} from "../../utils/localizedInput";
+import {LocalizedInputDirective} from "../../lang/localizedInput/localizedInput";
 import * as Immutable from "immutable";
 import {AttributeDefinitionSearch} from "../../../client/domain/search/attributeDefinitionSearch";
 import {Pricing} from "../../../client/domain/util/pricing";
 
 @Component({
-    selector: 'edit-item-variant-component',
+    selector: 'itemvariant-edit',
     inputs: ['itemVariant'],
     outputs: ['saved', 'cancelled'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/itemVariant/edit/editVariant.html',
     styleUrls: ['./components/itemVariant/edit/editVariant.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES,
-        RouterLink, LangSelect, LocalizedDirective, FormMessage,
+        RouterLink, LangSelectComponent, LocalizedInputDirective, FormMessageComponent,
         RequiredValidator]
 })
 export class ItemVariantEditComponent implements OnInit {

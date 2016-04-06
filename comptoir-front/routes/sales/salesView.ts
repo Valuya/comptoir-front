@@ -9,17 +9,16 @@ import {SaleView} from './sale/saleView';
 import {ActiveSalesView} from './actives/listView';
 import {SaleHistoryView} from './history/historyView';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {AppMenu} from '../../components/app/header/menu/appMenu';
-import {AppTab} from '../../components/app/header/tab/appTab';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {AppMenuComponent} from '../../components/app/header/menu/appMenu';
+import {AppTabComponent} from '../../components/app/header/tab/appTab';
 import {SaleDetailsView} from "./details/detailsView";
 import {ActiveSaleService} from "../../services/activeSale";
 
 @Component({
-    selector: 'sales-view',
     bindings: [ActiveSaleService],
     templateUrl: './routes/sales/salesView.html',
-    directives: [AppHeader, AppMenu, AppTab, RouterOutlet, RouterLink]
+    directives: [AppHeaderComponent, AppMenuComponent, AppTabComponent, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/sale/:id', component: SaleView, as: 'Sale'},

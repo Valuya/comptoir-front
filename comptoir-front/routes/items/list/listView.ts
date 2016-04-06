@@ -10,16 +10,15 @@ import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../..
 import {ErrorService} from "../../../services/error";
 import {ItemService} from "../../../services/item";
 import {AuthService} from "../../../services/auth";
-import {ItemList, ItemColumn} from "../../../components/item/list/itemList";
-import {Paginator} from "../../../components/utils/paginator/paginator";
+import {ItemListComponent, ItemColumn} from "../../../components/item/list/itemList";
+import {PaginatorComponent} from "../../../components/utils/paginator/paginator";
 import * as Immutable from "immutable";
 import {WsItemSearch} from "../../../client/domain/search/itemSearch";
 
 @Component({
-    selector: 'product-list',
     templateUrl: './routes/items/list/listView.html',
     styleUrls: ['./routes/items/list/listView.css'],
-    directives: [NgFor, NgIf, Paginator, FORM_DIRECTIVES, ItemList]
+    directives: [NgFor, NgIf, PaginatorComponent, FORM_DIRECTIVES, ItemListComponent]
 })
 
 export class ItemsListView {

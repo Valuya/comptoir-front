@@ -8,10 +8,10 @@ import {Language} from "../../../client/utils/lang";
 import {AuthService} from "../../../services/auth";
 import {AccountService} from "../../../services/account";
 import {ErrorService} from "../../../services/error";
-import {LangSelect} from "../../lang/langSelect/langSelect";
-import {LocalizedDirective} from "../../utils/localizedInput";
+import {LangSelectComponent} from "../../lang/langSelect/langSelect";
+import {LocalizedInputDirective} from "../../lang/localizedInput/localizedInput";
 import {RequiredValidator} from "../../utils/validators";
-import {FormMessage} from "../../utils/formMessage/formMessage";
+import {FormMessageComponent} from "../../utils/formMessage/formMessage";
 import * as Immutable from "immutable";
 import {AccountType, ALL_ACCOUNT_TYPES} from "../../../client/domain/util/accountType";
 
@@ -21,8 +21,8 @@ import {AccountType, ALL_ACCOUNT_TYPES} from "../../../client/domain/util/accoun
     outputs: ['saved', 'cancelled'],
     templateUrl: './components/account/edit/editAccount.html',
     styleUrls: ['./components/account/edit/editAccount.css'],
-    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelect, LocalizedDirective,
-        RequiredValidator, FormMessage]
+    directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
+        RequiredValidator, FormMessageComponent]
 })
 export class AccountsEditComponent implements OnInit {
     accountService:AccountService;

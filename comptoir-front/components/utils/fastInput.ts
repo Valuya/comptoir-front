@@ -17,7 +17,7 @@ import {Directive, ElementRef, EventEmitter, OnInit} from 'angular2/core';
         '(validate)': 'doValidate()'
     }
 })
-export class FastInput implements OnInit {
+export class FastInputDirective implements OnInit {
     static VALIDATE_EVENT = new Event('validate');
     static CANCEL_EVENT = new Event('cancel');
 
@@ -38,10 +38,10 @@ export class FastInput implements OnInit {
 
         var nativeElement = this.elementRef.nativeElement;
         nativeElement.doValidate = ()=> {
-            nativeElement.dispatchEvent(FastInput.VALIDATE_EVENT);
+            nativeElement.dispatchEvent(FastInputDirective.VALIDATE_EVENT);
         };
         nativeElement.doCancel = ()=> {
-            nativeElement.dispatchEvent(FastInput.CANCEL_EVENT);
+            nativeElement.dispatchEvent(FastInputDirective.CANCEL_EVENT);
         };
     }
 

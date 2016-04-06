@@ -58,7 +58,7 @@ export class AccountColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, AccountColumnComponent]
 })
 
-export class AccountList implements OnInit {
+export class AccountListComponent implements OnInit {
     // properties
     accounts:Immutable.List<Account>;
     columns:Immutable.List<AccountColumn>;

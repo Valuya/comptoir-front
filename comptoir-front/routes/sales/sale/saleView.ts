@@ -11,21 +11,20 @@ import {ErrorService} from "../../../services/error";
 import {SaleService} from "../../../services/sale";
 import {AuthService} from "../../../services/auth";
 import {ActiveSaleService} from "../../../services/activeSale";
-import {CommandView} from "../../../components/sales/sale/commandView/commandView";
-import {PayView} from "../../../components/sales/sale/payView/payView";
-import {PosSelect} from "../../../components/pos/posSelect/posSelect";
+import {CommandView} from "../../../components/sale/commandView/commandView";
+import {PayView} from "../../../components/sale/payView/payView";
+import {PosSelectComponent} from "../../../components/pos/posSelect/posSelect";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
 import {Stock} from "../../../domain/stock/stock";
-import {ItemVariantSelectView} from "../../../components/itemVariant/select/selectView";
+import {ItemVariantSelectComponent} from "../../../components/itemVariant/select/itemVariantSelect";
 import {StockService} from "../../../services/stock";
-import {SaleDetailsComponent} from "../../../components/sales/sale/detailsView/detailsView";
+import {SaleDetailsComponent} from "../../../components/sale/details/saleDetails";
 import {WsStockSearch} from "../../../client/domain/search/stockSearch";
 
 @Component({
-    selector: 'sale-view',
     templateUrl: './routes/sales/sale/saleView.html',
     styleUrls: ['./routes/sales/sale/saleView.css'],
-    directives: [ItemVariantSelectView, CommandView, PayView, SaleDetailsComponent, NgIf, PosSelect]
+    directives: [ItemVariantSelectComponent, CommandView, PayView, SaleDetailsComponent, NgIf, PosSelectComponent]
 })
 
 export class SaleView implements CanReuse, OnActivate {

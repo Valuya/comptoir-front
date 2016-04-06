@@ -5,17 +5,16 @@
 import {Component} from 'angular2/core';
 import {RouteConfig,RouterOutlet,RouterLink, Location} from 'angular2/router';
 
-import {AppHeader} from '../../components/app/header/appHeader';
-import {AppTab} from '../../components/app/header/tab/appTab';
+import {AppHeaderComponent} from '../../components/app/header/appHeader';
+import {AppTabComponent} from '../../components/app/header/tab/appTab';
 
 
 import {CountCashView} from './count/countView';
 import {CashHistoryView} from './history/historyView';
 
 @Component({
-    selector: 'cash-view',
     templateUrl: './routes/cash/cashView.html',
-    directives: [AppHeader, AppTab, RouterOutlet, RouterLink]
+    directives: [AppHeaderComponent, AppTabComponent, RouterOutlet, RouterLink]
 })
 @RouteConfig([
     {path: '/count', component: CountCashView, as: 'Count', useAsDefault: true},

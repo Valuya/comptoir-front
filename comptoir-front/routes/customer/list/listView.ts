@@ -11,16 +11,15 @@ import {ErrorService} from "../../../services/error";
 import {AuthService} from "../../../services/auth";
 import {PaginationFactory, PageChangeEvent, ApplyPageChangeEvent} from "../../../client/utils/pagination";
 import {SearchResult, SearchRequest} from "../../../client/utils/search";
-import {Paginator} from "../../../components/utils/paginator/paginator";
-import {CustomerList, CustomerColumn} from "../../../components/customer/list/customerList";
+import {PaginatorComponent} from "../../../components/utils/paginator/paginator";
+import {CustomerListComponent, CustomerColumn} from "../../../components/customer/list/customerList";
 import * as Immutable from "immutable";
 import {WsCustomerSearch} from "../../../client/domain/search/customerSearch";
 
 @Component({
-    selector: 'customer-list-view',
     templateUrl: './routes/customer/list/listView.html',
     styleUrls: ['./routes/customer/list/listView.css'],
-    directives: [NgIf, Paginator, FORM_DIRECTIVES, CustomerList]
+    directives: [NgIf, PaginatorComponent, FORM_DIRECTIVES, CustomerListComponent]
 })
 
 export class CustomerListView {

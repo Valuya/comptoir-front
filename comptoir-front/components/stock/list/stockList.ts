@@ -57,7 +57,7 @@ export class StockColumnComponent {
     directives: [NgFor, NgIf, FocusableDirective, StockColumnComponent]
 })
 
-export class StockList {
+export class StockListComponent {
     // properties
     stockList:Immutable.List<WsStock>;
     columns:Immutable.List<StockColumn>;
