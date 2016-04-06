@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter} from 'angular2/core';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter, Input, Output} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {WsStock} from '../../../client/domain/stock/stock';
@@ -20,8 +20,6 @@ import * as Immutable from 'immutable';
  */
 @Component({
     selector: 'stock-column',
-    inputs: ['stock', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/stock/list/stockColumn.html',
     styleUrls: ['./components/stock/list/stockList.css'],
@@ -30,10 +28,14 @@ import * as Immutable from 'immutable';
     encapsulation: ViewEncapsulation.None
 })
 export class StockColumnComponent {
-    action = new EventEmitter();
+    @Input()
     stock:WsStock;
+    @Input()
     column:StockColumn;
+    @Input()
     lang:Language;
+    @Output()
+    action = new EventEmitter();
 
     onColumnAction(stock:WsStock, column:StockColumn, event) {
         this.action.next({stock: stock, column: column});
@@ -49,8 +51,6 @@ export class StockColumnComponent {
 
 @Component({
     selector: 'stock-list',
-    inputs: ['stockList', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/stock/list/stockList.html',
     styleUrls: ['./components/stock/list/stockList.css'],
@@ -58,15 +58,21 @@ export class StockColumnComponent {
 })
 
 export class StockListComponent {
-    // properties
+    @Input()
     stockList:Immutable.List<WsStock>;
+    @Input()
     columns:Immutable.List<StockColumn>;
+    @Input()
     rowSelectable:boolean;
+    @Input()
     headersVisible:boolean;
-    language:Language;
 
+    @Output()
     rowClicked = new EventEmitter();
+    @Output()
     columnAction = new EventEmitter();
+
+    language:Language;
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();

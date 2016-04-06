@@ -2,7 +2,10 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation} from 'angular2/core';
+import {
+    Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation, Output,
+    Input
+} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {Account} from '../../../domain/accounting/account';
@@ -20,8 +23,6 @@ import * as Immutable from 'immutable';
  */
 @Component({
     selector: 'account-column',
-    inputs: ['account', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/account/list/accountColumn.html',
     styleUrls: ['./components/account/list/accountList.css'],
@@ -30,9 +31,13 @@ import * as Immutable from 'immutable';
     encapsulation: ViewEncapsulation.None
 })
 export class AccountColumnComponent {
+    @Output()
     action = new EventEmitter();
+    @Input()
     account:Account;
+    @Input()
     column:AccountColumn;
+    @Input()
     lang:Language;
 
     onColumnAction(account:Account, column:AccountColumn, event) {
@@ -50,8 +55,6 @@ export class AccountColumnComponent {
 
 @Component({
     selector: 'account-list',
-    inputs: ['accounts', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/account/list/accountList.html',
     styleUrls: ['./components/account/list/accountList.css'],
@@ -59,16 +62,23 @@ export class AccountColumnComponent {
 })
 
 export class AccountListComponent implements OnInit {
-    // properties
+    @Input()
     accounts:Immutable.List<Account>;
+    @Input()
     columns:Immutable.List<AccountColumn>;
+    @Input()
     rowSelectable:boolean;
+    @Input()
     headersVisible:boolean;
+
+    @Output()
+    rowClicked = new EventEmitter();
+    @Output()
+    columnAction = new EventEmitter();
+
     language:Language;
     columnWeightToPercentage:number;
 
-    rowClicked = new EventEmitter();
-    columnAction = new EventEmitter();
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();

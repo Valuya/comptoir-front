@@ -3,7 +3,7 @@
  */
 import {
     Component, EventEmitter, OnInit, ChangeDetectionStrategy, ElementRef, ViewQuery,
-    ViewChild
+    ViewChild, Input, Output
 } from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {RouterLink} from "angular2/router";
@@ -31,8 +31,6 @@ import {AttributeDefinitionSuggestionsComponent} from "../../attributeDefinition
 
 @Component({
     selector: 'itemvariant-edit',
-    inputs: ['itemVariant'],
-    outputs: ['saved', 'cancelled'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/itemVariant/edit/editVariant.html',
     styleUrls: ['./components/itemVariant/edit/editVariant.css'],
@@ -48,7 +46,15 @@ export class ItemVariantEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
+    @Input()
     itemVariant:ItemVariant;
+
+    @Output()
+    saved = new EventEmitter();
+    @Output()
+    cancelled = new EventEmitter();
+
+
     itemVariantModel:any;
     picture:Picture;
 
@@ -63,9 +69,6 @@ export class ItemVariantEditComponent implements OnInit {
 
     appLanguage:Language;
     editLanguage:Language;
-
-    saved = new EventEmitter();
-    cancelled = new EventEmitter();
 
     constructor(itemVariantService:ItemVariantService, attributeDefinitionService:AttributeDefinitionService,
                 pictureService:PictureService,

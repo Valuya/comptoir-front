@@ -1,13 +1,13 @@
 <div class="container" *ngIf="visible"
-     [class.modal]="isModal"
+     [class.modal]="modal"
      (click)="onContainerClick()">
 
     <div class="dialog">
-        <header [hidden]="!isClosable && title == undefined">
+        <header [hidden]="!closable && title == undefined">
             <h2 [hidden]="title == undefined">{{ title }}</h2>
             <span class="actions">
                 <span class="action red"
-                      [hidden]="!isClosable"
+                      [hidden]="!closable"
                       (click)="doClose()">
                 <i class="fa fa-times"></i>
                     </span>

@@ -2,7 +2,7 @@
  * Created by cghislai on 08/09/15.
  */
 
-import {Directive,ElementRef} from 'angular2/core';
+import {Directive, ElementRef, OnChanges, SimpleChange, Input} from 'angular2/core';
 
 import {Language, LanguageFactory, LocaleTexts} from '../../../client/utils/lang';
 import * as Immutable from 'immutable';
@@ -15,31 +15,57 @@ import * as Immutable from 'immutable';
  */
 @Directive({
     selector: 'input[localized], textarea[localized]',
-    inputs: ['languageProp: language',
-        'localeTextsProp: localeTexts',
-        'requiredProp: required'],
     host: {
         '(input)': "onInput($event)",
         '[class.comptoir-invalid]': "required"
     }
 })
-export class LocalizedInputDirective {
-    language:Language;
-    previousLanguage:Language;
-    localeTexts:LocaleTexts;
+export class LocalizedInputDirective implements OnChanges {
     elementRef:ElementRef;
 
-    // attribute set on the element
+    @Input()
+    localeTexts:LocaleTexts;
+    @Input()
+    language:Language;
+    @Input('required')
     requiredAttribute:boolean;
-    // field to update the actual attribute
-    required:boolean;
 
+    // Should the required attribute be set on the input element?
+    // This will not be the case if there is content in another language
+    required:boolean;
+    previousLanguage:Language;
     placeHolderAttribute:string;
+
 
     constructor(elementRef:ElementRef) {
         this.elementRef = elementRef;
         this.placeHolderAttribute = this.elementRef.nativeElement.placeholder;
     }
+
+    ngOnChanges(changes: {[key:string]: SimpleChange}) {
+        for (var key in changes) {
+            var change = changes[key];
+            var newValue = change.currentValue;
+            var previousValue = change.previousValue;
+
+            switch (key) {
+                case 'language': {
+                    this.previousLanguage = previousValue;
+                    this.update();
+                    break;
+                }
+                case 'localeTexts': {
+                    this.update();
+                    break;
+                }
+                case 'requiredAttribute': {
+                    this.updateRequired();
+                    break;
+                }
+            }
+        }
+    }
+
 
     resetPlaceHolder() {
         this.elementRef.nativeElement.placeholder = this.placeHolderAttribute;
@@ -105,19 +131,4 @@ export class LocalizedInputDirective {
         this.updateRequired();
     }
 
-    set languageProp(value:Language) {
-        this.previousLanguage = this.language;
-        this.language = value;
-        this.update();
-    }
-
-    set localeTextsProp(value:LocaleTexts) {
-        this.localeTexts = value;
-        this.update();
-    }
-
-    set requiredProp(value:any) {
-        this.requiredAttribute = value;
-        this.updateRequired();
-    }
 }

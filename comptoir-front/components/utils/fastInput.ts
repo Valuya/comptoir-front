@@ -2,13 +2,11 @@
  * Created by cghislai on 23/08/15.
  */
 
-import {Directive, ElementRef, EventEmitter, OnInit} from 'angular2/core';
+import {Directive, ElementRef, EventEmitter, OnInit, Input, Output} from 'angular2/core';
 
 
 @Directive({
     selector: 'input[fast-input]',
-    inputs: ['validator', 'initialValue', 'validateOnBlur'],
-    outputs: ['fastChange', 'cancelled'],
     host: {
         '(keyup)': 'onKeyUp($event)',
         '(input)': 'onInput($event)',
@@ -20,21 +18,25 @@ import {Directive, ElementRef, EventEmitter, OnInit} from 'angular2/core';
 export class FastInputDirective implements OnInit {
     static VALIDATE_EVENT = new Event('validate');
     static CANCEL_EVENT = new Event('cancel');
-
-    validator:(any)=>boolean;
-    fastChange;
-    cancelled;
-    initialValue:any;
     elementRef:ElementRef;
+
+    @Input()
+    validator:(any)=>boolean;
+    @Input()
+    initialValue:any;
+    @Input()
     validateOnBlur:boolean = false;
+
+    @Output()
+    fastChange = new EventEmitter();
+    @Output()
+    cancelled = new EventEmitter();
 
     validateRequired:boolean = false;
 
     constructor(elementRef:ElementRef) {
         this.elementRef = elementRef;
         this.initialValue = elementRef.nativeElement.value;
-        this.fastChange = new EventEmitter();
-        this.cancelled = new EventEmitter();
 
         var nativeElement = this.elementRef.nativeElement;
         nativeElement.doValidate = ()=> {

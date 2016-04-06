@@ -1,19 +1,21 @@
 /**
  * Created by cghislai on 28/08/15.
  */
-import {Component} from 'angular2/core';
+import {Component, Input} from 'angular2/core';
 import {RouterLink} from 'angular2/router';
 
 @Component({
     selector: 'app-menu',
-    inputs: ['title', 'inactive'],
     templateUrl: './components/app/header/menu/appMenu.html',
     styleUrls: ['./components/app/header/menu/appMenu.css'],
     directives: [RouterLink]
 })
 export class AppMenuComponent {
+    @Input()
     title:string;
+    @Input()
     inactive:boolean;
+
     menuVisible:boolean;
 
     closeMenuListener;

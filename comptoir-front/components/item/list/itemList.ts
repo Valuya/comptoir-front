@@ -2,8 +2,10 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy, OnInit,
-    EventEmitter, ViewEncapsulation} from 'angular2/core';
+import {
+    Component, ChangeDetectionStrategy, OnInit,
+    EventEmitter, ViewEncapsulation, Input, Output
+} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {Item} from '../../../domain/commercial/item';
@@ -21,8 +23,6 @@ import * as Immutable from 'immutable';
  */
 @Component({
     selector: 'item-column',
-    inputs: ['item', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/item/list/itemColumn.html',
     styleUrls: ['./components/item/list/itemList.css'],
@@ -31,10 +31,15 @@ import * as Immutable from 'immutable';
     encapsulation: ViewEncapsulation.None
 })
 export class ItemColumnComponent {
-    action = new EventEmitter();
+    @Input()
     item:Item;
+    @Input()
     column:ItemColumn;
+    @Input()
     lang:Language;
+
+    @Output()
+    action = new EventEmitter();
 
     onColumnAction(item:Item, column:ItemColumn, event) {
         this.action.next({item: item, column: column});
@@ -51,8 +56,6 @@ export class ItemColumnComponent {
 
 @Component({
     selector: 'item-list',
-    inputs: ['items', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/item/list/itemList.html',
     styleUrls: ['./components/item/list/itemList.css'],
@@ -60,16 +63,22 @@ export class ItemColumnComponent {
 })
 
 export class ItemListComponent implements OnInit {
-    // properties
+    @Input()
     items:Immutable.List<Item>;
+    @Input()
     columns:Immutable.List<ItemColumn>;
-    itemSelectable:boolean;
+    @Input()
+    rowSelectable:boolean;
+    @Input()
     headersVisible:boolean;
+
+    @Output()
+    rowClicked = new EventEmitter();
+    @Output()
+    columnAction = new EventEmitter();
+
     language:Language;
     columnWeightToPercentage:number;
-
-    rowClicked = new EventEmitter();
-    columnAction = new EventEmitter();
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();

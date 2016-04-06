@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, EventEmitter, OnInit} from 'angular2/core';
+import {Component, EventEmitter, OnInit, Input, Output} from 'angular2/core';
 import {NgFor, NgIf, FORM_DIRECTIVES} from 'angular2/common';
 
 import {Language} from '../../../client/utils/lang';
@@ -20,8 +20,6 @@ import {WsStockRef} from "../../../client/domain/stock/stock";
 
 @Component({
     selector: 'stock-edit',
-    inputs: ['stock'],
-    outputs: ['saved', 'cancelled'],
     templateUrl: './components/stock/edit/editStock.html',
     styleUrls: ['./components/stock/edit/editStock.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
@@ -32,14 +30,17 @@ export class StockEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
+    @Input()
     stock:Stock;
-    stockModel:any;
 
+    @Output()
+    saved = new EventEmitter();
+    @Output()
+    cancelled = new EventEmitter();
+
+    stockModel:any;
     editLanguage:Language;
     appLanguage:Language;
-
-    saved = new EventEmitter();
-    cancelled = new EventEmitter();
 
     constructor(stockService:StockService, authService:AuthService, errorService:ErrorService) {
         this.stockService = stockService;

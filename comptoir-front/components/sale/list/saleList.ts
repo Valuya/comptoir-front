@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy,EventEmitter, ViewEncapsulation} from 'angular2/core';
+import {Component, ChangeDetectionStrategy, EventEmitter, ViewEncapsulation, Input, Output} from 'angular2/core';
 import { NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {Sale} from '../../../domain/commercial/sale';
@@ -21,8 +21,6 @@ import {CustomerSelectComponent} from "../../customer/select/customerSelect";
  */
 @Component({
     selector: 'sale-column',
-    inputs: ['sale', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/sale/list/saleColumn.html',
     styleUrls: ['./components/sale/list/saleList.css'],
@@ -31,10 +29,14 @@ import {CustomerSelectComponent} from "../../customer/select/customerSelect";
     encapsulation: ViewEncapsulation.None
 })
 export class SaleColumnComponent {
-    action = new EventEmitter();
+    @Input()
     sale:Sale;
+    @Input()
     column:SaleColumn;
+    @Input()
     lang:Language;
+    @Output()
+    action = new EventEmitter();
 
     onColumnAction(sale:Sale, column:SaleColumn, event) {
         this.action.next({sale: sale, column: column});
@@ -51,8 +53,6 @@ export class SaleColumnComponent {
 
 @Component({
     selector: 'sale-list',
-    inputs: ['sales', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['saleClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/sale/list/saleList.html',
     styleUrls: ['./components/sale/list/saleList.css'],
@@ -60,22 +60,28 @@ export class SaleColumnComponent {
 })
 
 export class SaleListComponent {
-    // properties
+    @Input()
     sales:Immutable.List<Sale>;
+    @Input()
     columns:Immutable.List<SaleColumn>;
-    selectable:boolean;
-    headers:boolean;
-    language:Language;
+    @Input()
+    rowSelectable:boolean;
+    @Input()
+    headersVisible:boolean;
 
-    saleClicked = new EventEmitter();
+    @Output()
+    rowClicked = new EventEmitter();
+    @Output()
     columnAction = new EventEmitter();
+
+    language:Language;
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();
     }
 
     onSaleClick(sale:Sale, event) {
-        this.saleClicked.next(sale);
+        this.rowClicked.next(sale);
         event.stopPropagation();
         event.preventDefault();
     }

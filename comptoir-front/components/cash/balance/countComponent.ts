@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 29/09/15.
  */
-import {Component, EventEmitter, ChangeDetectionStrategy, OnInit} from 'angular2/core';
+import {Component, EventEmitter, ChangeDetectionStrategy, OnInit, Input, Output} from 'angular2/core';
 import {NgFor, NgIf} from 'angular2/common';
 
 import {Account} from '../../../domain/accounting/account';
@@ -22,8 +22,6 @@ import * as Immutable from 'immutable';
 
 @Component({
     selector: 'balance-count',
-    inputs: ['account'],
-    outputs: ['validated', 'cancelled'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/cash/balance/countComponent.html',
     styleUrls: ['./components/cash/balance/countComponent.css'],
@@ -36,14 +34,17 @@ export class BalanceCountComponent implements OnInit {
     moneyPileService:MoneyPileService;
     balanceService:BalanceService;
 
+    @Input()
     account:Account;
+
+    @Output()
+    validated = new EventEmitter();
+    @Output()
+    cancelled = new EventEmitter();
+
     balance:Balance;
     moneyPiles:Immutable.List<MoneyPile>;
-
     editingTotal:boolean;
-
-    validated = new EventEmitter();
-    cancelled = new EventEmitter();
 
     constructor(authService:AuthService, errorService:ErrorService,
                 moneyPileService:MoneyPileService, balanceService:BalanceService) {

@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, EventEmitter, OnInit, ChangeDetectionStrategy} from "angular2/core";
+import {Component, EventEmitter, OnInit, ChangeDetectionStrategy, Input, Output} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Router, RouterLink} from "angular2/router";
 import {Picture, PictureFactory} from "../../../domain/commercial/picture";
@@ -29,8 +29,6 @@ import {WsItemVariantSearch} from "../../../client/domain/search/itemVariantSear
 
 @Component({
     selector: 'item-edit',
-    inputs: ['item'],
-    outputs: ['saved', 'cancelled'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/item/edit/editItem.html',
     styleUrls: ['./components/item/edit/editItem.css'],
@@ -45,9 +43,15 @@ export class ItemEditComponent implements OnInit {
     authService:AuthService;
     pictureService:PictureService;
 
+    @Input()
     item:Item;
-    itemJS:any;
 
+    @Output()
+    saved = new EventEmitter();
+    @Output()
+    cancelled = new EventEmitter();
+
+    itemJS:any;
     itemTotalPrice:number;
     itemVatPercentage:number;
     itemVatPercentageString:string;
@@ -60,8 +64,6 @@ export class ItemEditComponent implements OnInit {
     itemVariantSearchResult:SearchResult<ItemVariant>;
     itemVariantListColumns:Immutable.List<ItemVariantColumn>;
 
-    saved = new EventEmitter();
-    cancelled = new EventEmitter();
 
     router:Router;
 

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, EventEmitter, Component} from "angular2/core";
+import {ChangeDetectionStrategy, EventEmitter, Component, Input, Output} from "angular2/core";
 import {FastInputDirective} from "../../../utils/fastInput";
 import {NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {ActiveSaleService} from "../../../../services/activeSale";
@@ -11,8 +11,6 @@ import {NumberUtils} from "../../../../client/utils/number";
 
 @Component({
     selector: 'commandview-header',
-    inputs: ['noInput', 'validated'],
-    outputs: ['validateChanged'],
     changeDetection: ChangeDetectionStrategy.Default,
     templateUrl: './components/sale/commandView/header/commandViewHeader.html',
     styleUrls: ['./components/sale/commandView/header/commandViewHeader.css'],
@@ -22,9 +20,14 @@ export class CommandViewHeaderComponent {
     activeSaleService:ActiveSaleService;
     errorService:ErrorService;
 
-    editingSaleDiscount:boolean = false;
+    @Input()
     validated:boolean = false;
+    @Input()
+    noInput:boolean = false;
+    @Output()
     validateChanged = new EventEmitter();
+
+    editingSaleDiscount:boolean = false;
 
     constructor(saleService:ActiveSaleService,
                 errorService:ErrorService) {

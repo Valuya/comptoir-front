@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, EventEmitter, OnInit} from "angular2/core";
+import {Component, EventEmitter, OnInit, Input, Output} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Account, AccountFactory} from "../../../domain/accounting/account";
 import {Language} from "../../../client/utils/lang";
@@ -17,8 +17,6 @@ import {AccountType, ALL_ACCOUNT_TYPES} from "../../../client/domain/util/accoun
 
 @Component({
     selector: 'account-edit',
-    inputs: ['account'],
-    outputs: ['saved', 'cancelled'],
     templateUrl: './components/account/edit/editAccount.html',
     styleUrls: ['./components/account/edit/editAccount.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
@@ -29,14 +27,18 @@ export class AccountsEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
-    account:Account;
     accountModel:any;
     paymentAccount:boolean;
 
     editLanguage:Language;
     appLanguage:Language;
 
+    @Input()
+    account:Account;
+
+    @Output()
     saved = new EventEmitter();
+    @Output()
     cancelled = new EventEmitter();
 
     allAccountTypes:Immutable.List<AccountType>;

@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter} from 'angular2/core';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter, Input, Output} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {WsPos} from '../../../client/domain/commercial/pos';
@@ -20,8 +20,6 @@ import * as Immutable from 'immutable';
  */
 @Component({
     selector: 'pos-column',
-    inputs: ['pos', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/pos/list/posColumn.html',
     styleUrls: ['./components/pos/list/posList.css'],
@@ -30,10 +28,14 @@ import * as Immutable from 'immutable';
     encapsulation: ViewEncapsulation.None
 })
 export class PosColumnComponent {
-    action = new EventEmitter();
+    @Input()
     pos:WsPos;
+    @Input()
     column:PosColumn;
+    @Input()
     lang:Language;
+    @Output()
+    action = new EventEmitter();
 
     onColumnAction(pos:WsPos, column:PosColumn, event) {
         this.action.next({pos: pos, column: column});
@@ -49,8 +51,6 @@ export class PosColumnComponent {
 
 @Component({
     selector: 'pos-list',
-    inputs: ['posList', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/pos/list/posList.html',
     styleUrls: ['./components/pos/list/posList.css'],
@@ -58,15 +58,22 @@ export class PosColumnComponent {
 })
 
 export class PosListComponent {
-    // properties
+    @Input()
     posList:Immutable.List<WsPos>;
+    @Input()
     columns:Immutable.List<PosColumn>;
+    @Input()
     rowSelectable:boolean;
+    @Input()
     headersVisible:boolean;
+
+    @Output()
+    rowClicked = new EventEmitter();
+    @Output()
+    columnAction = new EventEmitter();
+
     language:Language;
 
-    rowClicked = new EventEmitter();
-    columnAction = new EventEmitter();
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();

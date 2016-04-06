@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 05/08/15.
  */
-import {Component, EventEmitter, OnInit} from "angular2/core";
+import {Component, EventEmitter, OnInit, Input, Output} from "angular2/core";
 import {NgFor, NgIf, FORM_DIRECTIVES} from "angular2/common";
 import {Customer, CustomerFactory} from "../../../domain/thirdparty/customer";
 import {WsCustomerRef, WsCustomerFactory} from "../../../client/domain/thirdparty/customer";
@@ -17,8 +17,6 @@ import {FormMessageComponent} from "../../utils/formMessage/formMessage";
 
 @Component({
     selector: 'customer-edit',
-    inputs: ['customer'],
-    outputs: ['saved', 'cancelled'],
     templateUrl: './components/customer/edit/editCustomer.html',
     styleUrls: ['./components/customer/edit/editCustomer.css'],
     directives: [NgFor, NgIf, FORM_DIRECTIVES, LangSelectComponent, LocalizedInputDirective,
@@ -29,14 +27,17 @@ export class CustomersEditComponent implements OnInit {
     errorService:ErrorService;
     authService:AuthService;
 
+    @Input()
     customer:Customer;
-    customerModel:any;
+
+    @Output()
+    saved = new EventEmitter();
+    @Output()
+    cancelled = new EventEmitter();
 
     editLanguage:Language;
     appLanguage:Language;
-
-    saved = new EventEmitter();
-    cancelled = new EventEmitter();
+    customerModel:any;
 
     constructor(customerService:CustomerService, authService:AuthService, errorService:ErrorService) {
         this.customerService = customerService;

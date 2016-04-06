@@ -2,7 +2,7 @@
  * Created by cghislai on 20/08/15.
  */
 
-import {Component, ChangeDetectionStrategy, EventEmitter, Attribute} from 'angular2/core'
+import {Component, ChangeDetectionStrategy, EventEmitter, Attribute, Input, Output} from 'angular2/core'
 import {NgFor,  NgIf, NgControl,  ControlValueAccessor} from 'angular2/common';
 import {Language, LanguageFactory} from '../../../client/utils/lang';
 import {AuthService} from '../../../services/auth';
@@ -12,8 +12,6 @@ import * as Immutable from 'immutable';
  */
 @Component({
     selector: 'lang-select:not([ngControl])',
-    inputs: ['displayLanguage', 'selectedLanguage', 'dropDown', 'id'],
-    outputs: ['languageChanged'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/lang/langSelect/langSelect.html',
     styleUrls: ['./components/lang/langSelect/langSelect.css'],
@@ -21,15 +19,21 @@ import * as Immutable from 'immutable';
 })
 export class LangSelectComponent {
 
+    @Input()
     displayLanguage:Language;
+    @Input()
     selectedLanguage:Language;
+    @Input()
     allLanguages:Immutable.List<Language>;
-    languageChanged = new EventEmitter();
-
+    @Input()
     dropDown:boolean;
+    @Input()
     id:string;
 
-    constructor(authService:AuthService, @Attribute('id') id:string) {
+    @Output()
+    languageChanged = new EventEmitter();
+
+    constructor(@Attribute('id') id:string) {
         this.id = id;
         this.allLanguages = LanguageFactory.ALL_LANGUAGES;
     }
@@ -46,24 +50,29 @@ export class LangSelectComponent {
 
 @Component({
     selector: 'lang-select[ngControl]',
-    inputs: ['displayLanguage', 'selectedLanguage', 'dropDown', 'id'],
-    outputs: ['languageChanged'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/lang/langSelect/langSelect.html',
     styleUrls: ['./components/lang/langSelect/langSelect.css'],
     directives: [NgFor, NgIf]
 })
 export class LangSelectControl implements ControlValueAccessor {
-    onChange:Function;
-    onTouched:Function;
 
+    @Input()
     displayLanguage:Language;
+    @Input()
     selectedLanguage:Language;
-    allLanguages:Immutable.List<Language>;
+    @Input()
+    dropDown:boolean;
+    @Input()
+    id:string;
+
+    @Output()
     languageChanged = new EventEmitter();
 
-    dropDown:boolean;
-    id:string;
+    onChange:Function;
+    onTouched:Function;
+    allLanguages:Immutable.List<Language>;
+
 
     constructor(authService:AuthService, @Attribute('id') id:string, cd:NgControl) {
         this.id = id;

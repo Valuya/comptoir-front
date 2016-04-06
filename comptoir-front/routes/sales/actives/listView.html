@@ -11,10 +11,10 @@
                [showPrevNextLink]="true" [showFirstLastLink]="true"
                (pageChange)="onPageChanged($event)"></paginator>
     <sale-list [sales]="searchResult.list"
-              [columns]="columns"
-              [rowSelectable]="true"
-              [headersVisible]="true"
-              (saleClicked)="onSaleClicked($event)"
-              (columnAction)="onColumnAction($event)">
+               [columns]="columns"
+               [rowSelectable]="true"
+               [headersVisible]="true"
+               (rowClicked)="onSaleClicked($event)"
+               (columnAction)="onColumnAction($event)">
     </sale-list>
 </div>

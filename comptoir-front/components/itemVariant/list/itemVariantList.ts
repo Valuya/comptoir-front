@@ -2,7 +2,10 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation} from "angular2/core";
+import {
+    Component, ChangeDetectionStrategy, OnInit, EventEmitter, ViewEncapsulation, Input,
+    Output
+} from "angular2/core";
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from "angular2/common";
 import {ItemVariant, ItemVariantFactory} from "../../../domain/commercial/itemVariant";
 import {Language, LocaleTextsFactory} from "../../../client/utils/lang";
@@ -17,8 +20,6 @@ import {Pricing} from "../../../client/domain/util/pricing";
  */
 @Component({
     selector: 'itemvariant-column',
-    inputs: ['itemVariant', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariant/list/itemVariantColumn.html',
     styleUrls: ['./components/itemVariant/list/itemVariantList.css'],
@@ -27,10 +28,14 @@ import {Pricing} from "../../../client/domain/util/pricing";
     encapsulation: ViewEncapsulation.None
 })
 export class ItemVariantColumnComponent {
-    action = new EventEmitter();
+    @Input()
     itemVariant:ItemVariant;
+    @Input()
     column:ItemVariantColumn;
+    @Input()
     lang:Language;
+    @Output()
+    action = new EventEmitter();
 
     onColumnAction(item:ItemVariant, column:ItemVariantColumn, event) {
         this.action.next({itemVariant: item, column: column});
@@ -54,8 +59,6 @@ export class ItemVariantColumnComponent {
 
 @Component({
     selector: 'itemvariant-list',
-    inputs: ['items', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/itemVariant/list/itemVariantList.html',
     styleUrls: ['./components/itemVariant/list/itemVariantList.css'],
@@ -63,16 +66,23 @@ export class ItemVariantColumnComponent {
 })
 
 export class ItemVariantListComponent implements OnInit {
-    // properties
+    @Input()
     items:Immutable.List<ItemVariant>;
+    @Input()
     columns:Immutable.List<ItemVariantColumn>;
+    @Input()
     rowSelectable:boolean;
+    @Input()
     headersVisible:boolean;
+
+    @Output()
+    rowClicked = new EventEmitter();
+    @Output()
+    columnAction = new EventEmitter();
+
     language:Language;
     columnWeightToPercentage:number;
 
-    rowClicked = new EventEmitter();
-    columnAction = new EventEmitter();
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();

@@ -1,7 +1,7 @@
 /**
  * Created by cghislai on 29/09/15.
  */
-import {Component, EventEmitter, ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter, ChangeDetectionStrategy, Input, Output} from 'angular2/core';
 
 import {MoneyPile,  MoneyPileFactory} from '../../../domain/cash/moneyPile';
 
@@ -14,17 +14,19 @@ import {FastInputDirective} from '../../utils/fastInput';
 
 @Component({
     selector: 'moneypile-count',
-    inputs: ['moneyPile'],
-    outputs: ['changed'],
     templateUrl: './components/cash/moneyPile/moneyPileCount.html',
     styleUrls: ['./components/cash/moneyPile/moneyPileCount.css'],
     directives: [FastInputDirective],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoneyPileCountComponent {
+    @Input()
     moneyPile:MoneyPile;
-    appLanguage:Language;
+
+    @Output()
     changed = new EventEmitter();
+
+    appLanguage:Language;
 
     constructor(authService:AuthService) {
         this.appLanguage = authService.getEmployeeLanguage();

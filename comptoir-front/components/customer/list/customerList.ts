@@ -2,7 +2,7 @@
  * Created by cghislai on 29/07/15.
  */
 
-import {Component, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter} from 'angular2/core';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation, EventEmitter, Output, Input} from 'angular2/core';
 import {NgFor, NgIf, NgSwitch, NgSwitchWhen} from 'angular2/common';
 
 import {WsCustomer} from '../../../client/domain/thirdparty/customer';
@@ -20,8 +20,6 @@ import * as Immutable from 'immutable';
  */
 @Component({
     selector: 'customer-column',
-    inputs: ['customer', 'column', 'lang'],
-    outputs: ['action'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/customer/list/customerColumn.html',
     styleUrls: ['./components/customer/list/customerList.css'],
@@ -30,10 +28,15 @@ import * as Immutable from 'immutable';
     encapsulation: ViewEncapsulation.None
 })
 export class CustomerColumnComponent {
-    action = new EventEmitter();
+    @Input()
     customer:WsCustomer;
+    @Input()
     column:CustomerColumn;
+    @Input()
     lang:Language;
+
+    @Output()
+    action = new EventEmitter();
 
     onColumnAction(customer:WsCustomer, column:CustomerColumn, event) {
         this.action.next({customer: customer, column: column});
@@ -49,8 +52,6 @@ export class CustomerColumnComponent {
 
 @Component({
     selector: 'customer-list',
-    inputs: ['customerList', 'columns', 'rowSelectable', 'headersVisible'],
-    outputs: ['rowClicked', 'columnAction'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/customer/list/customerList.html',
     styleUrls: ['./components/customer/list/customerList.css'],
@@ -58,15 +59,21 @@ export class CustomerColumnComponent {
 })
 
 export class CustomerListComponent {
-    // properties
+    @Input()
     customerList:Immutable.List<WsCustomer>;
+    @Input()
     columns:Immutable.List<CustomerColumn>;
+    @Input()
     rowSelectable:boolean;
+    @Input()
     headersVisible:boolean;
-    language:Language;
 
+    @Output()
     rowClicked = new EventEmitter();
+    @Output()
     columnAction = new EventEmitter();
+
+    language:Language;
 
     constructor(authService:AuthService) {
         this.language = authService.getEmployeeLanguage();

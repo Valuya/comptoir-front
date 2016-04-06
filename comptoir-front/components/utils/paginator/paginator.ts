@@ -2,15 +2,12 @@
  * Created by cghislai on 02/08/15.
  */
 
-import {Component, EventEmitter, OnInit, OnChanges, ChangeDetectionStrategy} from 'angular2/core';
+import {Component, EventEmitter, OnInit, OnChanges, ChangeDetectionStrategy, Input, Output} from 'angular2/core';
 import {NgFor} from 'angular2/common';
 import {PageChangeEvent} from '../../../client/utils/pagination';
 
 @Component({
     selector: 'paginator',
-    outputs: ['pageChange'],
-    inputs: ['totalCount', 'pageSize', 'activePage',
-        'showPrevNextLink', 'showFirstLastLink'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './components/utils/paginator/paginator.html',
     styleUrls: ['./components/utils/paginator/paginator.css'],
@@ -18,20 +15,27 @@ import {PageChangeEvent} from '../../../client/utils/pagination';
 })
 
 export class PaginatorComponent implements OnInit, OnChanges {
+    @Input()
     pageCount:number;
+    @Input()
     pageSize: number;
+    @Input()
     totalCount: number;
-
-    showPrevNextLink:boolean;
-    showFirstLastLink:boolean;
-    pages:number[];
+    @Input()
     activePage:number;
+    @Input()
+    showPrevNextLink:boolean;
+    @Input()
+    showFirstLastLink:boolean;
+
+    @Output()
+    pageChange= new EventEmitter();
+
+    pages:number[];
     maxPageLinks:number = 10;
-    pageChange  ;
 
     constructor() {
         this.activePage = 0;
-        this.pageChange = new EventEmitter();
     }
 
     ngOnInit() {
