@@ -8,7 +8,7 @@
         <router-outlet></router-outlet>
     </div>
 
-    <dialog [modal]="true" [closable]="true"
+    <comptoir-dialog [modal]="true" [closable]="true"
             title="Erreur" *ngIf="errorService.hasError"
             (close)="errorService.dismissError()">
         <p [innerHtml]="errorService.errorHeader">
@@ -18,5 +18,5 @@
         </p>
         <p [innerHtml]="errorService.errorFooter">
         </p>
-    </dialog>
+    </comptoir-dialog>
 </div>

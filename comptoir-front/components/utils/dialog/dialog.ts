@@ -5,7 +5,7 @@ import {Component, EventEmitter, Attribute, Input, Output} from 'angular2/core';
 import {NgIf} from 'angular2/common';
 
 @Component({
-    selector: 'dialog',
+    selector: 'comptoir-dialog',
     templateUrl: './components/utils/dialog/dialog.html',
     styleUrls: ['./components/utils/dialog/dialog.css'],
     directives: [NgIf]
