@@ -1,7 +1,7 @@
-<span class="appTab" [hidden]="!active && !rowSelectable">
+<span class="appTab" [hidden]="!active && !selectable">
     <div class="tab"
          [class.active]="active"
-         [class.selectable]="rowSelectable">
+         [class.selectable]="selectable">
         <ng-content></ng-content>
     </div>
 </span>
