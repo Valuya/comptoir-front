@@ -92,7 +92,6 @@ export class SaleView implements CanReuse, OnActivate {
     }
 
     routerOnActivate() {
-        this.activeSaleService.sale = null;
         this.searchStocks();
         return this.findSale()
             .then((sale)=> {
