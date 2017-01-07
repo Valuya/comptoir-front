@@ -3,19 +3,8 @@
                         [validated]="validated || noInput "
                         (validateChanged)="onValidateChanged($event)"></commandview-header>
 
-    <item-variant-sale-list [rowSelectable]="false"
-                            [headersVisible]="activeSaleService.saleItemsResult.count > 0"
-                            [footerVisible]="true"
-                            [footerTotalColIndex]="3"
-                            [columns]="variantSaleColumns"
-                            [itemVariantSaleList]="activeSaleService.saleItemsResult.list"
-                            [editable]="!validated"
-                            [actionsVisible]="!validated && !noInput"
-                            [sale]="activeSaleService.sale"
-                            (columnAction)="onColumnAction($event)"
-                            (variantUpdated)="onVariantUpdated($event)"></item-variant-sale-list>
     <itemvariantsale-list [rowSelectable]="false"
-                          [headersVisible]="true"
+                          [headersVisible]="activeSaleService.saleItemsResult.count > 0"
                           [footerVisible]="true"
                           [footerTotalColIndex]="3"
                           [columns]="variantSaleColumns"
@@ -36,7 +25,7 @@
             <span *ngIf="activeSaleService.sale.customer != null">
                 {{activeSaleService.sale.customer.lastName }} {{activeSaleService.sale.customer.firstName }}
             </span>
-            <span [hidden]="activeSaleService.sale.customer != null">
+                <span [hidden]="activeSaleService.sale.customer != null">
                 Aucun client
             </span>
             </a>
@@ -72,7 +61,7 @@
                       id="editSaleReference"
                       class="edit-reference-area"
                       autofocus></textarea>
-            <span class="editActions">
+                <span class="editActions">
                         <i class="fa fa-check green" (click)="onConfirmNewReference()"></i>
                         <i class="fa fa-times red" (click)="onCancelNewReference()"></i>
             </span>

@@ -143,12 +143,14 @@ export class ActiveSaleService {
         var authToken = this.authService.authToken;
         return this.saleService.closeSale(this.sale.id, authToken)
             .then((ref)=>{
-                this.doSearchSaleItems();
                 return this.saleService.fetch(ref.id);
             })
             .then((sale)=>{
                 this.sale = sale;
-                return sale;
+                return this.doSearchSaleItems();
+            })
+            .then(()=>{
+                return this.sale;
             });
     }
 
