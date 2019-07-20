@@ -1,0 +1,204 @@
+<div class="customer-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>FirstName</label>
+    <cp-shell-inplace-edit name="firstName" #firstName
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.firstName"
+                           [ngModel]="value.firstName"
+                           (ngModelChange)="updateValue({firstName: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.firstName }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="firstName.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>LastName</label>
+    <cp-shell-inplace-edit name="lastName" #lastName
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.lastName"
+                           [ngModel]="value.lastName"
+                           (ngModelChange)="updateValue({lastName: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.lastName }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="lastName.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Email</label>
+    <cp-shell-inplace-edit name="email" #email
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.email"
+                           [ngModel]="value.email"
+                           (ngModelChange)="updateValue({email: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.email }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="email.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Phone1</label>
+    <cp-shell-inplace-edit name="phone1" #phone1
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.phone1"
+                           [ngModel]="value.phone1"
+                           (ngModelChange)="updateValue({phone1: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.phone1 }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="phone1.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Phone2</label>
+    <cp-shell-inplace-edit name="phone2" #phone2
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.phone2"
+                           [ngModel]="value.phone2"
+                           (ngModelChange)="updateValue({phone2: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.phone2 }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="phone2.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Address1</label>
+    <cp-shell-inplace-edit name="adress1" #adress1
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.adress1"
+                           [ngModel]="value.adress1"
+                           (ngModelChange)="updateValue({adress1: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.adress1 }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="inplace.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Adress2</label>
+    <cp-shell-inplace-edit name="adress2" #adress2
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.adress2"
+                           [ngModel]="value.adress2"
+                           (ngModelChange)="updateValue({adress2: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.adress2 }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="adress2.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Zip</label>
+    <cp-shell-inplace-edit name="zip" #zip
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.zip"
+                           [ngModel]="value.zip"
+                           (ngModelChange)="updateValue({zip: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.zip }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="zip.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>City</label>
+    <cp-shell-inplace-edit name="city" #city
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.city"
+                           [ngModel]="value.city"
+                           (ngModelChange)="updateValue({city: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.city }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="city.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Notes</label>
+    <cp-shell-inplace-edit name="notes" #notes
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.notes"
+                           [ngModel]="value.notes"
+                           (ngModelChange)="updateValue({notes: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.notes }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="notes.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+
+</div>

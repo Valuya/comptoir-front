@@ -1,0 +1,5 @@
+<div class="account">
+  <cp-loading-content [loading]="loading$ | async">
+    {{ (value$ | async)?.accountingNumber }} {{ (value$ | async)?.name }}
+  </cp-loading-content>
+</div>

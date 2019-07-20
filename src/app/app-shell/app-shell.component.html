@@ -1,0 +1,10 @@
+<div class="app-shell">
+  <div class="menu">
+    <p-panelMenu [model]="appMenu$ | async"
+                 [multiple]="false"
+    ></p-panelMenu>
+  </div>
+  <div class="shell-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

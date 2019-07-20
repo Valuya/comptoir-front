@@ -1,0 +1,36 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'CUSTOMER'">
+    <cp-customer [ref]="row.customerRef"></cp-customer>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'DATETIME'">
+    {{ row.dateTime | date }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'AMOUNT'">
+    {{ (row.vatExclusiveAmount + row.vatAmount) | currency }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'VAT_AMOUNT'">
+    {{  (row.vatAmount) | currency}}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'VAT_EXLUSIVE_AMOUNT'">
+    {{  (row.vatExclusiveAmount) | currency}}
+  </ng-container>
+
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

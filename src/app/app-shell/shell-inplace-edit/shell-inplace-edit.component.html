@@ -1,0 +1,35 @@
+<div class="shell-inplace-edit"
+     [class.editing]="editing"
+>
+  <div class="inplace-output" tabindex
+       (click)="onOutputClick()"
+  >
+    <ng-container
+      *ngTemplateOutlet="outputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
+      #outputTemplateRef
+    ></ng-container>
+  </div>
+
+  <div class="errors" *ngIf="errors?.length > 0">
+    <div *ngFor="let error of errors">
+      {{ error }}
+    </div>
+  </div>
+
+  <div class="inplace-input" *ngIf="inputTemplate != null">
+    <div class="content">
+      <ng-container *ngTemplateOutlet="inputTemplate;context: {valid: errors?.length === 0,invalid: errors?.length > 0}"
+      ></ng-container>
+    </div>
+    <div class="actions">
+      <div class="cancel" (click)="onCancelClick()">
+        <i class="fa fa-undo"></i>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="submit" (click)="onSubmitClick()">
+        <i class="fa fa-check"></i>
+      </div>
+    </div>
+  </div>
+</div>

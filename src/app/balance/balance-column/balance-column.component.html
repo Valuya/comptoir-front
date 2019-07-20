@@ -1,0 +1,38 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'ACCOUNT'">
+    <cp-account [ref]="row.accountRef"></cp-account>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'BALANCE'">
+    {{ row.balance | currency }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'CLOSED'">
+    <i class="fa fa-check-circle" *ngIf="row.closed"></i>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'COMMENT'">
+    {{ row.comment }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'DATETIME'">
+    {{ row.dateTime | date }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

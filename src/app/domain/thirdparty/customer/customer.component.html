@@ -1,0 +1,5 @@
+<div class="customer">
+  <cp-loading-content [loading]="loading$ |async">
+    {{ (value$ | async)?.lastName }} {{ (value$ | async)?.firstName }}
+  </cp-loading-content>
+</div>

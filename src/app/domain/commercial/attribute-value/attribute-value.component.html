@@ -1,0 +1,11 @@
+<div class="attribute-value">
+  <cp-loading-content [loading]="loading$ | async">
+    <div class="definition">
+      <cp-attribute-definition [ref]="(value$ | async)?.attributeDefinitionRef"
+      ></cp-attribute-definition>
+    </div>
+    <div class="value">
+      <cp-locale-text [localeText]="(value$ |async)?.value"></cp-locale-text>
+    </div>
+  </cp-loading-content>
+</div>

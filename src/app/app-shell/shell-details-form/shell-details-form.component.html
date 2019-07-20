@@ -1,0 +1,19 @@
+<div class="shell-details-form ui-widget">
+  <form #detailsForm (ngSubmit)="onSubmit()">
+
+    <div class="form-content">
+      <ng-container *ngTemplateOutlet="formContentTemplate; context: {form: detailsForm}"
+      ></ng-container>
+    </div>
+
+    <div class="form-actions">
+      <input type="submit" hidden>
+      <button pButton type="button"
+              [disabled]="detailsForm.invalid"
+              (click)="onSubmit()"
+              label="Save"
+      ></button>
+    </div>
+
+  </form>
+</div>

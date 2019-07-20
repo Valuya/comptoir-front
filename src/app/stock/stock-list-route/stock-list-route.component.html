@@ -1,0 +1,25 @@
+<cp-shell-content-page>
+  <ng-template cpContentHeaderActions>
+    <button type="button" pButton
+            label="New stock"
+            [routerLink]="['/stock/new']"
+    ></button>
+  </ng-template>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="stocksTableHelper.loading$ | async"
+                    [rows]="stocksTableHelper.rows$ | async"
+                    [totalRecords]="stocksTableHelper.totalCount$ | async"
+                    [pagination]="stocksTableHelper.pagination$ | async"
+                    (paginationChange)="stocksTableHelper.setPagination($event)"
+                    [(selection)]="selectedStocks"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-stock-column [column]="column"
+                        [row]="row"
+        ></cp-stock-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

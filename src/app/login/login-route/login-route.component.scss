@@ -1,0 +1,13 @@
+.login-route {
+  text-align: center;
+
+  form {
+    display: inline-block;
+    margin: 1em;
+
+    >* {
+      display: block;
+      margin: 1em;
+    }
+  }
+}

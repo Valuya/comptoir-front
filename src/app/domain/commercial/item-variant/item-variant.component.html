@@ -1,0 +1,21 @@
+<div class="item-variant">
+  <div class="icon">
+    <cp-loading-content [loading]="loading$ |async">
+
+    </cp-loading-content>
+  </div>
+
+  <div class="content">
+
+    <div class="item">
+      <cp-item [ref]="(value$ | async)?.itemRef"></cp-item>
+    </div>
+
+    <div class="reference">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.reference }}
+      </cp-loading-content>
+    </div>
+  </div>
+
+</div>

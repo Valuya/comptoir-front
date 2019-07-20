@@ -1,0 +1,43 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'DESCRIPTION'">
+    <cp-locale-text [localeTexts]="row.description">
+    </cp-locale-text>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'NAME'">
+    <cp-locale-text [localeTexts]="row.name">
+    </cp-locale-text>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'MAIN_PICTURE'">
+    pic
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'MULTIPLE_SALE'">
+    <i class="fa fa-check-circle" *ngIf="row.multipleSale"></i>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'REFERENCE'">
+    {{ row.reference }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'VAT_EXCLUSIVE'">
+    {{ row.vatExclusive | currency }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'VAT_RATE'">
+    {{ row.vatRate | currency }}
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

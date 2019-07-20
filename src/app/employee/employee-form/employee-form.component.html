@@ -1,0 +1,103 @@
+<div class="employee-form form" *ngIf="value != null">
+
+
+  <div class="control">
+    <label>FirstName</label>
+    <cp-shell-inplace-edit name="firstName" #firstName
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.firstName"
+                           [ngModel]="value.firstName"
+                           (ngModelChange)="updateValue({firstName: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.firstName }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="firstName.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>LastName</label>
+    <cp-shell-inplace-edit name="lastName" #lastName
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.lastName"
+                           [ngModel]="value.lastName"
+                           (ngModelChange)="updateValue({lastName: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.lastName }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="lastName.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+  <div class="control">
+    <label>Active</label>
+    <cp-shell-inplace-edit name="active" #active
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.active"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <p-inputSwitch [ngModel]="value.active"
+                       (ngModelChange)="updateValue({active: $event})"
+                       [class.ui-state-error]="invalid"
+                       autofocus
+        ></p-inputSwitch>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+
+  <div class="control">
+    <label>Login</label>
+    <cp-shell-inplace-edit name="login" #login
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.login"
+                           [ngModel]="value.login"
+                           (ngModelChange)="updateValue({login: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.login }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="login.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+    <div class="control">
+      <label>Locale</label>
+      <cp-shell-inplace-edit name="locale" #locale
+                             [disabled]="disabled"
+                             [errors]="validationResults?.errors?.locale"
+                             [ngModel]="value.locale"
+                             (ngModelChange)="updateValue({locale: $event})"
+      >
+        <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+          {{ value.locale }}
+        </ng-template>
+        <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+          <input type="text" pInputText [(ngModel)]="locale.editValue"
+                 autofocus
+                 [class.ui-state-error]="invalid">
+        </ng-template>
+      </cp-shell-inplace-edit>
+
+    </div>
+
+
+</div>

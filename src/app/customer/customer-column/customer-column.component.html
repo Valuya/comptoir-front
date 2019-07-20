@@ -1,0 +1,33 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'FIRST_NAME'">
+    {{ row.firstName }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'LAST_NAME'">
+    {{ row.lastName }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'EMAIL'">
+    {{ row.email }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'PHONE1'">
+    {{ row.phone1 }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'NOTES'">
+    {{ row.notes }}
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

@@ -1,0 +1,25 @@
+<cp-shell-content-page>
+  <ng-template cpContentHeaderActions>
+    <button type="button" pButton
+            label="New customer"
+            [routerLink]="['/customer/new']"
+    ></button>
+  </ng-template>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="customersTableHelper.loading$ | async"
+                    [rows]="customersTableHelper.rows$ | async"
+                    [totalRecords]="customersTableHelper.totalCount$ | async"
+                    [pagination]="customersTableHelper.pagination$ | async"
+                    (paginationChange)="customersTableHelper.setPagination($event)"
+                    [(selection)]="selectedCustomers"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-customer-column [column]="column"
+                        [row]="row"
+        ></cp-customer-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

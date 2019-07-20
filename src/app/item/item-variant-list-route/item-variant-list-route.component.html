@@ -1,0 +1,25 @@
+<cp-shell-content-page>
+  <ng-template cpContentHeaderActions>
+    <button type="button" pButton
+            label="New variant"
+            (click)="onNewVariantClick()"
+    ></button>
+  </ng-template>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="itemVariantTableHelper.loading$ | async"
+                    [rows]="itemVariantTableHelper.rows$ | async"
+                    [totalRecords]="itemVariantTableHelper.totalCount$ | async"
+                    [pagination]="itemVariantTableHelper.pagination$ | async"
+                    (paginationChange)="itemVariantTableHelper.setPagination($event)"
+                    [(selection)]="selecteditemVariant"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-item-variant-column [column]="column"
+                                [row]="row"
+        ></cp-item-variant-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

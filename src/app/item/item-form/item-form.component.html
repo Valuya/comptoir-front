@@ -1,0 +1,142 @@
+<div class="item-form form" *ngIf="value != null">
+
+
+  <div class="control">
+    <label>Main picture</label>
+    <cp-shell-inplace-edit name="mainPictureRef" #mainPictureRef
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.mainPictureRef"
+                           [ngModel]="value.mainPictureRef"
+                           (ngModelChange)="updateValue({mainPictureRef: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        todo pic
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        todo pic input
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Reference</label>
+    <cp-shell-inplace-edit name="reference" #reference
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.reference"
+                           [ngModel]="value.reference"
+                           (ngModelChange)="updateValue({reference: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.reference }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input [(ngModel)]="reference.editValue"
+               [class.ui-state-error]="invalid"
+               autofocus
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Name</label>
+    <cp-shell-inplace-edit name="name" #name
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.name"
+                           [ngModel]="value.name"
+                           (ngModelChange)="updateValue({name: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <cp-locale-text [localeTexts]="value.name">
+        </cp-locale-text>
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <cp-locale-text-edit #nameTexts
+                             [(ngModel)]="name.editValue"
+                             [disabled]="disabled"
+                             [invalid]="invalid"
+        >
+          <ng-template cpLocalizedEdit>
+            <input type="text" pInputText
+                   [(ngModel)]="nameTexts.editingTextValue"
+                   autofocus
+            >
+          </ng-template>
+        </cp-locale-text-edit>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Description</label>
+    <cp-shell-inplace-edit name="description" #description
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.description"
+                           [ngModel]="value.description"
+                           (ngModelChange)="updateValue({description: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <cp-locale-text [localeTexts]="value.description">
+        </cp-locale-text>
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <cp-locale-text-edit #descriptionTexts
+                             [(ngModel)]="description.editValue"
+                             [disabled]="disabled"
+                             [invalid]="invalid"
+        >
+          <ng-template cpLocalizedEdit>
+            <input type="text" pInputText
+                   [(ngModel)]="descriptionTexts.editingTextValue"
+                   autofocus
+            >
+          </ng-template>
+        </cp-locale-text-edit>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Vat exclusive</label>
+    <cp-shell-inplace-edit name="vatExclusive" #vatExclusive
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.vatExclusive"
+                           [ngModel]="value.vatExclusive"
+                           (ngModelChange)="updateValue({vatExclusive: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.vatExclusive | currency }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <p-spinner [(ngModel)]="vatExclusive.editValue"
+                   [min]="0" [step]="0.01"
+        ></p-spinner>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Vat rate</label>
+    <cp-shell-inplace-edit name="vatRate" #vatRate
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.vatRate"
+                           [ngModel]="value.vatRate"
+                           (ngModelChange)="updateValue({vatRate: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        {{ value.vatRate | percent }}
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <p-spinner [ngModel]="vatRate.editValue  * 100"
+                   (ngModelChange)="vatRate.editValue = $event / 100"
+                   [min]="0" [max]="100" [step]="1"
+        ></p-spinner>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+</div>

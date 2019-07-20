@@ -1,0 +1,49 @@
+<div class="shell-table">
+  <div class="filter-content">
+    <ng-container *ngTemplateOutlet="filterContentTemplate">
+    </ng-container>
+  </div>
+  <p-table [totalRecords]="totalRecords"
+           [first]="pagination?.first"
+           [rows]="pagination?.rows || 30"
+           paginatorPosition="bottom"
+           [rowHover]="true"
+           [columns]="columns"
+           [value]="rows"
+           selectionMode="multiple"
+           (onRowSelect)="onRowSelect($event)"
+           [selection]="selection"
+           (selectionChange)="onSelectionChange($event)"
+           [lazy]="true"
+           (onLazyLoad)="onLazyLoad($event)"
+           [loading]="loading"
+           [multiSortMeta]="pagination?.multiSortMeta"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th>
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th *ngFor="let col of columns" pSortableColumn>
+          {{col.header}}
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr [pSelectableRow]="rowData">
+        <td>
+          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+        </td>
+        <td *ngFor="let col of columns">
+          <ng-template [ngTemplateOutlet]="columnTemplate"
+                       [ngTemplateOutletContext]="{
+                        row: rowData,
+                        column: col
+                       }"
+          ></ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,0 +1,11 @@
+.locale-text-edit {
+  display: flex;
+  align-items: center;
+
+  >.text-control {
+    flex: 1 1 auto;
+  }
+  >.locale-control {
+    flex: 0 0 auto;
+  }
+}

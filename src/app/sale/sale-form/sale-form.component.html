@@ -1,0 +1,85 @@
+<div class="sale-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>Closed</label>
+    <cp-shell-inplace-edit name="closed" #inplace
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.closed"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <p-inputSwitch [ngModel]="value.closed"
+                       (ngModelChange)="updateValue({closed: $event})"
+                       [class.ui-state-error]="invalid"
+                       autofocus
+        ></p-inputSwitch>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>customer</label>
+    <cp-shell-inplace-edit name="customerRef" #customerRef
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.customerRef"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <cp-customer-select
+          [ngModel]="value.customerRef"
+          (ngModelChange)="updateValue({customerRef: $event})"
+          [invalid]="invalid"
+          [disabled]="disabled"
+        ></cp-customer-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Date</label>
+    <cp-shell-inplace-edit name="date" #date
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.dateTime"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <cp-date-select [ngModel]="value.dateTime"
+                        (ngModelChange)="updateValue({dateTime: $event})"
+                        [disabled]="disabled"
+                        [invalid]="invalid"
+                        [showTime]="true"
+        ></cp-date-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Invoice</label>
+    <div>
+      <div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Reference</label>
+    <cp-shell-inplace-edit name="reference" #inplace
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.reference"
+                           [ngModel]="value.reference"
+                           (ngModelChange)="updateValue({reference: $event})"
+    >
+      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [ngModel]="inplace.value"
+               [readOnly]="true"
+               [class.ui-state-error]="invalid">
+      </ng-template>
+      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="inplace.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+</div>

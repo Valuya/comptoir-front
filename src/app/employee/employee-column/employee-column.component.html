@@ -1,0 +1,38 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'FIRST_NAME'">
+    {{ row.firstName  }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'LAST_NAME'">
+    {{ row.lastName  }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'LOGIN'">
+    {{ row.login  }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'LOCALE'">
+    {{ row.locale }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'ACTIVE'">
+    <i class="fa fa-check-circle" *ngIf="row.active"></i>
+  </ng-container>
+
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

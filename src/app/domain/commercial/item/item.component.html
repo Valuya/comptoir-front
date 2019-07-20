@@ -1,0 +1,29 @@
+<div class="item">
+  <div class="icon">
+    <cp-loading-content [loading]="loading$ |async">
+
+    </cp-loading-content>
+  </div>
+
+  <div class="content">
+
+    <div class="name">
+      <cp-loading-content [loading]="loading$ |async">
+        <cp-locale-text [localeText]="(value$ |async)?.name"></cp-locale-text>
+      </cp-loading-content>
+    </div>
+
+    <div class="description">
+      <cp-loading-content [loading]="loading$ |async">
+        <cp-locale-text [localeText]="(value$ |async)?.description"></cp-locale-text>
+      </cp-loading-content>
+    </div>
+
+    <div class="reference">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.reference }}
+      </cp-loading-content>
+    </div>
+  </div>
+
+</div>
