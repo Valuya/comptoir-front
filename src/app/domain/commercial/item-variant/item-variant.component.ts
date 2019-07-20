@@ -1,13 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsItemVariant, WsItemVariantRef} from '@valuya/comptoir-ws-api';
 
 @Component({
-  selector: 'cp-item-varian-variant',
-  templateUrl: './item-varian-variant.component.html',
-  styleUrls: ['./item-varian-variant.component.scss']
+  selector: 'cp-item-variant',
+  templateUrl: './item-variant.component.html',
+  styleUrls: ['./item-variant.component.scss']
 })
 export class ItemVariantComponent implements OnInit {
 
@@ -26,12 +26,17 @@ export class ItemVariantComponent implements OnInit {
 
   ngOnInit() {
     this.value$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.loadRef$(ref)),
       publishReplay(1), refCount()
     );
   }
 
+
   private loadRef$(ref: WsItemVariantRef) {
+    if (ref == null) {
+      return of(null);
+    }
     this.loading$.next(true);
     const loaded$ = this.apiService.api.getItemVariant({
       id: ref.id

@@ -9,11 +9,11 @@
                            [ngModel]="value.description"
                            (ngModelChange)="updateValue({description: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-locale-text [localeTexts]="value.description">
         </cp-locale-text>
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-locale-text-edit #descriptionTexts
                              [(ngModel)]="description.editValue"
                              [disabled]="disabled"
@@ -38,7 +38,7 @@
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.active"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <p-inputSwitch [ngModel]="value.active"
                        (ngModelChange)="updateValue({active: $event})"
                        [class.ui-state-error]="invalid"

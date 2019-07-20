@@ -10,11 +10,6 @@
     min-width: 8em;
     display: inline-block;
 
-    &:hover {
-      cursor: pointer !important;
-      background-color: rgba(0, 0, 0, 0.2);
-    }
-
     .empty-output {
       opacity: .7;
     }
@@ -58,13 +53,23 @@
         background-color: rgba(0, 0, 0, 0.2);
       }
     }
+
   }
 
 
-  &.editing {
+  &.active.editing {
     .inplace-input {
       display: flex;
       align-items: center;
+    }
+  }
+
+  &.active {
+    .inplace-output {
+      &:hover {
+        cursor: pointer !important;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }

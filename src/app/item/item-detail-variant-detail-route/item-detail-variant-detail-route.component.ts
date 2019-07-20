@@ -1,42 +1,51 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
-import {WsItemVariant, WsItemVariantRef} from '@valuya/comptoir-ws-api';
-import {Observable, of, Subscription} from 'rxjs';
+import {WsItem, WsItemVariant, WsItemVariantRef} from '@valuya/comptoir-ws-api';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {map, mergeMap, tap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
+import {NavigationService} from '../../navigation.service';
 import {ApiService} from '../../api.service';
+import {map, mergeMap, publishReplay, refCount} from 'rxjs/operators';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
-import {NavigationService} from '../../navigation.service';
 
 @Component({
-  selector: 'cp-item-variant-details-route',
-  templateUrl: './item-variant-details-route.component.html',
-  styleUrls: ['./item-variant-details-route.component.scss'],
-
+  selector: 'cp-item-detail-variant-detail-route',
+  templateUrl: './item-detail-variant-detail-route.component.html',
+  styleUrls: ['./item-detail-variant-detail-route.component.scss']
 })
-export class ItemVariantDetailsRouteComponent implements OnInit, OnDestroy {
+export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy {
 
   formHelper: ShellFormHelper<WsItemVariant>;
 
   private subscription: Subscription;
+  item$: Observable<WsItem | null>;
 
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
               private apiService: ApiService) {
+  }
+
+  ngOnInit() {
     this.formHelper = new ShellFormHelper<WsItemVariant>(
       value => this.validate$(value),
       value => this.persist$(value),
     );
-  }
-
-  ngOnInit() {
     this.subscription = this.activatedRoute.data.pipe(
       map(data => data.itemVariant),
     ).subscribe(itemVariant => this.formHelper.init(itemVariant));
+
+    const item$List = this.activatedRoute.pathFromRoot.map(
+      route => route.data.pipe(map(data => data.item))
+    );
+    this.item$ = combineLatest(...item$List).pipe(
+      map(list => list.find(item => item != null)),
+      publishReplay(1), refCount(),
+    );
   }
+
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -87,4 +96,5 @@ export class ItemVariantDetailsRouteComponent implements OnInit, OnDestroy {
       ) as any as Observable<WsItemVariant>;
     }
   }
+
 }

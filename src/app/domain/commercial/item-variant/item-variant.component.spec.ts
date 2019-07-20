@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ItemVariantComponent } from './item-variant.component';
+import {ItemVariantComponent} from './item-variant.component';
 
 describe('ItemVariantComponent', () => {
   let component: ItemVariantComponent;

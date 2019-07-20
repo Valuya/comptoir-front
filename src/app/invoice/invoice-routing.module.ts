@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {InvoiceListRouteComponent} from './invoice-list-route/invoice-list-route.component';
 import {InvoiceDetailsRouteComponent} from './invoice-details-route/invoice-details-route.component';
-import {AppRouteData} from '../app-routes';
 import {InvoiceIdResolverService} from './invoice-id-resolver.service';
+import {InvoiceListMenuItem, ResolvedInvoiceDetailsMenuItem} from './invoice-menu';
 
 
 export const INVOICE_ROUTES: Routes = [
@@ -16,13 +16,8 @@ export const INVOICE_ROUTES: Routes = [
     path: 'list',
     component: InvoiceListRouteComponent,
     data: {
-      menuItem: {
-        label: 'List',
-        title: 'List',
-        icon: 'fa fa-list',
-        routerLink: ['/invoice/list'],
-      }
-    } as AppRouteData
+      menuItem: InvoiceListMenuItem
+    }
   },
   {
     path: ':invoiceId',
@@ -31,11 +26,7 @@ export const INVOICE_ROUTES: Routes = [
       invoice: InvoiceIdResolverService
     },
     data: {
-      menuItem: {
-        label: 'Details',
-        title: 'Details',
-        icon: 'fa fa-shopping-cart',
-      }
+      menuItem: ResolvedInvoiceDetailsMenuItem
     }
   }
 ];

@@ -6,7 +6,7 @@
                            [disabled]="true"
                            [errors]="validationResults?.errors?.closed"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
        {{ value.number }}
       </ng-template>
     </cp-shell-inplace-edit>
@@ -25,10 +25,10 @@
                            [ngModel]="value.notes"
                            (ngModelChange)="updateValue({notes: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.notes }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="inplace.editValue"
                autofocus
                [class.ui-state-error]="invalid">

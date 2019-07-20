@@ -1,11 +1,12 @@
 <div class="shell-inplace-edit"
      [class.editing]="editing"
+     [class.active]="outputTemplate != null && inputTemplate != null && !disabled"
 >
   <div class="inplace-output" tabindex
        (click)="onOutputClick()"
   >
     <ng-container
-      *ngTemplateOutlet="outputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
+      *ngTemplateOutlet="outputTemplate || inputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
       #outputTemplateRef
     ></ng-container>
   </div>
@@ -16,7 +17,7 @@
     </div>
   </div>
 
-  <div class="inplace-input" *ngIf="inputTemplate != null">
+  <div class="inplace-input" *ngIf="!disabled && inputTemplate != null && outputTemplate != null">
     <div class="content">
       <ng-container *ngTemplateOutlet="inputTemplate;context: {valid: errors?.length === 0,invalid: errors?.length > 0}"
       ></ng-container>

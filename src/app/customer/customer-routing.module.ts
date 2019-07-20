@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CustomerListRouteComponent} from './customer-list-route/customer-list-route.component';
 import {CustomerDetailsRouteComponent} from './customer-details-route/customer-details-route.component';
-import {AppRouteData} from '../app-routes';
 import {CustomerIdResolverService} from './customer-id-resolver.service';
+import {CustomerListMenuItem, ResolvedCustomerDetailsMenuItem} from './customer-menu';
 
 
 export const CUSTOMER_ROUTES: Routes = [
@@ -16,13 +16,8 @@ export const CUSTOMER_ROUTES: Routes = [
     path: 'list',
     component: CustomerListRouteComponent,
     data: {
-      menuItem: {
-        label: 'List',
-        title: 'List',
-        icon: 'fa fa-list',
-        routerLink: ['/customer/list'],
-      }
-    } as AppRouteData
+      menuItem: CustomerListMenuItem
+    }
   },
   {
     path: ':customerId',
@@ -31,11 +26,7 @@ export const CUSTOMER_ROUTES: Routes = [
       customer: CustomerIdResolverService
     },
     data: {
-      menuItem: {
-        label: 'Details',
-        title: 'Details',
-        icon: 'fa fa-shopping-cart',
-      }
+      menuItem: ResolvedCustomerDetailsMenuItem
     }
   }
 ];

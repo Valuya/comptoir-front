@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {AppRouteData} from '../app-routes';
+import {PosListRouteComponent} from './pos-list-route/pos-list-route.component';
+import {PosDetailsRouteComponent} from './pos-details-route/pos-details-route.component';
 import {PosIdResolverService} from './pos-id-resolver.service';
-import {PoDetailsRouteComponent} from './pos-details-route/pos-details-route.component';
-import {PoListRouteComponent} from './pos-list-route/pos-list-route.component';
+import {PosListMenuItem, ResolvedPosDetailsMenuItem} from './pos-menu';
 
 
 export const POS_ROUTES: Routes = [
@@ -14,28 +14,19 @@ export const POS_ROUTES: Routes = [
   },
   {
     path: 'list',
-    component: PoListRouteComponent,
+    component: PosListRouteComponent,
     data: {
-      menuItem: {
-        label: 'List',
-        title: 'List',
-        icon: 'fa fa-list',
-        routerLink: ['/pos/list'],
-      }
-    } as AppRouteData
+      menuItem: PosListMenuItem
+    }
   },
   {
     path: ':posId',
-    component: PoDetailsRouteComponent,
+    component: PosDetailsRouteComponent,
     resolve: {
       pos: PosIdResolverService
     },
     data: {
-      menuItem: {
-        label: 'Details',
-        title: 'Details',
-        icon: 'fa fa-building',
-      }
+      menuItem: ResolvedPosDetailsMenuItem
     }
   }
 ];

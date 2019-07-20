@@ -1,0 +1,28 @@
+<div class="sale">
+  <div class="icon">
+    <i class="fa fa-shopping-cart"></i>
+  </div>
+
+  <div class="content">
+
+    <div class="vatExclusiveAmount">
+      <cp-loading-content [loading]="loading$ |async">
+        <cp-locale-text [localeTexts]="(value$ |async)?.vatExclusiveAmount"></cp-locale-text>
+      </cp-loading-content>
+    </div>
+
+    <div class="reference">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.reference }}
+      </cp-loading-content>
+    </div>
+
+
+    <div class="dateteime">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.dateTime | date }}
+      </cp-loading-content>
+    </div>
+  </div>
+
+</div>

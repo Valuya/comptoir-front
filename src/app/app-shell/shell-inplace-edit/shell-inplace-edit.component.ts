@@ -2,14 +2,15 @@ import {
   AfterContentInit,
   Component,
   ContentChild,
-  ContentChildren, ElementRef,
+  ContentChildren,
   EventEmitter,
   Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
-  Output, QueryList,
+  Output,
+  QueryList,
   TemplateRef
 } from '@angular/core';
 import {InplaceOutputDirective} from './inplace-output.directive';

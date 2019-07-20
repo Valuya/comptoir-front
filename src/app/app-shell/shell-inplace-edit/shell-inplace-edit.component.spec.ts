@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ShellInplaceEditComponent } from './shell-inplace-edit.component';
+import {ShellInplaceEditComponent} from './shell-inplace-edit.component';
 
 describe('ShellInplaceEditComponent', () => {
   let component: ShellInplaceEditComponent;

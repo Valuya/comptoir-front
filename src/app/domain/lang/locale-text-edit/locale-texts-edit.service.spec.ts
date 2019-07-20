@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { LocaleTextsEditService } from './locale-texts-edit.service';
+import {LocaleTextsEditService} from './locale-texts-edit.service';
 
 describe('LocaleTextsEditService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

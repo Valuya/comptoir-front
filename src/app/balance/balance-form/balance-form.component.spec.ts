@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BalanceFormComponent } from './balance-form.component';
+import {BalanceFormComponent} from './balance-form.component';
 
 describe('BalanceFormComponent', () => {
   let component: BalanceFormComponent;

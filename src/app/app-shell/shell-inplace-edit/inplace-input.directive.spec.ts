@@ -1,4 +1,4 @@
-import { InplaceInputDirective } from './inplace-input.directive';
+import {InplaceInputDirective} from './inplace-input.directive';
 
 describe('InplaceInputDirective', () => {
   it('should create an instance', () => {

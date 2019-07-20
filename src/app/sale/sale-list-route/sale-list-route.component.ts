@@ -6,7 +6,7 @@ import {concat, Observable, of} from 'rxjs';
 import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
-import {AMOUNT_COLUMN, CUSTOMER_COLUMN, DATETIME_COLUMN, ID_COLUMN, SaleColumn} from '../sale-column/sale-columns';
+import {AMOUNT_COLUMN, CUSTOMER_COLUMN, DATETIME_COLUMN, ID_COLUMN, REFERENCE_COLUMN, SaleColumn} from '../sale-column/sale-columns';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsSale, WsSaleSearch, WsSalesSearchResult} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
@@ -24,6 +24,7 @@ export class SaleListRouteComponent implements OnInit {
   columns: TableColumn<SaleColumn>[] = [
     ID_COLUMN,
     DATETIME_COLUMN,
+    REFERENCE_COLUMN,
     CUSTOMER_COLUMN,
     AMOUNT_COLUMN
   ];

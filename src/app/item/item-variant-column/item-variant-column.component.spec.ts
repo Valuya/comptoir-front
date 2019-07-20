@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ItemVariantColumnComponent } from './item-variant-column.component';
+import {ItemVariantColumnComponent} from './item-variant-column.component';
 
 describe('ItemVariantColumnComponent', () => {
   let component: ItemVariantColumnComponent;

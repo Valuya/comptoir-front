@@ -28,9 +28,9 @@ export class SaleIdResolverService implements Resolve<WsSale> {
     return {} as WsSale;
   }
 
-  private fetchSale$(id: number) {
+  private fetchSale$(idValue: number) {
     return this.apiService.api.getSale({
-      id: id,
+      id: idValue,
     }) as any as Observable<WsSale>;
   }
 }

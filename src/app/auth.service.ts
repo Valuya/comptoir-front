@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {WsAuth, WsCompanyRef, WsEmployee} from '@valuya/comptoir-ws-api';
 import * as moment from 'moment';
 import {BehaviorSubject, concat, Observable, of} from 'rxjs';
-import {map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {AuthProvider} from './util/auth-provider';
 

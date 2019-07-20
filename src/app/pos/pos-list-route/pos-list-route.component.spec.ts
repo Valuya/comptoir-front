@@ -1,20 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PoListRouteComponent } from './pos-list-route.component';
+import {PosListRouteComponent} from './pos-list-route.component';
 
 describe('PoListRouteComponent', () => {
-  let component: PoListRouteComponent;
-  let fixture: ComponentFixture<PoListRouteComponent>;
+  let component: PosListRouteComponent;
+  let fixture: ComponentFixture<PosListRouteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PoListRouteComponent ]
+      declarations: [ PosListRouteComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PoListRouteComponent);
+    fixture = TestBed.createComponent(PosListRouteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

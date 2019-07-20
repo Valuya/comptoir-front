@@ -1,4 +1,4 @@
-import { InplaceOutputDirective } from './inplace-output.directive';
+import {InplaceOutputDirective} from './inplace-output.directive';
 
 describe('InplaceOutputDirective', () => {
   it('should create an instance', () => {

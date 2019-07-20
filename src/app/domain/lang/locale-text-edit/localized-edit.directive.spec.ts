@@ -1,4 +1,4 @@
-import { LocalizedEditDirective } from './localized-edit.directive';
+import {LocalizedEditDirective} from './localized-edit.directive';
 
 describe('LocalizedEditDirective', () => {
   it('should create an instance', () => {

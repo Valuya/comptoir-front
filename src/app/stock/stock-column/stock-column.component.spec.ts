@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { StockColumnComponent } from './stock-column.component';
+import {StockColumnComponent} from './stock-column.component';
 
 describe('StockColumnComponent', () => {
   let component: StockColumnComponent;

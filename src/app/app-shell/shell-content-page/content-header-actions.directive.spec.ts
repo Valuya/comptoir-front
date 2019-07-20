@@ -1,4 +1,4 @@
-import { ContentHeaderActionsDirective } from './content-header-actions.directive';
+import {ContentHeaderActionsDirective} from './content-header-actions.directive';
 
 describe('ContentHeaderActionsDirective', () => {
   it('should create an instance', () => {

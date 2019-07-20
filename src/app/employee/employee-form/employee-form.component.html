@@ -9,10 +9,10 @@
                            [ngModel]="value.firstName"
                            (ngModelChange)="updateValue({firstName: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.firstName }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="firstName.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -29,10 +29,10 @@
                            [ngModel]="value.lastName"
                            (ngModelChange)="updateValue({lastName: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.lastName }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="lastName.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -47,7 +47,7 @@
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.active"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <p-inputSwitch [ngModel]="value.active"
                        (ngModelChange)="updateValue({active: $event})"
                        [class.ui-state-error]="invalid"
@@ -67,10 +67,10 @@
                            [ngModel]="value.login"
                            (ngModelChange)="updateValue({login: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.login }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="login.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -87,10 +87,10 @@
                              [ngModel]="value.locale"
                              (ngModelChange)="updateValue({locale: $event})"
       >
-        <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+        <ng-template cpInplaceOutput let-invalid="invalid">
           {{ value.locale }}
         </ng-template>
-        <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+        <ng-template cpInplaceInput let-invalid="invalid">
           <input type="text" pInputText [(ngModel)]="locale.editValue"
                  autofocus
                  [class.ui-state-error]="invalid">

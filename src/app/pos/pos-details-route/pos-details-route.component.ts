@@ -3,7 +3,7 @@ import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-hel
 import {WsPos, WsPosRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {map, mergeMap, tap} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
@@ -16,7 +16,7 @@ import {NavigationService} from '../../navigation.service';
   styleUrls: ['./pos-details-route.component.scss'],
 
 })
-export class PoDetailsRouteComponent implements OnInit, OnDestroy {
+export class PosDetailsRouteComponent implements OnInit, OnDestroy {
 
   formHelper: ShellFormHelper<WsPos>;
 
@@ -26,13 +26,13 @@ export class PoDetailsRouteComponent implements OnInit, OnDestroy {
               private messageService: MessageService,
               private navigationService: NavigationService,
               private apiService: ApiService) {
+  }
+
+  ngOnInit() {
     this.formHelper = new ShellFormHelper<WsPos>(
       value => this.validate$(value),
       value => this.persist$(value),
     );
-  }
-
-  ngOnInit() {
     this.subscription = this.activatedRoute.data.pipe(
       map(data => data.pos),
     ).subscribe(pos => this.formHelper.init(pos));

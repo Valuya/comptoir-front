@@ -1,0 +1,9 @@
+<div class="stock-select">
+  <p-autoComplete [ngModel]="valueItem$ | async"
+                  (ngModelChange)="fireChanges($event.ref)"
+                  field="label"
+                  [suggestions]="suggestions$ | async"
+                  [dropdown]="true"
+                  (completeMethod)="onSearchQuery($event)"
+  ></p-autoComplete>
+</div>

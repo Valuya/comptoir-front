@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LocaleTextEditComponent } from './locale-text-edit.component';
+import {LocaleTextEditComponent} from './locale-text-edit.component';
 
 describe('LocaleTextEditComponent', () => {
   let component: LocaleTextEditComponent;

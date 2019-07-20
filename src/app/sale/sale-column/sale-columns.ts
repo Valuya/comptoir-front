@@ -7,6 +7,7 @@ export const enum SaleColumn {
   AMOUNT = 'AMOUNT',
   VAT_AMOUNT = 'VAT_AMOUNT',
   VAT_EXLUSIVE_AMOUNT = 'VAT_EXLUSIVE_AMOUNT',
+  REFERENCE = 'REFERENCE'
 }
 
 export const ID_COLUMN: TableColumn<SaleColumn> = {
@@ -35,6 +36,14 @@ export const DATETIME_COLUMN: TableColumn<SaleColumn> = {
 export const AMOUNT_COLUMN: TableColumn<SaleColumn> = {
   value: SaleColumn.AMOUNT,
   header: 'Amount',
+  sortable: false,
+  widthWeight: 1
+};
+
+
+export const REFERENCE_COLUMN: TableColumn<SaleColumn> = {
+  value: SaleColumn.REFERENCE,
+  header: 'Reference',
   sortable: false,
   widthWeight: 1
 };

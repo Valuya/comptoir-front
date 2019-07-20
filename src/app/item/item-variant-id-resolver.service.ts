@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {ApiService} from '../api.service';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
-import {WsItemVariant} from '@valuya/comptoir-ws-api';
+import {WsItem, WsItemVariant} from '@valuya/comptoir-ws-api';
+import {RouteUtils} from '../util/route-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -13,19 +14,22 @@ export class ItemVariantIdResolverService {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<WsItemVariant> | Promise<WsItemVariant> | WsItemVariant {
-    const param = route.params.itemVariantId;
-    if (param == null) {
-      return of(this.createNew());
+    const param = route.params.variantId;
+    const resolvedItem: WsItem = RouteUtils.findRouteDataInAncestors(route.pathFromRoot, 'item');
+    if (resolvedItem == null || param == null) {
+      return of(this.createNew(resolvedItem));
     }
     const idParam = parseInt(param, 10);
     if (isNaN(idParam)) {
-      return of(this.createNew());
+      return of(this.createNew(resolvedItem));
     }
     return this.fetchItemVariant$(idParam);
   }
 
-  private createNew(): WsItemVariant {
-    return {} as WsItemVariant;
+  private createNew(resolvedItem: WsItem): WsItemVariant {
+    return {
+      itemRef: resolvedItem == null ? null : {id: resolvedItem.id},
+    } as WsItemVariant;
   }
 
   private fetchItemVariant$(idValue: number) {

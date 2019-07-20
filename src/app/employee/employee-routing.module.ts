@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {EmployeeListRouteComponent} from './employee-list-route/employee-list-route.component';
 import {EmployeeDetailsRouteComponent} from './employee-details-route/employee-details-route.component';
-import {AppRouteData} from '../app-routes';
 import {EmployeeIdResolverService} from './employee-id-resolver.service';
+import {EmployeeListMenuItem, ResolvedEmployeeDetailsMenuItem} from './employee-menu';
 
 
 export const EMPLOYEE_ROUTES: Routes = [
@@ -16,13 +16,8 @@ export const EMPLOYEE_ROUTES: Routes = [
     path: 'list',
     component: EmployeeListRouteComponent,
     data: {
-      menuItem: {
-        label: 'List',
-        title: 'List',
-        icon: 'fa fa-list',
-        routerLink: ['/employee/list'],
-      }
-    } as AppRouteData
+      menuItem: EmployeeListMenuItem
+    }
   },
   {
     path: ':employeeId',
@@ -31,11 +26,7 @@ export const EMPLOYEE_ROUTES: Routes = [
       employee: EmployeeIdResolverService
     },
     data: {
-      menuItem: {
-        label: 'Details',
-        title: 'Details',
-        icon: 'fa fa-shopping-cart',
-      }
+      menuItem: ResolvedEmployeeDetailsMenuItem
     }
   }
 ];

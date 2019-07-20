@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AttributeValueComponent } from './attribute-value.component';
+import {AttributeValueComponent} from './attribute-value.component';
 
 describe('AttributeValueComponent', () => {
   let component: AttributeValueComponent;

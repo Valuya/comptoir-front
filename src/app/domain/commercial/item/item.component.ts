@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsItem, WsItemRef} from '@valuya/comptoir-ws-api';
@@ -31,6 +31,9 @@ export class ItemComponent implements OnInit {
   }
 
   private loadRef$(ref: WsItemRef) {
+    if (ref == null) {
+      return of(null);
+    }
     this.loading$.next(true);
     const loaded$ = this.apiService.api.getItem({
       id: ref.id

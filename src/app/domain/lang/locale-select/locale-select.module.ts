@@ -1,7 +1,6 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LocaleSelectComponent } from './locale-select.component';
-
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {LocaleSelectComponent} from './locale-select.component';
 
 
 @NgModule({

@@ -1,4 +1,4 @@
-import { FilterContentDirective } from './filter-content.directive';
+import {FilterContentDirective} from './filter-content.directive';
 
 describe('FilterContentDirective', () => {
   it('should create an instance', () => {

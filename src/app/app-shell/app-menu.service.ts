@@ -1,10 +1,13 @@
 import {Injectable} from '@angular/core';
 import {MenuItem} from 'primeng/api';
-import {combineLatest, concat, EMPTY, Observable, of} from 'rxjs';
-import {ActivatedRoute, Route, Router} from '@angular/router';
-import {distinctUntilChanged, map, mergeMap, publishReplay, refCount, switchMap, tap, toArray} from 'rxjs/operators';
-import {APP_MODULES_ROUTES, APP_SHELL_ROUTE_DATA_ID, AppRouteData} from '../app-routes';
+import {concat, Observable, of} from 'rxjs';
+import {ActivatedRouteSnapshot, ActivationStart, ResolveEnd, Route, Router, RouterStateSnapshot} from '@angular/router';
+import {distinctUntilChanged, filter, map, mergeMap, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {AuthService} from '../auth.service';
+import {AppMenu} from '../app-menu';
+import {AppRouteData} from '../util/app-route-data';
+import {RouteUtils} from '../util/route-utils';
+import {ResolvedRouteItem} from '../util/resolved-route-item';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +15,7 @@ import {AuthService} from '../auth.service';
 export class AppMenuService {
 
   appMenu$: Observable<MenuItem[]>;
+  breadcrumbMenu$: Observable<MenuItem[]>;
 
   constructor(private router: Router,
               private authService: AuthService) {
@@ -20,104 +24,29 @@ export class AppMenuService {
       switchMap(employee => this.createAppMenu$(employee)),
       publishReplay(1), refCount()
     );
+    const nextActivatedRoutesMenu$ = this.router.events.pipe(
+      mergeMap(event => this.filterActivationEvent(event)),
+      filter(e => e != null),
+      map(event => this.createMenuFromRouteEvent(event)),
+      publishReplay(1), refCount()
+    );
+    const activatedRouteMenu = this.createMenuFromRouterState(this.router.routerState.snapshot);
+    this.breadcrumbMenu$ = concat(of(activatedRouteMenu), nextActivatedRoutesMenu$);
   }
 
   createAppMenu$(loggeduser?: any): Observable<MenuItem[]> {
-    const appRoutes$List = APP_MODULES_ROUTES.map(
-      appRoute => this.filterDisabledRoute$(appRoute, loggeduser),
-    );
-    return concat(...appRoutes$List).pipe(
-      toArray(),
-      tap(routes => this.resetRouterConfig(routes)),
-      map(routes => this.createRoutesMenu(routes))
-    );
+    const mainMenuSections = Object.keys(AppMenu);
+    const mainMenu = mainMenuSections
+      .map(section => this.createMenuSection(section));
+    return of(mainMenu);
   }
 
-  createBreadcrumbMenuFromRoute$(activatedRoute: ActivatedRoute): Observable<MenuItem[]> {
-    const routePath = activatedRoute.pathFromRoot;
-    const menuItem$List = routePath.map(
-      part => this.createActivatedRouteMenuItem(part)
-    );
-    const menuitem$ = menuItem$List.length === 0 ? of([]) : combineLatest(menuItem$List);
-    return menuitem$.pipe(
-      map(list => list.filter(item => item != null))
-    );
-  }
-
-  private createActivatedRouteMenuItem(routePart: ActivatedRoute): Observable<MenuItem | null> {
-    return routePart.data.pipe(
-      map(routeData => this.createRouteMenuItemFromData(routeData))
-    );
-  }
-
-  private createRouteMenuItemFromData(routeData: AppRouteData) {
-    if (routeData == null) {
+  cloneMenuItem(menuItem: MenuItem | any) {
+    if (menuItem == null) {
       return null;
     }
-    if (routeData.menuItem != null) {
-      const menuData: MenuItem = routeData.menuItem;
-      const cloneItem: MenuItem = Object.assign({}, menuData);
-      return cloneItem;
-    }
-    return null;
-  }
-
-  private createLoggedUserMenuItem(): MenuItem {
-    return {
-      icon: 'fa fa-user',
-      routerLink: ['/me']
-    };
-  }
-
-  private filterDisabledRoute$(appRoute: Route, loggeduser: any): Observable<Route> {
-    const data = appRoute.data as AppRouteData;
-    if (data != null && data.menuItem != null) {
-      if (data.menuItem.routerLink == null || data.menuItem.routerLink.length === 0) {
-        return EMPTY;
-      }
-    }
-
-    const featureEnabled$ = of(true);
-    return featureEnabled$.pipe(
-      mergeMap(enabled => enabled ? of(appRoute) : EMPTY)
-    );
-  }
-
-  private resetRouterConfig(routes: Route[]) {
-    const baseConfig = this.cloneBaseRouterConfig();
-    const shellRouteConfig = this.flattenRoutes(baseConfig)
-      .find(route => route.data != null && route.data.id === APP_SHELL_ROUTE_DATA_ID);
-    if (shellRouteConfig == null) {
-      throw new Error(`No shell route with data id ${APP_SHELL_ROUTE_DATA_ID}`);
-    }
-    shellRouteConfig.children = routes;
-    this.router.resetConfig(baseConfig);
-  }
-
-  private flattenRoutes(routes: Route[]): Route[] {
-    return routes.reduce((cur, next) => {
-      const nexts = [next];
-      if (next.children != null) {
-        nexts.push(...this.flattenRoutes(next.children));
-      }
-      return [...cur, ...nexts];
-    }, []);
-  }
-
-  private createRoutesMenu(routes: Route[]): MenuItem[] {
-    const moduleRoutesItems = routes.map(route => route.data as AppRouteData)
-      .filter(data => data != null)
-      .map(data => data.menuItem)
-      .filter(item => item != null);
-    return [
-      this.createLoggedUserMenuItem(),
-      ...moduleRoutesItems
-    ];
-  }
-
-  private cloneBaseRouterConfig() {
-    const baseRoutes = this.router.config;
-    return this.cloneRoutes(baseRoutes);
+    const cloneItem: MenuItem = Object.assign({}, menuItem);
+    return cloneItem;
   }
 
   private cloneRoutes(routes: Route[]): Route[] {
@@ -130,5 +59,120 @@ export class AppMenuService {
       clone.children = this.cloneRoutes(clone.children);
     }
     return clone;
+  }
+
+  private createMenuSection(section: string) {
+    let menuItem = AppMenu[section];
+    menuItem = this.filterForAppMenu(menuItem);
+    return menuItem;
+  }
+
+  private filterForAppMenu(menuItem: MenuItem) {
+    if (menuItem == null) {
+      return null;
+    }
+    const newItem = this.cloneMenuItem(menuItem);
+    const children = newItem.items as MenuItem[];
+    if (children != null) {
+      newItem.items = [...children]
+        .map(item => this.filterForAppMenu(item))
+        .filter(item => item != null);
+    }
+    const newChildren = newItem.items;
+
+    if (newItem.routerLink == null && (newChildren == null || newChildren.length === 0)) {
+      return null;
+    }
+    return newItem;
+  }
+
+  private filterActivationEvent(event: any): Observable<ActivationStart | ResolveEnd> {
+    if (event instanceof ActivationStart) {
+      return of(event as ActivationStart);
+    } else if (event instanceof ResolveEnd) {
+      return of(event as ResolveEnd);
+    } else {
+      return of(null);
+    }
+  }
+
+  private createMenuFromRouteSnapshot(snapshot: ActivatedRouteSnapshot): MenuItem[] {
+    const routePath = snapshot.pathFromRoot;
+    return this.createMenuFromRootPath(routePath);
+  }
+
+  private createMenuFromRootPath(routePath: ActivatedRouteSnapshot[]) {
+    return routePath
+      .filter(snapshot => snapshot.data != null)
+      .map(snapshot => this.createMenuItemFromRouteSnapshot(snapshot))
+      .filter(item => item != null);
+  }
+
+  private createMenuFromRouterState(state: RouterStateSnapshot): MenuItem[] {
+    const rootRoute = state.root;
+    const routePath = [rootRoute]
+      .reduce((cur, next) => RouteUtils.reduceRoutePathFromRoot(cur, next), []);
+    return this.createMenuFromRootPath(routePath);
+  }
+
+
+  private createMenuItemFromRouteSnapshot(snapshot: ActivatedRouteSnapshot): MenuItem | null {
+    const data = snapshot.data as AppRouteData;
+    if (data == null || data.menuItem == null) {
+      return null;
+    }
+    return this.updateMenuItemFromRouteSnapshot(data.menuItem, snapshot);
+  }
+
+  updateMenuItemFromRouteSnapshot(item: ResolvedRouteItem<any> | MenuItem, snapshot: ActivatedRouteSnapshot): MenuItem | null {
+    const newItem = this.cloneMenuItem(item);
+    let resolvedItem: ResolvedRouteItem<any> & MenuItem = newItem as ResolvedRouteItem<any> & MenuItem;
+    const emptyResolvedItem = resolvedItem.labelFactory == null && resolvedItem.routerLinkFactory == null;
+    if (emptyResolvedItem) {
+      resolvedItem = null;
+    }
+    const data = snapshot.data as AppRouteData;
+
+    if (resolvedItem != null) {
+
+      // Label
+      if (resolvedItem.labelFactory != null) {
+        const resolvers = snapshot.routeConfig.resolve;
+        if (resolvers != null) {
+          const resolverNames = Object.keys(resolvers);
+          if (resolverNames.length > 0) {
+            const firstResolver = resolverNames[0];
+            const resolvedValue = data[firstResolver];
+            const resolvedLabel = resolvedItem.labelFactory(resolvedValue);
+            resolvedItem.label = resolvedLabel;
+            resolvedItem.title = resolvedLabel;
+          }
+        }
+      }
+
+      // Router link
+      if (resolvedItem.routerLinkFactory != null) {
+        const routerLinkValue = resolvedItem.routerLinkFactory(snapshot);
+        resolvedItem.routerLink = routerLinkValue;
+      }
+
+    }
+
+    const newItemChilds = newItem.items as MenuItem[];
+    if (newItemChilds != null && newItemChilds.length > 0) {
+      newItem.items = [
+        ...newItemChilds.map(newItemChild => this.updateMenuItemFromRouteSnapshot(newItemChild, snapshot))
+      ];
+    }
+
+    return newItem;
+  }
+
+  private createMenuFromRouteEvent(event: ActivationStart | ResolveEnd) {
+    if (event instanceof ActivationStart) {
+      return this.createMenuFromRouteSnapshot(event.snapshot);
+    } else if (event instanceof ResolveEnd) {
+      return this.createMenuFromRouterState(event.state);
+    }
   }
 }

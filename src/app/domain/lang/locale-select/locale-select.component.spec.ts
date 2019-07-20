@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LocaleSelectComponent } from './locale-select.component';
+import {LocaleSelectComponent} from './locale-select.component';
 
 describe('LocaleSelectComponent', () => {
   let component: LocaleSelectComponent;

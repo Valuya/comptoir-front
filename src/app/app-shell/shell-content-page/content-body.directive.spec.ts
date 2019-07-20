@@ -1,4 +1,4 @@
-import { ContentBodyDirective } from './content-body.directive';
+import {ContentBodyDirective} from './content-body.directive';
 
 describe('ContentBodyDirective', () => {
   it('should create an instance', () => {

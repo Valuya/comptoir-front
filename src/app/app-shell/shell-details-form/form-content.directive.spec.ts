@@ -1,4 +1,4 @@
-import { FormContentDirective } from './form-content.directive';
+import {FormContentDirective} from './form-content.directive';
 
 describe('FormContentDirective', () => {
   it('should create an instance', () => {

@@ -7,15 +7,16 @@ import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {
-  ID_COLUMN,
   CustomerColumn,
-  LAST_NAME_COLUMN,
-  FIRST_NAME_COLUMN,
   EMAIL_COLUMN,
-  PHONE1_COLUMN, NOTES_COLUMN
+  FIRST_NAME_COLUMN,
+  ID_COLUMN,
+  LAST_NAME_COLUMN,
+  NOTES_COLUMN,
+  PHONE1_COLUMN
 } from '../customer-column/customer-columns';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
-import {WsEmployee, WsCustomer, WsCustomerSearch, WsCustomerSearchResult} from '@valuya/comptoir-ws-api';
+import {WsCustomer, WsCustomerSearch, WsCustomerSearchResult, WsEmployee} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
 

@@ -1,0 +1,6 @@
+.stock {
+
+  &:not(.active) {
+    opacity: .7;
+  }
+}

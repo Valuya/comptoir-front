@@ -1,0 +1,23 @@
+<div class="variants">
+  <ng-template cpContentHeaderActions>
+    <button type="button" pButton
+            label="New variant"
+            [routerLink]="['/sale', (sale$ | async)?.id, '/variant/new']"
+    ></button>
+  </ng-template>
+  <cp-shell-table [columns]="columns"
+                  [loading]="saleVariantTableHelper.loading$ | async"
+                  [rows]="saleVariantTableHelper.rows$ | async"
+                  [totalRecords]="saleVariantTableHelper.totalCount$ | async"
+                  [pagination]="saleVariantTableHelper.pagination$ | async"
+                  (paginationChange)="saleVariantTableHelper.setPagination($event)"
+                  [(selection)]="selectedsaleVariant"
+                  (rowSelect)="onRowSelect($event)"
+  >
+    <ng-template cpShellColumn let-row="row" let-column="column">
+      <cp-sale-variant-column [column]="column"
+                              [row]="row"
+      ></cp-sale-variant-column>
+    </ng-template>
+  </cp-shell-table>
+</div>

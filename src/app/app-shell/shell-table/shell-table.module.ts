@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {ShellTableComponent} from './shell-table.component';
 import {TableModule} from 'primeng/table';
 import {ShellColumnDirective} from './shell-column.directive';
-import { FilterContentDirective } from './filter-content.directive';
+import {FilterContentDirective} from './filter-content.directive';
 
 
 @NgModule({

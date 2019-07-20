@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AccountSelectComponent } from './account-select.component';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {AccountSelectComponent} from './account-select.component';
 import {AutoCompleteModule} from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
-
 
 
 @NgModule({

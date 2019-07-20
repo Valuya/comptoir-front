@@ -1,6 +1,5 @@
 import {Component, ContentChild, EventEmitter, OnInit, Output, TemplateRef} from '@angular/core';
 import {FormContentDirective} from './form-content.directive';
-import {Location} from '@angular/common';
 import {InplaceEditService} from '../shell-inplace-edit/inplace-edit.service';
 
 @Component({

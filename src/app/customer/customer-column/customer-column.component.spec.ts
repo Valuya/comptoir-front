@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CustomerColumnComponent } from './customer-column.component';
+import {CustomerColumnComponent} from './customer-column.component';
 
 describe('CustomerColumnComponent', () => {
   let component: CustomerColumnComponent;

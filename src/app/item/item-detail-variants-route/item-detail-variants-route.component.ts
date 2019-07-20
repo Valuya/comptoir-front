@@ -1,29 +1,41 @@
 import {Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
+import {WsCompanyRef, WsItem, WsItemVariant, WsItemVariantSearch, WsItemVariantSearchResult} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
+import {
+  ID_COLUMN,
+  ItemVariantColumn,
+  MAIN_PICTURE_COLUMN,
+  PRICING_AMOUNT_COLUMN,
+  PRICING_COLUMN,
+  VARIANT_REFERENCE_COLUMN
+} from '../item-variant-column/item-variant-columns';
 import {ApiService} from '../../api.service';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
+import {filter, map, mergeMap, publishReplay, refCount, take, toArray} from 'rxjs/operators';
 import {Pagination} from '../../util/pagination';
-import {concat, Observable, of} from 'rxjs';
+import {combineLatest, concat, forkJoin, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
-import {ID_COLUMN, ItemVariantColumn} from '../item-variant-column/item-variant-columns';
-import {WsItemVariant, WsEmployee, WsItemVariantSearch, WsItemVariantSearchResult} from '@valuya/comptoir-ws-api';
 
 @Component({
-  selector: 'cp-item-variant-list-route',
-  templateUrl: './item-variant-list-route.component.html',
-  styleUrls: ['./item-variant-list-route.component.scss']
+  selector: 'cp-item-detail-variants-route',
+  templateUrl: './item-detail-variants-route.component.html',
+  styleUrls: ['./item-detail-variants-route.component.scss']
 })
-export class ItemVariantListRouteComponent implements OnInit {
+export class ItemDetailVariantsRouteComponent implements OnInit {
 
   itemVariantTableHelper: ShellTableHelper<WsItemVariant, WsItemVariantSearch>;
   selecteditemVariant: WsItemVariant[] = [];
   columns: TableColumn<ItemVariantColumn>[] = [
-    ID_COLUMN
+    ID_COLUMN,
+    MAIN_PICTURE_COLUMN,
+    VARIANT_REFERENCE_COLUMN,
+    PRICING_COLUMN,
+    PRICING_AMOUNT_COLUMN,
   ];
+  item$: Observable<WsItem | null>;
 
   constructor(private apiService: ApiService,
               private authService: AuthService,
@@ -36,10 +48,19 @@ export class ItemVariantListRouteComponent implements OnInit {
     this.itemVariantTableHelper = new ShellTableHelper<WsItemVariant, WsItemVariantSearch>(
       (searchFilter, pagination) => this.searchitemVariant$(searchFilter, pagination)
     );
-    this.authService.getLoggedEmployee$().pipe(
-      filter(e => e != null),
-      take(1),
-    ).subscribe(employee => this.initFilter(employee));
+    const companyRef$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(
+      filter(c => c != null),
+      take(1)
+    );
+    const item$List = this.activatedRoute.pathFromRoot.map(
+      route => route.data.pipe(map(data => data.item))
+    );
+    this.item$ = combineLatest(...item$List).pipe(
+      map(list => list.find(item => item != null)),
+      publishReplay(1), refCount(),
+    );
+    forkJoin(companyRef$, this.item$.pipe(filter(i => i != null), take(1)))
+      .subscribe(r => this.initFilter(r[0], r[1]));
   }
 
   private searchitemVariant$(searchFilter: WsItemVariantSearch | null, pagination: Pagination | null): Observable<SearchResult<WsItemVariant>> {
@@ -70,15 +91,25 @@ export class ItemVariantListRouteComponent implements OnInit {
     );
   }
 
-  private initFilter(employee: WsEmployee) {
+  private initFilter(companyRef: WsCompanyRef, item: WsItem) {
+    if (companyRef == null || item == null) {
+      return;
+    }
     const searchFilter: WsItemVariantSearch = {
-      // companyRef: employee.companyRef
+      itemRef: {id: item.id},
+      itemSearch: {
+        companyRef: companyRef,
+      }
     };
     this.itemVariantTableHelper.setFilter(searchFilter);
   }
 
   onRowSelect(itemVariant: WsItemVariant) {
-    this.router.navigate(['/itemVariant', itemVariant.id]);
+    this.item$.pipe(
+      take(1)
+    ).subscribe(item => {
+      this.router.navigate(['/item', item.id, 'variant', itemVariant.id]);
+    });
   }
 
   onNewVariantClick() {

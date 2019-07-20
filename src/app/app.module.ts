@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MessageService, PanelMenuModule} from 'primeng/primeng';
+import {MessageService} from 'primeng/primeng';
 import {AppShellModule} from './app-shell/app-shell.module';
 
 @NgModule({

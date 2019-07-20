@@ -8,10 +8,10 @@
                            [ngModel]="value.name"
                            (ngModelChange)="updateValue({name: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.name }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input [(ngModel)]="name.editValue"
                [class.ui-state-error]="invalid"
                autofocus
@@ -29,11 +29,11 @@
                            [ngModel]="value.description"
                            (ngModelChange)="updateValue({description: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-locale-text [localeTexts]="value.description">
         </cp-locale-text>
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-locale-text-edit #descriptionTexts
                              [(ngModel)]="description.editValue"
                              [disabled]="disabled"
@@ -59,7 +59,7 @@
                            [ngModel]="value.defaultCustomerRef"
                            (ngModelChange)="updateValue({defaultCustomerRef: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-customer-select
           [ngModel]="value.defaultCustomerRef"
           (ngModelChange)="updateValue({defaultCustomerRef: $event})"

@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { InplaceEditService } from './inplace-edit.service';
+import {InplaceEditService} from './inplace-edit.service';
 
 describe('InplaceEditService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

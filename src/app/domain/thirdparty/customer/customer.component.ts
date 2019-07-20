@@ -25,6 +25,7 @@ export class CustomerComponent implements OnInit {
 
   ngOnInit() {
     this.value$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.loadRef$(ref)),
       publishReplay(1), refCount()
     );

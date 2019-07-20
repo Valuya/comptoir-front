@@ -17,7 +17,7 @@ import {Router} from '@angular/router';
   templateUrl: './pos-list-route.component.html',
   styleUrls: ['./pos-list-route.component.scss']
 })
-export class PoListRouteComponent implements OnInit {
+export class PosListRouteComponent implements OnInit {
 
   posTableHelper: ShellTableHelper<WsPos, WsPosSearch>;
   selectedpos: WsPos[] = [];

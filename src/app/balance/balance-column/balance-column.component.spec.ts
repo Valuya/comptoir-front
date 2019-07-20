@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { BalanceColumnComponent } from './balance-column.component';
+import {BalanceColumnComponent} from './balance-column.component';
 
 describe('BalanceColumnComponent', () => {
   let component: BalanceColumnComponent;

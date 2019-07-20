@@ -51,6 +51,7 @@ export class SaleFilterComponent implements OnInit, ControlValueAccessor {
   }
 
   private fireChanges(newValue: WsSaleSearch) {
+    this.value = newValue;
     if (this.onTouched) {
       this.onTouched();
     }

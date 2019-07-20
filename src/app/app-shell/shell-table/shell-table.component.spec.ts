@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ShellTableComponent } from './shell-table.component';
+import {ShellTableComponent} from './shell-table.component';
 
 describe('ShellTableComponent', () => {
   let component: ShellTableComponent;

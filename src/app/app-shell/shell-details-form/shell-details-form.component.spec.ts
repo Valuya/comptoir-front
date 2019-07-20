@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ShellDetailsFormComponent } from './shell-details-form.component';
+import {ShellDetailsFormComponent} from './shell-details-form.component';
 
 describe('ShellDetailsFormComponent', () => {
   let component: ShellDetailsFormComponent;

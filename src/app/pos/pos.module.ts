@@ -4,8 +4,8 @@ import {CommonModule} from '@angular/common';
 import {PosRoutingModule} from './pos-routing.module';
 import {PosColumnComponent} from './pos-column/pos-column.component';
 import {PosFormComponent} from './pos-form/pos-form.component';
-import {PoDetailsRouteComponent} from './pos-details-route/pos-details-route.component';
-import {PoListRouteComponent} from './pos-list-route/pos-list-route.component';
+import {PosDetailsRouteComponent} from './pos-details-route/pos-details-route.component';
+import {PosListRouteComponent} from './pos-list-route/pos-list-route.component';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 import {ShellContentPageModule} from '../app-shell/shell-content-page/shell-content-page.module';
 import {ButtonModule} from 'primeng/button';
@@ -19,7 +19,7 @@ import {CustomerSelectModule} from '../domain/thirdparty/customer-select/custome
 
 
 @NgModule({
-  declarations: [PosColumnComponent, PosFormComponent, PoDetailsRouteComponent, PoListRouteComponent],
+  declarations: [PosColumnComponent, PosFormComponent, PosDetailsRouteComponent, PosListRouteComponent],
   imports: [
     CommonModule,
     PosRoutingModule,

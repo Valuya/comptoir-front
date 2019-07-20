@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { InvoiceFormComponent } from './invoice-form.component';
+import {InvoiceFormComponent} from './invoice-form.component';
 
 describe('InvoiceFormComponent', () => {
   let component: InvoiceFormComponent;

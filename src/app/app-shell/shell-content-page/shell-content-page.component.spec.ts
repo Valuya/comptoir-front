@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ShellContentPageComponent } from './shell-content-page.component';
+import {ShellContentPageComponent} from './shell-content-page.component';
 
 describe('ShellContentPageComponent', () => {
   let component: ShellContentPageComponent;

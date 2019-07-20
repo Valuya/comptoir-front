@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsCompanyRef, WsCustomer, WsCustomerRef, WsCustomerSearch, WsCustomerSearchResult} from '@valuya/comptoir-ws-api';
-import {BehaviorSubject, concat, forkJoin, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
 import {CustomerSelectItem} from './customer-select-item';
-import {filter, map, publishReplay, refCount, switchMap, take, toArray} from 'rxjs/operators';
+import {filter, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
 import {ApiService} from '../../../api.service';
 import {AuthService} from '../../../auth.service';
 

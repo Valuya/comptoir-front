@@ -1,10 +1,10 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsCustomerRef, WsPicture, WsPictureRef} from '@valuya/comptoir-ws-api';
-import {BehaviorSubject, EMPTY, forkJoin, Observable, Observer, Subscriber, Subscription} from 'rxjs';
+import {BehaviorSubject, forkJoin, Observable, Observer, Subscriber, Subscription} from 'rxjs';
 import {MessageService} from 'primeng/api';
 import {PictureUtils} from '../picture/picture-utils';
-import {catchError, delay, map, mergeMap, take, tap} from 'rxjs/operators';
+import {delay, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AuthService} from '../../../auth.service';
 import {ApiService} from '../../../api.service';
 

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
-import {WsCompanyRef, WsAccount, WsAccountRef, WsAccountSearch, WsAccountSearchResult} from '@valuya/comptoir-ws-api';
+import {WsAccount, WsAccountRef, WsAccountSearch, WsAccountSearchResult, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {ApiService} from '../../../api.service';
 import {AuthService} from '../../../auth.service';
 import {filter, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';

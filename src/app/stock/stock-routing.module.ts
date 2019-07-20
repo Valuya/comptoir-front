@@ -2,8 +2,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {StockListRouteComponent} from './stock-list-route/stock-list-route.component';
 import {StockDetailsRouteComponent} from './stock-details-route/stock-details-route.component';
-import {AppRouteData} from '../app-routes';
 import {StockIdResolverService} from './stock-id-resolver.service';
+import {ResolvedStockDetailsMenuItem, StockListMenuItem} from './stock-menu';
 
 
 export const STOCK_ROUTES: Routes = [
@@ -16,13 +16,8 @@ export const STOCK_ROUTES: Routes = [
     path: 'list',
     component: StockListRouteComponent,
     data: {
-      menuItem: {
-        label: 'List',
-        title: 'List',
-        icon: 'fa fa-list',
-        routerLink: ['/stock/list'],
-      }
-    } as AppRouteData
+      menuItem: StockListMenuItem
+    }
   },
   {
     path: ':stockId',
@@ -31,11 +26,7 @@ export const STOCK_ROUTES: Routes = [
       stock: StockIdResolverService
     },
     data: {
-      menuItem: {
-        label: 'Details',
-        title: 'Details',
-        icon: 'fa fa-shopping-cart',
-      }
+      menuItem: ResolvedStockDetailsMenuItem
     }
   }
 ];

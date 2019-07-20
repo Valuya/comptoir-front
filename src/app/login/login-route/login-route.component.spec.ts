@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LoginRouteComponent } from './login-route.component';
+import {LoginRouteComponent} from './login-route.component';
 
 describe('LoginRouteComponent', () => {
   let component: LoginRouteComponent;

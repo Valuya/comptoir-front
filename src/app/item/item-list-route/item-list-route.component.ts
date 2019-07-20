@@ -3,11 +3,13 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {TableColumn} from '../../util/table-column';
 import {
   DESCRIPTION_COLUMN,
-  ID_COLUMN,
   ItemColumn,
-  MAIN_PICTURE_COLUMN, MULTIPLE_SALE_COLUMN,
+  MAIN_PICTURE_COLUMN,
+  MULTIPLE_SALE_COLUMN,
   NAME_COLUMN,
-  REFERENCE_COLUMN, VAT_EXCLUSIVE_COLUMN, VAT_RATE_COLUMN
+  REFERENCE_COLUMN,
+  VAT_EXCLUSIVE_COLUMN,
+  VAT_RATE_COLUMN
 } from '../../item/item-column/item-columns';
 import {ApiService} from '../../api.service';
 import {AuthService} from '../../auth.service';
@@ -18,7 +20,6 @@ import {concat, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {WsEmployee, WsItem, WsItemRef, WsItemSearch, WsItemSearchResult} from '@valuya/comptoir-ws-api';
-import {AMOUNT_COLUMN} from '../../sale/sale-column/sale-columns';
 
 @Component({
   selector: 'cp-item-list-route',

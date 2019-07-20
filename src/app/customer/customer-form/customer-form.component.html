@@ -8,10 +8,10 @@
                            [ngModel]="value.firstName"
                            (ngModelChange)="updateValue({firstName: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.firstName }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="firstName.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -28,10 +28,10 @@
                            [ngModel]="value.lastName"
                            (ngModelChange)="updateValue({lastName: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.lastName }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="lastName.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -48,10 +48,10 @@
                            [ngModel]="value.email"
                            (ngModelChange)="updateValue({email: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.email }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="email.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -68,10 +68,10 @@
                            [ngModel]="value.phone1"
                            (ngModelChange)="updateValue({phone1: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.phone1 }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="phone1.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -88,10 +88,10 @@
                            [ngModel]="value.phone2"
                            (ngModelChange)="updateValue({phone2: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.phone2 }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="phone2.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -108,10 +108,10 @@
                            [ngModel]="value.adress1"
                            (ngModelChange)="updateValue({adress1: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.adress1 }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="inplace.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -128,10 +128,10 @@
                            [ngModel]="value.adress2"
                            (ngModelChange)="updateValue({adress2: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.adress2 }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="adress2.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -148,10 +148,10 @@
                            [ngModel]="value.zip"
                            (ngModelChange)="updateValue({zip: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.zip }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="zip.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -168,10 +168,10 @@
                            [ngModel]="value.city"
                            (ngModelChange)="updateValue({city: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.city }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="city.editValue"
                autofocus
                [class.ui-state-error]="invalid">
@@ -188,10 +188,10 @@
                            [ngModel]="value.notes"
                            (ngModelChange)="updateValue({notes: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.notes }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input type="text" pInputText [(ngModel)]="notes.editValue"
                autofocus
                [class.ui-state-error]="invalid">

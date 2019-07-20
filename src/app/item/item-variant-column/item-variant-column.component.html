@@ -7,6 +7,31 @@
   </ng-container>
 
 
+  <ng-container *ngSwitchCase="'ITEM'">
+    <cp-item [ref]="row.itemRef"></cp-item>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'MAIN_PICTURE'">
+    <cp-picture [ref]="row.mainPictureRef"></cp-picture>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'PRICING'">
+    <cp-pricing [pricing]="row.pricing"></cp-pricing>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'PRICING_AMOUNT'">
+    {{ row.pricingAmount | currency }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'VARIANT_REFERENCE'">
+    {{ row.variantReference }}
+  </ng-container>
+
+
   <ng-container *ngSwitchDefault>
     default
   </ng-container>

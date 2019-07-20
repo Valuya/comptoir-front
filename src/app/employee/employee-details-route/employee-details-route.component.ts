@@ -3,7 +3,7 @@ import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-hel
 import {WsEmployee, WsEmployeeRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {map, mergeMap, tap} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';

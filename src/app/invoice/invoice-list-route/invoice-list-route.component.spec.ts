@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { InvoiceListRouteComponent } from './invoice-list-route.component';
+import {InvoiceListRouteComponent} from './invoice-list-route.component';
 
 describe('InvoiceListRouteComponent', () => {
   let component: InvoiceListRouteComponent;

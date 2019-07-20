@@ -1,20 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PoDetailsRouteComponent } from './pos-details-route.component';
+import {PosDetailsRouteComponent} from './pos-details-route.component';
 
 describe('PoDetailsRouteComponent', () => {
-  let component: PoDetailsRouteComponent;
-  let fixture: ComponentFixture<PoDetailsRouteComponent>;
+  let component: PosDetailsRouteComponent;
+  let fixture: ComponentFixture<PosDetailsRouteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PoDetailsRouteComponent ]
+      declarations: [ PosDetailsRouteComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PoDetailsRouteComponent);
+    fixture = TestBed.createComponent(PosDetailsRouteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

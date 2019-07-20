@@ -9,11 +9,11 @@
                            [ngModel]="value.mainPictureRef"
                            (ngModelChange)="updateValue({mainPictureRef: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-picture [ref]="value.mainPictureRef"
         ></cp-picture>
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-picture-upload [(ngModel)]="mainPictureRef.editValue"
                            [disabled]="disabled"
         ></cp-picture-upload>
@@ -30,10 +30,10 @@
                            [ngModel]="value.reference"
                            (ngModelChange)="updateValue({reference: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.reference }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <input [(ngModel)]="reference.editValue"
                [class.ui-state-error]="invalid"
                autofocus
@@ -50,11 +50,11 @@
                            [ngModel]="value.name"
                            (ngModelChange)="updateValue({name: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-locale-text [localeTexts]="value.name">
         </cp-locale-text>
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-locale-text-edit #nameTexts
                              [(ngModel)]="name.editValue"
                              [disabled]="disabled"
@@ -79,11 +79,11 @@
                            [ngModel]="value.description"
                            (ngModelChange)="updateValue({description: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-locale-text [localeTexts]="value.description">
         </cp-locale-text>
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-locale-text-edit #descriptionTexts
                              [(ngModel)]="description.editValue"
                              [disabled]="disabled"
@@ -109,10 +109,10 @@
                            [ngModel]="value.vatExclusive"
                            (ngModelChange)="updateValue({vatExclusive: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.vatExclusive | currency }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <p-spinner [(ngModel)]="vatExclusive.editValue"
                    [min]="0" [step]="0.01"
         ></p-spinner>
@@ -129,10 +129,10 @@
                            [ngModel]="value.vatRate"
                            (ngModelChange)="updateValue({vatRate: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         {{ value.vatRate | percent }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <p-spinner [ngModel]="vatRate.editValue  * 100"
                    (ngModelChange)="vatRate.editValue = $event / 100"
                    [min]="0" [max]="100" [step]="1"

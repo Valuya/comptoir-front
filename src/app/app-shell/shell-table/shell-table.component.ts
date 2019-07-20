@@ -2,7 +2,6 @@ import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRe
 import {Pagination} from '../../util/pagination';
 import {TableColumn} from '../../util/table-column';
 import {LazyLoadEvent} from 'primeng/api';
-import {FormContentDirective} from '../shell-details-form/form-content.directive';
 import {ShellColumnDirective} from './shell-column.directive';
 import {FilterContentDirective} from './filter-content.directive';
 

@@ -1,14 +1,21 @@
 <cp-shell-content-page>
-  <ng-template cpContentBody>
-    <cp-shell-details-form (formSubmit)="onFormSubmit()">
-      <ng-template cpFormContent let-form="form">
-
-        <cp-sale-form [ngModel]="formHelper.editingValue$ | async"
-                      (partialUpdate)="formHelper.update($event)"
-                      [validationResults]="formHelper.validationResults$ | async"
-        ></cp-sale-form>
-
-      </ng-template>
-    </cp-shell-details-form>
+  <ng-template cpContentHeaderActions>
+    <button type="button" pButton
+            label="New sale"
+            [routerLink]="['/sale/new']"
+    ></button>
   </ng-template>
+
+
+  <ng-template cpContentBody>
+
+    <p-tabMenu [model]="detailsRoutesItems$ | async"></p-tabMenu>
+
+    <div class="details-route-content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </ng-template>
+
+
 </cp-shell-content-page>

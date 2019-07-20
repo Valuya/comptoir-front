@@ -6,7 +6,7 @@
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.closed"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <p-inputSwitch [ngModel]="value.closed"
                        (ngModelChange)="updateValue({closed: $event})"
                        [class.ui-state-error]="invalid"
@@ -22,7 +22,7 @@
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.customerRef"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-customer-select
           [ngModel]="value.customerRef"
           (ngModelChange)="updateValue({customerRef: $event})"
@@ -40,7 +40,7 @@
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.dateTime"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
+      <ng-template cpInplaceInput let-invalid="invalid">
         <cp-date-select [ngModel]="value.dateTime"
                         (ngModelChange)="updateValue({dateTime: $event})"
                         [disabled]="disabled"
@@ -51,30 +51,20 @@
     </cp-shell-inplace-edit>
   </div>
 
-  <div class="control">
-    <label>Invoice</label>
-    <div>
-      <div>
-
-      </div>
-    </div>
-  </div>
 
   <div class="control">
     <label>Reference</label>
-    <cp-shell-inplace-edit name="reference" #inplace
+    <cp-shell-inplace-edit name="reference" #reference
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.reference"
                            [ngModel]="value.reference"
                            (ngModelChange)="updateValue({reference: $event})"
     >
-      <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
-        <input type="text" pInputText [ngModel]="inplace.value"
-               [readOnly]="true"
-               [class.ui-state-error]="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.reference }}
       </ng-template>
-      <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
-        <input type="text" pInputText [(ngModel)]="inplace.editValue"
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="reference.editValue"
                autofocus
                [class.ui-state-error]="invalid">
       </ng-template>
