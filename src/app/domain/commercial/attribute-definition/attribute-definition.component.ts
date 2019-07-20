@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {ApiService} from '../../../api.service';
 import {WsAttributeDefinition, WsAttributeDefinitionRef} from '@valuya/comptoir-ws-api';
 import {WsLocaleText} from '../../lang/locale-text/ws-locale-text';
@@ -39,6 +39,7 @@ export class AttributeDefinitionComponent implements OnInit {
       id: ref.id
     }) as any as Observable<WsAttributeDefinition>;
     return loaded$.pipe(
+      delay(0),
       tap(def => this.loading$.next(false))
     );
   }

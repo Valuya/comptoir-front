@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {WsCustomer, WsCustomerRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {ApiService} from '../../../api.service';
-import {publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'cp-customer',
@@ -39,6 +39,7 @@ export class CustomerComponent implements OnInit {
       id: ref.id
     }) as any as Observable<WsCustomer>;
     return loaded$.pipe(
+      delay(0),
       tap(def => this.loading$.next(false))
     );
   }

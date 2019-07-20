@@ -1,6 +1,6 @@
 import {Pagination} from '../../util/pagination';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {debounceTime, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {debounceTime, delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {SearchResult} from './search-result';
 
 export class ShellTableHelper<T, F> {
@@ -45,6 +45,7 @@ export class ShellTableHelper<T, F> {
   private searchResults$(filter: F | null, pagination: Pagination | null): Observable<SearchResult<T>> {
     this.loading$.next(true);
     return this.search$(filter, pagination).pipe(
+      delay(0),
       tap(() => this.loading$.next(false))
     );
   }

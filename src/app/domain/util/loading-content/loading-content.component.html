@@ -2,7 +2,7 @@
      [class.loading]="loading">
   <div class="loading-placeholder"
   ></div>
-  <div class="loaded-content" *ngIf="!loading">
+  <div class="loaded-content" [hidden]="loading">
     <ng-content></ng-content>
   </div>
   <div class="display-overlay">

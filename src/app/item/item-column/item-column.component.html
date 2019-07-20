@@ -17,7 +17,8 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'MAIN_PICTURE'">
-    pic
+    <cp-picture [ref]="row.mainPictureRef"
+    ></cp-picture>
   </ng-container>
 
   <ng-container *ngSwitchCase="'MULTIPLE_SALE'">

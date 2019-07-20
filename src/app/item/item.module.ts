@@ -19,6 +19,8 @@ import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inpl
 import {InputSwitchModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
 import {LocaleTextModule} from '../domain/lang/locale-text/locale-text.module';
 import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
+import {PictureModule} from '../domain/commercial/picture/picture.module';
+import {PictureUploadModule} from '../domain/commercial/picture-upload/picture-upload.module';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-
     LocaleTextModule,
     LocaleTextEditModule,
     InputTextModule,
-    SpinnerModule
+    SpinnerModule,
+    PictureModule,
+    PictureUploadModule
   ]
 })
 export class ItemModule { }

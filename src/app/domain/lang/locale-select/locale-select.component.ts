@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'cp-locale-select',
@@ -6,6 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./locale-select.component.scss']
 })
 export class LocaleSelectComponent implements OnInit {
+  @Input()
+  disabled = false;
+  @Input()
+  invalid: boolean;
 
   constructor() { }
 

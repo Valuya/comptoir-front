@@ -10,10 +10,13 @@
                            (ngModelChange)="updateValue({mainPictureRef: $event})"
     >
       <ng-template cpInplaceOutput let-editValue="value" let-invalid="invalid">
-        todo pic
+        <cp-picture [ref]="value.mainPictureRef"
+        ></cp-picture>
       </ng-template>
       <ng-template cpInplaceInput let-editValue="value" let-invalid="invalid">
-        todo pic input
+        <cp-picture-upload [(ngModel)]="mainPictureRef.editValue"
+                           [disabled]="disabled"
+        ></cp-picture-upload>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>

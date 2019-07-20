@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {WsAttributeValue, WsAttributeValueRef} from '@valuya/comptoir-ws-api';
-import {publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {ApiService} from '../../../api.service';
 
 @Component({
@@ -36,6 +36,7 @@ export class AttributeValueComponent implements OnInit {
       id: ref.id
     }) as any as Observable<WsAttributeValue>;
     return loaded$.pipe(
+      delay(0),
       tap(def => this.loading$.next(false))
     );
   }
