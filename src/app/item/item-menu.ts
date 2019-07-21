@@ -1,10 +1,16 @@
 import {MenuItem} from 'primeng/api';
-import {WsBalance, WsItem, WsItemVariant} from '@valuya/comptoir-ws-api';
+import {WsItem, WsItemVariant} from '@valuya/comptoir-ws-api';
 import {ResolvedRouteItem} from '../util/resolved-route-item';
 import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
 
 
+export const CreateNewItemQuickActionItem = {
+  label: 'Create new item',
+  title: 'Create new item',
+  icon: 'fa fa-plus',
+  routerLink: ['/item/new'],
+};
 export const ItemDetailsVariantListMenuItem = {
   label: 'List',
   title: 'List',

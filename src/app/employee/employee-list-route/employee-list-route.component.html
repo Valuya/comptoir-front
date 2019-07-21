@@ -1,10 +1,4 @@
 <cp-shell-content-page>
-  <ng-template cpContentHeaderActions>
-    <button type="button" pButton
-            label="New employee"
-            [routerLink]="['/employee/new']"
-    ></button>
-  </ng-template>
   <ng-template cpContentBody>
     <cp-shell-table [columns]="columns"
                     [loading]="employeesTableHelper.loading$ | async"
@@ -17,7 +11,7 @@
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-employee-column [column]="column"
-                        [row]="row"
+                            [row]="row"
         ></cp-employee-column>
       </ng-template>
     </cp-shell-table>

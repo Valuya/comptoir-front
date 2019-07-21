@@ -3,10 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {StockListRouteComponent} from './stock-list-route/stock-list-route.component';
 import {StockDetailsRouteComponent} from './stock-details-route/stock-details-route.component';
 import {StockIdResolverService} from './stock-id-resolver.service';
-import {ResolvedStockDetailsMenuItem, StockListMenuItem} from './stock-menu';
+import {CreateNewStockQuickActionItem, ResolvedStockDetailsMenuItem, StockListMenuItem} from './stock-menu';
+import {AppRoute} from '../util/app-route-data';
 
 
-export const STOCK_ROUTES: Routes = [
+export const STOCK_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,7 +17,8 @@ export const STOCK_ROUTES: Routes = [
     path: 'list',
     component: StockListRouteComponent,
     data: {
-      menuItem: StockListMenuItem
+      menuItem: StockListMenuItem,
+      quickActions: [CreateNewStockQuickActionItem]
     }
   },
   {

@@ -1,12 +1,13 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {InvoiceListRouteComponent} from './invoice-list-route/invoice-list-route.component';
 import {InvoiceDetailsRouteComponent} from './invoice-details-route/invoice-details-route.component';
 import {InvoiceIdResolverService} from './invoice-id-resolver.service';
-import {InvoiceListMenuItem, ResolvedInvoiceDetailsMenuItem} from './invoice-menu';
+import {CreateNewInvoiceQuickActionItem, InvoiceListMenuItem, ResolvedInvoiceDetailsMenuItem} from './invoice-menu';
+import {AppRoute} from '../util/app-route-data';
 
 
-export const INVOICE_ROUTES: Routes = [
+export const INVOICE_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,7 +17,8 @@ export const INVOICE_ROUTES: Routes = [
     path: 'list',
     component: InvoiceListRouteComponent,
     data: {
-      menuItem: InvoiceListMenuItem
+      menuItem: InvoiceListMenuItem,
+      quickActions: [CreateNewInvoiceQuickActionItem]
     }
   },
   {

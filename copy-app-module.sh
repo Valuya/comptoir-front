@@ -69,11 +69,15 @@ filterSources() {
   path="$1"
   rel_path="$(echo $path | sed s@${SRC_PATH}@@)"
 
+  if [[ -z "${SRC_FILES_REGEXP}" || "${#SRC_FILES_REGEXP[*]}" = "0" ]] ; then
+    echo "true"
+    return 0
+  fi
   MATCH=false
   for REGEX in ${SRC_FILES_REGEXP}; do
     echo "$rel_path" | grep -e "$REGEX" && MATCH=true && break;
   done
- echo $MATCH
+  echo $MATCH
 }
 
 tmp=$(mktemp)

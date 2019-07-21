@@ -3,10 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {PosListRouteComponent} from './pos-list-route/pos-list-route.component';
 import {PosDetailsRouteComponent} from './pos-details-route/pos-details-route.component';
 import {PosIdResolverService} from './pos-id-resolver.service';
-import {PosListMenuItem, ResolvedPosDetailsMenuItem} from './pos-menu';
+import {CreateNewPosQuickActionItem, PosListMenuItem, ResolvedPosDetailsMenuItem} from './pos-menu';
+import {AppRoute} from '../util/app-route-data';
 
 
-export const POS_ROUTES: Routes = [
+export const POS_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,7 +17,8 @@ export const POS_ROUTES: Routes = [
     path: 'list',
     component: PosListRouteComponent,
     data: {
-      menuItem: PosListMenuItem
+      menuItem: PosListMenuItem,
+      quickActions: [CreateNewPosQuickActionItem]
     }
   },
   {

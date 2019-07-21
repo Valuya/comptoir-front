@@ -1,11 +1,12 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AppShellComponent} from './app-shell.component';
-import {GrowlModule, PanelMenuModule} from 'primeng/primeng';
+import {BreadcrumbModule, ButtonModule, GrowlModule, PanelMenuModule} from 'primeng/primeng';
 import {ToastModule} from 'primeng/toast';
 import {LogoutRouteComponent} from './logout-route/logout-route.component';
-import { DashboardRouteComponent } from './dashboard-route/dashboard-route.component';
+import {DashboardRouteComponent} from './dashboard-route/dashboard-route.component';
 import {ShellContentPageModule} from './shell-content-page/shell-content-page.module';
+import {ClockComponent} from './clock/clock.component';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import {ShellContentPageModule} from './shell-content-page/shell-content-page.mo
     AppShellComponent,
     LogoutRouteComponent,
     DashboardRouteComponent,
+    ClockComponent,
   ],
   exports: [],
   imports: [
@@ -20,7 +22,9 @@ import {ShellContentPageModule} from './shell-content-page/shell-content-page.mo
     PanelMenuModule,
     GrowlModule,
     ToastModule,
-    ShellContentPageModule
+    BreadcrumbModule,
+    ShellContentPageModule,
+    ButtonModule
   ]
 })
 export class AppShellModule {

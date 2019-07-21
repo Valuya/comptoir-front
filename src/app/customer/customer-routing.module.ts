@@ -3,10 +3,12 @@ import {RouterModule, Routes} from '@angular/router';
 import {CustomerListRouteComponent} from './customer-list-route/customer-list-route.component';
 import {CustomerDetailsRouteComponent} from './customer-details-route/customer-details-route.component';
 import {CustomerIdResolverService} from './customer-id-resolver.service';
-import {CustomerListMenuItem, ResolvedCustomerDetailsMenuItem} from './customer-menu';
+import {CreateNewCustomerQuickActionItem, CustomerListMenuItem, ResolvedCustomerDetailsMenuItem} from './customer-menu';
+import {CreateNewBalanceQuickActionItem} from '../balance/balance-menu';
+import {AppRoute} from '../util/app-route-data';
 
 
-export const CUSTOMER_ROUTES: Routes = [
+export const CUSTOMER_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,7 +18,8 @@ export const CUSTOMER_ROUTES: Routes = [
     path: 'list',
     component: CustomerListRouteComponent,
     data: {
-      menuItem: CustomerListMenuItem
+      menuItem: CustomerListMenuItem,
+      quickActions: [CreateNewCustomerQuickActionItem]
     }
   },
   {

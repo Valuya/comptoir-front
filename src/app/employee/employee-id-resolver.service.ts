@@ -41,7 +41,7 @@ export class EmployeeIdResolverService implements Resolve<WsEmployee> {
         take(1),
       );
     } else {
-      return this.createNew();
+      return of(this.createNew());
     }
   }
 

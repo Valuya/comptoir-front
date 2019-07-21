@@ -5,6 +5,13 @@ import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
 
 
+
+export const CreateNewPosQuickActionItem = {
+  label: 'Create new',
+  title: 'Create new',
+  icon: 'fa fa-plus',
+  routerLink: ['/pos/new'],
+};
 export const PosListMenuItem = {
   label: 'List',
   title: 'List',

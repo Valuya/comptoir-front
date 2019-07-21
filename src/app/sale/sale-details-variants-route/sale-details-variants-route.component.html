@@ -1,10 +1,4 @@
 <div class="variants">
-  <ng-template cpContentHeaderActions>
-    <button type="button" pButton
-            label="New variant"
-            [routerLink]="['/sale', (sale$ | async)?.id, '/variant/new']"
-    ></button>
-  </ng-template>
   <cp-shell-table [columns]="columns"
                   [loading]="saleVariantTableHelper.loading$ | async"
                   [rows]="saleVariantTableHelper.rows$ | async"

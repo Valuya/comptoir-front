@@ -6,6 +6,7 @@ import {ItemListRouteComponent} from './item-list-route/item-list-route.componen
 import {ItemDetailsRouteComponent} from './item-details-route/item-details-route.component';
 import {ItemIdResolverService} from './item-id-resolver.service';
 import {
+  CreateNewItemQuickActionItem,
   ItemDetailsDetailsMenuItem,
   ItemDetailsVariantListMenuItem,
   ItemDetailsVariantsMenuItem,
@@ -26,7 +27,7 @@ export const ITEM_ROUTES: Routes = [
   {
     path: 'list',
     component: ItemListRouteComponent,
-    data: createAppRouteData(ItemListMenuItem)
+    data: createAppRouteData(ItemListMenuItem, [CreateNewItemQuickActionItem])
   },
   {
     path: ':itemId',

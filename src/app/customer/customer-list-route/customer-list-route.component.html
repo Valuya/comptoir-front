@@ -1,10 +1,4 @@
 <cp-shell-content-page>
-  <ng-template cpContentHeaderActions>
-    <button type="button" pButton
-            label="New customer"
-            [routerLink]="['/customer/new']"
-    ></button>
-  </ng-template>
   <ng-template cpContentBody>
     <cp-shell-table [columns]="columns"
                     [loading]="customersTableHelper.loading$ | async"

@@ -1,12 +1,13 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {EmployeeListRouteComponent} from './employee-list-route/employee-list-route.component';
 import {EmployeeDetailsRouteComponent} from './employee-details-route/employee-details-route.component';
 import {EmployeeIdResolverService} from './employee-id-resolver.service';
-import {EmployeeListMenuItem, ResolvedEmployeeDetailsMenuItem} from './employee-menu';
+import {CreateNewEmployeeQuickActionItem, EmployeeListMenuItem, ResolvedEmployeeDetailsMenuItem} from './employee-menu';
+import {AppRoute} from '../util/app-route-data';
 
 
-export const EMPLOYEE_ROUTES: Routes = [
+export const EMPLOYEE_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,7 +17,8 @@ export const EMPLOYEE_ROUTES: Routes = [
     path: 'list',
     component: EmployeeListRouteComponent,
     data: {
-      menuItem: EmployeeListMenuItem
+      menuItem: EmployeeListMenuItem,
+      quickActions: [CreateNewEmployeeQuickActionItem]
     }
   },
   {

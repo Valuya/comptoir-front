@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Type} from '@angular/core';
 import {MenuItem} from 'primeng/api';
-import {concat, Observable, of} from 'rxjs';
+import {BehaviorSubject, concat, Observable, of} from 'rxjs';
 import {ActivatedRouteSnapshot, ActivationStart, ResolveEnd, Route, Router, RouterStateSnapshot} from '@angular/router';
 import {distinctUntilChanged, filter, map, mergeMap, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {AuthService} from '../auth.service';
@@ -16,6 +16,9 @@ export class AppMenuService {
 
   appMenu$: Observable<MenuItem[]>;
   breadcrumbMenu$: Observable<MenuItem[]>;
+  quickActions$: Observable<MenuItem[]>;
+
+  appMenuCollapsed$ = new BehaviorSubject<boolean>(false);
 
   constructor(private router: Router,
               private authService: AuthService
@@ -25,29 +28,26 @@ export class AppMenuService {
       switchMap(employee => this.createAppMenu$(employee)),
       publishReplay(1), refCount()
     );
-    const nextActivatedRoutesMenu$ = this.router.events.pipe(
+
+    const routeActivationEvents$ = this.router.events.pipe(
       mergeMap(event => this.filterActivationEvent(event)),
       filter(e => e != null),
+      publishReplay(1), refCount()
+    );
+
+    const activatedRoutePath = RouteUtils.createRoutePathFromRoot(this.router.routerState.snapshot);
+    const activatedRouteMenu = this.createMenuFromRootPath(activatedRoutePath);
+    const nextActivatedRoutesMenu$ = routeActivationEvents$.pipe(
       map(event => this.createMenuFromRouteEvent(event)),
       publishReplay(1), refCount()
     );
-    const activatedRouteMenu = this.createMenuFromRouterState(this.router.routerState.snapshot);
     this.breadcrumbMenu$ = concat(of(activatedRouteMenu), nextActivatedRoutesMenu$);
-  }
 
-  createAppMenu$(loggeduser?: any): Observable<MenuItem[]> {
-    const mainMenuSections = Object.keys(AppMenu);
-    const routerState = this.router.routerState;
-    const routePath = RouteUtils.createRoutePathFromRoot(routerState.snapshot);
-    const lastRouteChild = routePath.length === 0 ? null : routePath[routePath.length - 1];
-    if (lastRouteChild == null) {
-      return of([]);
-    }
 
-    const mainMenu = mainMenuSections
-      .map(section => this.createMenuSection(section))
-      .map(section => this.updateMenuItemFromRouteSnapshot(section, lastRouteChild));
-    return of(mainMenu);
+    this.quickActions$ = routeActivationEvents$.pipe(
+      map(event => this.createQuickActionMenuFromRouteEvent(event)),
+      publishReplay(1), refCount()
+    );
   }
 
   cloneMenuItem(menuItem: MenuItem | any) {
@@ -56,6 +56,14 @@ export class AppMenuService {
     }
     const cloneItem: MenuItem = Object.assign({}, menuItem);
     return cloneItem;
+  }
+
+  collapseAppMenu() {
+    this.appMenuCollapsed$.next(true);
+  }
+
+  expandAppMenu() {
+    this.appMenuCollapsed$.next(false);
   }
 
   private cloneRoutes(routes: Route[]): Route[] {
@@ -68,6 +76,35 @@ export class AppMenuService {
       clone.children = this.cloneRoutes(clone.children);
     }
     return clone;
+  }
+
+  private createAppMenu$(loggeduser?: any): Observable<MenuItem[]> {
+    const mainMenuSections = Object.keys(AppMenu);
+    const routerState = this.router.routerState;
+    const routePath = RouteUtils.createRoutePathFromRoot(routerState.snapshot);
+    const lastRouteChild = routePath.length === 0 ? null : routePath[routePath.length - 1];
+    if (lastRouteChild == null) {
+      return of([]);
+    }
+
+    const mainMenu = mainMenuSections
+      .map(section => this.createMenuSection(section))
+      .map(section => this.updateMenuItemFromRouteSnapshot(section, lastRouteChild));
+
+    return of([
+      this.createCollapseMenuItem(),
+      ...mainMenu
+    ]);
+  }
+
+
+  private createCollapseMenuItem() {
+    return {
+      icon: 'fa fa-chevron-left',
+      label: 'Hide',
+      title: 'Hide',
+      command: () => this.collapseAppMenu()
+    };
   }
 
   private createMenuSection(section: string) {
@@ -105,25 +142,16 @@ export class AppMenuService {
     }
   }
 
-  private createMenuFromRouteSnapshot(snapshot: ActivatedRouteSnapshot): MenuItem[] {
-    const routePath = snapshot.pathFromRoot;
-    return this.createMenuFromRootPath(routePath);
-  }
 
   private createMenuFromRootPath(routePath: ActivatedRouteSnapshot[]) {
     return routePath
       .filter(snapshot => snapshot.data != null)
-      .map(snapshot => this.createMenuItemFromRouteSnapshot(snapshot))
+      .map(snapshot => this.createAppMenuItemFromRouteSnapshot(snapshot))
       .filter(item => item != null);
   }
 
-  private createMenuFromRouterState(state: RouterStateSnapshot): MenuItem[] {
-    const routePath = RouteUtils.createRoutePathFromRoot(state);
-    return this.createMenuFromRootPath(routePath);
-  }
 
-
-  private createMenuItemFromRouteSnapshot(snapshot: ActivatedRouteSnapshot): MenuItem | null {
+  private createAppMenuItemFromRouteSnapshot(snapshot: ActivatedRouteSnapshot): MenuItem | null {
     const data = snapshot.data as AppRouteData;
     if (data == null || data.menuItem == null) {
       return null;
@@ -168,9 +196,36 @@ export class AppMenuService {
 
   private createMenuFromRouteEvent(event: ActivationStart | ResolveEnd) {
     if (event instanceof ActivationStart) {
-      return this.createMenuFromRouteSnapshot(event.snapshot);
+      const routePath = event.snapshot.pathFromRoot;
+      return this.createMenuFromRootPath(routePath);
     } else if (event instanceof ResolveEnd) {
-      return this.createMenuFromRouterState(event.state);
+      const routePath = RouteUtils.createRoutePathFromRoot(event.state);
+      return this.createMenuFromRootPath(routePath);
     }
+  }
+
+  private createQuickActionMenuFromRouteEvent(event: ActivationStart | ResolveEnd) {
+    if (event instanceof ActivationStart) {
+      const routePath = event.snapshot.pathFromRoot;
+      return this.createQuickActionsFromRoutePath(routePath);
+    } else if (event instanceof ResolveEnd) {
+      const routePath = RouteUtils.createRoutePathFromRoot(event.state);
+      return this.createQuickActionsFromRoutePath(routePath);
+    }
+  }
+
+  private createQuickActionsFromRoutePath(routePath: ActivatedRouteSnapshot[]): MenuItem[] {
+    return routePath
+      .filter(snapshot => snapshot.data != null)
+      .map(snapshot => this.createQuickActionItemFromRouteSnapshot(snapshot))
+      .reduce((c, n) => [...c, ...n], []);
+  }
+
+  private createQuickActionItemFromRouteSnapshot(snapshot: ActivatedRouteSnapshot): MenuItem[] {
+    const data = snapshot.data as AppRouteData;
+    if (data == null || data.quickActions == null) {
+      return [];
+    }
+    return data.quickActions;
   }
 }

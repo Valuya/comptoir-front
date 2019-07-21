@@ -1,10 +1,16 @@
 import {MenuItem} from 'primeng/api';
-import {WsBalance, WsEmployee} from '@valuya/comptoir-ws-api';
+import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {ResolvedRouteItem} from '../util/resolved-route-item';
 import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
 
 
+export const CreateNewEmployeeQuickActionItem = {
+  label: 'Create new employee',
+  title: 'Create new employee',
+  icon: 'fa fa-plus',
+  routerLink: ['/employee/new'],
+};
 export const EmployeeListMenuItem = {
   label: 'List',
   title: 'List',

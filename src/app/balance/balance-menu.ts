@@ -5,6 +5,13 @@ import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
 
 
+export const CreateNewBalanceQuickActionItem = {
+  label: 'Create new balance',
+  title: 'Create new balance',
+  icon: 'fa fa-plus',
+  routerLink: ['/balance/new'],
+};
+
 export const BalanceListMenuItem = {
   label: 'List',
   title: 'List',

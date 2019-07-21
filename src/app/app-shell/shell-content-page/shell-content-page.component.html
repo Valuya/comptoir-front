@@ -1,17 +1,4 @@
 <div class="content-page">
-  <header>
-    <div class="breadcrumb">
-      <p-breadcrumb [model]="breadcrumbMenu$ | async"></p-breadcrumb>
-    </div>
-    <div class="action">
-      <div *ngFor="let headerActionsTemplate of headerActionsTemplates">
-        <ng-container *ngTemplateOutlet="headerActionsTemplate">
-        </ng-container>
-      </div>
-    </div>
-  </header>
-  <div class="content">
-    <ng-container *ngTemplateOutlet="bodyTemplateRef">
-    </ng-container>
-  </div>
+  <ng-container *ngTemplateOutlet="bodyTemplateRef">
+  </ng-container>
 </div>

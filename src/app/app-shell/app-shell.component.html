@@ -1,10 +1,43 @@
 <div class="app-shell">
-  <div class="menu">
+
+  <div class="menu" [@collapsed]="appMenuService.appMenuCollapsed$ | async">
     <p-panelMenu [model]="appMenu$ | async"
                  [multiple]="false"
     ></p-panelMenu>
   </div>
+
   <div class="shell-content">
-    <router-outlet></router-outlet>
+    <header>
+      <div class="menu-toggler"
+           *ngIf="menuCollapsed$ | async"
+           (click)="onShowMenuClick()"
+      >
+        <i class="fa fa-chevron-right"></i>
+      </div>
+
+
+      <div class="action" *ngFor="let action of quickActionsMenu$ | async">
+        <button type="button" pButton
+                [label]="action.label"
+                [routerLink]="action.routerLink"
+                (click)="action.command ? action.command(): null"
+                [icon]="action.icon"
+        ></button>
+      </div>
+
+      <div class="breadcrumb">
+        <p-breadcrumb [model]="breadcrumbMenu$ | async"></p-breadcrumb>
+      </div>
+
+      <div class="clock">
+        <cp-clock></cp-clock>
+      </div>
+
+    </header>
+
+    <div class="shell-content-body">
+      <router-outlet></router-outlet>
+    </div>
+
   </div>
 </div>

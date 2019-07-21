@@ -1,10 +1,16 @@
 import {MenuItem} from 'primeng/api';
-import {WsPos, WsStock} from '@valuya/comptoir-ws-api';
+import {WsStock} from '@valuya/comptoir-ws-api';
 import {ResolvedRouteItem} from '../util/resolved-route-item';
 import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
 
 
+export const CreateNewStockQuickActionItem = {
+  label: 'Create new stock',
+  title: 'Create new stock',
+  icon: 'fa fa-plus',
+  routerLink: ['/stock/new'],
+};
 export const StockListMenuItem = {
   label: 'List',
   title: 'List',

@@ -3,10 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {BalanceListRouteComponent} from './balance-list-route/balance-list-route.component';
 import {BalanceDetailsRouteComponent} from './balance-details-route/balance-details-route.component';
 import {BalanceIdResolverService} from './balance-id-resolver.service';
-import {BalanceListMenuItem, ResolvedBalanceDetailsMenuItem} from './balance-menu';
+import {BalanceListMenuItem, CreateNewBalanceQuickActionItem, ResolvedBalanceDetailsMenuItem} from './balance-menu';
+import {AppRoute} from '../util/app-route-data';
 
 
-export const BALANCE_ROUTES: Routes = [
+export const BALANCE_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -16,7 +17,8 @@ export const BALANCE_ROUTES: Routes = [
     path: 'list',
     component: BalanceListRouteComponent,
     data: {
-      menuItem: BalanceListMenuItem
+      menuItem: BalanceListMenuItem,
+      quickActions: [CreateNewBalanceQuickActionItem]
     }
   },
   {

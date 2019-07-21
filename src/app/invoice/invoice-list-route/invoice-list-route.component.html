@@ -1,10 +1,4 @@
 <cp-shell-content-page>
-  <ng-template cpContentHeaderActions>
-    <button type="button" pButton
-            label="New invoice"
-            [routerLink]="['/invoice/new']"
-    ></button>
-  </ng-template>
   <ng-template cpContentBody>
     <cp-shell-table [columns]="columns"
                     [loading]="invoicesTableHelper.loading$ | async"

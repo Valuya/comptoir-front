@@ -5,6 +5,13 @@ import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
 
 
+
+export const CreateNewCustomerQuickActionItem = {
+  label: 'Create new customer',
+  title: 'Create new customer',
+  icon: 'fa fa-plus',
+  routerLink: ['/customer/new'],
+};
 export const CustomerListMenuItem = {
   label: 'List',
   title: 'List',

@@ -12,6 +12,7 @@ import {EmployeeFormComponent} from './employee-form/employee-form.component';
 import {FormsModule} from '@angular/forms';
 import {ButtonModule, InputSwitchModule, InputTextModule} from 'primeng/primeng';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
+import {AppShellModule} from '../app-shell/app-shell.module';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inpl
     InputTextModule,
     ShellInplaceEditModule,
     ButtonModule,
+    AppShellModule,
   ]
 })
 export class EmployeeModule {

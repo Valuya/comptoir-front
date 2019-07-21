@@ -14,10 +14,17 @@ import {
   ResolvedSaleDetailsVariantDetailsMenuItem
 } from './sale-menu';
 import {SaleDetailsVariantDetailsRouteComponent} from './sale-details-variant-details-route/sale-details-variant-details-route.component';
-import {createAppRouteData} from '../util/app-route-data';
+import {AppRoute, createAppRouteData} from '../util/app-route-data';
 
 
-export const SALE_ROUTES: Routes = [
+export const CreateNewSaleQuickActionItem = {
+  label: 'Create new sale',
+  title: 'Create new sale',
+  icon: 'fa fa-plus',
+  routerLink: ['/sale/new'],
+};
+
+export const SALE_ROUTES: AppRoute[] = [
   {
     path: '',
     pathMatch: 'full',
@@ -26,7 +33,7 @@ export const SALE_ROUTES: Routes = [
   {
     path: 'list',
     component: SaleListRouteComponent,
-    data: createAppRouteData(SaleListMenuItem)
+    data: createAppRouteData(SaleListMenuItem, [CreateNewSaleQuickActionItem])
   },
   {
     path: ':saleId',
