@@ -1,5 +1,5 @@
 import {MenuItem} from 'primeng/api';
-import {WsCustomer} from '@valuya/comptoir-ws-api';
+import {WsBalance, WsCustomer} from '@valuya/comptoir-ws-api';
 import {ResolvedRouteItem} from '../util/resolved-route-item';
 import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
@@ -13,11 +13,13 @@ export const CustomerListMenuItem = {
 };
 
 export const ResolvedCustomerDetailsMenuItem: MenuItem & ResolvedRouteItem<WsCustomer> = {
-  labelFactory: FunctionsUtils.splitDomainObjectCallback<WsCustomer, string>(
-    value => `#${value.id}`,
-    value => `New item`,
+  labelFactory: RouteUtils.createLabelFactoryFromRouteDataEntities<WsCustomer>(
+    FunctionsUtils.splitDomainObjectCallback<WsCustomer, string>(
+      value => `#${value.id}`,
+      value => `New customer`,
+    ), 'customer'
   ),
-  routerLinkFactory: RouteUtils.createRouteFactoryFromRouteDataEntities<WsCustomer>(
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsCustomer>(
     FunctionsUtils.splitDomainObjectCallback<WsCustomer, any[]>(
       customer => ['/customer', customer.id]
     ), 'customer'

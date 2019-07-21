@@ -18,5 +18,10 @@ export class LoginService {
     return this.apiService.api.login({authorization: authHeader}) as any as Observable<WsAuth>;
   }
 
+  testAuth(auth: WsAuth): Observable<WsAuth> {
+    const authHeader = HeaderUtils.toBearerAuthHeader(auth.token);
+    return this.apiService.api.login({authorization: authHeader}) as any as Observable<WsAuth>;
+  }
+
 
 }

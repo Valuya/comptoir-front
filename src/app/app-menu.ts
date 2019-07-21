@@ -7,21 +7,38 @@ import {CustomerMenuItems} from './customer/customer-menu';
 import {EmployeeMenuItems} from './employee/employee-menu';
 import {InvoiceMenuItems} from './invoice/invoice-menu';
 import {StockMenuItems} from './stock/stock-menu';
+import {FunctionsUtils} from './util/functions-utils';
+import {WsEmployee} from '@valuya/comptoir-ws-api';
+import {RouteUtils} from './util/route-utils';
+import {ResolvedRouteItem} from './util/resolved-route-item';
 
-export const LOGGED_USER_MENU_ID = 'logged-user';
-
-export const AppMenu: { [key: string]: MenuItem } = {
-  me: {
+const UserMenuItems: (MenuItem | ResolvedRouteItem<any>)[] = [
+  {
     icon: 'fa fa-user',
-    routerLink: ['/me'],
-    id: LOGGED_USER_MENU_ID,
+    routerLink: ['/me/profile'],
+    label: 'Profile',
+    title: 'Profile'
+  },
+  {
+    icon: 'fa fa-sign-out',
+    routerLink: ['/logout', {logoff: true}],
+    label: 'Logoff',
+    title: 'Logoff',
+  }
+];
+
+export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
+  home: {
+    icon: 'fa fa-home',
+    label: 'Home',
+    title: 'Home',
+    routerLink: ['/'],
   },
   sale: {
     label: 'Sales',
     title: 'Sales',
     icon: 'fa fa-shopping-cart',
     routerLink: ['/sale'],
-    expanded: false,
     items: SaleMenuItems
   },
   pos: {
@@ -29,7 +46,6 @@ export const AppMenu: { [key: string]: MenuItem } = {
     title: 'Points of sale',
     icon: 'fa fa-building',
     routerLink: ['/pos'],
-    expanded: false,
     items: PosMenuItems
   },
   item: {
@@ -37,7 +53,6 @@ export const AppMenu: { [key: string]: MenuItem } = {
     title: 'Items',
     icon: 'fa fa-square',
     routerLink: ['/item'],
-    expanded: false,
     items: ItemMenuItems
   },
   balance: {
@@ -46,7 +61,6 @@ export const AppMenu: { [key: string]: MenuItem } = {
     icon: 'fa fa-balance-scale',
     routerLink: ['/balance'],
     items: BalanceMenuItems,
-    expanded: false,
   },
   customer: {
     label: 'Customer',
@@ -54,7 +68,6 @@ export const AppMenu: { [key: string]: MenuItem } = {
     icon: 'fa fa-user-o',
     routerLink: ['/customer'],
     items: CustomerMenuItems,
-    expanded: false,
   },
   employee: {
     label: 'Employee',
@@ -62,7 +75,6 @@ export const AppMenu: { [key: string]: MenuItem } = {
     icon: 'fa fa-user-o',
     routerLink: ['/employee'],
     items: EmployeeMenuItems,
-    expanded: false,
   },
   invoice: {
     label: 'Invoice',
@@ -70,7 +82,6 @@ export const AppMenu: { [key: string]: MenuItem } = {
     icon: 'fa fa-user-o',
     routerLink: ['/invoice'],
     items: InvoiceMenuItems,
-    expanded: false,
   },
   stock: {
     label: 'Stock',
@@ -78,6 +89,15 @@ export const AppMenu: { [key: string]: MenuItem } = {
     icon: 'fa fa-user-o',
     routerLink: ['/stock'],
     items: StockMenuItems,
-    expanded: false,
+  },
+  me: {
+    icon: 'fa fa-user',
+    routerLink: ['/me'],
+    labelFactory: RouteUtils.createLabelFactoryFromRouteDataEntities<WsEmployee>(
+      FunctionsUtils.splitDomainObjectCallback<WsEmployee, string>(
+        employee => `${employee.firstName} ${employee.lastName}`
+      ), 'loggedEmployee',
+    ),
+    items: UserMenuItems
   },
 };

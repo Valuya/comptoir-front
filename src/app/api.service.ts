@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Configuration, DefaultApi, RequestArgs, RequestContext} from '@valuya/comptoir-ws-api';
 import {AuthProvider} from './util/auth-provider';
+import {HeaderUtils} from './util/header-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ApiService {
         basePath: 'https://comptoir.local:8443',
         accessToken: (name, scopes) => this.getAccessToken(name, scopes),
         middleware: [{
-          pre: (context: RequestContext) => this.onPreModdleware(context)
+          pre: (context: RequestContext) => this.onPreMiddleware(context)
         }]
       })
     );
@@ -29,14 +30,14 @@ export class ApiService {
     if (auth == null) {
       return null;
     }
-    const base64Token = btoa(auth.token);
-    return `Bearer ${base64Token}`;
+    return HeaderUtils.toBearerAuthHeader(auth.token);
   }
 
-  private onPreModdleware(context: RequestContext): RequestArgs {
+  private onPreMiddleware(context: RequestContext): RequestArgs {
     const token = this.getAccessToken();
     const curHeaders = context.options.headers as Record<string, string>;
-    if (token != null) {
+    const existingAuthHeader = HeaderUtils.findHeaderIgnoreCase('authorization', curHeaders);
+    if (existingAuthHeader == null) {
       curHeaders.authorization = token;
     }
     return context;

@@ -1,10 +1,31 @@
 import {Route} from '@angular/router';
 import {AppMenu} from './app-menu';
 import {createAppRouteData} from './util/app-route-data';
+import {DashboardRouteComponent} from './app-shell/dashboard-route/dashboard-route.component';
 
-export const APP_SHELL_ROUTE_DATA_ID = 'app-shell-route';
-
+const LoggedUserRoutes: Route[] = [
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: '/employee/me'
+  },
+  {
+    path: 'profile',
+    redirectTo: '/employee/me'
+  }
+];
 export const APP_MODULES_ROUTES: Route[] = [
+  {
+    path: '',
+    pathMatch: 'full',
+    component: DashboardRouteComponent,
+    data: createAppRouteData(AppMenu.home),
+  },
+  {
+    path: 'me',
+    data: createAppRouteData(AppMenu.me),
+    children: LoggedUserRoutes
+  },
   {
     path: 'sale',
     loadChildren: './sale/sale.module#SaleModule',

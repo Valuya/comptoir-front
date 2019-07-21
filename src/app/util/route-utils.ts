@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 export class RouteUtils {
 
 
-  static createRouteFactoryFromRouteDataEntities<T, U = any, V = any, W = any>(
+  static createRouterLinkFactoryFromRouteDataEntities<T, U = any, V = any, W = any>(
     createLink: (...data: [T, U, V, W] | [T, U, V] | [T, U] | [T]) => any[],
     ...params: string[]
   ): (snapshot: RouterStateSnapshot) => any[] {
@@ -19,6 +19,25 @@ export class RouteUtils {
       return routerLink;
     };
   }
+
+
+  static createLabelFactoryFromRouteDataEntities<T, U = any, V = any, W = any>(
+    createLabel: (...data: [T, U, V, W] | [T, U, V] | [T, U] | [T]) => string,
+    ...params: string[]
+  ): (snapshot: RouterStateSnapshot) => string {
+
+    return (snapshot: RouterStateSnapshot) => {
+      const dataList: [T, U, V, W] = [
+        params.length > 0 ? this.findRouteDataOrParam(params[0], snapshot) as T : null,
+        params.length > 0 ? this.findRouteDataOrParam(params[1], snapshot) as U : null,
+        params.length > 0 ? this.findRouteDataOrParam(params[2], snapshot) as V : null,
+        params.length > 0 ? this.findRouteDataOrParam(params[3], snapshot) as W : null,
+      ];
+      const label = createLabel(...dataList);
+      return label;
+    };
+  }
+
 
   static findRouteDataOrParam(parmaName: string, snapshot: RouterStateSnapshot) {
     const routePath = [snapshot.root]
@@ -62,5 +81,12 @@ export class RouteUtils {
       }
     }
     return null;
+  }
+
+  static createRoutePathFromRoot(routerState: RouterStateSnapshot): ActivatedRouteSnapshot[] {
+    const rootRoute = routerState.root;
+    const routePath = [rootRoute]
+      .reduce((cur, next) => RouteUtils.reduceRoutePathFromRoot(cur, next), []);
+    return routePath;
   }
 }

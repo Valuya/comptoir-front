@@ -4,7 +4,7 @@ export class FunctionsUtils {
     onValue: (value: T) => U,
     onEmptyId?: (value: T) => U,
     onNull?: () => U,
-    idSelector: string = 'id'
+    idSelector: string = 'id',
   ): (value: T) => U {
     return (val: T) => {
       if (val == null) {

@@ -18,7 +18,8 @@ export class AppMenuService {
   breadcrumbMenu$: Observable<MenuItem[]>;
 
   constructor(private router: Router,
-              private authService: AuthService) {
+              private authService: AuthService
+  ) {
     this.appMenu$ = this.authService.getLoggedEmployee$().pipe(
       distinctUntilChanged(),
       switchMap(employee => this.createAppMenu$(employee)),
@@ -36,8 +37,16 @@ export class AppMenuService {
 
   createAppMenu$(loggeduser?: any): Observable<MenuItem[]> {
     const mainMenuSections = Object.keys(AppMenu);
+    const routerState = this.router.routerState;
+    const routePath = RouteUtils.createRoutePathFromRoot(routerState.snapshot);
+    const lastRouteChild = routePath.length === 0 ? null : routePath[routePath.length - 1];
+    if (lastRouteChild == null) {
+      return of([]);
+    }
+
     const mainMenu = mainMenuSections
-      .map(section => this.createMenuSection(section));
+      .map(section => this.createMenuSection(section))
+      .map(section => this.updateMenuItemFromRouteSnapshot(section, lastRouteChild));
     return of(mainMenu);
   }
 
@@ -67,7 +76,7 @@ export class AppMenuService {
     return menuItem;
   }
 
-  private filterForAppMenu(menuItem: MenuItem) {
+  private filterForAppMenu(menuItem: MenuItem | ResolvedRouteItem<any>) {
     if (menuItem == null) {
       return null;
     }
@@ -109,9 +118,7 @@ export class AppMenuService {
   }
 
   private createMenuFromRouterState(state: RouterStateSnapshot): MenuItem[] {
-    const rootRoute = state.root;
-    const routePath = [rootRoute]
-      .reduce((cur, next) => RouteUtils.reduceRoutePathFromRoot(cur, next), []);
+    const routePath = RouteUtils.createRoutePathFromRoot(state);
     return this.createMenuFromRootPath(routePath);
   }
 
@@ -131,23 +138,14 @@ export class AppMenuService {
     if (emptyResolvedItem) {
       resolvedItem = null;
     }
-    const data = snapshot.data as AppRouteData;
 
     if (resolvedItem != null) {
 
       // Label
       if (resolvedItem.labelFactory != null) {
-        const resolvers = snapshot.routeConfig.resolve;
-        if (resolvers != null) {
-          const resolverNames = Object.keys(resolvers);
-          if (resolverNames.length > 0) {
-            const firstResolver = resolverNames[0];
-            const resolvedValue = data[firstResolver];
-            const resolvedLabel = resolvedItem.labelFactory(resolvedValue);
-            resolvedItem.label = resolvedLabel;
-            resolvedItem.title = resolvedLabel;
-          }
-        }
+        const createdLabel = resolvedItem.labelFactory(snapshot);
+        resolvedItem.label = createdLabel;
+        resolvedItem.title = createdLabel;
       }
 
       // Router link

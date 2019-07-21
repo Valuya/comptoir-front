@@ -18,10 +18,20 @@ export class NavigationService {
   navigateBackWithRedirectCheck() {
     this.activatedRoute.queryParams.pipe(
       take(1),
-    ).subscribe(params => this.navigateBackWithRedirectParamsCheck(params));
+    ).subscribe(params => this.doUnlessRedirectParams(params,
+      () => this.location.back()
+    ));
   }
 
-  private navigateBackWithRedirectParamsCheck(params: Params) {
+  navigateWithRedirectChek(link: any[]) {
+    this.activatedRoute.queryParams.pipe(
+      take(1),
+    ).subscribe(params => this.doUnlessRedirectParams(params,
+      () => this.router.navigate(link)
+    ));
+  }
+
+  private doUnlessRedirectParams(params: Params, callback: () => void) {
     const redirectParam = params.redirect;
     const redirectUrlParam = params.redirectUrl;
 
@@ -30,7 +40,7 @@ export class NavigationService {
     } else if (redirectUrlParam != null) {
       this.router.navigateByUrl(redirectUrlParam);
     } else {
-      this.location.back();
+      callback();
     }
   }
 }

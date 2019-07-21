@@ -2,7 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {EmployeeLoggedInGuard} from './util/employee-logged-in.guard';
 import {AppShellComponent} from './app-shell/app-shell.component';
-import {APP_MODULES_ROUTES, APP_SHELL_ROUTE_DATA_ID} from './app-routes';
+import {APP_MODULES_ROUTES} from './app-routes';
+import {LoggedEmployeeResolverService} from './logged-employee-resolver.service';
+import {LogoutRouteComponent} from './app-shell/logout-route/logout-route.component';
 
 
 export const APP_BASE_ROUTES: Routes = [
@@ -11,13 +13,19 @@ export const APP_BASE_ROUTES: Routes = [
     loadChildren: './login/login.module#LoginModule'
   },
   {
+    path: 'logout',
+    component: LogoutRouteComponent,
+  },
+  {
     path: '',
     canActivateChild: [EmployeeLoggedInGuard],
+    resolve: {
+      loggedEmployee: LoggedEmployeeResolverService
+    },
     children: [
       {
         path: '',
         component: AppShellComponent,
-        data: {id: APP_SHELL_ROUTE_DATA_ID},
         children: APP_MODULES_ROUTES,
       }
     ]

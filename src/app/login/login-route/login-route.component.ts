@@ -5,6 +5,7 @@ import {AuthService} from '../../auth.service';
 import {WsAuth} from '@valuya/comptoir-ws-api';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {map, publishReplay, refCount, take} from 'rxjs/operators';
+import {NavigationService} from '../../navigation.service';
 
 @Component({
   selector: 'cp-login-route',
@@ -21,20 +22,15 @@ export class LoginRouteComponent implements OnInit {
   password: string;
   rememberLogin: boolean;
 
-  private redirectParam$: Observable<string | null>;
 
   constructor(private loginService: LoginService,
               private authService: AuthService,
               private router: Router,
-              private activatedRoute: ActivatedRoute
+              private navigationService: NavigationService,
   ) {
   }
 
   ngOnInit() {
-    this.redirectParam$ = this.activatedRoute.queryParams.pipe(
-      map((params: Params) => params['redirect']),
-      publishReplay(1), refCount()
-    );
   }
 
   submit() {
@@ -48,15 +44,11 @@ export class LoginRouteComponent implements OnInit {
   private onLoginSuccess(auth: WsAuth) {
     this.loading$.next(false);
     this.authService.setAuth(auth);
-    this.redirectParam$.pipe(
-      take(1),
-    ).subscribe(redirect => {
-      if (redirect != null) {
-        this.router.navigate([redirect]);
-      } else {
-        this.router.navigate(['/']);
-      }
-    });
+    this.redirectOnLoggedIn();
+  }
+
+  private redirectOnLoggedIn() {
+    this.navigationService.navigateWithRedirectChek(['/']);
   }
 
   private onLoginError(error: any) {

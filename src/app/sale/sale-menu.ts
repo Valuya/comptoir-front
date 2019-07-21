@@ -1,7 +1,7 @@
 import {MenuItem} from 'primeng/api';
 import {FunctionsUtils} from '../util/functions-utils';
 import {RouteUtils} from '../util/route-utils';
-import {WsItemVariantSale, WsSale} from '@valuya/comptoir-ws-api';
+import {WsBalance, WsItemVariantSale, WsPos, WsSale} from '@valuya/comptoir-ws-api';
 import {ResolvedRouteItem} from '../util/resolved-route-item';
 
 
@@ -9,19 +9,21 @@ export const SaleDetailsVariantListMenuItem = {
   label: 'List',
   title: 'List',
   icon: 'fa fa-list',
-  routerLinkFactory: RouteUtils.createRouteFactoryFromRouteDataEntities<WsSale>(
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsSale>(
     FunctionsUtils.splitDomainObjectCallback<WsSale, any[]>(
       sale => ['/sale', sale.id, 'variant', 'list']
     ), 'sale'
   ),
 };
 
-export const ResolvedSaleDetailsVariantDetailsMenuItem: MenuItem & ResolvedRouteItem<WsSale> = {
-  labelFactory: FunctionsUtils.splitDomainObjectCallback<WsItemVariantSale, string>(
-    value => `#${value.id}`,
-    value => `Add variant`,
+export const ResolvedSaleDetailsVariantDetailsMenuItem: MenuItem & ResolvedRouteItem<WsItemVariantSale> = {
+  labelFactory: RouteUtils.createLabelFactoryFromRouteDataEntities<WsItemVariantSale>(
+    FunctionsUtils.splitDomainObjectCallback<WsItemVariantSale, string>(
+      value => `#${value.id}`,
+      value => `New variant`,
+    ), 'sale'
   ),
-  routerLinkFactory: RouteUtils.createRouteFactoryFromRouteDataEntities<WsSale, WsItemVariantSale>(
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsSale, WsItemVariantSale>(
     (sale, variant) => (sale == null || variant == null) ? [] : ['/sale', sale.id, 'variant', variant.id],
     'sale', 'saleVariant'
   ),
@@ -37,7 +39,7 @@ export const ResolvedSaleDetailsDetailsMenuItem: MenuItem & ResolvedRouteItem<Ws
   label: 'Details',
   title: 'Details',
   icon: 'fa fa-shopping-cart',
-  routerLinkFactory: RouteUtils.createRouteFactoryFromRouteDataEntities<WsSale>(
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsSale>(
     FunctionsUtils.splitDomainObjectCallback<WsSale, any[]>(
       sale => ['/sale', sale.id]
     ), 'sale'
@@ -48,7 +50,7 @@ export const SaleDetailsVariantsMenuItem: MenuItem & ResolvedRouteItem<WsSale> =
   label: 'Content',
   title: 'Content',
   icon: 'fa fa-shopping-basket',
-  routerLinkFactory: RouteUtils.createRouteFactoryFromRouteDataEntities<WsSale>(
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsSale>(
     FunctionsUtils.splitDomainObjectCallback<WsSale, any[]>(
       sale => ['/sale', sale.id, 'variant', 'list']
     ), 'sale'
@@ -68,11 +70,13 @@ export const SaleListMenuItem = {
 };
 
 export const ResolvedSaleDetailsMenuItem: MenuItem & ResolvedRouteItem<WsSale> = {
-  labelFactory: FunctionsUtils.splitDomainObjectCallback<WsSale, string>(
-    value => `#${value.id}`,
-    value => `New sale`,
+  labelFactory: RouteUtils.createLabelFactoryFromRouteDataEntities<WsSale>(
+    FunctionsUtils.splitDomainObjectCallback<WsSale, string>(
+      value => `#${value.id}`,
+      value => `New sale`,
+    ), 'sale'
   ),
-  routerLinkFactory: RouteUtils.createRouteFactoryFromRouteDataEntities<WsSale>(
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsSale>(
     FunctionsUtils.splitDomainObjectCallback<WsSale, any[]>(
       sale => ['/sale', sale.id]
     ), 'sale'
