@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {WsAttributeValue, WsAttributeValueRef} from '@valuya/comptoir-ws-api';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {ApiService} from '../../../api.service';
@@ -10,6 +10,7 @@ import {ApiService} from '../../../api.service';
   styleUrls: ['./attribute-value.component.scss']
 })
 export class AttributeValueComponent implements OnInit {
+
   @Input()
   set ref(value: WsAttributeValueRef) {
     this.refSource$.next(value);
@@ -25,12 +26,16 @@ export class AttributeValueComponent implements OnInit {
 
   ngOnInit() {
     this.value$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.loadRef$(ref)),
       publishReplay(1), refCount()
     );
   }
 
   private loadRef$(ref: WsAttributeValueRef) {
+    if (ref == null) {
+      return of(null);
+    }
     this.loading$.next(true);
     const loaded$ = this.apiService.api.getAttributeValue({
       id: ref.id

@@ -10,6 +10,7 @@
     <cp-item-variant-form [ngModel]="formHelper.editingValue$ | async"
                           (partialUpdate)="formHelper.update($event)"
                           [validationResults]="formHelper.validationResults$ | async"
+                          (attributesChange)="onAttributesChange($event)"
     ></cp-item-variant-form>
 
   </ng-template>

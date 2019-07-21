@@ -1,5 +1,5 @@
-<div class="attribute-definition">
-  <cp-loading-content [loading]="loading$ | async">
-    <cp-locale-text [localeText]="labelLocaleText$ | async"></cp-locale-text>
-  </cp-loading-content>
-</div>
+<cp-loading-content [loading]="loading$ | async">
+  <div class="attribute-definition">
+    <cp-locale-text [localeTexts]="labelLocaleText$ | async"></cp-locale-text>
+  </div>
+</cp-loading-content>

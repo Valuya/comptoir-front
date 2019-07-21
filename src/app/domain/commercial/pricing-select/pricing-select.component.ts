@@ -31,7 +31,6 @@ export class PricingSelectComponent implements OnInit, ControlValueAccessor {
 
   suggestionQuerySource$ = new Subject<string>();
   suggestions$: Observable<PricingSelectItem[]>;
-  loadingSuggestions$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private pricingService: PricingService,
@@ -90,6 +89,12 @@ export class PricingSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private createItem(pricing: WsItemVariantPricingEnum): PricingSelectItem {
+    if (pricing == null) {
+      return {
+        label: 'None',
+        value: null
+      };
+    }
     const labelValue = this.pricingService.getLabel(pricing);
     return {
       label: labelValue,

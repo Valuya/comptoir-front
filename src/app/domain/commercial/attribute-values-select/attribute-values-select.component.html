@@ -1,0 +1,40 @@
+<div class="attribute-values-select">
+  <div class="list">
+    <cp-attribute-values [valueItems]="valuesSource$ | async"
+                         [showCloseAction]="true"
+                         (onItemCloseClicked)="onValueRemoved($event)"
+    >
+    </cp-attribute-values>
+  </div>
+
+
+  <form class="next" *ngIf="nextItem != null" #nextForm="ngForm"
+        (ngSubmit)="onAddNextClick()">
+    <cp-attribute-definition-select name="def"
+                                    [ngModel]="nextItem"
+                                    (ngModelChange)="updateNextItem($event)"
+                                    [required]="true"
+    ></cp-attribute-definition-select>
+    <cp-locale-text-edit name="val"
+                         [ngModel]="nextItem.valueTexts"
+                         (ngModelChange)="updateNextItem({valueTexts: $event})"
+                         #valueTexts
+    >
+      <ng-template cpLocalizedEdit>
+        <input type="text" pInputText
+               required name="def-value"
+               [(ngModel)]="valueTexts.editingTextValue">
+      </ng-template>
+    </cp-locale-text-edit>
+    <div class="action">
+      <input type="submit" hidden>
+      <button type="button" pButton
+              label="Add"
+              [disabled]="!nextForm.valid"
+              (click)="onAddNextClick()"
+      >
+      </button>
+    </div>
+  </form>
+
+</div>

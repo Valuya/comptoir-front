@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {ApiService} from '../../../api.service';
 import {WsAttributeDefinition, WsAttributeDefinitionRef} from '@valuya/comptoir-ws-api';
@@ -27,13 +27,17 @@ export class AttributeDefinitionComponent implements OnInit {
 
   ngOnInit() {
     this.labelLocaleText$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.loadRef$(ref)),
-      map(definition => definition.name as WsLocaleText[]),
+      map(def => def == null ? [] : def.name as WsLocaleText[]),
       publishReplay(1), refCount()
     );
   }
 
   private loadRef$(ref: WsAttributeDefinitionRef): Observable<WsAttributeDefinition> {
+    if (ref == null) {
+      return of(null);
+    }
     this.loading$.next(true);
     const loaded$ = this.apiService.api.getAttributeDefinition({
       id: ref.id

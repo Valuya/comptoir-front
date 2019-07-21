@@ -1,0 +1,22 @@
+<p-autoComplete [ngModel]="value$ | async"
+                field="definitionLabel"
+                (ngModelChange)="onValuesChanged($event)"
+                (completeMethod)="onSearchQuery($event.query)"
+                [suggestions]="suggestions$ | async"
+                [forceSelection]="true"
+                [required]="required"
+                name="attribute-definition"
+>
+  <ng-template let-item pTemplate="item">
+    <cp-attribute-definition [ref]="item.definitionRef"
+                             *ngIf="item.definitionRef != null"
+    >
+    </cp-attribute-definition>
+    <div class="definition-to-create" *ngIf="item.definitionRef == null">
+      <div class="label">Create:</div>
+      <div class="attribute-definition">
+        {{ item.definitionLabel }}
+      </div>
+    </div>
+  </ng-template>
+</p-autoComplete>

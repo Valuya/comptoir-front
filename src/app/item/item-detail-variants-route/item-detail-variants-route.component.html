@@ -11,7 +11,7 @@
                   [totalRecords]="itemVariantTableHelper.totalCount$ | async"
                   [pagination]="itemVariantTableHelper.pagination$ | async"
                   (paginationChange)="itemVariantTableHelper.setPagination($event)"
-                  [(selection)]="selecteditemVariant"
+                  [(selection)]="selectedItemVariants"
                   (rowSelect)="onRowSelect($event)"
   >
     <ng-template cpShellColumn let-row="row" let-column="column">

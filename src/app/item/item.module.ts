@@ -25,6 +25,8 @@ import {ItemComponentModule as ItemComponentModule} from '../domain/commercial/i
 import {PricingModule} from '../domain/commercial/pricing/pricing.module';
 import {ItemDetailVariantDetailRouteComponent} from './item-detail-variant-detail-route/item-detail-variant-detail-route.component';
 import {PricingSelectModule} from '../domain/commercial/pricing-select/pricing-select.module';
+import {AttributeValuesModule} from '../domain/commercial/attribute-values/attribute-values.module';
+import {AttributeValuesSelectModule} from '../domain/commercial/attribute-values-select/attribute-values-select.module';
 
 
 @NgModule({
@@ -59,6 +61,8 @@ import {PricingSelectModule} from '../domain/commercial/pricing-select/pricing-s
     ItemComponentModule,
     PricingModule,
     PricingSelectModule,
+    AttributeValuesModule,
+    AttributeValuesSelectModule,
   ]
 })
 export class ItemModule {

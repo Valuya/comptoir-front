@@ -2,6 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemVariant} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
+import {AttributeSelectItem} from '../../domain/commercial/attribute-value/attribute-select-item';
+import {AttributesService} from '../../domain/commercial/attribute-value/attributes.service';
+import {LocaleService} from '../../locale.service';
+import {filter, publishReplay, refCount, switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, concat, Observable, of} from 'rxjs';
 
 @Component({
   selector: 'cp-item-variant-form',
@@ -24,17 +29,37 @@ export class ItemVariantFormComponent implements OnInit, ControlValueAccessor {
 
   @Output()
   partialUpdate = new EventEmitter<Partial<WsItemVariant>>();
+  @Output('attributesChange')
+  editingAttributeSource$ = new BehaviorSubject<AttributeSelectItem[]>(null);
 
-  value: WsItemVariant;
+  value$ = new BehaviorSubject<WsItemVariant | null>(null);
+
+  valueAttributesItems$: Observable<AttributeSelectItem[]>;
+
+  get value() {
+    return this.value$.getValue();
+  }
 
   private onChange: (value: WsItemVariant) => void;
   private onTouched: () => void;
 
 
-  constructor() {
+  constructor(private attributeService: AttributesService,
+              private localeService: LocaleService) {
   }
 
   ngOnInit() {
+    const attributeItemFromValue$ = this.value$.pipe(
+      switchMap(value => this.fetchValueAttributes$(value)),
+    );
+    this.valueAttributesItems$ = attributeItemFromValue$.pipe(
+      // load from value then editing updates
+      switchMap(valueItems => concat(
+        of(valueItems),
+        this.editingAttributeSource$.pipe(filter(a => a != null)),
+      )),
+      publishReplay(1), refCount()
+    );
   }
 
   registerOnChange(fn: any): void {
@@ -49,8 +74,13 @@ export class ItemVariantFormComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  writeValue(obj: any): void {
-    this.value = obj;
+  writeValue(obj: WsItemVariant): void {
+    this.value$.next(obj);
+  }
+
+
+  updateAttributes(attributes: AttributeSelectItem[]) {
+    this.editingAttributeSource$.next(attributes);
   }
 
   updateValue(update: Partial<WsItemVariant>) {
@@ -65,6 +95,17 @@ export class ItemVariantFormComponent implements OnInit, ControlValueAccessor {
     }
     if (this.onChange) {
       this.onChange(newValue);
+    }
+  }
+
+  private fetchValueAttributes$(value: WsItemVariant): Observable<AttributeSelectItem[]> {
+    if (value != null && value.attributeValueRefs != null) {
+      return this.localeService.getViewLocale$().pipe(
+        take(1),
+        switchMap(locale => this.attributeService.createValueItems$(value.attributeValueRefs, locale))
+      );
+    } else {
+      return of([]);
     }
   }
 }

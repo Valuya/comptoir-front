@@ -1,1 +1,6 @@
-{{ localizedValue$ | async }}
+<div class="text">
+  {{ localizedValue$ | async }}
+</div>
+<div class="locale" [hidden]="(localizedValueLocale$ | async) === (viewLocale$ | async)">
+  {{ localizedValueLocale$ | async }}
+</div>

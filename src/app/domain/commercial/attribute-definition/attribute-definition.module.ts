@@ -1,7 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AttributeDefinitionComponent} from './attribute-definition.component';
-import {AppModule} from '../../../app.module';
+import {LocaleTextModule} from '../../lang/locale-text/locale-text.module';
+import {LoadingContentModule} from '../../util/loading-content/loading-content.module';
 
 
 @NgModule({
@@ -9,7 +10,8 @@ import {AppModule} from '../../../app.module';
   exports: [AttributeDefinitionComponent],
   imports: [
     CommonModule,
-    AppModule
+    LocaleTextModule,
+    LoadingContentModule
   ]
 })
 export class AttributeDefinitionModule {

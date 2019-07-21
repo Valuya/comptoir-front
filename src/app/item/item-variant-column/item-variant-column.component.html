@@ -32,6 +32,12 @@
   </ng-container>
 
 
+  <ng-container *ngSwitchCase="'ATTRIBUTES'">
+    <cp-attribute-values [valueRefs]="row.attributeValueRefs">
+    </cp-attribute-values>
+  </ng-container>
+
+
   <ng-container *ngSwitchDefault>
     default
   </ng-container>

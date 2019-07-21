@@ -3,6 +3,7 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {WsCompanyRef, WsItem, WsItemVariant, WsItemVariantSearch, WsItemVariantSearchResult} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
 import {
+  ATTRIBUTES_COLUMN,
   ID_COLUMN,
   ItemVariantColumn,
   MAIN_PICTURE_COLUMN,
@@ -27,11 +28,12 @@ import {SearchResultFactory} from '../../app-shell/shell-table/search-result.fac
 export class ItemDetailVariantsRouteComponent implements OnInit {
 
   itemVariantTableHelper: ShellTableHelper<WsItemVariant, WsItemVariantSearch>;
-  selecteditemVariant: WsItemVariant[] = [];
+  selectedItemVariants: WsItemVariant[] = [];
   columns: TableColumn<ItemVariantColumn>[] = [
     ID_COLUMN,
     MAIN_PICTURE_COLUMN,
     VARIANT_REFERENCE_COLUMN,
+    ATTRIBUTES_COLUMN,
     PRICING_COLUMN,
     PRICING_AMOUNT_COLUMN,
   ];
@@ -91,14 +93,14 @@ export class ItemDetailVariantsRouteComponent implements OnInit {
     );
   }
 
-  private initFilter(companyRef: WsCompanyRef, item: WsItem) {
-    if (companyRef == null || item == null) {
+  private initFilter(companyRefValue: WsCompanyRef, item: WsItem) {
+    if (companyRefValue == null || item == null) {
       return;
     }
     const searchFilter: WsItemVariantSearch = {
       itemRef: {id: item.id},
       itemSearch: {
-        companyRef: companyRef,
+        companyRef: companyRefValue,
       }
     };
     this.itemVariantTableHelper.setFilter(searchFilter);
