@@ -50,11 +50,27 @@ while (("$#" > "0")); do
   shift
 done
 
-echo "sources: ${SRC_FILES_REGEXP}"
-echo "substitutions: ${MOD_SRC}:${MOD_DEST} $SUBSTITUTIONS"
-echo "force: $OVERWRITE_DEST_PATH"
-echo "dry run: $DRY_RUN"
-[ "$DRY_RUN" = "true" ] && echo "Use -e to apply changes"
+printStatus() {
+
+echo -n "substitutions: ${MOD_SRC}:${MOD_DEST} $SUBSTITUTIONS"
+[ -z "${SUBSTITUTIONS}" ] && echo -n "$(printf '\t')  # Pass 'src:dest' expressions to pass through sed s:\$src:\$dest: "
+echo
+
+echo -n "sources: ${SRC_FILES_REGEXP}"
+[ -z "${SRC_FILES_REGEXP}" ] && echo -n "$(printf '\t')  # Use -f <pattern> to filter source files"
+echo
+
+echo -n  "force: $OVERWRITE_DEST_PATH"
+[ "$OVERWRITE_DEST_PATH" != "true" ] && echo -n "$(printf '\t')  # Use --overwrite-dest to force"
+echo
+
+echo -n "dry run: $DRY_RUN"
+[ "$DRY_RUN" = "true" ] && echo -n "$(printf '\t')  # Use -e to apply changes"
+echo
+}
+
+printStatus
+echo
 
 [[ -z "$MOD_DEST" ]] && echo "Invalid des: $MOD_DEST" && exit 1
 DEST_PATH="${WD}/src/app/${MOD_DEST}"
@@ -83,6 +99,8 @@ filterSources() {
 tmp=$(mktemp)
 find "$SRC_PATH" -type d >"$tmp"
 
+echo
+
 while read DIR; do
   INCLUDED=$(filterSources "$DIR")
   [ "$INCLUDED" = "false" ] && continue
@@ -94,6 +112,8 @@ while read DIR; do
     mkdir -p "$DEST_DIR_PATH"
   fi
 done <"$tmp"
+
+echo
 
 find "$SRC_PATH" -type f >$tmp
 while read FILE; do
@@ -122,9 +142,8 @@ done <"$tmp"
 rm "$tmp"
 
 
+echo
+echo
+printStatus
+echo
 echo "COmpleted"
-echo "sources: ${SRC_FILES_REGEXP}"
-echo "substitutions: ${MOD_SRC}:${MOD_DEST} $SUBSTITUTIONS"
-echo "force: $OVERWRITE_DEST_PATH"
-echo "dry run: $DRY_RUN"
-[ "$DRY_RUN" = "true" ] && echo "Use -e to apply changes"
