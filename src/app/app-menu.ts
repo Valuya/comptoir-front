@@ -11,6 +11,7 @@ import {FunctionsUtils} from './util/functions-utils';
 import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {RouteUtils} from './util/route-utils';
 import {ResolvedRouteItem} from './util/resolved-route-item';
+import {ComptoirMenuItems} from './comptoir/comptoir-menu';
 
 const UserMenuItems: (MenuItem | ResolvedRouteItem<any>)[] = [
   {
@@ -33,6 +34,13 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     label: 'Home',
     title: 'Home',
     routerLink: ['/'],
+  },
+  comptoir: {
+    label: 'Comptoir',
+    title: 'Comptoir',
+    icon: 'fa fa-shopping-basket',
+    routerLink: ['/comptoir'],
+    items: ComptoirMenuItems
   },
   sale: {
     label: 'Sales',

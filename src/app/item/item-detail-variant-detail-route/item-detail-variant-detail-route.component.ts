@@ -71,7 +71,6 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
           attributeValueRefs: valueRefs
         });
       }),
-      tap(a => console.log(a)),
       switchMap(() => this.formHelper.persist$()),
     ).subscribe(
       updatedItemVariant => this.onSaveSuccess(updatedItemVariant),

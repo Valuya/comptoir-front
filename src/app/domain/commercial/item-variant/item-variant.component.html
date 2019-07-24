@@ -1,21 +1,31 @@
-<div class="item-variant">
-  <div class="icon">
-    <cp-loading-content [loading]="loading$ |async">
+<cp-loading-content [loading]="loading$ |async">
+  <div class="item-variant" [ngClass]="layout" >
 
-    </cp-loading-content>
-  </div>
-
-  <div class="content">
-
-    <div class="item">
-      <cp-item [ref]="(value$ | async)?.itemRef"></cp-item>
+    <div class="main-picture">
+      <div class="variant-picture" *ngIf="(value$ | async)?.mainPictureRef != null; else: itemPicture ">
+        <cp-picture [ref]="(value$ | async)?.mainPictureRef"
+        >
+        </cp-picture>
+      </div>
+      <ng-template #itemPicture>
+        <cp-item [ref]="(value$ | async)?.itemRef"
+                 [showMainPicture]="true"
+        ></cp-item>
+      </ng-template>
     </div>
 
-    <div class="reference">
-      <cp-loading-content [loading]="loading$ |async">
+    <div class="details" [ngClass]="layout">
+      <div class="ref item-ref" *ngIf="showReference">
         {{ (value$ | async)?.variantReference }}
-      </cp-loading-content>
+      </div>
+      <div class="name" *ngIf="showItemName">
+        <cp-item [ref]="(value$ | async)?.itemRef"
+                 [showName]="true"
+        ></cp-item>
+      </div>
     </div>
+
   </div>
 
-</div>
+</cp-loading-content>
+

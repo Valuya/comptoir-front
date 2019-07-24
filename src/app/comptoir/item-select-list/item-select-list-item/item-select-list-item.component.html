@@ -1,0 +1,38 @@
+<div class="item-list-item">
+  <cp-loading-content [loading]="loading$ | async">
+    <div class="list-item-content">
+      <div class="picture">
+        <cp-picture [ref]="(item$ | async)?.mainPictureRef"
+        ></cp-picture>
+      </div>
+
+      <div class="details-left">
+        <div class="ref-line">
+          <div class="ref item-ref">
+            {{ (item$ | async)?.reference }}
+          </div>
+          <div class="multiple-sale" *ngIf="(item$ | async)?.multipleSale">
+            <i class="fa fa-sitemap"></i>
+          </div>
+        </div>
+        <div class="name">
+          <cp-locale-text [localeTexts]="(item$ | async)?.name"
+          ></cp-locale-text>
+        </div>
+        <div class="description">
+          <cp-locale-text [localeTexts]="(item$ | async)?.description"
+          ></cp-locale-text>
+        </div>
+      </div>
+
+      <div class="details-right">
+        <div class="price">
+          {{ (item$ | async)?.vatExclusive | currency }}
+        </div>
+        <div class="vat">
+          {{ (item$ | async)?.vatRate | percent}}
+        </div>
+      </div>
+    </div>
+  </cp-loading-content>
+</div>

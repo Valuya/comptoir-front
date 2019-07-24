@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsItemVariant, WsItemVariantRef} from '@valuya/comptoir-ws-api';
+import {ItemService} from '../item.service';
 
 @Component({
   selector: 'cp-item-variant',
@@ -16,12 +17,21 @@ export class ItemVariantComponent implements OnInit {
     this.refSource$.next(value);
   }
 
+  @Input()
+  showMainPicture: boolean;
+  @Input()
+  showReference: boolean;
+  @Input()
+  showItemName: boolean;
+  @Input()
+  layout: 'row' | 'column' | 'details-column';
+
   private refSource$ = new BehaviorSubject<WsItemVariantRef>(null);
 
   loading$ = new BehaviorSubject<boolean>(false);
   value$: Observable<WsItemVariant>;
 
-  constructor(private apiService: ApiService) {
+  constructor(private itemService: ItemService) {
   }
 
   ngOnInit() {
@@ -38,10 +48,7 @@ export class ItemVariantComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getItemVariant({
-      id: ref.id
-    }) as any as Observable<WsItemVariant>;
-    return loaded$.pipe(
+    return this.itemService.getItemVariant$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

@@ -1,0 +1,40 @@
+<div class="list-item-content" *ngIf="item != null">
+  <div class="item">
+    <cp-item-variant [ref]="item.itemVariantRef"
+                     [showMainPicture]="true"
+                     [showReference]="true"
+                     [showItemName]="true"
+                     layout="details-column"
+    ></cp-item-variant>
+  </div>
+
+  <div class="details">
+
+    <div class="amounts">
+      <div class="quantity">
+        {{ item.quantity }} x
+      </div>
+      <div class="vat-exclusive">
+        {{ item.vatExclusive | currency }}
+      </div>
+      <div class="vat-rate">
+        VAT: {{ item.vatRate | percent }}
+      </div>
+      <div class="total">
+        {{ item.total | currency }}
+      </div>
+    </div>
+
+    <div class="info">
+      <div class="comment">
+        {{ item.comment }}
+      </div>
+      <div class="customer-loyalty">
+        {{ item.includeCustomerLoyalty | json }}
+      </div>
+      <div class="">
+        {{ item.stockRef | json  }}
+      </div>
+    </div>
+  </div>
+</div>

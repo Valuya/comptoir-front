@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
-import {WsEmployee, WsEmployeeRef} from '@valuya/comptoir-ws-api';
+import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
+import {EmployeeService} from '../../domain/thirdparty/employee.service';
 
 @Component({
   selector: 'cp-employees-details-route',
@@ -25,7 +25,7 @@ export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private employeeService: EmployeeService) {
     this.formHelper = new ShellFormHelper<WsEmployee>(
       value => this.validate$(value),
       value => this.persist$(value),
@@ -67,24 +67,13 @@ export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
 
   private persist$(value: WsEmployee): Observable<WsEmployee> {
     if (value.id == null) {
-      const created$ = this.apiService.api.createEmployee({
-        wsEmployee: value
-      }) as any as Observable<WsEmployeeRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getEmployee({
-          id: ref.id
-        }))
-      ) as any as Observable<WsEmployee>;
+      return this.employeeService.createEmployee$(value).pipe(
+        mergeMap(createdRef => this.employeeService.getEmployee$(createdRef)),
+      );
     } else {
-      const updated$ = this.apiService.api.updateEmployee({
-        id: value.id,
-        wsEmployee: value
-      }) as any as Observable<WsEmployeeRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getEmployee({
-          id: ref.id
-        }))
-      ) as any as Observable<WsEmployee>;
+      return this.employeeService.updateEmployee$(value).pipe(
+        mergeMap(createdRef => this.employeeService.getEmployee$(createdRef)),
+      );
     }
   }
 }

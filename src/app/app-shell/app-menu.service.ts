@@ -126,7 +126,9 @@ export class AppMenuService {
     }
     const newChildren = newItem.items;
 
-    if (newItem.routerLink == null && (newChildren == null || newChildren.length === 0)) {
+    const isEmpty = newItem.routerLink == null;
+    const isLeaf = newChildren == null || newChildren.length === 0;
+    if (isEmpty && isLeaf) { // kepp empty intermediate nodes that are labbelled
       return null;
     }
     return newItem;

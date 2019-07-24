@@ -7,4 +7,11 @@ export class SearchResultFactory {
       totalCount: 0
     };
   }
+
+  static create<T>(listValue: T[], count: number): SearchResult<T> {
+    return {
+      list: listValue,
+      totalCount: count
+    };
+  }
 }

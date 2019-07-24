@@ -23,7 +23,7 @@
     "@ngrx/effects": "^8.1.0",
     "@ngrx/router-store": "^8.1.0",
     "@ngrx/store": "^8.1.0",
-    "@valuya/comptoir-ws-api": "file:../../comptoir-back/comptoir-ws-api/target/generated-sources/openapi",
+    "@valuya/comptoir-ws-api": "1.0.0-alpha.1-SNAPSHOT.201907231908",
     "chart.js": "^2.8.0",
     "font-awesome": "^4.7.0",
     "moment": "^2.24.0",

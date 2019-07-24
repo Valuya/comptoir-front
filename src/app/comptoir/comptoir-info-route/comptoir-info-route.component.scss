@@ -1,0 +1,18 @@
+.comptoir-info-page {
+
+  >.form {
+    width: 30em;
+
+    .control {
+      display: flex;
+      align-items: center;
+
+      >* {
+        flex: 1 1 auto;
+      }
+      >label {
+        flex: 0 0 14em;
+      }
+    }
+  }
+}

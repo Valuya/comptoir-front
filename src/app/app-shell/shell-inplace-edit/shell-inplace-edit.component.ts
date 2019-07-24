@@ -95,7 +95,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterConten
   }
 
   onCancelClick() {
-    this.fireChanges(this.value);
+    this.editValue = this.value;
     this.onEditChange(false);
   }
 

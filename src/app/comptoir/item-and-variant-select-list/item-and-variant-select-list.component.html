@@ -1,0 +1,13 @@
+<div class="item-list" [hidden]="selectionType !== 'item'">
+  <cp-item-select-list (itemSelect)="onItemSelected($event)"
+                       [viewLayout]="displayMode"
+  ></cp-item-select-list>
+</div>
+
+<div class="variant-list" [hidden]="selectionType !== 'variant'">
+  <cp-variant-select-list [itemRef]="itemRef"
+                          [viewLayout]="displayMode"
+                          [autoSelectSingleVariant]="autoSelectSingleVariant"
+                          (variantSelect)="onVariantSelected($event)"
+  ></cp-variant-select-list>
+</div>

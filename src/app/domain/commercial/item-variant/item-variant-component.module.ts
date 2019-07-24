@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {ItemVariantComponent} from './item-variant.component';
 import {LoadingContentModule} from '../../util/loading-content/loading-content.module';
 import {ItemComponentModule} from '../item/item-component.module';
+import {PictureModule} from '../picture/picture.module';
 
 
 @NgModule({
@@ -10,7 +11,8 @@ import {ItemComponentModule} from '../item/item-component.module';
   imports: [
     CommonModule,
     LoadingContentModule,
-    ItemComponentModule
+    ItemComponentModule,
+    PictureModule
   ],
   exports: [ItemVariantComponent]
 })

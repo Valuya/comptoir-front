@@ -27,6 +27,11 @@ export const APP_MODULES_ROUTES: Route[] = [
     children: LoggedUserRoutes
   },
   {
+    path: 'comptoir',
+    loadChildren: './comptoir/comptoir.module#ComptoirModule',
+    data: createAppRouteData(AppMenu.comptoir)
+  },
+  {
     path: 'sale',
     loadChildren: './sale/sale.module#SaleModule',
     data: createAppRouteData(AppMenu.sale)

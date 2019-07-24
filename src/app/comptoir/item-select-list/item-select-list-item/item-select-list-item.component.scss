@@ -1,0 +1,47 @@
+.item-list-item {
+
+  ::ng-deep .list-item-content {
+    display: flex;
+    align-items: center;
+    //height: 5em;
+
+    >* {
+      padding: .5em;
+    }
+    >.picture {
+      flex: 0 0 3em;
+    }
+    >.details-left {
+      flex: 1 1 auto;
+      >* {
+        margin: .2em 0;
+      }
+    }
+    >.details-right {
+      flex: 1 1 auto;
+      text-align: right;
+      >*{
+        margin: .2em 0;
+      }
+    }
+
+    .ref-line {
+      display: inline-flex;
+      align-items: center;
+
+      >* {
+        flex: 0 0 auto;
+      }
+      .multiple-sale {
+        margin: 0 1em;
+        font-size: .8em;
+      }
+    }
+    .description {
+      font-size: .7em;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}

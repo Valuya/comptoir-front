@@ -4,6 +4,7 @@ import {TableColumn} from '../../util/table-column';
 import {LazyLoadEvent} from 'primeng/api';
 import {ShellColumnDirective} from './shell-column.directive';
 import {FilterContentDirective} from './filter-content.directive';
+import {PaginationUtils} from '../../util/pagination-utils';
 
 @Component({
   selector: 'cp-shell-table',
@@ -35,7 +36,7 @@ export class ShellTableComponent implements OnInit {
   @ContentChild(ShellColumnDirective, {static: false, read: TemplateRef})
   columnTemplate: TemplateRef<any>;
   @ContentChild(FilterContentDirective, {static: false, read: TemplateRef})
-  filterContentTemplate: TemplateRef<any>
+  filterContentTemplate: TemplateRef<any>;
 
   constructor() {
   }
@@ -48,13 +49,8 @@ export class ShellTableComponent implements OnInit {
   }
 
   onLazyLoad(event: LazyLoadEvent) {
-    const newPagination = Object.assign({}, this.pagination, <Partial<Pagination>> {
-      first: event.first,
-      rows: event.rows,
-      multiSortMeta: event.multiSortMeta,
-      globalFilter: event.globalFilter
-    });
-    this.paginationChange.next(newPagination);
+    const pagination = PaginationUtils.createFromEvent(event);
+    this.paginationChange.next(pagination);
   }
 
   onSelectionChange(rows: any[]) {

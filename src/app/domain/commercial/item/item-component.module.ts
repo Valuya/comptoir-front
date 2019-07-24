@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {ItemComponent} from './item.component';
 import {LoadingContentModule} from '../../util/loading-content/loading-content.module';
 import {LocaleTextModule} from '../../lang/locale-text/locale-text.module';
+import {PictureModule} from '../picture/picture.module';
 
 
 @NgModule({
@@ -10,7 +11,8 @@ import {LocaleTextModule} from '../../lang/locale-text/locale-text.module';
   imports: [
     CommonModule,
     LoadingContentModule,
-    LocaleTextModule
+    LocaleTextModule,
+    PictureModule
   ],
   exports: [ItemComponent]
 })

@@ -8,7 +8,6 @@ import {ContentBodyDirective} from './content-body.directive';
 })
 export class ShellContentPageComponent implements OnInit {
 
-
   @ContentChild(ContentBodyDirective, {static: false, read: TemplateRef})
   bodyTemplateRef: TemplateRef<any>;
 
