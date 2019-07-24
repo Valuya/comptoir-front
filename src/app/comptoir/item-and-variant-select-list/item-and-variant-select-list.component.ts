@@ -18,7 +18,7 @@ export class ItemAndVariantSelectListComponent implements OnInit {
   selectionType: 'item' | 'variant' = 'item';
   displayMode: 'list' | 'grid' = 'list';
 
-  private itemRef: WsItemRef | null;
+  itemRef: WsItemRef | null;
 
   constructor() {
   }

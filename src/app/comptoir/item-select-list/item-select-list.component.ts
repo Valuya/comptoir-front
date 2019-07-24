@@ -29,9 +29,9 @@ export class ItemSelectListComponent implements OnInit, OnDestroy {
   tableHelper: ShellTableHelper<WsItemRef, WsItemSearch>;
 
   searchQuery$ = new BehaviorSubject<string | null>(null);
+  sortOptions: SelectItem[];
 
   private subscription: Subscription;
-  private sortOptions: SelectItem[];
 
   constructor(
     private authService: AuthService,
@@ -73,7 +73,7 @@ export class ItemSelectListComponent implements OnInit, OnDestroy {
   }
 
   onItemClick(ref: WsItemRef) {
-    this.itemSelect.emit(ref)
+    this.itemSelect.emit(ref);
   }
 
   private createSearchFilter(companyRef: WsCompanyRef | null, searchQuery: string | null): WsItemSearch {
