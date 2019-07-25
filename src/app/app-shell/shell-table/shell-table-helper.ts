@@ -1,6 +1,6 @@
 import {Pagination} from '../../util/pagination';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {debounceTime, delay, map, publishReplay, refCount, switchMap, take, tap} from 'rxjs/operators';
+import {concatMap, debounceTime, delay, map, mergeMap, publishReplay, refCount, skip, switchMap, take, tap} from 'rxjs/operators';
 import {SearchResult} from './search-result';
 import {PaginationUtils} from '../../util/pagination-utils';
 
@@ -19,11 +19,16 @@ export class ShellTableHelper<T, F> {
   paginationRows$: Observable<number>;
   paginationSortField$: Observable<string>;
   paginationSortOrder$: Observable<1 | -1>;
+  private options: { noDebounce: boolean };
 
   constructor(
     search$: (filter: F | null, pagination: Pagination | null) => Observable<SearchResult<T>>,
+    options?: {
+      noDebounce: boolean
+    }
   ) {
     this.search$ = search$;
+    this.options = options;
     this.initResults();
   }
 
@@ -36,15 +41,32 @@ export class ShellTableHelper<T, F> {
   }
 
   reload() {
-    this.pagination$.pipe(
+    const reloadedRows$ = this.pagination$.pipe(
       take(1),
-    ).subscribe(p => this.pagination$.next(p));
+      tap(p => this.pagination$.next(p)),
+      mergeMap(() => this.rows$),
+      skip(1), // cache value in the replay operator
+      take(1), // next fresh value
+      publishReplay(1), refCount()
+    );
+    reloadedRows$.subscribe();
+    return reloadedRows$;
   }
 
   private initResults() {
-    this.results$ = combineLatest(this.filter$, this.pagination$).pipe(
-      debounceTime(100),
-      switchMap(results => this.searchResults$(results[0], results[1])),
+    const filterAndpagination$ = combineLatest(this.filter$, this.pagination$);
+    let results$: Observable<SearchResult<T>>;
+    if (this.options == null || this.options.noDebounce !== true) {
+      results$ = filterAndpagination$.pipe(
+        debounceTime(100),
+        switchMap(results => this.searchResults$(results[0], results[1])),
+      );
+    } else {
+      results$ = filterAndpagination$.pipe(
+        concatMap(results => this.searchResults$(results[0], results[1]))
+      );
+    }
+    this.results$ = results$.pipe(
       publishReplay(1), refCount()
     );
     this.rows$ = this.results$.pipe(

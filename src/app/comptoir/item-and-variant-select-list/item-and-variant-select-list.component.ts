@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemRef, WsItemVariantRef} from '@valuya/comptoir-ws-api';
 import {$e} from 'codelyzer/angular/styles/chars';
+import {MessageService} from 'primeng/api';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {debounceTime, publishReplay, refCount} from 'rxjs/operators';
 
 @Component({
   selector: 'cp-item-and-variant-select-list',
@@ -15,25 +18,43 @@ export class ItemAndVariantSelectListComponent implements OnInit {
   @Output()
   variantSelect$ = new EventEmitter<WsItemVariantRef>();
 
-  selectionType: 'item' | 'variant' = 'item';
   displayMode: 'list' | 'grid' = 'list';
+  selectionTypeSource$$ = new BehaviorSubject<'item' | 'variant'>('item');
+  debouncedSelectionType$: Observable<'item' | 'variant'>;
 
   itemRef: WsItemRef | null;
 
-  constructor() {
+  constructor(
+    private messageService: MessageService,
+  ) {
   }
 
   ngOnInit() {
+    this.debouncedSelectionType$ = this.selectionTypeSource$$.pipe(
+      debounceTime(300),
+      publishReplay(1), refCount()
+    );
   }
 
   onItemSelected(ref: WsItemRef) {
     this.itemRef = ref;
-    this.selectionType = 'variant';
+    this.selectionTypeSource$$.next('variant');
+    console.log('item');
   }
 
   onVariantSelected(ref: WsItemVariantRef) {
     this.variantSelect$.next(ref);
-    this.selectionType = 'item';
+    this.selectionTypeSource$$.next('item');
     this.itemRef = null;
+    console.log('variant');
+    this.notifyAdded();
+  }
+
+  private notifyAdded() {
+    this.messageService.add({
+      severity: 'info',
+      life: 500,
+      summary: 'Adding 1'
+    });
   }
 }

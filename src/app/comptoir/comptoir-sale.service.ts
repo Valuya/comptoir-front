@@ -11,7 +11,7 @@ import {
   WsItemVariantSearch,
   WsSale
 } from '@valuya/comptoir-ws-api';
-import {concatMap, filter, map, publishReplay, refCount, scan, switchMap, take, tap, throwIfEmpty} from 'rxjs/operators';
+import {concatMap, filter, map, mergeMap, publishReplay, refCount, scan, switchMap, take, tap} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
 import {AuthService} from '../auth.service';
@@ -23,7 +23,6 @@ import {ItemService} from '../domain/commercial/item.service';
 import {LocaleService} from '../locale.service';
 import {WsLocaleText} from '../domain/lang/locale-text/ws-locale-text';
 import {SimpleSearchResultResourceCache} from '../domain/util/cache/simple-search-result-resource-cache';
-import {ITEM_COLUMN} from '../item/item-variant-column/item-variant-columns';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +32,7 @@ export class ComptoirSaleService {
   private activeSaleSource$ = new BehaviorSubject<WsSale>(null);
   private saleUpdatesSource$ = new Subject<Partial<WsSale>>();
 
+  private addingItemInProgress$ = new BehaviorSubject<boolean>(false);
   private saleUpdating$ = new BehaviorSubject<boolean>(false);
   private updatedSale$: Observable<WsSale>;
 
@@ -55,14 +55,14 @@ export class ComptoirSaleService {
       publishReplay(1), refCount()
     );
     this.saleItemsTableHelper = new ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>(
-      (searchFilter, pagination) => this.searchSaleItems$(searchFilter, pagination)
+      (searchFilter, pagination) => this.searchSaleItems$(searchFilter, pagination), {
+        noDebounce: true
+      }
     );
 
     this.addVariantSource$.pipe(
       concatMap(ref => this.addNextVariant$(ref)),
-    ).subscribe(() => {
-      console.log('updated');
-    });
+    );
     // this.itemSelectChildrenCache = new SimpleSeachResultResourceCache<WsItemVariantRef>(
     //   ref => this.fetchItemVarianFirstPages$(ref)
     // );
@@ -120,7 +120,7 @@ export class ComptoirSaleService {
         itemRef: itemRef as object,
         variantReferenceContains: query
       };
-      return this.doSearchVariants$(partialFilter);
+      return this.doSearchVariants$(partialFilter, PaginationUtils.create(100));
     }
   }
 
@@ -198,9 +198,14 @@ export class ComptoirSaleService {
       filter(s => s != null),
       take(1),
     );
+    this.addingItemInProgress$.next(true);
     return forkJoin(curSale$, curItems$).pipe(
-      switchMap(results => this.addOrAppendVariant$(results[0], results[1], ref)),
-      tap(() => this.reloadSaleItems())
+      concatMap(results => {
+        return this.addOrAppendVariant$(results[0], results[1], ref).pipe(
+          mergeMap(added => this.saleItemsTableHelper.reload()),
+          tap(() => this.addingItemInProgress$.next(false))
+        );
+      }),
     );
   }
 
@@ -230,17 +235,13 @@ export class ComptoirSaleService {
     }
   }
 
-  private reloadSaleItems() {
-    this.saleItemsTableHelper.reload();
-  }
-
   private getCachedItemVariantForItem$(itemRef: WsItemRef) {
     const cache = this.itemVariantsCaches[itemRef.id];
     if (cache == null) {
       this.itemVariantsCaches[itemRef.id] = new SimpleSearchResultResourceCache<WsItemVariantRef>(
         () => this.doSearchVariants$({
           itemRef: itemRef as object,
-        })
+        }, PaginationUtils.create(100))
       );
       return this.itemVariantsCaches[itemRef.id].getOneResults$();
     } else {
@@ -248,7 +249,7 @@ export class ComptoirSaleService {
     }
   }
 
-  private doSearchVariants$(partialFilter: WsItemVariantSearch, pagination?: Pagination): Observable<SearchResult<WsItemVariantRef>> {
+  private doSearchVariants$(partialFilter: WsItemVariantSearch, pagination: Pagination): Observable<SearchResult<WsItemVariantRef>> {
     return this.authService.getLoggedEmployeeCompanyRef$().pipe(
       take(1),
       map(companyRef => Object.assign({}, partialFilter, {

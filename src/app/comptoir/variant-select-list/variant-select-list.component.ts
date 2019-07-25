@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {WsCompanyRef, WsItemRef, WsItemVariantRef, WsItemVariantSearch} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
@@ -30,6 +30,8 @@ export class VariantSelectListComponent implements OnInit, OnDestroy {
   viewLayout: 'list' | 'grid' = 'list';
   @Input()
   autoSelectSingleVariant = true;
+  @Input()
+  noDebounce: boolean;
 
   @Input()
   set itemRef(value: WsItemRef) {
@@ -56,7 +58,10 @@ export class VariantSelectListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = new Subscription();
     this.tableHelper = new ShellTableHelper<WsItemVariantRef, WsItemVariantSearch>(
-      (searchFilter, pagination) => this.searchVariants$(searchFilter, pagination)
+      (searchFilter, pagination) => this.searchVariants$(searchFilter, pagination),
+      {
+        noDebounce: this.noDebounce
+      }
     );
     this.sortOptions = this.createSortOptions();
     this.tableHelper.setPagination(PaginationUtils.createWithSort(

@@ -117,7 +117,7 @@ export class PictureUploadComponent implements OnInit, ControlValueAccessor {
     this.valueSource$.next(obj);
   }
 
-  fireChanges(newValue: WsPicture) {
+  fireChanges(newValue: WsPictureRef) {
     if (this.onTouched) {
       this.onTouched();
     }

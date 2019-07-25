@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
   selector: 'cp-root',
   template: `
       <div class="messages">
-          <p-toast position="top-right">
+          <p-toast position="top-center">
           </p-toast>
       </div>
       <router-outlet></router-outlet>`,

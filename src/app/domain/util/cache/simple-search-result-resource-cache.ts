@@ -1,5 +1,5 @@
 import {concat, Observable, Subject} from 'rxjs';
-import {publishReplay, refCount, retry, switchMap, take, takeUntil} from 'rxjs/operators';
+import {publishReplay, refCount, retry, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {SearchResult} from '../../../app-shell/shell-table/search-result';
 
 export class SimpleSearchResultResourceCache<T> {
@@ -18,8 +18,8 @@ export class SimpleSearchResultResourceCache<T> {
         switchMap(() => fetcher())
       )
     ).pipe(
-      publishReplay(1), refCount(),
       retry(),
+      publishReplay(1), refCount(),
     );
   }
 
