@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {WsAccount, WsAccountRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {AccountService} from '../account.service';
 
 @Component({
   selector: 'cp-account',
@@ -20,7 +20,9 @@ export class AccountComponent implements OnInit {
   loading$ = new BehaviorSubject<boolean>(false);
   value$: Observable<WsAccount>;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private accountService: AccountService,
+  ) {
   }
 
   ngOnInit() {
@@ -35,10 +37,7 @@ export class AccountComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getAccount({
-      id: ref.id
-    }) as any as Observable<WsAccount>;
-    return loaded$.pipe(
+    return this.accountService.getAccount$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

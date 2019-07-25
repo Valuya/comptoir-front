@@ -3,7 +3,6 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
-import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {ACTIVE_COLUMN, DESCRIPTION_COLUMN, ID_COLUMN, StockColumn} from '../stock-column/stock-columns';
@@ -11,6 +10,7 @@ import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsStock, WsStockSearch, WsStockSearchResult} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {StockService} from '../../domain/commercial/stock.service';
 
 @Component({
   selector: 'cp-stocks-list-route',
@@ -27,7 +27,7 @@ export class StockListRouteComponent implements OnInit {
     ACTIVE_COLUMN,
   ];
 
-  constructor(private apiService: ApiService,
+  constructor(private stockService: StockService,
               private authService: AuthService,
               private router: Router,
   ) {
@@ -47,20 +47,13 @@ export class StockListRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.searchStocks({
-      wsStockSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsStockSearchResult>;
-    return results$.pipe(
+    return this.stockService.searchStockList$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultStocks$(results)),
     );
   }
 
   private searchResultStocks$(results: WsStockSearchResult): Observable<SearchResult<WsStock>> {
-    const stocks$List = results.list.map(ref => this.apiService.api.getStock({
-      id: ref.id
-    }));
+    const stocks$List = results.list.map(ref => this.stockService.getStock$(ref));
     return concat(...stocks$List).pipe(toArray()).pipe(
       map(newList => {
         return {

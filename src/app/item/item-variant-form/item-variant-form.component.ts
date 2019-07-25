@@ -3,10 +3,10 @@ import {WsItemVariant} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {AttributeSelectItem} from '../../domain/commercial/attribute-value/attribute-select-item';
-import {AttributesService} from '../../domain/commercial/attribute-value/attributes.service';
 import {LocaleService} from '../../locale.service';
 import {filter, publishReplay, refCount, switchMap, take, tap} from 'rxjs/operators';
 import {BehaviorSubject, concat, Observable, of} from 'rxjs';
+import {AttributeService} from '../../domain/commercial/attribute.service';
 
 @Component({
   selector: 'cp-item-variant-form',
@@ -44,7 +44,7 @@ export class ItemVariantFormComponent implements OnInit, ControlValueAccessor {
   private onTouched: () => void;
 
 
-  constructor(private attributeService: AttributesService,
+  constructor(private attributeService: AttributeService,
               private localeService: LocaleService) {
   }
 

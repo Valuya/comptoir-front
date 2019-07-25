@@ -14,7 +14,6 @@ import {
 import {concatMap, filter, map, publishReplay, refCount, scan, switchMap, take, tap, throwIfEmpty} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
-import {ApiService} from '../api.service';
 import {AuthService} from '../auth.service';
 import {PaginationUtils} from '../util/pagination-utils';
 import {SearchResult} from '../app-shell/shell-table/search-result';
@@ -49,7 +48,6 @@ export class ComptoirSaleService {
     private saleService: SaleService,
     private itemService: ItemService,
     private localeService: LocaleService,
-    private apiService: ApiService,
     private authService: AuthService,
   ) {
     this.updatedSale$ = this.activeSaleSource$.pipe(
@@ -165,13 +163,7 @@ export class ComptoirSaleService {
       saleRef: {id: sale.id},
       companyRef: companyRef as object,
     } as Partial<WsItemVariantSaleSearch>);
-    const searchResult$ = this.apiService.api.searchItemVariantSales({
-      offset: pagination.first,
-      length: pagination.rows,
-      sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
-      wsItemVariantSaleSearch: searchFilter
-    }) as any as Observable<WsItemVariantSaleSearchResult>;
-    return searchResult$.pipe(
+    return this.saleService.searchVariants$(searchFilter, pagination).pipe(
       switchMap(results => this.fetchResultsItems$(results)),
     );
   }
@@ -187,9 +179,7 @@ export class ComptoirSaleService {
   }
 
   private fetchSaleItemRef$(ref: WsItemVariantSaleRef) {
-    return this.apiService.api.getItemVariantSale({
-      id: ref.id
-    }) as any as Observable<WsItemVariantSale>;
+    return this.saleService.getVariant$(ref);
   }
 
   private createSale$(sale: WsSale) {
@@ -264,12 +254,7 @@ export class ComptoirSaleService {
       map(companyRef => Object.assign({}, partialFilter, {
         itemSearch: {companyRef: companyRef as object}
       } as WsItemVariantSearch)),
-      switchMap(searchFilter => this.apiService.api.findItemVariants({
-        offset: pagination == null ? 0 : pagination.first,
-        length: pagination == null ? this.ItemVariantCacheSize : pagination.rows,
-        wsItemVariantSearch: searchFilter,
-        // sort: 'item:asc'
-      }) as any as Observable<WsItemVariantSaleSearchResult> as Observable<SearchResult<WsItemVariantRef>>),
+      switchMap(searchFilter => this.itemService.searchVariants$(searchFilter, pagination)),
     );
   }
 

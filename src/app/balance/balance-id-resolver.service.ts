@@ -5,13 +5,14 @@ import {Observable, of} from 'rxjs';
 import {ApiService} from '../api.service';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {BalanceService} from '../domain/accounting/balance.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BalanceIdResolverService implements Resolve<WsBalance> {
 
-  constructor(private apiService: ApiService,
+  constructor(private balanceService: BalanceService,
               private authService: AuthService) {
   }
 
@@ -24,14 +25,9 @@ export class BalanceIdResolverService implements Resolve<WsBalance> {
     if (isNaN(idParam)) {
       return this.resolveNoNumericParam$(param);
     }
-    return this.fetchBalance$(idParam);
+    return this.balanceService.getBalance$({id: idParam});
   }
 
-  private fetchBalance$(idValue: number) {
-    return this.apiService.api.getBalance({
-      id: idValue,
-    }) as any as Observable<WsBalance>;
-  }
 
   private resolveNoNumericParam$(param: string) {
     return this.createNew$();

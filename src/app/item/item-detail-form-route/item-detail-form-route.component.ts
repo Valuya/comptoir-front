@@ -4,11 +4,11 @@ import {WsItem, WsItemRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
-import {ApiService} from '../../api.service';
+import {ItemService} from '../../domain/commercial/item.service';
 
 @Component({
   selector: 'cp-item-detail-form-route',
@@ -24,9 +24,11 @@ export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private itemService: ItemService,
+  ) {
 
   }
+
   ngOnInit() {
     this.formHelper = new ShellFormHelper<WsItem>(
       value => this.validate$(value),
@@ -66,25 +68,8 @@ export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsItem): Observable<WsItem> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createItem({
-        wsItem: value,
-      }) as any as Observable<WsItemRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getItem({
-          id: ref.id
-        }))
-      ) as any as Observable<WsItem>;
-    } else {
-      const updated$ = this.apiService.api.updateItem({
-        id: value.id,
-        wsItem: value,
-      }) as any as Observable<WsItemRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getItem({
-          id: ref.id
-        }))
-      ) as any as Observable<WsItem>;
-    }
+    return this.itemService.saveItem(value).pipe(
+      switchMap(ref => this.itemService.getItem$(ref))
+    );
   }
 }

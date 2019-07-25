@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsItem, WsItemRef} from '@valuya/comptoir-ws-api';
 import {ItemService} from '../item.service';
@@ -16,6 +15,7 @@ export class ItemComponent implements OnInit {
   set ref(value: WsItemRef) {
     this.refSource$.next(value);
   }
+
   @Input()
   showMainPicture: boolean;
   @Input()

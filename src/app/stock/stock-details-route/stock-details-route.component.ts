@@ -3,12 +3,12 @@ import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-hel
 import {WsStock, WsStockRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
+import {StockService} from '../../domain/commercial/stock.service';
 
 @Component({
   selector: 'cp-stocks-details-route',
@@ -25,7 +25,8 @@ export class StockDetailsRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private stockService: StockService,
+  ) {
     this.formHelper = new ShellFormHelper<WsStock>(
       value => this.validate$(value),
       value => this.persist$(value),
@@ -66,25 +67,8 @@ export class StockDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsStock): Observable<WsStock> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createStock({
-        wsStock: value
-      }) as any as Observable<WsStockRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getStock({
-          id: ref.id
-        }))
-      ) as any as Observable<WsStock>;
-    } else {
-      const updated$ = this.apiService.api.updateStock({
-        id: value.id,
-        wsStock: value
-      }) as any as Observable<WsStockRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getStock({
-          id: ref.id
-        }))
-      ) as any as Observable<WsStock>;
-    }
+    return this.stockService.saveStock(value).pipe(
+      switchMap(ref => this.stockService.getStock$(ref))
+    );
   }
 }

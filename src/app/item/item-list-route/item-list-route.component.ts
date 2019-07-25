@@ -11,7 +11,6 @@ import {
   VAT_EXCLUSIVE_COLUMN,
   VAT_RATE_COLUMN
 } from '../../item/item-column/item-columns';
-import {ApiService} from '../../api.service';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
@@ -20,6 +19,7 @@ import {concat, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {WsEmployee, WsItem, WsItemRef, WsItemSearch, WsItemSearchResult} from '@valuya/comptoir-ws-api';
+import {ItemService} from '../../domain/commercial/item.service';
 
 @Component({
   selector: 'cp-item-list-route',
@@ -40,7 +40,7 @@ export class ItemListRouteComponent implements OnInit {
     VAT_EXCLUSIVE_COLUMN,
   ];
 
-  constructor(private apiService: ApiService,
+  constructor(private itemService: ItemService,
               private authService: AuthService,
               private router: Router,
   ) {
@@ -60,20 +60,13 @@ export class ItemListRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.findItems({
-      wsItemSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsItemSearchResult>;
-    return results$.pipe(
+    return this.itemService.searchsItems$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultitem$(results)),
     );
   }
 
   private searchResultitem$(results: WsItemSearchResult): Observable<SearchResult<WsItem>> {
-    const item$List = results.list.map(ref => this.apiService.api.getItem({
-      id: (ref as WsItemRef).id
-    }));
+    const item$List = results.list.map(ref => this.itemService.getItem$(ref));
     return concat(...item$List).pipe(toArray()).pipe(
       map(newList => {
         return {

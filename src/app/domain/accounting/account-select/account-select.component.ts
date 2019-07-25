@@ -1,11 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
-import {WsAccount, WsAccountRef, WsAccountSearch, WsAccountSearchResult, WsCompanyRef} from '@valuya/comptoir-ws-api';
-import {ApiService} from '../../../api.service';
+import {WsAccount, WsAccountRef, WsAccountSearch, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../../auth.service';
 import {filter, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
 import {AccountSelectItem} from './account-select-item';
+import {AccountService} from '../account.service';
+import {PaginationUtils} from '../../../util/pagination-utils';
 
 @Component({
   selector: 'cp-account-select',
@@ -34,8 +35,10 @@ export class AccountSelectComponent implements OnInit, ControlValueAccessor {
   suggestions$: Observable<AccountSelectItem[]>;
   loadingSuggestions$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private apiService: ApiService,
-              private authService: AuthService) {
+  constructor(
+    private accountService: AccountService,
+    private authService: AuthService
+  ) {
   }
 
   ngOnInit() {
@@ -95,10 +98,7 @@ export class AccountSelectComponent implements OnInit, ControlValueAccessor {
     if (ref == null) {
       return of(null);
     }
-    const fetched$ = this.apiService.api.getAccount({
-      id: ref.id,
-    }) as any as Observable<WsAccount>;
-    return fetched$;
+    return this.accountService.getAccount$(ref);
   }
 
   private createItem(account: WsAccount): AccountSelectItem {
@@ -117,13 +117,7 @@ export class AccountSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private searchAccountRefs$(searchFilter: WsAccountSearch) {
-    this.loadingSuggestions$.next(true);
-    const loaded$ = this.apiService.api.searchAccounts({
-      offset: 0,
-      length: 10,
-      wsAccountSearch: searchFilter
-    }) as any as Observable<WsAccountSearchResult>;
-    return loaded$;
+    return this.accountService.searchAccountList$(searchFilter, PaginationUtils.create(10));
   }
 
   private createSearchFilter(companyRef: WsCompanyRef, query: string): WsAccountSearch {

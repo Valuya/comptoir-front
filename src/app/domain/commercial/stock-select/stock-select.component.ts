@@ -8,6 +8,8 @@ import {ApiService} from '../../../api.service';
 import {AuthService} from '../../../auth.service';
 import {LocaleService} from '../../../locale.service';
 import {WsLocaleText} from '../../lang/locale-text/ws-locale-text';
+import {StockService} from '../stock.service';
+import {PaginationUtils} from '../../../util/pagination-utils';
 
 @Component({
   selector: 'cp-stock-select',
@@ -36,7 +38,7 @@ export class StockSelectComponent implements OnInit, ControlValueAccessor {
   suggestions$: Observable<StockSelectItem[]>;
   loadingSuggestions$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private apiService: ApiService,
+  constructor(private stockService: StockService,
               private localeService: LocaleService,
               private authService: AuthService) {
   }
@@ -99,10 +101,7 @@ export class StockSelectComponent implements OnInit, ControlValueAccessor {
     if (ref == null) {
       return of(null);
     }
-    const fetched$ = this.apiService.api.getStock({
-      id: ref.id,
-    }) as any as Observable<WsStock>;
-    return fetched$;
+    return this.stockService.getStock$(ref);
   }
 
   private createItem$(stock: WsStock): Observable<StockSelectItem> {
@@ -126,12 +125,7 @@ export class StockSelectComponent implements OnInit, ControlValueAccessor {
 
   private searchStockRefs$(searchFilter: WsStockSearch) {
     this.loadingSuggestions$.next(true);
-    const loaded$ = this.apiService.api.searchStocks({
-      offset: 0,
-      length: 10,
-      wsStockSearch: searchFilter
-    }) as any as Observable<WsStockSearchResult>;
-    return loaded$;
+    return this.stockService.searchStockList$(searchFilter, PaginationUtils.create(10));
   }
 
   private createSearchFilter(companyRef: WsCompanyRef, query: string): WsStockSearch {

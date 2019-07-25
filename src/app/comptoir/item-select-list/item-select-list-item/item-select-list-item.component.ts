@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {WsItem, WsItemRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {ItemService} from '../../../domain/commercial/item.service';
 

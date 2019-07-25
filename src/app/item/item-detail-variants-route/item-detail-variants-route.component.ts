@@ -11,7 +11,6 @@ import {
   PRICING_COLUMN,
   VARIANT_REFERENCE_COLUMN
 } from '../item-variant-column/item-variant-columns';
-import {ApiService} from '../../api.service';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, mergeMap, publishReplay, refCount, take, toArray} from 'rxjs/operators';
@@ -19,6 +18,7 @@ import {Pagination} from '../../util/pagination';
 import {combineLatest, concat, forkJoin, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
+import {ItemService} from '../../domain/commercial/item.service';
 
 @Component({
   selector: 'cp-item-detail-variants-route',
@@ -39,7 +39,7 @@ export class ItemDetailVariantsRouteComponent implements OnInit {
   ];
   item$: Observable<WsItem | null>;
 
-  constructor(private apiService: ApiService,
+  constructor(private itemService: ItemService,
               private authService: AuthService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -69,20 +69,13 @@ export class ItemDetailVariantsRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.findItemVariants({
-      wsItemVariantSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsItemVariantSearchResult>;
-    return results$.pipe(
+    return this.itemService.searchVariants$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultitemVariant$(results)),
     );
   }
 
   private searchResultitemVariant$(results: WsItemVariantSearchResult): Observable<SearchResult<WsItemVariant>> {
-    const itemVariant$List = results.list.map(ref => this.apiService.api.getItemVariant({
-      id: ref.id
-    }));
+    const itemVariant$List = results.list.map(ref => this.itemService.getItemVariant$(ref));
     return concat(...itemVariant$List).pipe(toArray()).pipe(
       map(newList => {
         return {

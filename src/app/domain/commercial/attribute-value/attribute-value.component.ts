@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {WsAttributeValue, WsAttributeValueRef} from '@valuya/comptoir-ws-api';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
-import {ApiService} from '../../../api.service';
+import {AttributeService} from '../attribute.service';
 
 @Component({
   selector: 'cp-attribute-value',
@@ -21,7 +21,9 @@ export class AttributeValueComponent implements OnInit {
   loading$ = new BehaviorSubject<boolean>(false);
   value$: Observable<WsAttributeValue>;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private attributeService: AttributeService
+  ) {
   }
 
   ngOnInit() {
@@ -37,10 +39,7 @@ export class AttributeValueComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getAttributeValue({
-      id: ref.id
-    }) as any as Observable<WsAttributeValue>;
-    return loaded$.pipe(
+    return this.attributeService.getAttributeValue$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

@@ -2,16 +2,16 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {WsItem, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
-import {ApiService} from '../api.service';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {ItemService} from '../domain/commercial/item.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemIdResolverService implements Resolve<WsItem> {
 
-  constructor(private apiService: ApiService,
+  constructor(private itemService: ItemService,
               private authService: AuthService) {
   }
 
@@ -24,13 +24,7 @@ export class ItemIdResolverService implements Resolve<WsItem> {
     if (isNaN(idParam)) {
       return this.resolveNoNumericParam$(param);
     }
-    return this.fetchItem$(idParam);
-  }
-
-  private fetchItem$(idValue: number) {
-    return this.apiService.api.getItem({
-      id: idValue,
-    }) as any as Observable<WsItem>;
+    return this.itemService.getItem$({id: idParam});
   }
 
   private resolveNoNumericParam$(param: string) {

@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {WsPos, WsCompanyRef} from '@valuya/comptoir-ws-api';
-import {Observable, of} from 'rxjs';
-import {ApiService} from '../api.service';
+import {WsCompanyRef, WsPos} from '@valuya/comptoir-ws-api';
+import {Observable} from 'rxjs';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {PosService} from '../domain/commercial/pos.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PosIdResolverService implements Resolve<WsPos> {
 
-  constructor(private apiService: ApiService,
+  constructor(private posService: PosService,
               private authService: AuthService) {
   }
 
@@ -24,13 +24,7 @@ export class PosIdResolverService implements Resolve<WsPos> {
     if (isNaN(idParam)) {
       return this.resolveNoNumericParam$(param);
     }
-    return this.fetchPos$(idParam);
-  }
-
-  private fetchPos$(idValue: number) {
-    return this.apiService.api.getPos({
-      id: idValue,
-    }) as any as Observable<WsPos>;
+    return this.posService.getPos$({id: idParam});
   }
 
   private resolveNoNumericParam$(param: string) {

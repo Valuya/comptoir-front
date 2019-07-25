@@ -3,12 +3,12 @@ import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-hel
 import {WsPos, WsPosRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
+import {PosService} from '../../domain/commercial/pos.service';
 
 @Component({
   selector: 'cp-pos-details-route',
@@ -25,7 +25,8 @@ export class PosDetailsRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private posService: PosService,
+  ) {
   }
 
   ngOnInit() {
@@ -66,25 +67,8 @@ export class PosDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsPos): Observable<WsPos> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createPos({
-        wsPos: value
-      }) as any as Observable<WsPosRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getPos({
-          id: ref.id
-        }))
-      ) as any as Observable<WsPos>;
-    } else {
-      const updated$ = this.apiService.api.updatePos({
-        id: value.id,
-        wsPos: value,
-      }) as any as Observable<WsPosRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getPos({
-          id: ref.id
-        }))
-      ) as any as Observable<WsPos>;
-    }
+    return this.posService.savePos(value).pipe(
+      switchMap(ref => this.posService.getPos$(ref))
+    );
   }
 }

@@ -1,28 +1,10 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, concat, forkJoin, Observable, of, Subject} from 'rxjs';
-import {
-  WsCompany,
-  WsCompanyRef, WsCustomerRef,
-  WsItemVariantRef,
-  WsItemVariantSale,
-  WsItemVariantSaleRef,
-  WsItemVariantSaleSearch,
-  WsItemVariantSaleSearchResult, WsPosRef,
-  WsSale
-} from '@valuya/comptoir-ws-api';
-import {defaultIfEmpty, filter, map, publishReplay, refCount, scan, switchMap, take, tap, throwIfEmpty} from 'rxjs/operators';
-import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
-import {Pagination} from '../util/pagination';
-import {ApiService} from '../api.service';
+import {BehaviorSubject, concat, Observable, of, Subject} from 'rxjs';
+import {WsCompany, WsCompanyRef, WsCustomerRef, WsPosRef} from '@valuya/comptoir-ws-api';
+import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth.service';
-import {PaginationUtils} from '../util/pagination-utils';
-import {SearchResult} from '../app-shell/shell-table/search-result';
-import {SearchResultFactory} from '../app-shell/shell-table/search-result.factory';
-import {SaleService} from '../domain/commercial/sale.service';
-import {ItemService} from '../domain/commercial/item.service';
-import {LocaleService} from '../locale.service';
-import {WsLocaleText} from '../domain/lang/locale-text/ws-locale-text';
 import {MessageService} from 'primeng/api';
+import {CompanyService} from '../domain/commercial/company.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,8 +19,8 @@ export class ComptoirService {
 
   constructor(
     private authService: AuthService,
-    private apiService: ApiService,
     private messageService: MessageService,
+    private companyService: CompanyService
   ) {
     this.customerLoyaltyAmount$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(
       switchMap(ref => this.reemitOnReload$(ref, this.customerLoyaltyAmountReloadTrigger$)),
@@ -78,16 +60,11 @@ export class ComptoirService {
   }
 
   private fetchCompany$(ref: WsCompanyRef) {
-    return this.apiService.api.getCompany({
-      id: ref.id
-    }) as any as Observable<WsCompany>;
+    return this.companyService.getCompany$(ref);
   }
 
   private updateCompany$(company: WsCompany) {
-    return this.apiService.api.updateCompany({
-      id: company.id,
-      wsCompany: company
-    }) as any as Observable<WsCompanyRef>;
+    return this.companyService.saveCompany(company);
   }
 
   private reemitOnReload$(ref: WsCompanyRef, subject: Subject<any>): Observable<WsCompanyRef> {

@@ -4,8 +4,9 @@ import {WsCompanyRef, WsCustomer, WsCustomerRef, WsCustomerSearch, WsCustomerSea
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
 import {CustomerSelectItem} from './customer-select-item';
 import {filter, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
-import {ApiService} from '../../../api.service';
 import {AuthService} from '../../../auth.service';
+import {CustomerService} from '../customer.service';
+import {PaginationUtils} from '../../../util/pagination-utils';
 
 @Component({
   selector: 'cp-customer-select',
@@ -34,7 +35,7 @@ export class CustomerSelectComponent implements OnInit, ControlValueAccessor {
   suggestions$: Observable<CustomerSelectItem[]>;
   loadingSuggestions$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private apiService: ApiService,
+  constructor(private customreService: CustomerService,
               private authService: AuthService) {
   }
 
@@ -96,10 +97,7 @@ export class CustomerSelectComponent implements OnInit, ControlValueAccessor {
     if (ref == null) {
       return of(null);
     }
-    const fetched$ = this.apiService.api.getCustomer({
-      id: ref.id,
-    }) as any as Observable<WsCustomer>;
-    return fetched$;
+    return this.customreService.getCustomer$(ref);
   }
 
   private createItem(customer: WsCustomer): CustomerSelectItem {
@@ -119,12 +117,7 @@ export class CustomerSelectComponent implements OnInit, ControlValueAccessor {
 
   private searchCustomerRefs$(searchFilter: WsCustomerSearch) {
     this.loadingSuggestions$.next(true);
-    const loaded$ = this.apiService.api.searchCustomers({
-      offset: 0,
-      length: 10,
-      wsCustomerSearch: searchFilter
-    }) as any as Observable<WsCustomerSearchResult>;
-    return loaded$;
+    return this.customreService.searchCustomerList$(searchFilter, PaginationUtils.create(10));
   }
 
   private createSearchFilter(companyRef: WsCompanyRef, query: string): WsCustomerSearch {

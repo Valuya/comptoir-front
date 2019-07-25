@@ -3,9 +3,9 @@ import {WsAttributeValueRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, merge, Observable, of} from 'rxjs';
 import {AttributeSelectItem} from '../attribute-value/attribute-select-item';
 import {AttributeDefinitionSelectItem} from '../attribute-value/attribute-definition-select-item';
-import {filter, mergeMap, publishReplay, refCount, switchMap, take, tap} from 'rxjs/operators';
+import {filter, mergeMap, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
 import {LocaleService} from '../../../locale.service';
-import {AttributesService} from '../attribute-value/attributes.service';
+import {AttributeService} from '../attribute.service';
 
 @Component({
   selector: 'cp-attribute-values',
@@ -37,7 +37,7 @@ export class AttributeValuesComponent implements OnInit {
 
   constructor(
     private localeService: LocaleService,
-    private attributeService: AttributesService,
+    private attributeService: AttributeService,
   ) {
   }
 

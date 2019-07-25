@@ -3,7 +3,6 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
-import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {DEFAULT_CUSTOMER_COLUMN, DESCRIPTION_COLUMN, ID_COLUMN, NAME_COLUMN, PosColumn} from '../pos-column/pos-columns';
@@ -11,6 +10,7 @@ import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsPos, WsPosRef, WsPosSearch, WsPosSearchResult} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {PosService} from '../../domain/commercial/pos.service';
 
 @Component({
   selector: 'cp-pos-list-route',
@@ -28,7 +28,7 @@ export class PosListRouteComponent implements OnInit {
     DEFAULT_CUSTOMER_COLUMN,
   ];
 
-  constructor(private apiService: ApiService,
+  constructor(private posService: PosService,
               private authService: AuthService,
               private router: Router,
   ) {
@@ -48,20 +48,13 @@ export class PosListRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.findPosList({
-      wsPosSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsPosSearchResult>;
-    return results$.pipe(
+    return this.posService.searchPosList$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultpos$(results)),
     );
   }
 
   private searchResultpos$(results: WsPosSearchResult): Observable<SearchResult<WsPos>> {
-    const pos$List = results.list.map(ref => this.apiService.api.getPos({
-      id: (ref as WsPosRef).id
-    }));
+    const pos$List = results.list.map(ref => this.posService.getPos$(ref));
     return concat(...pos$List).pipe(toArray()).pipe(
       map(newList => {
         return {

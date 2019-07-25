@@ -2,16 +2,16 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {WsStock, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
-import {ApiService} from '../api.service';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {StockService} from '../domain/commercial/stock.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockIdResolverService implements Resolve<WsStock> {
 
-  constructor(private apiService: ApiService,
+  constructor(private stockService: StockService,
               private authService: AuthService) {
   }
 
@@ -24,13 +24,7 @@ export class StockIdResolverService implements Resolve<WsStock> {
     if (isNaN(idParam)) {
       return this.resolveNoNumericParam$(param);
     }
-    return this.fetchStock$(idParam);
-  }
-
-  private fetchStock$(idValue: number) {
-    return this.apiService.api.getStock({
-      id: idValue,
-    }) as any as Observable<WsStock>;
+    return this.stockService.getStock$({id: idParam});
   }
 
   private resolveNoNumericParam$(param: string) {

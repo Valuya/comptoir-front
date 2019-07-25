@@ -2,17 +2,17 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {WsEmployee, WsSale} from '@valuya/comptoir-ws-api';
-import {ApiService} from '../api.service';
 import {AuthService} from '../auth.service';
 import {ComptoirSaleService} from './comptoir-sale.service';
 import {delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {SaleService} from '../domain/commercial/sale.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComptoirSaleIdResolverService {
 
-  constructor(private apiService: ApiService,
+  constructor(private saleService: SaleService,
               private comptoirSaleService: ComptoirSaleService,
               private authService: AuthService) {
   }
@@ -27,7 +27,7 @@ export class ComptoirSaleIdResolverService {
       if (isNaN(idParam)) {
         resovledSale$ = this.handleNonNumericParam$(param);
       } else {
-        resovledSale$ = this.fetchSale$(idParam);
+        resovledSale$ = this.saleService.getSale$({id: idParam});
       }
     }
     return resovledSale$.pipe(
@@ -36,12 +36,6 @@ export class ComptoirSaleIdResolverService {
     );
   }
 
-
-  private fetchSale$(idValue: number) {
-    return this.apiService.api.getSale({
-      id: idValue,
-    }) as any as Observable<WsSale>;
-  }
 
   private handleNonNumericParam$(idParam: string) {
     if (idParam === 'active') {

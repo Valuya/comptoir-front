@@ -12,13 +12,14 @@ import {combineLatest, forkJoin, Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
-import {ApiService} from '../../api.service';
 import {map, mergeMap, publishReplay, refCount, switchMap, take, tap} from 'rxjs/operators';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {AttributeSelectItem} from '../../domain/commercial/attribute-value/attribute-select-item';
 import {AuthService} from '../../auth.service';
 import {LocaleTextUtils} from '../../domain/lang/locale-text/LocaleTextUtils';
+import {ItemService} from '../../domain/commercial/item.service';
+import {AttributeService} from '../../domain/commercial/attribute.service';
 
 @Component({
   selector: 'cp-item-detail-variant-detail-route',
@@ -38,7 +39,9 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
               private authService: AuthService,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private itemService: ItemService,
+              private attributeService: AttributeService,
+  ) {
   }
 
   ngOnInit() {
@@ -95,26 +98,9 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
   }
 
   private persist$(value: WsItemVariant): Observable<WsItemVariant> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createItemVariant({
-        wsItemVariant: value,
-      }) as any as Observable<WsItemVariantRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getItemVariant({
-          id: ref.id
-        }))
-      ) as any as Observable<WsItemVariant>;
-    } else {
-      const updated$ = this.apiService.api.updateItemVariant({
-        id: value.id,
-        wsItemVariant: value,
-      }) as any as Observable<WsItemVariantRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getItemVariant({
-          id: ref.id
-        }))
-      ) as any as Observable<WsItemVariant>;
-    }
+    return this.itemService.saveVariant(value).pipe(
+      switchMap(ref => this.itemService.getItemVariant$(ref))
+    );
   }
 
   onAttributesChange(attributes: AttributeSelectItem[]) {
@@ -156,10 +142,7 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
   }
 
   private createDefinition$(definition: WsAttributeDefinition): Observable<WsAttributeDefinitionRef> {
-    const created$ = this.apiService.api.createAttributeDefinition({
-      wsAttributeDefinition: definition
-    }) as any as Observable<WsAttributeDefinitionRef>;
-    return created$;
+    return this.attributeService.saveAttributeDefinition(definition);
   }
 
   private createAttributeValue$(defRef: WsAttributeDefinitionRef, item: AttributeSelectItem): Observable<WsAttributeValueRef> {
@@ -178,9 +161,6 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
   }
 
   private createValue$(value: WsAttributeValue): Observable<WsAttributeValueRef> {
-    const created$ = this.apiService.api.createAttributeValue({
-      wsAttributeValue: value
-    }) as any as Observable<WsAttributeDefinitionRef>;
-    return created$;
+    return this.attributeService.saveAttributeValue(value);
   }
 }

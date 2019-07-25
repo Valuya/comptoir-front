@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {WsCompanyRef, WsItemRef, WsItemSearch} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
-import {ApiService} from '../../api.service';
 import {debounceTime, map, publishReplay, refCount} from 'rxjs/operators';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
@@ -12,6 +11,7 @@ import {MULTIPLE_SALE_COLUMN, NAME_COLUMN, REFERENCE_COLUMN, VAT_EXCLUSIVE_COLUM
 import {LazyLoadEvent, SelectItem} from 'primeng/api';
 import {VAT_RATE_COLUMN} from '../../sale/sale-variant-column/sale-variant-columns';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
+import {ItemService} from '../../domain/commercial/item.service';
 
 @Component({
   selector: 'cp-item-select-list',
@@ -35,7 +35,7 @@ export class ItemSelectListComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private apiService: ApiService,
+    private itemService: ItemService,
   ) {
   }
 
@@ -90,13 +90,7 @@ export class ItemSelectListComponent implements OnInit, OnDestroy {
     if (filter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const searchResults$ = this.apiService.api.findItems({
-      offset: pagination.first,
-      length: pagination.rows,
-      sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
-      wsItemSearch: filter
-    }) as any as Observable<SearchResult<WsItemRef>>;
-    return searchResults$;
+    return this.itemService.searchsItems$(filter, pagination);
   }
 
   private createSortOptions() {

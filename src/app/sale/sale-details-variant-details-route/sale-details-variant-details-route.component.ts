@@ -5,10 +5,10 @@ import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
-import {ApiService} from '../../api.service';
-import {map, mergeMap, publishReplay, refCount} from 'rxjs/operators';
+import {map, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
+import {SaleService} from '../../domain/commercial/sale.service';
 
 @Component({
   selector: 'cp-sale-details-variant-details-route',
@@ -25,7 +25,8 @@ export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestro
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private saleService: SaleService,
+  ) {
   }
 
   ngOnInit() {
@@ -75,26 +76,9 @@ export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestro
   }
 
   private persist$(value: WsItemVariantSale): Observable<WsItemVariantSale> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createItemVariantSale({
-        wsItemVariantSale: value,
-      }) as any as Observable<WsItemVariantSaleRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getItemVariantSale({
-          id: ref.id
-        }))
-      ) as any as Observable<WsItemVariantSale>;
-    } else {
-      const updated$ = this.apiService.api.updateItemVariantSale({
-        id: value.id,
-        wsItemVariantSale: value,
-      }) as any as Observable<WsItemVariantSaleRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getItemVariantSale({
-          id: ref.id
-        }))
-      ) as any as Observable<WsItemVariantSale>;
-    }
+    return this.saleService.saveVariant(value).pipe(
+      switchMap(ref => this.saleService.getVariant$(ref))
+    );
   }
 
 }

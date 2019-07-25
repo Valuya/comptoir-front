@@ -2,13 +2,14 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {ApiService} from '../../api.service';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
+import {SaleService} from '../../domain/commercial/sale.service';
 
 @Component({
   selector: 'cp-sale-details-form-route',
@@ -20,7 +21,7 @@ export class SaleDetailsFormRouteComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
 
   constructor(
-    private apiService: ApiService,
+    private saleService: SaleService,
     private activatedRoute: ActivatedRoute,
     private messageService: MessageService,
     private navigationService: NavigationService,
@@ -68,26 +69,9 @@ export class SaleDetailsFormRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsSale): Observable<WsSale> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createSale({
-        wsSale: value
-      }) as any as Observable<WsSaleRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getSale({
-          id: ref.id
-        }))
-      ) as any as Observable<WsSale>;
-    } else {
-      const updated$ = this.apiService.api.updateSale({
-        id: value.id,
-        wsSale: value
-      }) as any as Observable<WsSaleRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getSale({
-          id: ref.id
-        }))
-      ) as any as Observable<WsSale>;
-    }
+    return this.saleService.saveSale(value).pipe(
+      switchMap(ref => this.saleService.getSale$(ref))
+    );
   }
 
 }

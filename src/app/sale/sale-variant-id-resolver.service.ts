@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
-import {ApiService} from '../api.service';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
 import {WsCompanyRef, WsItemVariantSale, WsSale} from '@valuya/comptoir-ws-api';
 import {RouteUtils} from '../util/route-utils';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {SaleService} from '../domain/commercial/sale.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SaleVariantIdResolverService {
 
-  constructor(private apiService: ApiService,
+  constructor(private saleService: SaleService,
               private authService: AuthService) {
   }
 
@@ -28,13 +28,7 @@ export class SaleVariantIdResolverService {
     if (isNaN(idParam)) {
       return this.resolveNoNumericParam$(resolvedSale, param);
     }
-    return this.fetchSaleVariant$(idParam);
-  }
-
-  private fetchSaleVariant$(idValue: number) {
-    return this.apiService.api.getItemVariantSale({
-      id: idValue,
-    }) as any as Observable<WsItemVariantSale>;
+    return this.saleService.getVariant$({id: idParam});
   }
 
   private resolveNoNumericParam$(sale: WsSale, param: string) {

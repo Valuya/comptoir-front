@@ -3,7 +3,6 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
-import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {ACCOUNT_COLUMN, BALANCE_COLUMN, BalanceColumn, CLOSED_COLUMN, DATETIME_COLUMN, ID_COLUMN} from '../balance-column/balance-columns';
@@ -11,6 +10,7 @@ import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsBalance, WsBalanceSearch, WsBalanceSearchResult, WsEmployee} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {BalanceService} from '../../domain/accounting/balance.service';
 
 @Component({
   selector: 'cp-balances-list-route',
@@ -29,7 +29,7 @@ export class BalanceListRouteComponent implements OnInit {
     BALANCE_COLUMN,
   ];
 
-  constructor(private apiService: ApiService,
+  constructor(private balanceService: BalanceService,
               private authService: AuthService,
               private router: Router,
   ) {
@@ -49,20 +49,13 @@ export class BalanceListRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.searchBalances({
-      wsBalanceSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsBalanceSearchResult>;
-    return results$.pipe(
+    return this.balanceService.searchBalanceList$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultBalances$(results)),
     );
   }
 
   private searchResultBalances$(results: WsBalanceSearchResult): Observable<SearchResult<WsBalance>> {
-    const balances$List = results.list.map(ref => this.apiService.api.getBalance({
-      id: ref.id
-    }));
+    const balances$List = results.list.map(ref => this.balanceService.getBalance$(ref));
     return concat(...balances$List).pipe(toArray()).pipe(
       map(newList => {
         return {

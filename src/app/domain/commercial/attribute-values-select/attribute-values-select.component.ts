@@ -1,13 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
-import {WsAttributeDefinitionSearchResult, WsAttributeSearch, WsCompanyRef} from '@valuya/comptoir-ws-api';
+import {WsAttributeSearch, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
-import {ApiService} from '../../../api.service';
 import {AuthService} from '../../../auth.service';
-import {AttributesService} from '../attribute-value/attributes.service';
 import {AttributeSelectItem} from '../attribute-value/attribute-select-item';
 import {LocaleService} from '../../../locale.service';
+import {AttributeService} from '../attribute.service';
+import {PaginationUtils} from '../../../util/pagination-utils';
 
 @Component({
   selector: 'cp-attribute-values-select',
@@ -37,10 +37,9 @@ export class AttributeValuesSelectComponent implements OnInit, ControlValueAcces
   loadingSuggestions$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private apiService: ApiService,
     private authService: AuthService,
     private localeService: LocaleService,
-    private attributeService: AttributesService,
+    private attributeService: AttributeService,
   ) {
   }
 
@@ -101,13 +100,9 @@ export class AttributeValuesSelectComponent implements OnInit, ControlValueAcces
       return of([]);
     }
     this.loadingSuggestions$.next(true);
-    const definitions$ = this.apiService.api.findAttributeDefinitions({
-      offset: 0,
-      length: 10,
-      wsAttributeSearch: searchFilter
-    }) as any as Observable<WsAttributeDefinitionSearchResult>;
-
+    const definitions$ = this.attributeService.searchAttributeDefinitionList$(searchFilter, PaginationUtils.create(10));
     const locale$ = this.localeService.getViewLocale$().pipe(take(1));
+
     return forkJoin(definitions$, locale$).pipe(
       switchMap(results => this.attributeService.createDefinitionItems$(results[0].list, results[1])),
       map(list => list.map(item => item as AttributeSelectItem))

@@ -1,15 +1,18 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api.service';
 import {
+  WsBalance, WsBalanceRef,
   WsItemVariantSale,
-  WsItemVariantSaleRef,
+  WsItemVariantSaleRef, WsItemVariantSaleSearch, WsItemVariantSaleSearchResult,
   WsSale,
-  WsSaleRef
+  WsSaleRef, WsSaleSearch, WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
+import {Pagination} from '../../util/pagination';
+import {PaginationUtils} from '../../util/pagination-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +51,43 @@ export class SaleService {
 
   getVariant$(ref: WsItemVariantSaleRef): Observable<WsItemVariantSale> {
     return this.variantCache.getResource$(ref);
+  }
+
+  saveSale(sale: WsSale): Observable<WsSaleRef> {
+    if (sale.id == null) {
+      return this.saleCache.createResource$(sale);
+    } else {
+      return this.saleCache.updateResource$(sale);
+    }
+  }
+
+  saveVariant(variant: WsItemVariantSale): Observable<WsItemVariantSaleRef> {
+    if (variant.id == null) {
+      return this.variantCache.createResource$(variant);
+    } else {
+      return this.variantCache.updateResource$(variant);
+    }
+  }
+
+
+  searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<WsSalesSearchResult> {
+    const searchResult$ = this.apiService.api.findSales({
+      offset: pagination.first,
+      length: pagination.rows,
+      sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
+      wsSaleSearch: searchFilter
+    }) as any as Observable<WsSalesSearchResult>;
+    return searchResult$;
+  }
+
+  searchVariants$(searchFilter: WsItemVariantSaleSearch, pagination: Pagination): Observable<WsItemVariantSaleSearchResult> {
+    const searchResult$ = this.apiService.api.searchItemVariantSales({
+      offset: pagination.first,
+      length: pagination.rows,
+      sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
+      wsItemVariantSaleSearch: searchFilter
+    }) as any as Observable<WsItemVariantSaleSearchResult>;
+    return searchResult$;
   }
 
   createNewSaleItem$(curSale: WsSale, itemToAdd: WsItemVariantSaleRef): Observable<WsItemVariantSaleRef> {

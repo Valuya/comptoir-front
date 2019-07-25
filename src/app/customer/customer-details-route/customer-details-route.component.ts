@@ -5,10 +5,10 @@ import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
+import {CustomerService} from '../../domain/thirdparty/customer.service';
 
 @Component({
   selector: 'cp-customers-details-route',
@@ -25,7 +25,8 @@ export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private customerService: CustomerService,
+  ) {
     this.formHelper = new ShellFormHelper<WsCustomer>(
       value => this.validate$(value),
       value => this.persist$(value),
@@ -66,25 +67,8 @@ export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsCustomer): Observable<WsCustomer> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createCustomer({
-        wsCustomer: value
-      }) as any as Observable<WsCustomerRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getCustomer({
-          id: ref.id
-        }))
-      ) as any as Observable<WsCustomer>;
-    } else {
-      const updated$ = this.apiService.api.updateCustomer({
-        id: value.id,
-        wsCustomer: value
-      }) as any as Observable<WsCustomerRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getCustomer({
-          id: ref.id
-        }))
-      ) as any as Observable<WsCustomer>;
-    }
+    return this.customerService.saveCustomer(value).pipe(
+      mergeMap(ref => this.customerService.getCustomer$(ref))
+    );
   }
 }

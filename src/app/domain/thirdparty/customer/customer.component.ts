@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {WsCustomer, WsCustomerRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {CustomerService} from '../customer.service';
 
 @Component({
   selector: 'cp-customer',
@@ -20,7 +20,7 @@ export class CustomerComponent implements OnInit {
   loading$ = new BehaviorSubject<boolean>(false);
   value$: Observable<WsCustomer>;
 
-  constructor(private apiService: ApiService) {
+  constructor(private customerService: CustomerService) {
   }
 
   ngOnInit() {
@@ -36,10 +36,7 @@ export class CustomerComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getCustomer({
-      id: ref.id
-    }) as any as Observable<WsCustomer>;
-    return loaded$.pipe(
+    return this.customerService.getCustomer$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

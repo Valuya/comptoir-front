@@ -3,7 +3,6 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
-import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {AMOUNT_COLUMN, CUSTOMER_COLUMN, DATETIME_COLUMN, ID_COLUMN, REFERENCE_COLUMN, SaleColumn} from '../sale-column/sale-columns';
@@ -11,6 +10,7 @@ import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsSale, WsSaleSearch, WsSalesSearchResult} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {SaleService} from '../../domain/commercial/sale.service';
 
 @Component({
   selector: 'cp-sales-list-route',
@@ -29,7 +29,7 @@ export class SaleListRouteComponent implements OnInit {
     AMOUNT_COLUMN
   ];
 
-  constructor(private apiService: ApiService,
+  constructor(private saleService: SaleService,
               private authService: AuthService,
               private router: Router,
   ) {
@@ -49,20 +49,13 @@ export class SaleListRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.findSales({
-      wsSaleSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsSalesSearchResult>;
-    return results$.pipe(
+    return this.saleService.searchSales$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultSales$(results)),
     );
   }
 
   private searchResultSales$(results: WsSalesSearchResult): Observable<SearchResult<WsSale>> {
-    const sales$List = results.list.map(ref => this.apiService.api.getSale({
-      id: ref.id
-    }));
+    const sales$List = results.list.map(ref => this.saleService.getSale$(ref));
     return concat(...sales$List).pipe(toArray()).pipe(
       map(newList => {
         return {

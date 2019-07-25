@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
-import {WsInvoice, WsInvoiceRef} from '@valuya/comptoir-ws-api';
+import {WsInvoice} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
+import {InvoiceService} from '../../domain/commercial/invoice.service';
 
 @Component({
   selector: 'cp-invoices-details-route',
@@ -25,7 +25,8 @@ export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private invoiceService: InvoiceService,
+  ) {
     this.formHelper = new ShellFormHelper<WsInvoice>(
       value => this.validate$(value),
       value => this.persist$(value),
@@ -66,25 +67,8 @@ export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsInvoice): Observable<WsInvoice> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createInvoice({
-        wsInvoice: value
-      }) as any as Observable<WsInvoiceRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getInvoice({
-          id: ref.id
-        }))
-      ) as any as Observable<WsInvoice>;
-    } else {
-      const updated$ = this.apiService.api.updateInvoice({
-        id: value.id,
-        wsInvoice: value
-      }) as any as Observable<WsInvoiceRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getInvoice({
-          id: ref.id
-        }))
-      ) as any as Observable<WsInvoice>;
-    }
+    return this.invoiceService.saveInvoice(value).pipe(
+      mergeMap(ref => this.invoiceService.getInvoice$(ref))
+    );
   }
 }

@@ -10,7 +10,6 @@ import {
 } from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
 import * as Columns from '../sale-variant-column/sale-variant-columns';
-import {ApiService} from '../../api.service';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, mergeMap, publishReplay, refCount, take, toArray} from 'rxjs/operators';
@@ -18,6 +17,9 @@ import {Pagination} from '../../util/pagination';
 import {combineLatest, concat, forkJoin, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
+import {CompanyService} from '../../domain/commercial/company.service';
+import {ItemService} from '../../domain/commercial/item.service';
+import {SaleService} from '../../domain/commercial/sale.service';
 
 @Component({
   selector: 'cp-sale-details-variants-route',
@@ -42,10 +44,11 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
   ];
   sale$: Observable<WsSale | null>;
 
-  constructor(private apiService: ApiService,
-              private authService: AuthService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router,
+  constructor(
+    private saleService: SaleService,
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
   ) {
   }
 
@@ -72,20 +75,13 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.searchItemVariantSales({
-      wsItemVariantSaleSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsItemVariantSaleSearchResult>;
-    return results$.pipe(
+    return this.saleService.searchVariants$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultsaleVariant$(results)),
     );
   }
 
   private searchResultsaleVariant$(results: WsItemVariantSaleSearchResult): Observable<SearchResult<WsItemVariantSale>> {
-    const saleVariant$List = results.list.map(ref => this.apiService.api.getItemVariantSale({
-      id: ref.id
-    }));
+    const saleVariant$List = results.list.map(ref => this.saleService.getVariant$(ref));
     return concat(...saleVariant$List).pipe(toArray()).pipe(
       map(newList => {
         return {
@@ -101,9 +97,9 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
       return;
     }
     const searchFilter: WsItemVariantSaleSearch = {
-      saleRef: {id: sale.id},
-      companyRef: companyRef as object
-  }
+        saleRef: {id: sale.id},
+        companyRef: companyRef as object
+      }
     ;
     this.saleVariantTableHelper.setFilter(searchFilter);
   }

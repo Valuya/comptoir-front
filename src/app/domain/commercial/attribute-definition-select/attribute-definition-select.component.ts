@@ -1,14 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
-import {ApiService} from '../../../api.service';
 import {AuthService} from '../../../auth.service';
-import {AttributesService} from '../attribute-value/attributes.service';
 import {delay, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
-import {WsAttributeDefinitionSearchResult, WsAttributeSearch, WsCompanyRef} from '@valuya/comptoir-ws-api';
+import {WsAttributeSearch, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {LocaleService} from '../../../locale.service';
 import {AttributeDefinitionSelectItem} from '../attribute-value/attribute-definition-select-item';
 import {WsLocaleText} from '../../lang/locale-text/ws-locale-text';
+import {AttributeService} from '../attribute.service';
+import {PaginationUtils} from '../../../util/pagination-utils';
 
 @Component({
   selector: 'cp-attribute-definition-select',
@@ -40,10 +40,10 @@ export class AttributeDefinitionSelectComponent implements OnInit, ControlValueA
   loadingSuggestions$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private apiService: ApiService,
+    private attributeService: AttributeService,
     private authService: AuthService,
     private localeService: LocaleService,
-    private attributeService: AttributesService,
+    // private attributeService: AttributesService,
   ) {
   }
 
@@ -112,13 +112,7 @@ export class AttributeDefinitionSelectComponent implements OnInit, ControlValueA
       return of([]);
     }
     this.loadingSuggestions$.next(true);
-    const definitions$ = this.apiService.api.findAttributeDefinitions({
-      offset: 0,
-      length: 10,
-      wsAttributeSearch: searchFilter
-    }) as any as Observable<WsAttributeDefinitionSearchResult>;
-    const locale$ = this.localeService.getViewLocale$().pipe(take(1));
-    return forkJoin(definitions$, locale$).pipe(
+    return this.attributeService.searchAttributeDefinitionList$(searchFilter, PaginationUtils.create(10)).pipe(
       switchMap(results => this.attributeService.createDefinitionItems$(results[0].list, results[1]))
     );
   }

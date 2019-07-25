@@ -3,7 +3,6 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
-import {ApiService} from '../../api.service';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {
@@ -19,6 +18,7 @@ import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsEmployeeSearch, WsEmployeeSearchResult} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
+import {EmployeeService} from '../../domain/thirdparty/employee.service';
 
 @Component({
   selector: 'cp-employees-list-route',
@@ -38,7 +38,7 @@ export class EmployeeListRouteComponent implements OnInit {
     ACTIVE_COLUMN,
   ];
 
-  constructor(private apiService: ApiService,
+  constructor(private employeeService: EmployeeService,
               private authService: AuthService,
               private router: Router,
   ) {
@@ -58,20 +58,13 @@ export class EmployeeListRouteComponent implements OnInit {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
-    const results$ = this.apiService.api.searchEmployees({
-      wsEmployeeSearch: searchFilter,
-      offset: pagination.first,
-      length: pagination.rows,
-    }) as any as Observable<WsEmployeeSearchResult>;
-    return results$.pipe(
+    return this.employeeService.searchEmployeeList$(searchFilter, pagination).pipe(
       mergeMap(results => this.searchResultEmployees$(results)),
     );
   }
 
   private searchResultEmployees$(results: WsEmployeeSearchResult): Observable<SearchResult<WsEmployee>> {
-    const employees$List = results.list.map(ref => this.apiService.api.getEmployee({
-      id: ref.id
-    }));
+    const employees$List = results.list.map(ref => this.employeeService.getEmployee$(ref));
     return concat(...employees$List).pipe(toArray()).pipe(
       map(newList => {
         return {

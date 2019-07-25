@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {ApiService} from '../../../api.service';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsStock, WsStockRef} from '@valuya/comptoir-ws-api';
+import {StockService} from '../stock.service';
 
 @Component({
   selector: 'cp-stock',
@@ -14,6 +14,7 @@ export class StockComponent implements OnInit {
   set ref(value: WsStockRef) {
     this.refSource$.next(value);
   }
+
   @Input()
   showIcon: boolean;
   @Input()
@@ -24,7 +25,9 @@ export class StockComponent implements OnInit {
   loading$ = new BehaviorSubject<boolean>(false);
   value$: Observable<WsStock>;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private stockService: StockService,
+  ) {
   }
 
   ngOnInit() {
@@ -39,10 +42,7 @@ export class StockComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getStock({
-      id: ref.id
-    }) as any as Observable<WsStock>;
-    return loaded$.pipe(
+    return this.stockService.getStock$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

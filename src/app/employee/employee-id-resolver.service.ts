@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {WsEmployee, WsCompanyRef} from '@valuya/comptoir-ws-api';
-import {Observable, of} from 'rxjs';
-import {ApiService} from '../api.service';
+import {WsEmployee} from '@valuya/comptoir-ws-api';
+import {Observable} from 'rxjs';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {EmployeeService} from '../domain/thirdparty/employee.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeIdResolverService implements Resolve<WsEmployee> {
 
-  constructor(private apiService: ApiService,
+  constructor(private employeeService: EmployeeService,
               private authService: AuthService) {
   }
 
@@ -24,13 +24,7 @@ export class EmployeeIdResolverService implements Resolve<WsEmployee> {
     if (isNaN(idParam)) {
       return this.resolveNoNumericParam$(param);
     }
-    return this.fetchEmployee$(idParam);
-  }
-
-  private fetchEmployee$(idValue: number) {
-    return this.apiService.api.getEmployee({
-      id: idValue,
-    }) as any as Observable<WsEmployee>;
+    return this.employeeService.getEmployee$({id: idParam});
   }
 
   private resolveNoNumericParam$(param: string) {

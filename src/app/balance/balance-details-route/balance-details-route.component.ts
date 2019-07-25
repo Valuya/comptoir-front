@@ -5,10 +5,10 @@ import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ApiService} from '../../api.service';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
+import {BalanceService} from '../../domain/accounting/balance.service';
 
 @Component({
   selector: 'cp-balances-details-route',
@@ -25,7 +25,7 @@ export class BalanceDetailsRouteComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
               private navigationService: NavigationService,
-              private apiService: ApiService) {
+              private balanceService: BalanceService) {
     this.formHelper = new ShellFormHelper<WsBalance>(
       value => this.validate$(value),
       value => this.persist$(value),
@@ -66,25 +66,6 @@ export class BalanceDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   private persist$(value: WsBalance): Observable<WsBalance> {
-    if (value.id == null) {
-      const created$ = this.apiService.api.createBalance({
-        wsBalance: value
-      }) as any as Observable<WsBalanceRef>;
-      return created$.pipe(
-        mergeMap(ref => this.apiService.api.getBalance({
-          id: ref.id
-        }))
-      ) as any as Observable<WsBalance>;
-    } else {
-      const updated$ = this.apiService.api.updateBalance({
-        id: value.id,
-        wsBalance: value
-      }) as any as Observable<WsBalanceRef>;
-      return updated$.pipe(
-        mergeMap(ref => this.apiService.api.getBalance({
-          id: ref.id
-        }))
-      ) as any as Observable<WsBalance>;
-    }
+    return this.balanceService.saveBalance(value);
   }
 }

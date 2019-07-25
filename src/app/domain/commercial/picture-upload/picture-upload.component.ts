@@ -6,7 +6,7 @@ import {MessageService} from 'primeng/api';
 import {PictureUtils} from '../picture/picture-utils';
 import {delay, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AuthService} from '../../../auth.service';
-import {ApiService} from '../../../api.service';
+import {PictureService} from '../picture.service';
 
 @Component({
   selector: 'cp-picture-upload',
@@ -41,9 +41,11 @@ export class PictureUploadComponent implements OnInit, ControlValueAccessor {
   private onChange: (value: WsCustomerRef) => void;
   private onTouched: () => void;
 
-  constructor(private messageService: MessageService,
-              private authService: AuthService,
-              private apiService: ApiService) {
+  constructor(
+    private messageService: MessageService,
+    private authService: AuthService,
+    private pictureService: PictureService,
+  ) {
   }
 
   ngOnInit() {
@@ -213,10 +215,7 @@ export class PictureUploadComponent implements OnInit, ControlValueAccessor {
     const byteProgressObserver = this.createByteProgressObserver(dataLength, progressObserver);
 
     this.uploading$.next(true);
-    const saved$ = this.apiService.api.createPicture({
-      wsPicture: picture
-    }) as any as Observable<WsPictureRef>;
-    return saved$.pipe(
+    return this.pictureService.savePicture(picture).pipe(
       delay(0),
       tap(() => this.uploading$.next(false)),
     );

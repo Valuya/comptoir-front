@@ -1,8 +1,21 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api.service';
-import {WsItem, WsItemRef, WsItemVariant, WsItemVariantRef, WsItemVariantSale, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
+import {
+  WsBalance, WsBalanceRef,
+  WsItem,
+  WsItemRef,
+  WsItemSearch,
+  WsItemVariant,
+  WsItemVariantRef,
+  WsItemVariantSearch,
+  WsItemVariantSearchResult
+} from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
+import {Pagination} from '../../util/pagination';
+import {PaginationUtils} from '../../util/pagination-utils';
+import {SearchResult} from '../../app-shell/shell-table/search-result';
+import {switchMap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +52,43 @@ export class ItemService {
   getItemVariant$(ref: WsItemVariantRef): Observable<WsItemVariant> {
     return this.variantCache.getResource$(ref);
   }
+
+  saveItem(item: WsItem): Observable<WsItemRef> {
+    if (item.id == null) {
+      return this.itemCache.createResource$(item);
+    } else {
+      return this.itemCache.updateResource$(item);
+    }
+  }
+
+  saveVariant(variant: WsItemVariant): Observable<WsItemVariant> {
+    if (variant.id == null) {
+      return this.variantCache.createResource$(variant);
+    } else {
+      return this.variantCache.updateResource$(variant);
+    }
+  }
+
+  searchsItems$(searchFilter: WsItemSearch, pagination: Pagination): Observable<SearchResult<WsItemRef>> {
+    const searchResult$ = this.apiService.api.findItems({
+      offset: pagination.first,
+      length: pagination.rows,
+      sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
+      wsItemSearch: searchFilter
+    }) as any as Observable<SearchResult<WsItemRef>>;
+    return searchResult$;
+  }
+
+  searchVariants$(searchFilter: WsItemVariantSearch, pagination: Pagination): Observable<SearchResult<WsItemVariantRef>> {
+    const searchResult$ = this.apiService.api.findItemVariants({
+      offset: pagination.first,
+      length: pagination.rows,
+      sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
+      wsItemVariantSearch: searchFilter
+    }) as any as Observable<SearchResult<WsItemVariantRef>>;
+    return searchResult$;
+  }
+
 
   private doGet$(ref: WsItemRef) {
     return this.apiService.api.getItem({

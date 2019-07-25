@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
-import {ApiService} from '../../../api.service';
 import {WsAttributeDefinition, WsAttributeDefinitionRef} from '@valuya/comptoir-ws-api';
 import {WsLocaleText} from '../../lang/locale-text/ws-locale-text';
+import {AttributeService} from '../attribute.service';
 
 @Component({
   selector: 'cp-attribute-definition',
@@ -22,7 +22,9 @@ export class AttributeDefinitionComponent implements OnInit {
   loading$ = new BehaviorSubject<boolean>(false);
   labelLocaleText$: Observable<WsLocaleText[]>;
 
-  constructor(private apiService: ApiService) {
+  constructor(
+    private attributeService: AttributeService,
+  ) {
   }
 
   ngOnInit() {
@@ -39,10 +41,7 @@ export class AttributeDefinitionComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getAttributeDefinition({
-      id: ref.id
-    }) as any as Observable<WsAttributeDefinition>;
-    return loaded$.pipe(
+    return this.attributeService.getAttributeDefinition$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

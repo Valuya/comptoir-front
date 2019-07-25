@@ -3,7 +3,7 @@ import {ApiService} from '../../api.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../util/pagination';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
-import {WsPos, WsPosRef, WsPosSearch, WsPosSearchResult} from '@valuya/comptoir-ws-api';
+import {WsBalance, WsBalanceRef, WsPos, WsPosRef, WsPosSearch, WsPosSearchResult} from '@valuya/comptoir-ws-api';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +24,14 @@ export class PosService {
     );
   }
 
+
+  savePos(pos: WsPos): Observable<WsPosRef> {
+    if (pos.id == null) {
+      return this.posCache.createResource$(pos);
+    } else {
+      return this.posCache.updateResource$(pos);
+    }
+  }
 
   getPos$(ref: WsPosRef): Observable<WsPos> {
     return this.posCache.getResource$(ref);
