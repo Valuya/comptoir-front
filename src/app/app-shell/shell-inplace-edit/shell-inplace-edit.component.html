@@ -3,13 +3,13 @@
      [class.active]="outputTemplate != null && inputTemplate != null && !disabled"
 >
   <div class="inplace-output"
+       #outputElement
        (click)="onOutputClick($event)"
        (keydown)="onOutputKeyDown($event)"
        tabIndex="0" role="button"
   >
     <ng-container
       *ngTemplateOutlet="outputTemplate || inputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
-      #outputTemplateRef
     ></ng-container>
   </div>
 
@@ -19,25 +19,29 @@
     </div>
   </div>
 
-  <div class="inplace-input" [hidden]="disabled || inputTemplate != null || outputTemplate != null"
-       (focusout)="onInputFocusOut($event)"
-       (keydown)="onInputKeyDown($event)"
+  <p-overlayPanel #inputOverlay appendTo="body"
+                  (focusout)="onInputFocusOut($event)"
   >
-    <div class="content" #inputComponent
-    >
-      <ng-container *ngTemplateOutlet="inputTemplate;context: {valid: errors?.length === 0,invalid: errors?.length > 0}"
-      ></ng-container>
-    </div>
-    <div class="actions"
-    >
-      <div class="cancel" (click)="onCancelClick()"
-           tabIndex="0" role="button"
+    <div class="inplace-input-content">
+      <div class="content" #inputComponent
+           (keydown)="onInputKeyDown($event)"
       >
-        <i class="fa fa-undo"></i>
+        <ng-container
+          *ngTemplateOutlet="inputTemplate;context: {valid: errors?.length === 0,invalid: errors?.length > 0}"
+        ></ng-container>
       </div>
-<!--      <div class="submit" (click)="onSubmitClick()">-->
-<!--        <i class="fa fa-check"></i>-->
-<!--      </div>-->
+      <div class="actions"
+      >
+        <div class="cancel" (click)="onCancelClick()"
+             tabIndex="0" role="button"
+        >
+          <i class="fa fa-undo"></i>
+        </div>
+        <!--      <div class="submit" (click)="onSubmitClick()">-->
+        <!--        <i class="fa fa-check"></i>-->
+        <!--      </div>-->
+      </div>
     </div>
-  </div>
+
+  </p-overlayPanel>
 </div>

@@ -3,17 +3,17 @@ import {ComptoirSaleService} from '../comptoir-sale.service';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch} from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {LazyLoadEvent, MessageService, SelectItem} from 'primeng/api';
 import {
   DATETIME_COLUMN,
-  DISCOUNT_RATIO_COLUMN, INCLUDE_CUSTOMER_LOYALTY_COLUMN,
+  DISCOUNT_RATIO_COLUMN,
+  INCLUDE_CUSTOMER_LOYALTY_COLUMN,
   ITEM_VARIANT_COLUMN,
-  QUANTITY_COLUMN, TOTAL_COLUMN, VAT_RATE_COLUMN
+  QUANTITY_COLUMN,
+  TOTAL_COLUMN,
+  VAT_RATE_COLUMN
 } from '../../sale/sale-variant-column/sale-variant-columns';
-import {NAME_COLUMN} from '../../item/item-column/item-columns';
 
 @Component({
   selector: 'cp-sale-item-list',

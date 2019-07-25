@@ -8,6 +8,7 @@
 
   > .menu {
     flex: 0 0 10em;
+    overflow-y: auto;
   }
 
   >.shell-content {

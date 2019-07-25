@@ -116,15 +116,38 @@
         </cp-shell-inplace-edit>
       </div>
 
-      <div class="customer-loyalty">
+      <div class="discount-ratio" title="Discount ratio">
+        <cp-shell-inplace-edit name="discountRatio" #discountRatio
+                               [ngModel]="item.discountRatio"
+                               (ngModelChange)="firsChanges({discountRatio: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-sun-o"></i>
+            {{ item.discountRatio | percent }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [ngModel]="discountRatio.editValue * 100"
+                       (ngModelChange)="discountRatio.editValue = $event / 100"
+                       [min]="0" [step]="0.1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+
+      <div class="customer-loyalty" title="Apply customer loyalty discount">
         <cp-shell-inplace-edit name="includeCustomerLoyalty" #includeCustomerLoyalty
                                [ngModel]="item.includeCustomerLoyalty"
                                (ngModelChange)="firsChanges({includeCustomerLoyalty: $event})"
         >
           <ng-template cpInplaceOutput>
-            <p-inputSwitch [ngModel]="item.includeCustomerLoyalty"
-                           (ngModelChange)="firsChanges({includeCustomerLoyalty: $event})"
-            ></p-inputSwitch>
+            <label for="customer-loyalty">
+              <i class="fa fa-user-plus"></i>
+            </label>
+            <p-checkbox [binary]="true" id="customer-loyalty"
+                        [ngModel]="item.includeCustomerLoyalty"
+                        (ngModelChange)="firsChanges({includeCustomerLoyalty: $event})"
+            ></p-checkbox>
           </ng-template>
         </cp-shell-inplace-edit>
       </div>

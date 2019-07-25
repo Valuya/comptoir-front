@@ -18,6 +18,7 @@ import {InplaceInputDirective} from './inplace-input.directive';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {InplaceEditService} from './inplace-edit.service';
 import {timer} from 'rxjs';
+import {OverlayPanel} from 'primeng/primeng';
 
 @Component({
   selector: 'cp-shell-inplace-edit',
@@ -52,8 +53,10 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
 
   @ViewChild('inputComponent', {static: false})
   private inputComponent: ElementRef;
-
-  private focusInCaptured: boolean;
+  @ViewChild('inputOverlay', {static: false})
+  private inputOverlay: OverlayPanel;
+  @ViewChild('outputElement', {static: true})
+  private outputElement: ElementRef;
 
   value: any;
   editValue: any;
@@ -80,22 +83,29 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
 
-  onEditChange(edit: boolean) {
-    this.editing = edit;
-    this.editingChange.next(edit);
-    if (edit) {
-      if (this.editService) {
-        this.editService.closeAllOthers(this);
-      }
-      this.editValue = this.value;
+  startEdit(event: Event) {
+    this.editing = true;
+    this.editingChange.next(true);
+    this.inputOverlay.show(event, this.outputElement.nativeElement);
+
+    this.editValue = this.value;
+    timer(10).subscribe(() => {
       this.focusFirstInput();
-    }
+    });
+  }
+
+  stopEdit() {
+    this.editing = false;
+    this.editingChange.next(false);
+    this.inputOverlay.hide();
   }
 
   onOutputClick(event: Event) {
-    event.preventDefault();
-    this.onEditChange(true);
-    return false;
+    if (this.inputTemplate != null && !this.editing) {
+      event.preventDefault();
+      this.startEdit(event);
+      return false;
+    }
   }
 
   onCancelClick() {
@@ -146,7 +156,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     switch (keyCode) {
       case 0x0D: // enter
       case 0x20: // space
-        this.onEditChange(true);
+        this.startEdit(keyboardEvent);
         break;
       default:
         return;
@@ -173,30 +183,38 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   private focusFirstInput() {
-    if (this.inputTemplate != null) {
-      const element: HTMLElement = this.inputComponent.nativeElement;
-      const inputElements = element.getElementsByTagName('input');
-      if (inputElements.length > 0) {
-        const firstInput: HTMLInputElement = inputElements.item(0);
-        timer(10).subscribe(() => {
-          firstInput.focus({
-            preventScroll: true
-          });
-          const valueLength = firstInput.value.length;
-          firstInput.setSelectionRange(0, valueLength);
+    if (this.inputOverlay != null) {
+      const overlayContainer = this.inputOverlay.container;
+      this.focusFirstInputOfElement(overlayContainer);
+    }
+    // if (this.inputTemplate != null) {
+    //   const element: HTMLElement = this.inputComponent.nativeElement;
+    //   this.focusFirstInputOfElement(element);
+    // }
+  }
+
+  private focusFirstInputOfElement(element: HTMLElement) {
+    const inputElements = element.getElementsByTagName('input');
+    if (inputElements.length > 0) {
+      const firstInput: HTMLInputElement = inputElements.item(0);
+      timer(10).subscribe(() => {
+        firstInput.focus({
+          preventScroll: true
         });
-      }
+        const valueLength = firstInput.value.length;
+        firstInput.setSelectionRange(0, valueLength);
+      });
     }
   }
 
   private cancelEdit() {
     this.editValue = this.value;
-    this.onEditChange(false);
+    this.stopEdit();
   }
 
   private commitEdit() {
     this.fireChanges(this.editValue);
-    this.onEditChange(false);
+    this.stopEdit();
   }
 
   private fireChanges(value: any) {
