@@ -12,29 +12,123 @@
 
     <div class="amounts">
       <div class="quantity">
-        {{ item.quantity }} x
+        <cp-shell-inplace-edit name="quantity" #quantity
+                               [ngModel]="item.quantity"
+                               (ngModelChange)="firsChanges({quantity: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            {{ item.quantity }} x
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [(ngModel)]="quantity.editValue"
+                       [min]="1" [step]="1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
       </div>
+
       <div class="vat-exclusive">
-        {{ item.vatExclusive | currency }}
+        <cp-shell-inplace-edit name="vatExclusive" #vatExclusive
+                               [ngModel]="item.vatExclusive"
+                               (ngModelChange)="firsChanges({vatExclusive: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            {{ item.vatExclusive | currency }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [(ngModel)]="vatExclusive.editValue"
+                       [min]="0.00" [step]="0.01"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
       </div>
+
       <div class="vat-rate">
-        VAT: {{ item.vatRate | percent }}
+        <cp-shell-inplace-edit name="vatRate" #vatRate
+                               [ngModel]="item.vatRate"
+                               (ngModelChange)="firsChanges({vatRate: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            VAT: {{ item.vatRate | percent }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [ngModel]="vatRate.editValue * 100"
+                       (ngModelChange)="vatRate.editValue = $event / 100"
+                       [min]="0" [step]="0.1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
       </div>
+
       <div class="total">
-        {{ item.total | currency }}
+        <cp-shell-inplace-edit name="total" #total
+                               [ngModel]="item.total"
+                               (ngModelChange)="firsChanges({total: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            {{ item.total | currency }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [(ngModel)]="total.editValue"
+                       [min]="0.00" [step]="0.01"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
       </div>
     </div>
 
     <div class="info">
+
+      <div class="stock">
+        <cp-shell-inplace-edit name="stockRef" #stockRef
+                               [ngModel]="item.stockRef"
+                               (ngModelChange)="firsChanges({stockRef: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <cp-stock [ref]="item.stockRef"
+                      [showIcon]="true"
+            ></cp-stock>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <cp-stock-select [(ngModel)]="item.stockRef"></cp-stock-select>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
       <div class="comment">
-        {{ item.comment }}
+        <cp-shell-inplace-edit name="comment" #comment
+                               [ngModel]="item.comment"
+                               (ngModelChange)="firsChanges({comment: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-comment-o"></i>
+            <cp-locale-text [localeTexts]="item.comment"></cp-locale-text>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <cp-locale-text-edit [(ngModel)]="comment.editValue" #commentEdit>
+              <ng-template cpLocalizedEdit>
+                <input type="text" pInputText
+                       [(ngModel)]="commentEdit.editingTextValue"
+                >
+              </ng-template>
+            </cp-locale-text-edit>
+          </ng-template>
+        </cp-shell-inplace-edit>
       </div>
+
       <div class="customer-loyalty">
-        {{ item.includeCustomerLoyalty | json }}
+        <cp-shell-inplace-edit name="includeCustomerLoyalty" #includeCustomerLoyalty
+                               [ngModel]="item.includeCustomerLoyalty"
+                               (ngModelChange)="firsChanges({includeCustomerLoyalty: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <p-inputSwitch [ngModel]="item.includeCustomerLoyalty"
+                           (ngModelChange)="firsChanges({includeCustomerLoyalty: $event})"
+            ></p-inputSwitch>
+          </ng-template>
+        </cp-shell-inplace-edit>
       </div>
-      <div class="">
-        {{ item.stockRef | json  }}
-      </div>
+
     </div>
   </div>
 </div>

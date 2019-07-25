@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
-import {WsItemVariantSale, WsItemVariantSaleSearch} from '@valuya/comptoir-ws-api';
+import {WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch} from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
-import {LazyLoadEvent, SelectItem} from 'primeng/api';
+import {LazyLoadEvent, MessageService, SelectItem} from 'primeng/api';
 import {
   DATETIME_COLUMN,
   DISCOUNT_RATIO_COLUMN, INCLUDE_CUSTOMER_LOYALTY_COLUMN,
@@ -36,7 +36,8 @@ export class SaleItemListComponent implements OnInit {
   sortOptions: SelectItem[];
 
   constructor(
-    private comptoirSaleService: ComptoirSaleService
+    private comptoirSaleService: ComptoirSaleService,
+    private messageService: MessageService,
   ) {
   }
 
@@ -82,5 +83,28 @@ export class SaleItemListComponent implements OnInit {
 
   onSortFieldChange($event: any) {
     console.warn($event);
+  }
+
+  onSaeItemUpdate(item: WsItemVariantSale) {
+    const ref: WsItemVariantSaleRef = {id: item.id};
+    this.comptoirSaleService.udpdateSaleVariant$(ref, item)
+      .subscribe(newRef => this.onVariantUpdated(newRef),
+        err => this.onVariantUpdateError(err));
+  }
+
+  private onVariantUpdated(ref: WsItemVariantSaleRef) {
+    this.itemsTableHelper.reload();
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Item updated'
+    });
+  }
+
+  private onVariantUpdateError(err: any) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: err
+    });
   }
 }

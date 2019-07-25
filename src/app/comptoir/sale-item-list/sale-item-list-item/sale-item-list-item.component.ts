@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemVariantSale} from '@valuya/comptoir-ws-api';
 
 @Component({
@@ -11,9 +11,18 @@ export class SaleItemListItemComponent implements OnInit {
   @Input()
   item: WsItemVariantSale;
 
-  constructor() { }
+  @Output()
+  itemChange = new EventEmitter<WsItemVariantSale>();
+
+  constructor() {
+  }
 
   ngOnInit() {
+  }
+
+  firsChanges(update: Partial<WsItemVariantSale>) {
+    const newValue = Object.assign({}, this.item, update);
+    this.itemChange.next(newValue);
   }
 
 }

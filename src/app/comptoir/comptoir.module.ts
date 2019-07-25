@@ -9,7 +9,7 @@ import {ComptoirSalePayRouteComponent} from './comptoir-sale-pay-route/comptoir-
 import {ComptoirInfoRouteComponent} from './comptoir-info-route/comptoir-info-route.component';
 import {SaleItemListComponent} from './sale-item-list/sale-item-list.component';
 import {DataViewModule} from 'primeng/dataview';
-import {DropdownModule, SpinnerModule} from 'primeng/primeng';
+import {DropdownModule, InputSwitchModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
 import {VariantSelectListComponent} from './variant-select-list/variant-select-list.component';
@@ -29,6 +29,9 @@ import {PosSelectModule} from '../domain/commercial/pos-select/pos-select.module
 import {CustomerSelectModule} from '../domain/thirdparty/customer-select/customer-select.module';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 import {ItemVariantComponentModule} from '../domain/commercial/item-variant/item-variant-component.module';
+import {SockComponentModule} from '../domain/commercial/stock/sock-component.module';
+import {StockSelectModule} from '../domain/commercial/stock-select/stock-select.module';
+import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
 
 
 @NgModule({
@@ -65,6 +68,11 @@ import {ItemVariantComponentModule} from '../domain/commercial/item-variant/item
     ShellInplaceEditModule,
     SpinnerModule,
     ItemVariantComponentModule,
+    InputTextModule,
+    InputSwitchModule,
+    SockComponentModule,
+    StockSelectModule,
+    LocaleTextEditModule,
 
   ]
 })

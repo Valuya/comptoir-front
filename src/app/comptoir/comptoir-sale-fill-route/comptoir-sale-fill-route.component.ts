@@ -21,12 +21,13 @@ export class ComptoirSaleFillRouteComponent implements OnInit {
   }
 
   onVariantSelected(ref: WsItemVariantRef) {
-    this.saleService.addVariant$(ref).pipe(
-      switchMap(saleVariantRef => this.saleService.getVariantAddedLabel$(saleVariantRef))
-    ).subscribe(
-      variantLabel => this.onVariantAdded(variantLabel),
-      error => this.onVariantAddError(error)
-    );
+    this.saleService.addVariant(ref);
+    // .pipe(
+    //   switchMap(saleVariantRef => this.saleService.getVariantAddedLabel$(saleVariantRef))
+    // ).subscribe(
+    //   variantLabel => this.onVariantAdded(variantLabel),
+    //   error => this.onVariantAddError(error)
+    // );
   }
 
   private onVariantAdded(label: string) {

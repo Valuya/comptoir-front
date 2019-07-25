@@ -14,6 +14,10 @@ export class StockComponent implements OnInit {
   set ref(value: WsStockRef) {
     this.refSource$.next(value);
   }
+  @Input()
+  showIcon: boolean;
+  @Input()
+  showDescription: boolean;
 
   private refSource$ = new BehaviorSubject<WsStockRef>(null);
 

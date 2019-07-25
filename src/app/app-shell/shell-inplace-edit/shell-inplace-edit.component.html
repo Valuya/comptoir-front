@@ -2,8 +2,10 @@
      [class.editing]="editing"
      [class.active]="outputTemplate != null && inputTemplate != null && !disabled"
 >
-  <div class="inplace-output" tabindex
-       (click)="onOutputClick()"
+  <div class="inplace-output"
+       (click)="onOutputClick($event)"
+       (keydown)="onOutputKeyDown($event)"
+       tabIndex="0" role="button"
   >
     <ng-container
       *ngTemplateOutlet="outputTemplate || inputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
@@ -17,20 +19,25 @@
     </div>
   </div>
 
-  <div class="inplace-input" *ngIf="!disabled && inputTemplate != null && outputTemplate != null">
-    <div class="content">
+  <div class="inplace-input" [hidden]="disabled || inputTemplate != null || outputTemplate != null"
+       (focusout)="onInputFocusOut($event)"
+       (keydown)="onInputKeyDown($event)"
+  >
+    <div class="content" #inputComponent
+    >
       <ng-container *ngTemplateOutlet="inputTemplate;context: {valid: errors?.length === 0,invalid: errors?.length > 0}"
       ></ng-container>
     </div>
-    <div class="actions">
-      <div class="cancel" (click)="onCancelClick()">
+    <div class="actions"
+    >
+      <div class="cancel" (click)="onCancelClick()"
+           tabIndex="0" role="button"
+      >
         <i class="fa fa-undo"></i>
       </div>
-    </div>
-    <div class="actions">
-      <div class="submit" (click)="onSubmitClick()">
-        <i class="fa fa-check"></i>
-      </div>
+<!--      <div class="submit" (click)="onSubmitClick()">-->
+<!--        <i class="fa fa-check"></i>-->
+<!--      </div>-->
     </div>
   </div>
 </div>

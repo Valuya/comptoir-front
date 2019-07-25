@@ -27,12 +27,13 @@
     <ng-template let-item pTemplate="listItem">
       <div class="list-item">
         <cp-sale-item-list-item [item]="item"
+                                (itemChange)="onSaeItemUpdate($event)"
         ></cp-sale-item-list-item>
       </div>
     </ng-template>
-    <ng-template let-item2 pTemplate="gridItem">
+    <ng-template let-item pTemplate="gridItem">
       <div class="grid-item">
-        <cp-sale-item-grid-item [item]="item2"
+        <cp-sale-item-grid-item [item]="item"
         ></cp-sale-item-grid-item>
       </div>
     </ng-template>

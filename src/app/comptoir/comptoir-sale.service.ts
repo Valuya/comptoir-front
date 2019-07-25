@@ -11,7 +11,7 @@ import {
   WsItemVariantSearch,
   WsSale
 } from '@valuya/comptoir-ws-api';
-import {filter, map, publishReplay, refCount, scan, switchMap, take, tap, throwIfEmpty} from 'rxjs/operators';
+import {concatMap, filter, map, publishReplay, refCount, scan, switchMap, take, tap, throwIfEmpty} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
 import {ApiService} from '../api.service';
@@ -39,6 +39,8 @@ export class ComptoirSaleService {
 
   private saleItemsTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
 
+  private addVariantSource$ = new Subject<WsItemVariantRef>();
+
   // Cache a page of variant for each item
   private ItemVariantCacheSize: 30;
   private itemVariantsCaches: { [itemId: number]: SimpleSearchResultResourceCache<WsItemVariantRef> } = {};
@@ -57,6 +59,12 @@ export class ComptoirSaleService {
     this.saleItemsTableHelper = new ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>(
       (searchFilter, pagination) => this.searchSaleItems$(searchFilter, pagination)
     );
+
+    this.addVariantSource$.pipe(
+      concatMap(ref => this.addNextVariant$(ref)),
+    ).subscribe(() => {
+      console.log('updated');
+    });
     // this.itemSelectChildrenCache = new SimpleSeachResultResourceCache<WsItemVariantRef>(
     //   ref => this.fetchItemVarianFirstPages$(ref)
     // );
@@ -78,6 +86,13 @@ export class ComptoirSaleService {
     this.saleUpdatesSource$.next(update);
   }
 
+  udpdateSaleVariant$(ref: WsItemVariantSaleRef, update: Partial<WsItemVariantSale>): Observable<any> {
+    return this.saleService.getVariant$(ref).pipe(
+      switchMap(backendItem => this.saleService.updateVariant$(backendItem, update)),
+      tap(newRef => this.onSaleVariantUpdated(newRef))
+    );
+  }
+
   getSale$(): Observable<WsSale> {
     return this.updatedSale$;
   }
@@ -86,19 +101,8 @@ export class ComptoirSaleService {
     return this.saleItemsTableHelper;
   }
 
-  addVariant$(ref: WsItemVariantRef): Observable<WsItemVariantSaleRef> {
-    const curSale$ = this.getSale$().pipe(
-      filter(s => s != null),
-      take(1),
-    );
-    const curItems$ = this.saleItemsTableHelper.rows$.pipe(
-      filter(s => s != null),
-      take(1),
-    );
-    return forkJoin(curSale$, curItems$).pipe(
-      switchMap(results => this.addOrAppendVariant$(results[0], results[1], ref)),
-      tap(() => this.reloadSaleItems())
-    );
+  addVariant(ref: WsItemVariantRef) {
+    this.addVariantSource$.next(ref);
   }
 
   getVariantAddedLabel$(ref: WsItemVariantSaleRef): Observable<string> {
@@ -195,6 +199,21 @@ export class ComptoirSaleService {
     );
   }
 
+  private addNextVariant$(ref: WsItemVariantRef) {
+    const curSale$ = this.getSale$().pipe(
+      filter(s => s != null),
+      take(1),
+    );
+    const curItems$ = this.saleItemsTableHelper.rows$.pipe(
+      filter(s => s != null),
+      take(1),
+    );
+    return forkJoin(curSale$, curItems$).pipe(
+      switchMap(results => this.addOrAppendVariant$(results[0], results[1], ref)),
+      tap(() => this.reloadSaleItems())
+    );
+  }
+
   private addOrAppendVariant$(curSale: WsSale | null, currentItems: WsItemVariantSale[], itemToAdd: WsItemVariantRef)
     : Observable<WsItemVariantSaleRef> {
     if (curSale == null || curSale.id == null) {
@@ -252,5 +271,9 @@ export class ComptoirSaleService {
         // sort: 'item:asc'
       }) as any as Observable<WsItemVariantSaleSearchResult> as Observable<SearchResult<WsItemVariantRef>>),
     );
+  }
+
+  private onSaleVariantUpdated(ref: WsItemVariantSaleRef) {
+    this.saleUpdatesSource$.next({});
   }
 }

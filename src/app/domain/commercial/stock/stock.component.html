@@ -1,13 +1,13 @@
 <div class="stock"
      [class.active]="(value$ | async)?.active"
 >
-  <div class="icon">
+  <div class="icon" *ngIf="showIcon">
     <i class="fa fa-hand-spock-o"></i>
   </div>
 
   <div class="content">
 
-    <div class="description">
+    <div class="description" *ngIf="showDescription">
       <cp-loading-content [loading]="loading$ |async">
         <cp-locale-text [localeTexts]="(value$ |async)?.description"></cp-locale-text>
       </cp-loading-content>

@@ -1,5 +1,12 @@
 .stock {
 
+  display: flex;
+  align-items: center;
+
+  >* {
+    flex: 1 1 auto;
+  }
+
   &:not(.active) {
     opacity: .7;
   }
