@@ -1,0 +1,157 @@
+<div class="list-item-content" *ngIf="item != null">
+  <div class="item">
+    <cp-item-variant [ref]="item.itemVariantRef"
+                     [showMainPicture]="true"
+                     [showReference]="true"
+                     [showItemName]="true"
+                     layout="details-column"
+    ></cp-item-variant>
+  </div>
+
+  <div class="details">
+
+    <div class="amounts">
+      <div class="quantity">
+        <cp-shell-inplace-edit name="quantity" #quantity
+                               [ngModel]="item.quantity"
+                               (ngModelChange)="fireChanges({quantity: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            {{ item.quantity }} x
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [(ngModel)]="quantity.editValue"
+                       [min]="1" [step]="1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+      <div class="vat-exclusive">
+        <cp-shell-inplace-edit name="vatExclusive" #vatExclusive
+                               [ngModel]="item.vatExclusive"
+                               (ngModelChange)="fireChanges({vatExclusive: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            {{ item.vatExclusive | currency }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [(ngModel)]="vatExclusive.editValue"
+                       [min]="0.00" [step]="0.01"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+      <div class="vat-rate">
+        <cp-shell-inplace-edit name="vatRate" #vatRate
+                               [ngModel]="item.vatRate"
+                               (ngModelChange)="fireChanges({vatRate: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            VAT: {{ item.vatRate | percent }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [ngModel]="vatRate.editValue * 100"
+                       (ngModelChange)="vatRate.editValue = $event / 100"
+                       [min]="0" [step]="0.1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+      <div class="total">
+        <cp-shell-inplace-edit name="total" #total
+                               [ngModel]="item.total"
+                               (ngModelChange)="fireChanges({total: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            {{ item.total | currency }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [(ngModel)]="total.editValue"
+                       [min]="0.00" [step]="0.01"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+    </div>
+
+    <div class="info">
+
+      <div class="stock">
+        <cp-shell-inplace-edit name="stockRef" #stockRef
+                               [ngModel]="item.stockRef"
+                               (ngModelChange)="fireChanges({stockRef: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <cp-stock [ref]="item.stockRef"
+                      [showIcon]="true"
+            ></cp-stock>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <cp-stock-select [(ngModel)]="item.stockRef"></cp-stock-select>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+      <div class="comment">
+        <cp-shell-inplace-edit name="comment" #comment
+                               [ngModel]="item.comment"
+                               (ngModelChange)="fireChanges({comment: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-comment-o"></i>
+            <cp-locale-text [localeTexts]="item.comment"></cp-locale-text>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <cp-locale-text-edit [(ngModel)]="comment.editValue" #commentEdit>
+              <ng-template cpLocalizedEdit>
+                <input type="text" pInputText
+                       [(ngModel)]="commentEdit.editingTextValue"
+                >
+              </ng-template>
+            </cp-locale-text-edit>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+      <div class="discount-ratio" title="Discount ratio">
+        <cp-shell-inplace-edit name="discountRatio" #discountRatio
+                               [ngModel]="item.discountRatio"
+                               (ngModelChange)="fireChanges({discountRatio: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-sun-o"></i>
+            {{ item.discountRatio | percent }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [ngModel]="discountRatio.editValue * 100"
+                       (ngModelChange)="discountRatio.editValue = $event / 100"
+                       [min]="0" [step]="0.1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+
+      <div class="customer-loyalty" title="Apply customer loyalty discount">
+        <cp-shell-inplace-edit name="includeCustomerLoyalty" #includeCustomerLoyalty
+                               [ngModel]="item.includeCustomerLoyalty"
+                               (ngModelChange)="fireChanges({includeCustomerLoyalty: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <label for="customer-loyalty">
+              <i class="fa fa-user-plus"></i>
+            </label>
+            <p-checkbox [binary]="true" id="customer-loyalty"
+                        [ngModel]="item.includeCustomerLoyalty"
+                        (ngModelChange)="fireChanges({includeCustomerLoyalty: $event})"
+            ></p-checkbox>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+    </div>
+  </div>
+</div>

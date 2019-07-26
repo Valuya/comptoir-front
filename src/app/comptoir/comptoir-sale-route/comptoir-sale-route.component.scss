@@ -1,0 +1,16 @@
+.comptoir-sale {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  >header {
+    flex: 0 0 auto;
+  }
+  >.content {
+    flex: 1 1 auto;
+    position: relative;
+    overflow: hidden;
+  }
+}

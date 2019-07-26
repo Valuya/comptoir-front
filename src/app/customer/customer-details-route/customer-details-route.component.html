@@ -1,0 +1,14 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-details-form (formSubmit)="onFormSubmit()">
+      <ng-template cpFormContent let-form="form">
+
+        <cp-customer-form [ngModel]="formHelper.editingValue$ | async"
+                      (partialUpdate)="formHelper.update($event)"
+                      [validationResults]="formHelper.validationResults$ | async"
+        ></cp-customer-form>
+
+      </ng-template>
+    </cp-shell-details-form>
+  </ng-template>
+</cp-shell-content-page>

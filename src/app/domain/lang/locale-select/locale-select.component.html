@@ -1,0 +1,8 @@
+<div class="customer-select">
+  <p-autoComplete [ngModel]="valueSource$ | async"
+                  (ngModelChange)="fireChanges($event)"
+                  [suggestions]="suggestions$ | async"
+                  [dropdown]="true"
+                  (completeMethod)="onSearchQuery($event)"
+  ></p-autoComplete>
+</div>

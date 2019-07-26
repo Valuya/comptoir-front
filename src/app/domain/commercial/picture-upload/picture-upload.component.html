@@ -1,0 +1,38 @@
+<div class="picture-input">
+  <div class="preview" *ngIf="(valueSource$ | async) != null"
+       [style.height]="previewSize"
+       [style.width]="previewSize"
+  >
+    <cp-picture [ref]="valueSource$ | async"></cp-picture>
+  </div>
+
+  <div class="actions">
+    <button name="add" label="Ajouter" [hidden]="(valueSource$ | async) != null"
+            [disabled]="uploading$ | async"
+            pButton (click)="onOpenClicked()"></button>
+    <button name="change" label="Changer" [hidden]="(valueSource$ | async) == null"
+            class="ui-button-secondary"
+            [disabled]="uploading$ | async"
+            pButton (click)="onOpenClicked()"></button>
+    <button name="remove" label="Supprimer" [hidden]="(valueSource$ | async) == null"
+            class="ui-button-secondary"
+            [disabled]="uploading$ | async"
+            pButton (click)="onRemoveClicked()"></button>
+  </div>
+  <div hidden>
+    <input type="file" #fileInput
+           accept="image/*"
+           (change)="onFileChosen($event)">
+  </div>
+  <div class="progress-overlay" *ngIf="uploading$ | async">
+    <div class="progress-container ui-widget">
+      <label>Envoi en cours... </label>
+      <p-progressBar [value]="progressPercentage"
+                     [showValue]="true"
+      ></p-progressBar>
+      <a (click)="onCancelUploadClicked($event)">
+        Annuler
+      </a>
+    </div>
+  </div>
+</div>

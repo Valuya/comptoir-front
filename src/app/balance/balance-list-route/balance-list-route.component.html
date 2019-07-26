@@ -1,0 +1,19 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="balancesTableHelper.loading$ | async"
+                    [rows]="balancesTableHelper.rows$ | async"
+                    [totalRecords]="balancesTableHelper.totalCount$ | async"
+                    [pagination]="balancesTableHelper.pagination$ | async"
+                    (paginationChange)="balancesTableHelper.setPagination($event)"
+                    [(selection)]="selectedBalances"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-balance-column [column]="column"
+                        [row]="row"
+        ></cp-balance-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

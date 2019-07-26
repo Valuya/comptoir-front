@@ -1,0 +1,18 @@
+<div class="loading-content"
+     [class.loading]="reallyLoading$ | async">
+  <div class="loading-placeholder"
+  >
+    <div class="fake-content">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <div class="loaded-content" [class.loading]="reallyLoading$ | async">
+    <ng-content></ng-content>
+  </div>
+  <div class="display-overlay">
+  </div>
+</div>

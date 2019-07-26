@@ -1,0 +1,20 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'DESCRIPTION'">
+    <cp-locale-text [localeTexts]="row.description"></cp-locale-text>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'ACTIVE'">
+    <i class="fa fa-check-circle" *ngIf="row.active"></i>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

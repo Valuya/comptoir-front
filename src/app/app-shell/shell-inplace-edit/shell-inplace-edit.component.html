@@ -1,0 +1,47 @@
+<div class="shell-inplace-edit"
+     [class.editing]="editing"
+     [class.active]="outputTemplate != null && inputTemplate != null && !disabled"
+>
+  <div class="inplace-output"
+       #outputElement
+       (click)="onOutputClick($event)"
+       (keydown)="onOutputKeyDown($event)"
+       tabIndex="0" role="button"
+  >
+    <ng-container
+      *ngTemplateOutlet="outputTemplate || inputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
+    ></ng-container>
+  </div>
+
+  <div class="errors" *ngIf="errors?.length > 0">
+    <div *ngFor="let error of errors">
+      {{ error }}
+    </div>
+  </div>
+
+  <p-overlayPanel #inputOverlay appendTo="body"
+                  (onHide)="onOverlayHidden()"
+  >
+    <div class="inplace-input-content">
+      <div class="content" #inputComponent
+           (keydown)="onInputKeyDown($event)"
+      >
+        <ng-container
+          *ngTemplateOutlet="inputTemplate;context: {valid: errors?.length === 0,invalid: errors?.length > 0}"
+        ></ng-container>
+      </div>
+      <div class="actions"
+      >
+        <div class="cancel" (click)="onCancelClick()"
+             tabIndex="0" role="button"
+        >
+          <i class="fa fa-undo"></i>
+        </div>
+        <!--      <div class="submit" (click)="onSubmitClick()">-->
+        <!--        <i class="fa fa-check"></i>-->
+        <!--      </div>-->
+      </div>
+    </div>
+
+  </p-overlayPanel>
+</div>

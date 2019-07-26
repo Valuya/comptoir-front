@@ -1,0 +1,9 @@
+<div class="pos-select">
+  <p-autoComplete [ngModel]="valueItem$ | async"
+                  (ngModelChange)="fireChanges($event.ref)"
+                  field="label"
+                  [suggestions]="suggestions$ | async"
+                  [dropdown]="true"
+                  (completeMethod)="onSearchQuery($event)"
+  ></p-autoComplete>
+</div>

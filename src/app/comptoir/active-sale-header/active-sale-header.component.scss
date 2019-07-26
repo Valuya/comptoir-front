@@ -1,0 +1,21 @@
+.active-sale {
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  padding: .5em;
+  margin-bottom: 1em;
+
+  >*{
+    flex: 1 1 auto;
+  }
+  >.menu {
+    flex: 0 0 10em;
+
+    >.sale {
+      font-size: 1.3em;
+    }
+    .date {
+      font-size: .8em;
+    }
+  }
+}

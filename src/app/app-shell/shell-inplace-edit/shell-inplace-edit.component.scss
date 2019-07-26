@@ -1,0 +1,60 @@
+.shell-inplace-edit {
+  position: relative;
+  display: inline-block;
+
+  .inplace-output {
+    border-radius: .3em;
+    //margin: .5em;
+    padding: .3em;
+    min-height: 2em;
+    min-width: 2em;
+    display: inline-block;
+
+    .empty-output {
+      opacity: .7;
+    }
+  }
+
+  .errors {
+    font-family: serif;
+    font-size: .8em;
+    color: darkred;
+    z-index: 1;
+    position: absolute;
+    background-color: rgba(255, 255, 255, .8);
+    box-shadow: 0 0 .3em .3em darkred;
+  }
+
+  &.active {
+    .inplace-output {
+      &:hover {
+        cursor: pointer !important;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}
+::ng-deep .inplace-input-content {
+  display: flex;
+  align-items: center;
+
+  > * {
+    flex: 0 0 auto;
+    //margin: 0 .5em;
+  }
+
+  > .content {
+    flex: 1 1 auto;
+  }
+
+  > .actions > * {
+    padding: .3em;
+    border-radius: .3em;
+
+    &:hover {
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+
+}

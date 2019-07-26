@@ -1,0 +1,10 @@
+<cp-loading-content [loading]="loading$ | async"
+>
+  <div class="picture-container"
+       [ngClass]="sizeType"
+  >
+    <div class="picture"
+         [style]="safePictureCss$ | async"
+    ></div>
+  </div>
+</cp-loading-content>

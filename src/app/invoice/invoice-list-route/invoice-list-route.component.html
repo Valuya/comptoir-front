@@ -1,0 +1,19 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="invoicesTableHelper.loading$ | async"
+                    [rows]="invoicesTableHelper.rows$ | async"
+                    [totalRecords]="invoicesTableHelper.totalCount$ | async"
+                    [pagination]="invoicesTableHelper.pagination$ | async"
+                    (paginationChange)="invoicesTableHelper.setPagination($event)"
+                    [(selection)]="selectedInvoices"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-invoice-column [column]="column"
+                        [row]="row"
+        ></cp-invoice-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

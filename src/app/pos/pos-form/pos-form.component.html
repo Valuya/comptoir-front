@@ -1,0 +1,74 @@
+<div class="pos-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>Name</label>
+    <cp-shell-inplace-edit name="name" #name
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.name"
+                           [ngModel]="value.name"
+                           (ngModelChange)="updateValue({name: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.name }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input [(ngModel)]="name.editValue"
+               [class.ui-state-error]="invalid"
+               autofocus
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Description</label>
+    <cp-shell-inplace-edit name="description" #description
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.description"
+                           [ngModel]="value.description"
+                           (ngModelChange)="updateValue({description: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-locale-text [localeTexts]="value.description">
+        </cp-locale-text>
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-locale-text-edit #descriptionTexts
+                             [(ngModel)]="description.editValue"
+                             [disabled]="disabled"
+                             [invalid]="invalid"
+        >
+          <ng-template cpLocalizedEdit>
+            <input type="text" pInputText
+                   [(ngModel)]="descriptionTexts.editingTextValue"
+                   autofocus
+            >
+          </ng-template>
+        </cp-locale-text-edit>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Default customer</label>
+    <cp-shell-inplace-edit name="defaultCustomerRef" #defaultCustomerRef
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.defaultCustomerRef"
+                           [ngModel]="value.defaultCustomerRef"
+                           (ngModelChange)="updateValue({defaultCustomerRef: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-customer-select
+          [ngModel]="value.defaultCustomerRef"
+          (ngModelChange)="updateValue({defaultCustomerRef: $event})"
+          [invalid]="invalid"
+          [disabled]="disabled"
+        ></cp-customer-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+</div>

@@ -1,0 +1,98 @@
+<div class="item-variant-form form" *ngIf="value != null">
+
+
+  <div class="control">
+    <label>Main picture</label>
+    <cp-shell-inplace-edit name="mainPictureRef" #mainPictureRef
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.mainPictureRef"
+                           [ngModel]="value.mainPictureRef"
+                           (ngModelChange)="updateValue({mainPictureRef: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-picture [ref]="value.mainPictureRef"
+        ></cp-picture>
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-picture-upload [(ngModel)]="mainPictureRef.editValue"
+                           [disabled]="disabled"
+        ></cp-picture-upload>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Reference</label>
+    <cp-shell-inplace-edit name="variantReference" #variantReference
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.variantReference"
+                           [ngModel]="value.variantReference"
+                           (ngModelChange)="updateValue({variantReference: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.variantReference }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="variantReference.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Pricing</label>
+    <cp-shell-inplace-edit name="pricing" #pricing
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.pricing"
+                           [ngModel]="value.pricing"
+                           (ngModelChange)="updateValue({pricing: $event})">
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-pricing-select [(ngModel)]="pricing.editValue"
+                           (ngModelChange)="updateValue({pricingAmount: $event})"
+                           [invalid]="invalid"
+        ></cp-pricing-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Pricing amount</label>
+    <cp-shell-inplace-edit name="pricingAmount" #pricingAmount
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.pricingAmount"
+                           [ngModel]="value.pricingAmount"
+                           (ngModelChange)="updateValue({pricingAmount: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.pricingAmount | currency }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <p-spinner [(ngModel)]="pricingAmount.value"
+        ></p-spinner>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Attributes</label>
+    <cp-shell-inplace-edit name="attributeValueRefs" #attributeValueRefs
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.attributeValueRefs"
+                           [ngModel]="valueAttributesItems$ | async"
+                           (ngModelChange)="updateAttributes($event)"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-attribute-values [valueItems]="valueAttributesItems$ | async"
+        ></cp-attribute-values>
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-attribute-values-select [(ngModel)]="attributeValueRefs.editValue"
+        ></cp-attribute-values-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+</div>

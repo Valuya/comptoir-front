@@ -1,0 +1,57 @@
+
+.list-item-content {
+  display: flex;
+  align-items: center;
+
+  > .item {
+    flex: 1 1 auto;
+    padding: .5em;
+  }
+
+  > .details {
+    flex: 1 1 auto;
+    padding: 0 .5em;
+
+    .amounts {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+
+      > * {
+        flex: 0 0 auto;
+      }
+
+      > .total {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+    }
+
+    .info {
+      display: flex;
+      align-items: center;
+
+      > * {
+        flex: 0 0 auto;
+      }
+
+      > .comment {
+        flex: 1 1 auto;
+      }
+
+      ::ng-deep .inplace-output {
+        display: flex;
+        align-items: center;
+
+        > * {
+          flex: 1 1 auto;
+        }
+
+        > i {
+          flex: 0 0 auto;
+          margin-right: .4em;
+        }
+      }
+    }
+  }
+}

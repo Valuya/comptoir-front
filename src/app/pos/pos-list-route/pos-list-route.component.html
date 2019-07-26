@@ -1,0 +1,19 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="posTableHelper.loading$ | async"
+                    [rows]="posTableHelper.rows$ | async"
+                    [totalRecords]="posTableHelper.totalCount$ | async"
+                    [pagination]="posTableHelper.pagination$ | async"
+                    (paginationChange)="posTableHelper.setPagination($event)"
+                    [(selection)]="selectedpos"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-pos-column [column]="column"
+                       [row]="row"
+        ></cp-pos-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

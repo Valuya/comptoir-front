@@ -1,0 +1,86 @@
+<div class="register-route">
+  <h1 i18n>
+    Connexion
+  </h1>
+
+  <div *ngIf="loading$ | async" class="login-loading">
+    Registering...
+  </div>
+
+  <form #loginForm (ngSubmit)="submit()"
+        [hidden]="loading$ | async">
+
+    <div class="company">
+
+      <cp-locale-text-edit name="companyName" #companyName
+                           [(ngModel)]="registrationModel.company.name"
+      >
+        <ng-template cpLocalizedEdit>
+          <input type="text" pInputText [(ngModel)]="companyName.editingTextValue"
+                 name="companyNameInput"
+                 placeholder="Company name"
+
+          >
+        </ng-template>
+      </cp-locale-text-edit>
+
+      <cp-locale-text-edit name="companyDescription" #companyDescription
+                           [(ngModel)]="registrationModel.company.description"
+      >
+        <ng-template cpLocalizedEdit>
+          <input type="text" pInputText [(ngModel)]="companyDescription.editingTextValue"
+                 name="companyDescriptionInput"
+                 placeholder="Company description"
+          >
+        </ng-template>
+      </cp-locale-text-edit>
+
+      <cp-country-select name="country" #country
+                         [(ngModel)]="registrationModel.company.countryRef"
+      ></cp-country-select>
+
+    </div>
+
+    <div class="employee">
+      <input type="text" pInputText name="firstName"
+             [(ngModel)]="registrationModel.employee.firstName"
+             placeholder="First name"
+      >
+      <input type="text" pInputText name="firstName"
+             [(ngModel)]="registrationModel.employee.lastName"
+             placeholder="Last name"
+      >
+      <cp-locale-select name="locale" #locale
+                        [(ngModel)]="registrationModel.employee.locale"
+      ></cp-locale-select>
+
+      <input type="text" pInputText name="firstName"
+             [(ngModel)]="registrationModel.employee.login"
+             placeholder="Login"
+      >
+      <input type="text" pInputText name="firstName"
+             [(ngModel)]="registrationModel.employeePassword"
+             placeholder="Password"
+      >
+    </div>
+
+
+    <div>
+      <button type="button" name="submit"
+              (click)="submit()"
+              i18n-label pButton
+              [disabled]="loginForm.invalid"
+              label="Connexion">
+      </button>
+      <input type="submit" hidden>
+    </div>
+
+  </form>
+
+
+  <div class="back">
+    <a [routerLink]="['/login']" i18n>
+      Retour
+    </a>
+  </div>
+</div>

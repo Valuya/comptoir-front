@@ -1,0 +1,14 @@
+<div class="item-list" [hidden]="(debouncedSelectionType$ | async) !== 'item'">
+  <cp-item-select-list (itemSelect)="onItemSelected($event)"
+                       [viewLayout]="displayMode"
+  ></cp-item-select-list>
+</div>
+
+<div class="variant-list" [hidden]="(debouncedSelectionType$ | async) !== 'variant'">
+  <cp-variant-select-list [itemRef]="itemRef"
+                          [noDebounce]="true"
+                          [viewLayout]="displayMode"
+                          [autoSelectSingleVariant]="autoSelectSingleVariant"
+                          (variantSelect)="onVariantSelected($event)"
+  ></cp-variant-select-list>
+</div>

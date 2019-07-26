@@ -1,0 +1,26 @@
+.sale-fill-view {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+
+  >* {
+    flex: 1 1 50%;
+    position: relative;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  >.item-list {
+    flex: 1 1 14em;
+    margin-right: 1em;
+    height: 100%;
+
+  }
+
+  >.sale-content {
+    height: 100%;
+  }
+
+
+}

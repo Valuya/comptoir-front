@@ -1,0 +1,43 @@
+<div class="attribute-values">
+  <p-chips [ngModel]="value$ | async"
+           [disabled]="true"
+           field="label"
+  >
+    <ng-template let-item pTemplate="item">
+
+      <div class="item-template">
+        <div class="attribute-value-preview"
+             [class.definition-persisted]="item.definitionRef != null"
+             [class.value-persisted]="item.valueRef != null"
+        >
+          <cp-attribute-value [ref]="item.valueRef"
+                              *ngIf="item.valueRef != null"
+          ></cp-attribute-value>
+
+          <div class="new-value" *ngIf="item.valueRef == null">
+            <div class="definition">
+              <cp-attribute-definition [ref]="item.definitionRef"
+                                       *ngIf="item.definitionRef != null"
+              ></cp-attribute-definition>
+              <div class="new-definition" *ngIf="item.definitionRef == null">
+                <cp-locale-text [localeTexts]="item.definitionNameTexts">
+                </cp-locale-text>
+              </div>
+            </div>
+            <div class="value">
+              <cp-locale-text [localeTexts]="item.valueTexts">
+              </cp-locale-text>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="close-action" *ngIf="showCloseAction"
+             (click)="onItemCloseClick(item)"
+        >
+          <i class="fa fa-times"></i>
+        </div>
+      </div>
+    </ng-template>
+  </p-chips>
+</div>

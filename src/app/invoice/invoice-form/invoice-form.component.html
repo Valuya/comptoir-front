@@ -1,0 +1,40 @@
+<div class="invoice-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>Number</label>
+    <cp-shell-inplace-edit name="number" #number
+                           [disabled]="true"
+                           [errors]="validationResults?.errors?.number"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+       {{ value.number }}
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Sale</label>
+    <div> {{ value.saleRef | json }}</div>
+  </div>
+
+  <div class="control">
+    <label>Notes</label>
+    <cp-shell-inplace-edit name="note" #note
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.note"
+                           [ngModel]="value.note"
+                           (ngModelChange)="updateValue({note: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.note }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText [(ngModel)]="note.editValue"
+               autofocus
+               [class.ui-state-error]="invalid">
+      </ng-template>
+    </cp-shell-inplace-edit>
+
+  </div>
+
+</div>

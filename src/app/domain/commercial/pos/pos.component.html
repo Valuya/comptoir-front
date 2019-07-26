@@ -1,0 +1,5 @@
+<cp-loading-content [loading]="loading$ | async">
+  <div class="pos">
+    {{ (value$ | async)?.name }}
+  </div>
+</cp-loading-content>

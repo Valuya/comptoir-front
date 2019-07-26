@@ -1,0 +1,32 @@
+.shell-table {
+
+
+  .filter-content {
+    ::ng-deep .filter-form {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: .8em;
+
+      .control {
+        display: inline-flex;
+        align-items: center;
+        text-align: left;
+        margin: .3em;
+
+        > * {
+          flex: 0 0 auto;
+          margin: .3em;
+        }
+
+        > label {
+          flex: 0 0 auto;
+        }
+
+        input {
+          min-width: 16em;
+        }
+      }
+    }
+  }
+}

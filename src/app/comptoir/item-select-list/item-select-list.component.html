@@ -1,0 +1,46 @@
+<div class="item-select-list">
+
+  <p-dataView [value]="tableHelper.rows$ | async"
+              [layout]="viewLayout"
+              [lazy]="true"
+              [paginator]="true"
+              [first]="tableHelper.paginationFirst$ | async"
+              [rows]="tableHelper.paginationRows$ | async"
+              (onLazyLoad)="onLazyLoad($event)"
+              [totalRecords]="tableHelper.totalCount$ | async"
+              [sortField]="tableHelper.paginationSortField$ | async"
+              [sortOrder]="tableHelper.paginationSortOrder$ | async"
+              [loading]="tableHelper.loading$ | async"
+              emptyMessage="No item found"
+  >
+
+    <p-header>
+      <p-dropdown [options]="sortOptions"
+                  [ngModel]="tableHelper.paginationSortField$ | async"
+                  (ngModelChange)="onSortFieldChange($event)"
+                  placeholder="Sort By"
+      ></p-dropdown>
+      <input type="search" pInputText
+             placeholder="Filter.."
+             [ngModel]="searchQuery$ | async"
+             (ngModelChange)="searchQuery$.next($event)"
+             hidden>
+    </p-header>
+
+    <ng-template let-ref let-i="index" pTemplate="listItem">
+      <div class="list-item" (click)="onItemClick(ref)"
+           [tabIndex]="i"
+      >
+        <cp-item-select-list-item [ref]="ref"
+        ></cp-item-select-list-item>
+      </div>
+
+    </ng-template>
+    <ng-template let-ref pTemplate="gridItem">
+      <cp-item-select-grid-item [ref]="ref"
+      ></cp-item-select-grid-item>
+    </ng-template>
+
+  </p-dataView>
+
+</div>

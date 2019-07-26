@@ -1,8 +1,0 @@
-<div class="formPage pageContent">
-    <h1 class="pageTitle">Édition du client</h1>
-
-    <customer-edit *ngIf="customer != null"
-                   [customer]="customer"
-                   (saved)="onSaved($event)"
-                   (cancelled)="onCancelled()"></customer-edit>
-</div>

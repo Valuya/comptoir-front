@@ -1,0 +1,30 @@
+.shell-details-form {
+  text-align: center;
+
+  .form-content {
+
+    ::ng-deep .form {
+      display: inline-block;
+
+      .control {
+        display: inline-flex;
+        width: 100%;
+        align-items: center;
+        text-align: left;
+
+        >* {
+          flex: 1 0 14em;
+          margin: .5em;
+        }
+        >label {
+          flex: .5 0 10em;
+          text-align: right;
+        }
+
+        input {
+          min-width: 16em;
+        }
+      }
+    }
+  }
+}

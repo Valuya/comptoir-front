@@ -1,0 +1,22 @@
+.sale-itemlist {
+  height: 100%;
+
+
+  ::ng-deep .ui-dataview {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    >* {
+      flex: 0 0 auto;
+    }
+    >.ui-dataview-content {
+      flex: 1 1 auto;
+      overflow: auto;
+    }
+  }
+
+  ::ng-deep .list-item {
+    display: block;
+  }
+}

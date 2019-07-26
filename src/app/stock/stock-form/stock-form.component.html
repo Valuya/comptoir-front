@@ -1,0 +1,51 @@
+<div class="stock-form form" *ngIf="value != null">
+
+
+  <div class="control">
+    <label>Description</label>
+    <cp-shell-inplace-edit name="description" #description
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.description"
+                           [ngModel]="value.description"
+                           (ngModelChange)="updateValue({description: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-locale-text [localeTexts]="value.description">
+        </cp-locale-text>
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-locale-text-edit #descriptionTexts
+                             [(ngModel)]="description.editValue"
+                             [disabled]="disabled"
+                             [invalid]="invalid"
+        >
+          <ng-template cpLocalizedEdit>
+            <input type="text" pInputText
+                   [(ngModel)]="descriptionTexts.editingTextValue"
+                   autofocus
+            >
+          </ng-template>
+        </cp-locale-text-edit>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+
+  <div class="control">
+    <label>Active</label>
+    <cp-shell-inplace-edit name="active" #inplace
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.active"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <p-inputSwitch [ngModel]="value.active"
+                       (ngModelChange)="updateValue({active: $event})"
+                       [class.ui-state-error]="invalid"
+                       autofocus
+        ></p-inputSwitch>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+</div>

@@ -1,0 +1,54 @@
+<div class="login-route">
+  <h1 i18n>
+    Connexion
+  </h1>
+
+  <p *ngIf="(loginMessage$ | async) != null" class="login-message">
+    {{ loginMessage$ | async }}
+  </p>
+
+  <div *ngIf="(loginError$ | async) != null" class="login-error">
+    Échec du login. {{ loginError$ | async }}
+  </div>
+
+  <div *ngIf="loading$ | async" class="login-loading">
+    Login en cours...
+  </div>
+
+  <form #loginForm (ngSubmit)="submit()"
+        [hidden]="loading$ | async">
+    <input type="text" name="login" pInputText
+           [(ngModel)]="login"
+           #loginControl="ngModel"
+           [class.ui-state-error]="loginControl.invalid"
+           i18n-placeholder required
+           placeholder="Login">
+
+    <input type="password" name="password" pInputText
+           [(ngModel)]="password" #passwordControl="ngModel"
+           [class.ui-state-error]="passwordControl.invalid"
+           i18n-placeholder required
+           placeholder="Password">
+
+    <p-checkbox name="remember"
+                [(ngModel)]="rememberLogin"
+                [binary]="true"
+                label="Enregistrer sur cet appareil"
+    ></p-checkbox>
+    <div>
+      <button type="button" name="submit"
+              (click)="submit()"
+              i18n-label pButton
+              [disabled]="loginForm.invalid"
+              label="Connexion">
+      </button>
+      <input type="submit" hidden>
+    </div>
+  </form>
+
+  <div class="registration">
+    <a [routerLink]="['/login/register']" i18n>
+      Créer un compte
+    </a>
+  </div>
+</div>

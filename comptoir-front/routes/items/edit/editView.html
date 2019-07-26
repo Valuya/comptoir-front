@@ -1,9 +1,0 @@
-<div class="pageContent">
-    <h1 class="pageTitle">Édition du produit</h1>
-
-    <item-edit *ngIf="item != null"
-               [item]="item"
-               (saved)="onSaved($event)"
-               (cancelled)="onCancelled()">
-    </item-edit>
-</div>

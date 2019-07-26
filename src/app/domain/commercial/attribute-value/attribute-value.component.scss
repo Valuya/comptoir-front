@@ -1,0 +1,14 @@
+::ng-deep .attribute-value {
+  display: inline-flex;
+  align-items: center;
+
+  >* {
+    flex: 0 0 auto;
+  }
+  .definition {
+    margin-right: .3em;
+  }
+  .value {
+
+  }
+}

@@ -1,0 +1,43 @@
+<div class="sale-itemlist">
+  <p-dataView [value]="saleItems$ | async"
+              [layout]="viewLayout"
+              [lazy]="true"
+              [paginator]="true"
+              [first]="paginationFirst$ | async"
+              [rows]="paginationRows$ | async"
+              (onLazyLoad)="onLazyLoad($event)"
+              [totalRecords]="totalCount$ | async"
+              [sortField]="sortField$ | async"
+              [sortOrder]="sortOrder$ | async"
+              [loading]="loading$ | async"
+              emptyMessage="Sale is empty"
+  >
+
+    <p-header>
+      <p-dropdown [options]="sortOptions"
+                  [ngModel]="sortField$ | async"
+                  (ngModelChange)="onSortFieldChange($event)"
+                  placeholder="Sort By"
+      ></p-dropdown>
+      <input type="search" pInputText
+             placeholder="Filter.."
+             hidden>
+    </p-header>
+
+    <ng-template let-item pTemplate="listItem">
+      <div class="list-item">
+        <cp-sale-item-list-item [item]="item"
+                                (itemChange)="onSaeItemUpdate($event)"
+        ></cp-sale-item-list-item>
+      </div>
+    </ng-template>
+    <ng-template let-item pTemplate="gridItem">
+      <div class="grid-item">
+        <cp-sale-item-grid-item [item]="item"
+        ></cp-sale-item-grid-item>
+      </div>
+    </ng-template>
+
+  </p-dataView>
+
+</div>

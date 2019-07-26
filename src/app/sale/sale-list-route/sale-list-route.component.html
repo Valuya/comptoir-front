@@ -1,0 +1,25 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="salesTableHelper.loading$ | async"
+                    [rows]="salesTableHelper.rows$ | async"
+                    [totalRecords]="salesTableHelper.totalCount$ | async"
+                    [pagination]="salesTableHelper.pagination$ | async"
+                    (paginationChange)="salesTableHelper.setPagination($event)"
+                    [(selection)]="selectedSales"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpFilterContent>
+        <cp-sale-filter [ngModel]="salesTableHelper.filter$ | async"
+                        (ngModelChange)="salesTableHelper.setFilter($event)"
+                        name="filter"
+        ></cp-sale-filter>
+      </ng-template>
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-sale-column [column]="column"
+                        [row]="row"
+        ></cp-sale-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

@@ -1,0 +1,40 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <div class="comptoir-info-page ui-widget">
+
+      <div class="form">
+        <div class="control">
+          <label>Point of sale</label>
+          <cp-pos-select [ngModel]="comptoirService.pointOfSaleRef$ | async"
+                         (ngModelChange)="comptoirService.setPos($event)"
+          ></cp-pos-select>
+        </div>
+        <div class="control">
+          <label>Default customer</label>
+          <cp-customer-select [ngModel]="comptoirService.defaultCustomerRef$ | async"
+                              (ngModelChange)="comptoirService.setDefaultCustomer($event)"
+          ></cp-customer-select>
+        </div>
+
+        <div class="control">
+          <label>Customer loyalty rate</label>
+          <cp-shell-inplace-edit name="loyalty" #loyalty
+                                 [ngModel]="comptoirService.customerLoyaltyAmount$ | async"
+                                 (ngModelChange)="comptoirService.setCustomerLoyaltyRate($event)"
+          >
+            <ng-template cpInplaceOutput>
+              {{ loyalty.value | percent }}
+            </ng-template>
+            <ng-template cpInplaceInput let-invalid="invalid">
+              <p-spinner [ngModel]="loyalty.editValue * 100"
+                         (ngModelChange)="loyalty.editValue = $event * 0.01"
+              ></p-spinner>
+            </ng-template>
+          </cp-shell-inplace-edit>
+        </div>
+      </div>
+
+
+    </div>
+  </ng-template>
+</cp-shell-content-page>
