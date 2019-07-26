@@ -1,0 +1,41 @@
+.sale-details {
+  display: flex;
+  align-items: center;
+
+  > * {
+    flex: 1 1 auto;
+  }
+
+  > .details {
+    > .row {
+      display: flex;
+      align-items: center;
+
+      > * {
+        flex: 0 0 auto;
+        margin: 0 1em;
+      }
+    }
+  }
+
+  >.sub-total, .grand-total {
+    text-align: right;
+  }
+
+  .grand-total {
+    flex: 0 0 auto;
+    margin: 1em;
+    font-size: 1.2em;
+  }
+
+  ::ng-deep .inplace-output {
+    display: flex !important;
+    align-items: center;
+    >* {
+      flex: 0 0 auto;
+    }
+    >i {
+      margin-right: .3em;
+    }
+  }
+}

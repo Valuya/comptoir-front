@@ -2,12 +2,8 @@
   <ng-template cpContentBody>
     <div class="comptoir-sale">
       <header>
-        <div *ngIf="(sale$ | async)?.id == null; else: definedSale" >
-          New sale
-        </div>
-        <ng-template  #definedSale>
-          Sale {{ (sale$ | async)?.id }}
-        </ng-template>
+        <cp-active-sale-header
+        ></cp-active-sale-header>
       </header>
       <div class="content">
         <router-outlet></router-outlet>

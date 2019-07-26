@@ -9,7 +9,7 @@ import {ComptoirSalePayRouteComponent} from './comptoir-sale-pay-route/comptoir-
 import {ComptoirInfoRouteComponent} from './comptoir-info-route/comptoir-info-route.component';
 import {SaleItemListComponent} from './sale-item-list/sale-item-list.component';
 import {DataViewModule} from 'primeng/dataview';
-import {CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
+import {AutoCompleteModule, CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
 import {VariantSelectListComponent} from './variant-select-list/variant-select-list.component';
@@ -32,6 +32,10 @@ import {ItemVariantComponentModule} from '../domain/commercial/item-variant/item
 import {SockComponentModule} from '../domain/commercial/stock/sock-component.module';
 import {StockSelectModule} from '../domain/commercial/stock-select/stock-select.module';
 import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
+import { ActiveSaleHeaderComponent } from './active-sale-header/active-sale-header.component';
+import { ActiveSaleDetailsComponent } from './active-sale-header/active-sale-details/active-sale-details.component';
+import {CustomerModule} from '../domain/thirdparty/customer/customer.module';
+import { ActiveSaleSelectComponent } from './active-sale-header/active-sale-select/active-sale-select.component';
 
 
 @NgModule({
@@ -49,7 +53,10 @@ import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-
     VariantSelectListComponent,
     VariantSelectListItemComponent,
     VariantSelectGridItemComponent,
-    ItemAndVariantSelectListComponent
+    ItemAndVariantSelectListComponent,
+    ActiveSaleHeaderComponent,
+    ActiveSaleDetailsComponent,
+    ActiveSaleSelectComponent
   ],
   imports: [
     CommonModule,
@@ -74,6 +81,8 @@ import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-
     StockSelectModule,
     LocaleTextEditModule,
     CheckboxModule,
+    CustomerModule,
+    AutoCompleteModule,
 
   ]
 })

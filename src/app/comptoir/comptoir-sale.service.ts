@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, concat, forkJoin, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, concat, EMPTY, forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {
   WsCompanyRef,
   WsItemRef,
@@ -9,9 +9,24 @@ import {
   WsItemVariantSaleSearch,
   WsItemVariantSaleSearchResult,
   WsItemVariantSearch,
-  WsSale
+  WsSale,
+  WsSaleRef
 } from '@valuya/comptoir-ws-api';
-import {concatMap, filter, map, mergeMap, publishReplay, refCount, scan, switchMap, take, tap} from 'rxjs/operators';
+import {
+  concatMap,
+  delay,
+  filter,
+  map,
+  mapTo,
+  mergeMap,
+  publishReplay,
+  refCount,
+  share,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
 import {AuthService} from '../auth.service';
@@ -21,27 +36,36 @@ import {SearchResultFactory} from '../app-shell/shell-table/search-result.factor
 import {SaleService} from '../domain/commercial/sale.service';
 import {ItemService} from '../domain/commercial/item.service';
 import {LocaleService} from '../locale.service';
-import {WsLocaleText} from '../domain/lang/locale-text/ws-locale-text';
 import {SimpleSearchResultResourceCache} from '../domain/util/cache/simple-search-result-resource-cache';
+import {SaleVariantUpdate} from './sale-variant-update';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComptoirSaleService {
 
+  // Sale source, emitting when active sale is changed only
   private activeSaleSource$ = new BehaviorSubject<WsSale>(null);
+  // Queue of sale updates to apply
   private saleUpdatesSource$ = new Subject<Partial<WsSale>>();
+  // Queue of sale items to add
+  private addVariantSource$ = new Subject<WsItemVariantRef>();
+  // Queue of item updates to apply
+  private updateVariantSource$ = new Subject<Partial<SaleVariantUpdate>>();
 
+  // busy monitors for those operations
+  private updatingSaleInProgress$ = new BehaviorSubject<boolean>(false);
   private addingItemInProgress$ = new BehaviorSubject<boolean>(false);
-  private saleUpdating$ = new BehaviorSubject<boolean>(false);
-  private updatedSale$: Observable<WsSale>;
+  private updatingItemInProgress$ = new BehaviorSubject<boolean>(false);
 
+  // Updated sale values, emitting whenever a value has been refetched
+  private nonCachedUpdatedSale$: Observable<WsSale>;
+  private updatedSale$: Observable<WsSale>;
+  private saleRef$: Observable<WsSale>;
+  private saleTotalPaid$: Observable<number>;
   private saleItemsTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
 
-  private addVariantSource$ = new Subject<WsItemVariantRef>();
-
-  // Cache a page of variant for each item
-  private ItemVariantCacheSize: 30;
+  // Cache a page of variant for each item, to be used by the item-and-variant-select in the fill view
   private itemVariantsCaches: { [itemId: number]: SimpleSearchResultResourceCache<WsItemVariantRef> } = {};
 
   constructor(
@@ -50,27 +74,64 @@ export class ComptoirSaleService {
     private localeService: LocaleService,
     private authService: AuthService,
   ) {
-    this.updatedSale$ = this.activeSaleSource$.pipe(
-      switchMap(initSale => this.applySaleUpdates$(initSale)),
+    // The most recent sale on which to apply further updates
+    const effectiveEditingSale$: Observable<WsSale> = this.activeSaleSource$.pipe(
+      filter(s => s != null),
+      tap(() => this.saleItemsTableHelper.reload()),
+      switchMap(initSale => this.concatInitSaleAndItsUpdates$(initSale)),
+      publishReplay(1), refCount(),
+    );
+    // Each source of updates is applied
+    const persistedSaleRefOnSaleUpdates$ = this.saleUpdatesSource$.pipe(
+      concatMap(update => this.applyNextSaleUpdate$(update, effectiveEditingSale$)),
+    );
+    const itemAdded$ = this.addVariantSource$.pipe(
+      concatMap(variantRef => this.addNextVariant$(variantRef, effectiveEditingSale$)),
+      tap(() => this.saleItemsTableHelper.reload())
+    );
+    const itemUpdated$ = this.updateVariantSource$.pipe(
+      concatMap(variantUpdate => this.applyNextVariantUpdate$(variantUpdate, effectiveEditingSale$)),
+      tap(() => this.saleItemsTableHelper.reload())
+    );
+    // ..and for each update applied, the sale is refetched
+    const updateReuired$ = merge(persistedSaleRefOnSaleUpdates$, itemAdded$, itemUpdated$, this.activeSaleSource$);
+    this.nonCachedUpdatedSale$ = updateReuired$.pipe(
+      withLatestFrom(effectiveEditingSale$),
+      switchMap(updatedResults => this.refetchSaleOnUpdate$(updatedResults[1])),
+      share(),
+    );
+    this.updatedSale$ = this.nonCachedUpdatedSale$.pipe(
       publishReplay(1), refCount()
     );
+
+    this.saleRef$ = this.updatedSale$.pipe(
+      map(s => s == null || s.id == null ? null : {id: s.id}),
+      publishReplay(1), refCount()
+    );
+    this.saleTotalPaid$ = this.saleRef$.pipe(
+      switchMap(sale => this.fetchSaleTotalPaid$(sale)),
+      publishReplay(1), refCount()
+    );
+
     this.saleItemsTableHelper = new ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>(
       (searchFilter, pagination) => this.searchSaleItems$(searchFilter, pagination), {
         noDebounce: true
       }
     );
 
-    this.addVariantSource$.pipe(
-      concatMap(ref => this.addNextVariant$(ref)),
-    );
-    // this.itemSelectChildrenCache = new SimpleSeachResultResourceCache<WsItemVariantRef>(
-    //   ref => this.fetchItemVarianFirstPages$(ref)
-    // );
+    // this.addVariantSource$.pipe(
+    //   concatMap(ref => this.addNextVariant$(ref)),
+    // ).subscribe();
+    // this.saleUpdatesSource$.pipe(
+    //   concatMap(update => this.applySaleUpdate$(update)),
+    // ).subscribe();
   }
 
   initSale(sale: WsSale) {
-    this.activeSaleSource$.next(sale);
     if (sale == null) {
+      throw new Error('No sale');
+    }
+    if (sale.id == null) {
       this.saleItemsTableHelper.setFilter(null);
     } else {
       this.saleItemsTableHelper.setFilter({
@@ -78,38 +139,43 @@ export class ComptoirSaleService {
         saleRef: {id: sale.id}
       });
     }
+    this.activeSaleSource$.next(sale);
   }
 
   updateSale(update: Partial<WsSale>) {
     this.saleUpdatesSource$.next(update);
   }
 
-  udpdateSaleVariant$(ref: WsItemVariantSaleRef, update: Partial<WsItemVariantSale>): Observable<any> {
-    return this.saleService.getVariant$(ref).pipe(
-      switchMap(backendItem => this.saleService.updateVariant$(backendItem, update)),
-      tap(newRef => this.onSaleVariantUpdated(newRef))
-    );
+  addVariant(ref: WsItemVariantRef) {
+    this.addVariantSource$.next(ref);
   }
+
+  udpdateSaleVariant(ref: WsItemVariantSaleRef, partialUpdate: Partial<WsItemVariantSale>) {
+    this.updateVariantSource$.next({
+      variantRef: ref,
+      update: partialUpdate
+    });
+  }
+
 
   getSale$(): Observable<WsSale> {
     return this.updatedSale$;
   }
 
+  getActiveSaleOptional(): WsSale | null {
+    return this.activeSaleSource$.getValue();
+  }
+
+  getSaleRef$(): Observable<WsSaleRef> {
+    return this.saleRef$;
+  }
+
+  getSaleTotalPaid$(): Observable<number> {
+    return this.saleTotalPaid$;
+  }
+
   getItemsTableHelper(): ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch> {
     return this.saleItemsTableHelper;
-  }
-
-  addVariant(ref: WsItemVariantRef) {
-    this.addVariantSource$.next(ref);
-  }
-
-  getVariantAddedLabel$(ref: WsItemVariantSaleRef): Observable<string> {
-    return this.saleService.getVariant$(ref).pipe(
-      switchMap(variant => this.itemService.getItemVariant$(variant.itemVariantRef)),
-      switchMap(variant => this.itemService.getItem$(variant.itemRef)),
-      switchMap(item => this.localeService.getLocalizedText(item.name as WsLocaleText[])),
-      map(name => `Added ${name}`),
-    );
   }
 
   listItemVariants$(itemRef: WsItemRef, query?: string): Observable<SearchResult<WsItemVariantRef>> {
@@ -125,20 +191,44 @@ export class ComptoirSaleService {
   }
 
 
-  private applySaleUpdates$(initSale: WsSale) {
-    if (initSale == null) {
-      return of(null);
-    }
-    return concat(
-      of(initSale),
-      this.saleUpdatesSource$.pipe(
-        scan((cur, next) => this.applySaleUpdate(cur, next), initSale)
-      )
+  private applyNextSaleUpdate$(update: Partial<WsSale>, effectiveSale$: Observable<WsSale>): Observable<WsSaleRef> {
+    this.updatingItemInProgress$.next(true);
+    return effectiveSale$.pipe(
+      take(1),
+      map(curSale => Object.assign({}, curSale, update) as WsSale),
+      mergeMap(updatedSale => this.saleService.saveSale(updatedSale)),
+      delay(0),
+      tap(() => this.updatingSaleInProgress$.next(false))
     );
   }
 
-  private applySaleUpdate(cur: WsSale, next: Partial<WsSale>): WsSale {
-    return Object.assign({}, cur, next);
+  private addNextVariant$(ref: WsItemVariantRef, curSale$: Observable<WsSale>): Observable<WsItemVariantSaleRef> {
+    this.addingItemInProgress$.next(true);
+    return forkJoin(
+      curSale$.pipe(take(1)),
+      this.saleItemsTableHelper.rows$.pipe(take(1))
+    ).pipe(
+      mergeMap(results => this.addOrAppendVariant$(results[0], results[1], ref)),
+      mergeMap(addedRef => this.saleItemsTableHelper.reload().pipe(
+        mapTo(addedRef))
+      ),
+      delay(0),
+      tap(() => this.addingItemInProgress$.next(false)),
+    );
+  }
+
+  private applyNextVariantUpdate$(variantUpdate: Partial<SaleVariantUpdate>, effectiveEditingSale$: Observable<WsSale>)
+    : Observable<WsItemVariantSaleRef> {
+    const variantRef = variantUpdate.variantRef;
+    const variantPartialUpdate = variantUpdate.update;
+
+    this.updatingItemInProgress$.next(true);
+    return this.searchCurrentVariant$(variantRef, effectiveEditingSale$).pipe(
+      map(curVariant => Object.assign({}, curVariant, variantPartialUpdate) as WsItemVariantSale),
+      mergeMap(updatedVariant => this.saleService.saveVariant(updatedVariant)),
+      delay(0),
+      tap(() => this.updatingItemInProgress$.next(false))
+    );
   }
 
   private searchSaleItems$(searchFilter: WsItemVariantSaleSearch, pagination: Pagination): Observable<SearchResult<WsItemVariantSale>> {
@@ -189,25 +279,6 @@ export class ComptoirSaleService {
     );
   }
 
-  private addNextVariant$(ref: WsItemVariantRef) {
-    const curSale$ = this.getSale$().pipe(
-      filter(s => s != null),
-      take(1),
-    );
-    const curItems$ = this.saleItemsTableHelper.rows$.pipe(
-      filter(s => s != null),
-      take(1),
-    );
-    this.addingItemInProgress$.next(true);
-    return forkJoin(curSale$, curItems$).pipe(
-      concatMap(results => {
-        return this.addOrAppendVariant$(results[0], results[1], ref).pipe(
-          mergeMap(added => this.saleItemsTableHelper.reload()),
-          tap(() => this.addingItemInProgress$.next(false))
-        );
-      }),
-    );
-  }
 
   private addOrAppendVariant$(curSale: WsSale | null, currentItems: WsItemVariantSale[], itemToAdd: WsItemVariantRef)
     : Observable<WsItemVariantSaleRef> {
@@ -259,7 +330,35 @@ export class ComptoirSaleService {
     );
   }
 
-  private onSaleVariantUpdated(ref: WsItemVariantSaleRef) {
-    this.saleUpdatesSource$.next({});
+  private fetchSaleTotalPaid$(ref: WsSaleRef) {
+    return this.saleService.getSaleTotalPaid$(ref);
+  }
+
+  private concatInitSaleAndItsUpdates$(initSale: WsSale): Observable<WsSale> {
+    if (this.updatedSale$ == null) {
+      throw new Error('Updated sale observable does not exist yet');
+    }
+    return concat(
+      of(initSale),
+      // Avoid replaying updates from previous sales
+      this.nonCachedUpdatedSale$,
+    );
+  }
+
+  private searchCurrentVariant$(variantRef: WsItemVariantSaleRef, effectiveEditingSale$: Observable<WsSale>) {
+    // get it from the sale service cache rather than this table helper
+    return this.saleService.getVariant$(variantRef);
+  }
+
+  private findVariantInListOrEmpty$(rows: WsItemVariantSale[], variantRef: WsItemVariantSaleRef) {
+    const found = rows.find(row => row.id === variantRef.id);
+    return found == null ? EMPTY : of(found);
+  }
+
+  private refetchSaleOnUpdate$(sale: WsSale): Observable<WsSale> {
+    if (sale.id == null) {
+      return of(sale);
+    }
+    return this.saleService.getSale$({id: sale.id}, true);
   }
 }

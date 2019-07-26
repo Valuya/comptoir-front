@@ -22,26 +22,15 @@ export class ComptoirSaleFillRouteComponent implements OnInit {
 
   onVariantSelected(ref: WsItemVariantRef) {
     this.saleService.addVariant(ref);
-    // .pipe(
-    //   switchMap(saleVariantRef => this.saleService.getVariantAddedLabel$(saleVariantRef))
-    // ).subscribe(
-    //   variantLabel => this.onVariantAdded(variantLabel),
-    //   error => this.onVariantAddError(error)
-    // );
+    this.notifyAdded();
   }
 
-  private onVariantAdded(label: string) {
-    this.messageService.add({
-      severity: 'info',
-      summary: label,
-    });
-  }
 
-  private onVariantAddError(error: any) {
+  private notifyAdded() {
     this.messageService.add({
       severity: 'info',
-      summary: `Failed to add item`,
-      detail: error
+      life: 500,
+      summary: 'Adding 1'
     });
   }
 }

@@ -20,7 +20,7 @@
   </div>
 
   <p-overlayPanel #inputOverlay appendTo="body"
-                  (onHide)="commitEdit()"
+                  (onHide)="onOverlayHidden()"
   >
     <div class="inplace-input-content">
       <div class="content" #inputComponent

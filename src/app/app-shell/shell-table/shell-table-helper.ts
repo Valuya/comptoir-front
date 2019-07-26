@@ -1,6 +1,6 @@
 import {Pagination} from '../../util/pagination';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {concatMap, debounceTime, delay, map, mergeMap, publishReplay, refCount, skip, switchMap, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {concatMap, debounceTime, delay, map, mergeMap, publishReplay, refCount, share, skip, switchMap, take, tap} from 'rxjs/operators';
 import {SearchResult} from './search-result';
 import {PaginationUtils} from '../../util/pagination-utils';
 
@@ -12,6 +12,7 @@ export class ShellTableHelper<T, F> {
   pagination$ = new BehaviorSubject<Pagination | null>(null);
   loading$ = new BehaviorSubject<boolean>(false);
 
+  uncachedResults: Observable<SearchResult<T>>;
   results$: Observable<SearchResult<T>>;
   rows$: Observable<T[]>;
   totalCount$: Observable<number>;
@@ -44,8 +45,8 @@ export class ShellTableHelper<T, F> {
     const reloadedRows$ = this.pagination$.pipe(
       take(1),
       tap(p => this.pagination$.next(p)),
-      mergeMap(() => this.rows$),
-      skip(1), // cache value in the replay operator
+      mergeMap(() => this.uncachedResults),
+      map(results => results.list),
       take(1), // next fresh value
       publishReplay(1), refCount()
     );
@@ -66,7 +67,10 @@ export class ShellTableHelper<T, F> {
         concatMap(results => this.searchResults$(results[0], results[1]))
       );
     }
-    this.results$ = results$.pipe(
+    this.uncachedResults = results$.pipe(
+      share()
+    );
+    this.results$ = this.uncachedResults.pipe(
       publishReplay(1), refCount()
     );
     this.rows$ = this.results$.pipe(

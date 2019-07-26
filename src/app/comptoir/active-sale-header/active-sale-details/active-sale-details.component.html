@@ -1,0 +1,76 @@
+<div class="sale-details" *ngIf="sale != null">
+
+  <div class="details">
+    <div class="row">
+
+      <div class="discountRatio" title="Discount">
+        <cp-shell-inplace-edit name="discountRatio" #discountRatio
+                               [ngModel]="sale.discountRatio"
+                               (ngModelChange)="fireChanges({discountRatio: $event})"
+        >
+          <ng-template cpInplaceOutput >
+            <i class="fa fa-dollar"></i>
+            {{ sale.discountRatio | percent }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <p-spinner [ngModel]="discountRatio.editValue * 100"
+                       (ngModelChange)="discountRatio.editValue = $event / 100"
+                       [min]="1" [step]="1"
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+
+      <div class="customer" title="Customer">
+        <cp-shell-inplace-edit name="customer" #customer
+                               [ngModel]="sale.customerRef"
+                               (ngModelChange)="fireChanges({customerRef: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-user-o"></i>
+            <cp-customer [ref]="sale.customerRef"></cp-customer>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <cp-customer-select [(ngModel)]="customer.editValue"
+            ></cp-customer-select>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+
+    </div>
+    <div class="row">
+      <div class="ref" title="Reference">
+        <cp-shell-inplace-edit name="reference" #reference
+                               [ngModel]="sale.reference"
+                               (ngModelChange)="fireChanges({reference: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-hashtag"></i>
+            {{ sale.reference }}
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <input type="text" pInputText
+                   [(ngModel)]="reference.editValue">
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-total">
+    <div class="vat-exclusive">
+      {{ sale.vatExclusiveAmount | currency }}
+    </div>
+    <div class="vat">
+      {{ sale.vatAmount  |currency }}
+    </div>
+    <div class="discount">
+      {{ -sale.discountAmount |currency}}
+    </div>
+  </div>
+  <div class="grand-total">
+    {{ (sale.vatExclusiveAmount + sale.vatAmount - sale.discountAmount) | currency }}
+  </div>
+</div>

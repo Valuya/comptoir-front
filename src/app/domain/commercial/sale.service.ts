@@ -7,7 +7,7 @@ import {
   WsSale,
   WsSaleRef, WsSaleSearch, WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
@@ -45,11 +45,32 @@ export class SaleService {
     return this.saleCache.createResource$(sale);
   }
 
-  getSale$(ref: WsSaleRef): Observable<WsSale> {
+  getSale$(ref: WsSaleRef, forceFetch?: boolean): Observable<WsSale> {
+    if (ref == null) {
+      return of(null);
+    }
+    if (forceFetch) {
+      this.saleCache.clearCache(ref);
+    }
     return this.saleCache.getResource$(ref);
   }
 
-  getVariant$(ref: WsItemVariantSaleRef): Observable<WsItemVariantSale> {
+  getSaleTotalPaid$(ref: WsSaleRef): Observable<number> {
+    if (ref == null) {
+      return of(0);
+    }
+    const totalString$ = this.apiService.api.getSaleTotalPayed({
+      id: ref.id
+    }) as Observable<string>;
+    return totalString$.pipe(
+      map(stringValue => parseFloat(stringValue))
+    );
+  }
+
+  getVariant$(ref: WsItemVariantSaleRef, forceFetch?: boolean): Observable<WsItemVariantSale> {
+    if (forceFetch) {
+      this.variantCache.clearCache(ref);
+    }
     return this.variantCache.getResource$(ref);
   }
 
@@ -126,7 +147,6 @@ export class SaleService {
     const newVariant = Object.assign({}, variant, updates);
     return this.variantCache.updateResource$(newVariant);
   }
-
 
   private doGet$(ref: WsSaleRef) {
     return this.apiService.api.getSale({

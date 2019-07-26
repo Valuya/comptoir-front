@@ -87,24 +87,7 @@ export class SaleItemListComponent implements OnInit {
 
   onSaeItemUpdate(item: WsItemVariantSale) {
     const ref: WsItemVariantSaleRef = {id: item.id};
-    this.comptoirSaleService.udpdateSaleVariant$(ref, item)
-      .subscribe(newRef => this.onVariantUpdated(newRef),
-        err => this.onVariantUpdateError(err));
+    this.comptoirSaleService.udpdateSaleVariant(ref, item);
   }
 
-  private onVariantUpdated(ref: WsItemVariantSaleRef) {
-    this.itemsTableHelper.reload();
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Item updated'
-    });
-  }
-
-  private onVariantUpdateError(err: any) {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: err
-    });
-  }
 }

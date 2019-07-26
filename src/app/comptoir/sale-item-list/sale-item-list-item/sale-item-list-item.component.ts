@@ -20,7 +20,7 @@ export class SaleItemListItemComponent implements OnInit {
   ngOnInit() {
   }
 
-  firsChanges(update: Partial<WsItemVariantSale>) {
+  fireChanges(update: Partial<WsItemVariantSale>) {
     const newValue = Object.assign({}, this.item, update);
     this.itemChange.next(newValue);
   }

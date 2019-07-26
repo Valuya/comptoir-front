@@ -39,22 +39,12 @@ export class ItemAndVariantSelectListComponent implements OnInit {
   onItemSelected(ref: WsItemRef) {
     this.itemRef = ref;
     this.selectionTypeSource$$.next('variant');
-    console.log('item');
   }
 
   onVariantSelected(ref: WsItemVariantRef) {
     this.variantSelect$.next(ref);
     this.selectionTypeSource$$.next('item');
     this.itemRef = null;
-    console.log('variant');
-    this.notifyAdded();
   }
 
-  private notifyAdded() {
-    this.messageService.add({
-      severity: 'info',
-      life: 500,
-      summary: 'Adding 1'
-    });
-  }
 }

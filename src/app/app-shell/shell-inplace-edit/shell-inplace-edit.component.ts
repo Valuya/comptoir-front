@@ -182,6 +182,23 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.disabled = isDisabled;
   }
 
+
+  cancelEdit() {
+    this.editValue = this.value;
+    this.stopEdit();
+  }
+
+  commitEdit() {
+    this.fireChanges(this.editValue);
+    this.stopEdit();
+  }
+
+  onOverlayHidden() {
+    if (this.editing) {
+      this.commitEdit();
+    }
+  }
+
   private focusFirstInput() {
     if (this.inputOverlay != null) {
       const overlayContainer = this.inputOverlay.container;
@@ -205,16 +222,6 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
         firstInput.setSelectionRange(0, valueLength);
       });
     }
-  }
-
-  private cancelEdit() {
-    this.editValue = this.value;
-    this.stopEdit();
-  }
-
-  private commitEdit() {
-    this.fireChanges(this.editValue);
-    this.stopEdit();
   }
 
   private fireChanges(value: any) {

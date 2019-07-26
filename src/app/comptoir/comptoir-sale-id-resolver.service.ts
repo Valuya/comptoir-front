@@ -40,16 +40,16 @@ export class ComptoirSaleIdResolverService {
   private handleNonNumericParam$(idParam: string) {
     if (idParam === 'active') {
       return this.getActive$();
+    } else if (idParam === 'new') {
+      return this.createNew$();
     } else {
       return this.createNew$();
     }
   }
 
   private getActive$() {
-    return this.comptoirSaleService.getSale$().pipe(
-      take(1),
-      switchMap(sale => sale == null ? this.createNew$() : of(sale))
-    );
+    const curActive = this.comptoirSaleService.getActiveSaleOptional();
+    return curActive == null ? this.createNew$() : of(curActive);
   }
 
   private createNew$() {
