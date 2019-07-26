@@ -7,13 +7,13 @@ export class CachedResourceClient<R, T> {
   private cache: ResourceCache<T>;
 
   private get$: (ref: R) => Observable<T>;
-  private put$: (val: T) => Observable<R>;
+  private put$?: (val: T) => Observable<R>;
   private post$?: (val: T) => Observable<R>;
   private delete$?: (ref: R) => Observable<R>;
 
   constructor(
     get$: (ref: R) => Observable<T>,
-    put$: (val: T) => Observable<R>,
+    put$?: (val: T) => Observable<R>,
     post$?: (val: T) => Observable<R>,
     delete$?: (ref: R) => Observable<R>,
   ) {

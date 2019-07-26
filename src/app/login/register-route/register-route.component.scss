@@ -1,0 +1,24 @@
+.register-route {
+  text-align: center;
+
+  form {
+    display: inline-block;
+    margin: 1em;
+
+    >* {
+      display: block;
+      margin: 1em;
+    }
+
+    .company, .employee {
+      padding: 1em;
+      width: 18em;
+
+      >* {
+        display: block;
+        margin: 1em 0;
+        width: 100%;
+      }
+    }
+  }
+}

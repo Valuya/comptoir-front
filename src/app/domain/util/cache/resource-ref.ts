@@ -1,3 +1,3 @@
-export interface ResourceRef {
-  id?: number;
+export interface ResourceRef<T = number> {
+  id?: T;
 }

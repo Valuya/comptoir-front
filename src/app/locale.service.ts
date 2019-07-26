@@ -22,6 +22,7 @@ export class LocaleService {
     );
     this.viewLocale$ = concat(
       of(this.appLocale),
+      of('fr'),//Some hardcoded default
       employeeLocaleAndUpdates$
     ).pipe(
       publishReplay(1), refCount()
@@ -42,6 +43,13 @@ export class LocaleService {
       map(locale => localeTexts.find(text => text.locale === locale)),
       map(text => text.text),
     );
+  }
+
+  getSupportedLocales$(): Observable<string[]> {
+    return of([
+      'fr',
+      'en'
+    ]);
   }
 
   private concatEmployeeLocaleWithLocaleChanges$(employeeLocale: string): Observable<string> {
