@@ -48,9 +48,9 @@
                            [errors]="validationResults?.errors?.pricing"
                            [ngModel]="value.pricing"
                            (ngModelChange)="updateValue({pricing: $event})">
-      <ng-template cpInplaceInput let-invalid="invalid">
+      <ng-template cpInplaceOutput let-invalid="invalid">
         <cp-pricing-select [(ngModel)]="pricing.editValue"
-                           (ngModelChange)="updateValue({pricingAmount: $event})"
+                           (ngModelChange)="updateValue({pricing: $event})"
                            [invalid]="invalid"
         ></cp-pricing-select>
       </ng-template>

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {InlineResponse200, InlineResponse200EventTypeEnum, WsItemVariantSale, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {ApiService} from '../api.service';
 import {SearchResult} from '../app-shell/shell-table/search-result';
 
@@ -21,6 +21,7 @@ export class ComptoirSaleEventsService {
 
   private saleUpdates$ = new Subject<WsSale>();
   private saleItemsUpdates$ = new Subject<SaleItemupdateEvent>();
+  private enabled$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private apiService: ApiService
@@ -48,6 +49,17 @@ export class ComptoirSaleEventsService {
 
   getItemsUpdates$(): Observable<SaleItemupdateEvent> {
     return this.saleItemsUpdates$;
+  }
+
+  getEnabled$(): Observable<boolean> {
+    return this.enabled$;
+  }
+
+  unsubscribe() {
+    if (this.eventSource != null) {
+      this.eventSource.close();
+      this.curSubscriptionRef = null;
+    }
   }
 
   private subscribeToSaleRef(ref) {
@@ -78,13 +90,6 @@ export class ComptoirSaleEventsService {
       results: searchResults,
       saleRef: compoirEvent.saleRef
     });
-  }
-
-  private unsubscribe() {
-    if (this.eventSource != null) {
-      this.eventSource.close();
-      this.curSubscriptionRef = null;
-    }
   }
 
   private parseMessage(messageEvent: MessageEvent): SomeSaleEvent {

@@ -1,19 +1,20 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api.service';
 import {
-  WsBalance, WsBalanceRef,
+  WsBalance, WsBalanceRef, WsItem, WsItemVariant,
   WsItemVariantSale,
   WsItemVariantSaleRef, WsItemVariantSaleSearch, WsItemVariantSaleSearchResult,
   WsSale,
   WsSaleRef, WsSaleSearch, WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
+import {PricingUtils} from '../util/pricing-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -113,15 +114,9 @@ export class SaleService {
   }
 
   createNewSaleItem$(curSale: WsSale, itemToAdd: WsItemVariantSaleRef): Observable<WsItemVariantSaleRef> {
-    const variant: WsItemVariantSale = {
-      saleRef: {id: curSale.id},
-      dateTime: new Date(),
-      itemVariantRef: itemToAdd,
-      quantity: 1,
-      vatExclusive: 0,
-      vatRate: 0,
-    };
-    return this.variantCache.createResource$(variant);
+    return this.itemService.getItemVariant$(itemToAdd).pipe(
+      mergeMap(itemVariant => this.createNewSaleItemVariant$(curSale, itemVariant))
+    );
   }
 
   isMultipleSale$(variantRef: WsItemVariantSaleRef): Observable<boolean> {
@@ -212,4 +207,27 @@ export class SaleService {
     }) as any as Observable<WsItemVariantSaleRef>;
   }
 
+  private createNewSaleItemVariant$(curSale: WsSale, itemVariant: WsItemVariant) {
+    return this.itemService.getItem$(itemVariant.itemRef).pipe(
+      mergeMap(item => this.createNewSaleItemVariantWithItem$(curSale, item, itemVariant))
+    );
+
+  }
+
+  private createNewSaleItemVariantWithItem$(curSale: WsSale, item: WsItem, itemVariant: WsItemVariant) {
+    const vatExclusive = item.vatExclusive;
+    const variantPricing = itemVariant.pricing;
+    const pricingAmount = itemVariant.pricingAmount;
+    const variantPrice = PricingUtils.applyPricing(vatExclusive, variantPricing, pricingAmount);
+    const itemVatRate = item.vatRate;
+    const variant: WsItemVariantSale = {
+      saleRef: {id: curSale.id},
+      dateTime: new Date(),
+      itemVariantRef: {id: itemVariant.id},
+      quantity: 1,
+      vatExclusive: variantPrice,
+      vatRate: itemVatRate,
+    };
+    return this.variantCache.createResource$(variant);
+  }
 }

@@ -1,6 +1,6 @@
 <div class="pricing-select">
   <p-autoComplete [ngModel]="valueItem$ | async"
-                  (ngModelChange)="fireChanges($event.ref)"
+                  (ngModelChange)="fireChanges($event.value)"
                   field="label"
                   [suggestions]="suggestions$ | async"
                   [dropdown]="true"
