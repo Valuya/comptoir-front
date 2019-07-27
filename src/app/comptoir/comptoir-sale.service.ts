@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, concat, EMPTY, forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {
+  InlineResponse200,
   WsCompanyRef,
   WsItemRef,
   WsItemVariantRef,
@@ -12,21 +13,7 @@ import {
   WsSale,
   WsSaleRef
 } from '@valuya/comptoir-ws-api';
-import {
-  concatMap,
-  delay,
-  filter,
-  map,
-  mapTo,
-  mergeMap,
-  publishReplay,
-  refCount,
-  share,
-  switchMap,
-  take,
-  tap,
-  withLatestFrom
-} from 'rxjs/operators';
+import {concatMap, delay, filter, map, mapTo, mergeMap, publishReplay, refCount, switchMap, take, tap} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
 import {AuthService} from '../auth.service';
@@ -38,6 +25,7 @@ import {ItemService} from '../domain/commercial/item.service';
 import {LocaleService} from '../locale.service';
 import {SimpleSearchResultResourceCache} from '../domain/util/cache/simple-search-result-resource-cache';
 import {SaleVariantUpdate} from './sale-variant-update';
+import {ComptoirSaleEventsService, SaleItemupdateEvent} from './comptoir-sale-events.service';
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +34,7 @@ export class ComptoirSaleService {
 
   // Sale source, emitting when active sale is changed only
   private activeSaleSource$ = new BehaviorSubject<WsSale>(null);
+
   // Queue of sale updates to apply
   private saleUpdatesSource$ = new Subject<Partial<WsSale>>();
   // Queue of sale items to add
@@ -73,33 +62,46 @@ export class ComptoirSaleService {
     private itemService: ItemService,
     private localeService: LocaleService,
     private authService: AuthService,
+    private saleEventsService: ComptoirSaleEventsService
   ) {
+
+    // Dont miss any event
+    const saleUpdateEvents$ = this.saleEventsService.getUpdates$().pipe(
+      tap(sale => this.saleService.cacheSale(sale)),
+      publishReplay(1), refCount()
+    );
+    const saleItemUpdateEvents$ = this.saleEventsService.getItemsUpdates$().pipe(
+      tap(event => this.saleService.cacheSaleItems(event.results)),
+      publishReplay(1), refCount()
+    );
+    saleUpdateEvents$.subscribe();
+    saleItemUpdateEvents$.subscribe();
+
     // The most recent sale on which to apply further updates
     const effectiveEditingSale$: Observable<WsSale> = this.activeSaleSource$.pipe(
       filter(s => s != null),
-      tap(() => this.saleItemsTableHelper.reload()),
-      switchMap(initSale => this.concatInitSaleAndItsUpdates$(initSale)),
+      switchMap(initSale => this.concatInitSaleAndItsUpdates$(initSale, saleUpdateEvents$)),
       publishReplay(1), refCount(),
     );
+
     // Each source of updates is applied
-    const persistedSaleRefOnSaleUpdates$ = this.saleUpdatesSource$.pipe(
+    const saleUpdated$ = this.saleUpdatesSource$.pipe(
       concatMap(update => this.applyNextSaleUpdate$(update, effectiveEditingSale$)),
     );
     const itemAdded$ = this.addVariantSource$.pipe(
       concatMap(variantRef => this.addNextVariant$(variantRef, effectiveEditingSale$)),
-      tap(() => this.saleItemsTableHelper.reload())
     );
     const itemUpdated$ = this.updateVariantSource$.pipe(
       concatMap(variantUpdate => this.applyNextVariantUpdate$(variantUpdate, effectiveEditingSale$)),
-      tap(() => this.saleItemsTableHelper.reload())
     );
-    // ..and for each update applied, the sale is refetched
-    const updateReuired$ = merge(persistedSaleRefOnSaleUpdates$, itemAdded$, itemUpdated$, this.activeSaleSource$);
-    this.nonCachedUpdatedSale$ = updateReuired$.pipe(
-      withLatestFrom(effectiveEditingSale$),
-      switchMap(updatedResults => this.refetchSaleOnUpdate$(updatedResults[1])),
-      share(),
-    );
+
+    // In place of plugging the updates to the refetched sale, just subscribe to them
+    // to ensure the request are sent
+    merge(saleUpdated$, itemAdded$, itemUpdated$).subscribe();
+
+    // .. and watch for updates sent by the server
+    this.nonCachedUpdatedSale$ = effectiveEditingSale$;
+
     this.updatedSale$ = this.nonCachedUpdatedSale$.pipe(
       publishReplay(1), refCount()
     );
@@ -114,23 +116,20 @@ export class ComptoirSaleService {
     );
 
     this.saleItemsTableHelper = new ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>(
-      (searchFilter, pagination) => this.searchSaleItems$(searchFilter, pagination), {
-        noDebounce: true
+      (searchFilter, pagination) => this.getSaleItemEventResults$(searchFilter, saleItemUpdateEvents$),
+      {
+        noDebounce: true,
+        ignorePagination: true,
       }
     );
-
-    // this.addVariantSource$.pipe(
-    //   concatMap(ref => this.addNextVariant$(ref)),
-    // ).subscribe();
-    // this.saleUpdatesSource$.pipe(
-    //   concatMap(update => this.applySaleUpdate$(update)),
-    // ).subscribe();
   }
 
   initSale(sale: WsSale) {
     if (sale == null) {
       throw new Error('No sale');
     }
+    this.activeSaleSource$.next(sale);
+
     if (sale.id == null) {
       this.saleItemsTableHelper.setFilter(null);
     } else {
@@ -138,8 +137,8 @@ export class ComptoirSaleService {
         companyRef: sale.companyRef,
         saleRef: {id: sale.id}
       });
+      this.saleEventsService.subscribeToSale({id: sale.id});
     }
-    this.activeSaleSource$.next(sale);
   }
 
   updateSale(update: Partial<WsSale>) {
@@ -274,6 +273,7 @@ export class ComptoirSaleService {
 
   private createSale$(sale: WsSale) {
     return this.saleService.createSale$(sale).pipe(
+      tap(newSaleRef => this.saleEventsService.subscribeToSale(newSaleRef)),
       switchMap(newSaleRef => this.saleService.getSale$(newSaleRef)),
       tap(newSale => this.initSale(newSale)),
     );
@@ -334,14 +334,20 @@ export class ComptoirSaleService {
     return this.saleService.getSaleTotalPaid$(ref);
   }
 
-  private concatInitSaleAndItsUpdates$(initSale: WsSale): Observable<WsSale> {
-    if (this.updatedSale$ == null) {
+  private concatInitSaleAndItsUpdates$(initSale: WsSale, updatedSales$: Observable<WsSale>): Observable<WsSale> {
+    if (updatedSales$ == null) {
       throw new Error('Updated sale observable does not exist yet');
     }
+    if (initSale.id == null) {
+      return of(initSale);
+    }
+
+    const saleUpdates$ = this.saleEventsService.getUpdates$().pipe(
+      filter(update => update.id === initSale.id),
+    );
     return concat(
       of(initSale),
-      // Avoid replaying updates from previous sales
-      this.nonCachedUpdatedSale$,
+      saleUpdates$,
     );
   }
 
@@ -360,5 +366,28 @@ export class ComptoirSaleService {
       return of(sale);
     }
     return this.saleService.getSale$({id: sale.id}, true);
+  }
+
+  private isSameSale(sale: WsSale, updateEvent: InlineResponse200 & any) {
+    const eventSale = updateEvent.wsSale;
+    return sale.id === eventSale.id;
+  }
+
+  private getSaleItemEventResults$(searchFilter: WsItemVariantSaleSearch, events$: Observable<SaleItemupdateEvent>)
+    : Observable<SearchResult<WsItemVariantSale>> {
+    const emptyResults$ = of(SearchResultFactory.emptyResults());
+    if (searchFilter == null) {
+      return emptyResults$;
+    }
+
+    // const restResults$ = this.searchSaleItems$(searchFilter, PaginationUtils.create(100));
+    const resultsFromEvent$ = events$.pipe(
+      filter(event => event.saleRef.id === searchFilter.saleRef.id),
+      map(event => event.results),
+    );
+    return concat(
+      emptyResults$,
+      resultsFromEvent$,
+    );
   }
 }

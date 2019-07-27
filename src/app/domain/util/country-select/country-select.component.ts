@@ -44,7 +44,6 @@ export class CountrySelectComponent implements OnInit, ControlValueAccessor {
     this.valueItem$ = this.valueSource$.pipe(
       switchMap(ref => this.fetchRef$(ref)),
       map(country => this.createItem(country)),
-      tap(a => console.log(a)),
       publishReplay(1), refCount()
     );
     this.suggestions$ = this.suggestionQuerySource$.pipe(

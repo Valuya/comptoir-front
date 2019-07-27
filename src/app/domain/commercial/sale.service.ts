@@ -13,6 +13,7 @@ import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
+import {SearchResult} from '../../app-shell/shell-table/search-result';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,7 @@ export class SaleService {
     }
     const totalString$ = this.apiService.api.getSaleTotalPayed({
       id: ref.id
-    }) as Observable<string>;
+    }) as any as Observable<string>;
     return totalString$.pipe(
       map(stringValue => parseFloat(stringValue))
     );
@@ -146,6 +147,17 @@ export class SaleService {
   updateVariant$(variant: WsItemVariantSale, updates?: Partial<WsItemVariantSale>) {
     const newVariant = Object.assign({}, variant, updates);
     return this.variantCache.updateResource$(newVariant);
+  }
+
+
+  cacheSale(sale: WsSale) {
+    this.saleCache.setCachedValue(sale);
+  }
+
+  cacheSaleItems(results: SearchResult<WsItemVariantSale>) {
+    results.list.forEach(
+      variant => this.variantCache.setCachedValue(variant)
+    );
   }
 
   private doGet$(ref: WsSaleRef) {

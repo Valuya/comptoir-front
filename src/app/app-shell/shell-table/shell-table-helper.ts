@@ -1,8 +1,9 @@
 import {Pagination} from '../../util/pagination';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, forkJoin, Observable, of} from 'rxjs';
 import {concatMap, debounceTime, delay, map, mergeMap, publishReplay, refCount, share, skip, switchMap, take, tap} from 'rxjs/operators';
 import {SearchResult} from './search-result';
 import {PaginationUtils} from '../../util/pagination-utils';
+import {ShellTableHelperOptions} from './shell-table-helper-options';
 
 export class ShellTableHelper<T, F> {
 
@@ -20,13 +21,12 @@ export class ShellTableHelper<T, F> {
   paginationRows$: Observable<number>;
   paginationSortField$: Observable<string>;
   paginationSortOrder$: Observable<1 | -1>;
-  private options: { noDebounce: boolean };
+
+  private options: ShellTableHelperOptions;
 
   constructor(
     search$: (filter: F | null, pagination: Pagination | null) => Observable<SearchResult<T>>,
-    options?: {
-      noDebounce: boolean
-    }
+    options?: ShellTableHelperOptions
   ) {
     this.search$ = search$;
     this.options = options;
@@ -42,9 +42,15 @@ export class ShellTableHelper<T, F> {
   }
 
   reload() {
-    const reloadedRows$ = this.pagination$.pipe(
-      take(1),
-      tap(p => this.pagination$.next(p)),
+    const filterAndPagination$ = forkJoin(
+      this.filter$.pipe(take(1)),
+      this.pagination$.pipe(take(1)),
+    );
+    const reloadedRows$ = filterAndPagination$.pipe(
+      tap(r => {
+        this.filter$.next(r[0]);
+        this.pagination$.next(r[1]);
+      }),
       mergeMap(() => this.uncachedResults),
       map(results => results.list),
       take(1), // next fresh value
@@ -55,19 +61,9 @@ export class ShellTableHelper<T, F> {
   }
 
   private initResults() {
-    const filterAndpagination$ = combineLatest(this.filter$, this.pagination$);
-    let results$: Observable<SearchResult<T>>;
-    if (this.options == null || this.options.noDebounce !== true) {
-      results$ = filterAndpagination$.pipe(
-        debounceTime(100),
-        switchMap(results => this.searchResults$(results[0], results[1])),
-      );
-    } else {
-      results$ = filterAndpagination$.pipe(
-        concatMap(results => this.searchResults$(results[0], results[1]))
-      );
-    }
-    this.uncachedResults = results$.pipe(
+    const filterAndpagination$ = this.getFilterAndPagination$();
+    this.uncachedResults = filterAndpagination$.pipe(
+      switchMap(results => this.searchResults$(results[0], results[1])),
       share()
     );
     this.results$ = this.uncachedResults.pipe(
@@ -101,6 +97,23 @@ export class ShellTableHelper<T, F> {
     );
   }
 
+
+  private getFilterAndPagination$(): Observable<[F | null, Pagination | null]> {
+    if (this.options == null) {
+      return combineLatest(this.filter$, this.pagination$);
+    } else {
+      const filter$ = this.options.ignoreFilter ? of(null) : this.filter$;
+      const pagination$ = this.options.ignorePagination ? of(null) : this.pagination$;
+      const filterandPagination$ = combineLatest(filter$, pagination$);
+      if (this.options.noDebounce) {
+        return filterandPagination$;
+      } else {
+        return filterandPagination$.pipe(
+          debounceTime(50)
+        );
+      }
+    }
+  }
 
   private searchResults$(filter: F | null, pagination: Pagination | null): Observable<SearchResult<T>> {
     this.loading$.next(true);

@@ -50,4 +50,7 @@ export class CachedResourceClient<R, T> {
     this.cache.clear(ref);
   }
 
+  setCachedValue(value: T) {
+    this.cache.put(value);
+  }
 }

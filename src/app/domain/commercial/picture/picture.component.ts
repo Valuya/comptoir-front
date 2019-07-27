@@ -5,6 +5,7 @@ import {ApiService} from '../../../api.service';
 import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {PictureUtils} from './picture-utils';
+import {PictureService} from '../picture.service';
 
 @Component({
   selector: 'cp-picture',
@@ -27,7 +28,7 @@ export class PictureComponent implements OnInit {
   value$: Observable<WsPicture>;
   safePictureCss$: Observable<SafeStyle>;
 
-  constructor(private apiService: ApiService,
+  constructor(private pictureService: PictureService,
               private sanitizer: DomSanitizer) {
   }
 
@@ -49,10 +50,7 @@ export class PictureComponent implements OnInit {
       return of(null);
     }
     this.loading$.next(true);
-    const loaded$ = this.apiService.api.getPicture({
-      id: ref.id
-    }) as any as Observable<WsPicture>;
-    return loaded$.pipe(
+    return this.pictureService.getPicture$(ref).pipe(
       delay(0),
       tap(def => this.loading$.next(false))
     );

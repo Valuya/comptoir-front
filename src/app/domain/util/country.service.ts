@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ApiService} from '../../api.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../util/pagination';
-import {CachedResourceClient} from '../util/cache/cached-resource-client';
+import {CachedResourceClient} from './cache/cached-resource-client';
 import {WsCountry, WsCountrySearchResult} from '@valuya/comptoir-ws-api';
 import {map, switchMap} from 'rxjs/operators';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
@@ -44,16 +44,22 @@ export class CountryService {
   }
 
   searchCountryList$(seachFilter: any, pagination: Pagination): Observable<SearchResult<string>> {
-    return this.apiService.api.searchCountries({
+    const searchResult$ = this.apiService.api.searchCountries({
       offset: pagination.first,
       length: pagination.rows,
-    }).pipe(
-      map((results: SearchResult<{ code: string }>) => {
-        const codeList = results.list.map(ref => ref.code);
-        return Object.assign({}, results, {
+    }) as any as Observable<WsCountrySearchResult>;
+    return searchResult$.pipe(
+      map(r => {
+        const list = r.list;
+        const count = r.totalCount;
+        const codeList: string[] = list.map((item: any) => item.code as string);
+        const results: SearchResult<string> = {
+          totalCount: count,
           list: codeList
-        });
-      })) as any as Observable<SearchResult<string>>;
+        };
+        return results;
+      })
+    ) as any as Observable<SearchResult<string>>;
   }
 
   private doGet$(ref: ResourceRef<string>) {
