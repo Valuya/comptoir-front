@@ -9,7 +9,15 @@ import {ComptoirSalePayRouteComponent} from './comptoir-sale-pay-route/comptoir-
 import {ComptoirInfoRouteComponent} from './comptoir-info-route/comptoir-info-route.component';
 import {SaleItemListComponent} from './sale-item-list/sale-item-list.component';
 import {DataViewModule} from 'primeng/dataview';
-import {AutoCompleteModule, CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
+import {
+  AutoCompleteModule,
+  ButtonModule,
+  CheckboxModule,
+  DropdownModule,
+  InputSwitchModule,
+  InputTextModule,
+  SpinnerModule
+} from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
 import {VariantSelectListComponent} from './variant-select-list/variant-select-list.component';
@@ -83,6 +91,7 @@ import { ActiveSaleSelectComponent } from './active-sale-header/active-sale-sele
     CheckboxModule,
     CustomerModule,
     AutoCompleteModule,
+    ButtonModule,
 
   ]
 })

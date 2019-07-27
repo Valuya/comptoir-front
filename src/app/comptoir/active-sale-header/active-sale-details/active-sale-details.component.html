@@ -9,8 +9,12 @@
                                (ngModelChange)="fireChanges({discountRatio: $event})"
         >
           <ng-template cpInplaceOutput >
-            <i class="fa fa-dollar"></i>
+            <i class="fa fa-sun-o"></i>
             {{ sale.discountRatio | percent }}
+            <span *ngIf="sale.discountRatio > 0" class="discount-amount">
+              <span>-</span>
+              {{ sale.discountAmount | currency }}
+            </span>
           </ng-template>
           <ng-template cpInplaceInput>
             <p-spinner [ngModel]="discountRatio.editValue * 100"
@@ -61,16 +65,13 @@
 
   <div class="sub-total">
     <div class="vat-exclusive">
-      {{ sale.vatExclusiveAmount | currency }}
+      HTVA: {{ sale.vatExclusiveAmount | currency }}
     </div>
     <div class="vat">
-      {{ sale.vatAmount  |currency }}
-    </div>
-    <div class="discount">
-      {{ -sale.discountAmount |currency}}
+      TVA: {{ sale.vatAmount  |currency }}
     </div>
   </div>
   <div class="grand-total">
-    {{ (sale.vatExclusiveAmount + sale.vatAmount - sale.discountAmount) | currency }}
+    {{ (sale.vatExclusiveAmount + sale.vatAmount ) | currency }}
   </div>
 </div>

@@ -12,4 +12,19 @@ export class PricingUtils {
         return base;
     }
   }
+
+  static vatExclusviveFromTotal(totalValue: number, curVatRate: number) {
+    const vatExclusive = totalValue * (1 / (1 + curVatRate));
+    return PricingUtils.fixedDecimals(vatExclusive);
+  };
+
+  static totalFromVatExclusive(vatExclusiveValue: number, curVatRate: number) {
+    const totalValue = vatExclusiveValue * (1 + curVatRate);
+    return PricingUtils.fixedDecimals(totalValue);
+  }
+
+  static fixedDecimals(priceValue: number): number {
+    const fixedDecimalString = priceValue.toFixed(2);
+    return parseFloat(fixedDecimalString);
+  }
 }

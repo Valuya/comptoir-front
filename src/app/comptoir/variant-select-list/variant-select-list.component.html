@@ -15,16 +15,23 @@
   >
 
     <p-header>
-      <p-dropdown [options]="sortOptions"
-                  [ngModel]="tableHelper.paginationSortField$ | async"
-                  (ngModelChange)="onSortFieldChange($event)"
-                  placeholder="Sort By"
-      ></p-dropdown>
-      <input type="search" pInputText
-             placeholder="Filter.."
-             [ngModel]="searchQuery$ | async"
-             (ngModelChange)="searchQuery$.next($event)"
-             hidden>
+      <div class="header-content">
+
+        <p-dropdown [options]="sortOptions"
+                    [ngModel]="tableHelper.paginationSortField$ | async"
+                    (ngModelChange)="onSortFieldChange($event)"
+                    placeholder="Sort By"
+        ></p-dropdown>
+        <input type="search" pInputText
+               placeholder="Filter.."
+               [ngModel]="searchQuery$ | async"
+               (ngModelChange)="searchQuery$.next($event)"
+               hidden>
+        <div class="separtor"></div>
+        <div class="content">
+          <ng-content></ng-content>
+        </div>
+      </div>
     </p-header>
 
     <ng-template let-ref let-i="index" pTemplate="listItem">

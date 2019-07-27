@@ -47,4 +47,9 @@ export class ItemAndVariantSelectListComponent implements OnInit {
     this.itemRef = null;
   }
 
+  onBackToItemClicked() {
+    this.selectionTypeSource$$.next('item');
+    this.itemRef = null;
+  }
+
 }
