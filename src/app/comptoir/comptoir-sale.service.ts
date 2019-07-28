@@ -3,7 +3,7 @@ import {
   WsAccountingEntry,
   WsAccountingEntryRef,
   WsAccountingEntrySearch,
-  WsAccountingEntrySearchAccountSearchAccountTypeEnum,
+  WsBalanceSearchAccountSearchAccountTypeEnum,
   WsCompanyRef,
   WsItemRef,
   WsItemVariantRef,
@@ -221,7 +221,7 @@ export class ComptoirSaleService {
         companyRef: sale.companyRef,
         accountingTransactionRef: sale.accountingTransactionRef,
         accountSearch: {
-          accountType: WsAccountingEntrySearchAccountSearchAccountTypeEnum.PAYMENT
+          accountType: WsBalanceSearchAccountSearchAccountTypeEnum.PAYMENT
         }
       });
       if (this.serverEventEnabled) {
