@@ -29,15 +29,12 @@ export class CachedResourceClient<R, T> {
   }
 
   updateResource$(value: T): Observable<R> {
-    return this.put$(value).pipe(
-      tap(ref => this.cache.clear(ref))
-    );
+    this.setCachedValue(value);
+    return this.put$(value);
   }
 
   createResource$(value: T): Observable<R> {
-    return this.post$(value).pipe(
-      tap(ref => this.cache.clear(ref))
-    );
+    return this.post$(value);
   }
 
   deleteResource$(ref: R): Observable<R> {

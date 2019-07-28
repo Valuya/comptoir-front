@@ -17,10 +17,7 @@
             </span>
           </ng-template>
           <ng-template cpInplaceInput>
-            <p-spinner [ngModel]="discountRatio.editValue * 100"
-                       (ngModelChange)="discountRatio.editValue = $event / 100"
-                       [min]="1" [step]="1"
-            ></p-spinner>
+            <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
           </ng-template>
         </cp-shell-inplace-edit>
       </div>

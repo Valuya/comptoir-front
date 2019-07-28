@@ -26,9 +26,7 @@
               {{ loyalty.value | percent }}
             </ng-template>
             <ng-template cpInplaceInput let-invalid="invalid">
-              <p-spinner [ngModel]="loyalty.editValue * 100"
-                         (ngModelChange)="loyalty.editValue = $event * 0.01"
-              ></p-spinner>
+              <cp-percent-input [(ngModel)]="loyalty.editValue"></cp-percent-input>
             </ng-template>
           </cp-shell-inplace-edit>
         </div>

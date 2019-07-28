@@ -26,6 +26,7 @@ import {ItemVariantComponentModule} from '../domain/commercial/item-variant/item
 import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
 import {SockComponentModule} from '../domain/commercial/stock/sock-component.module';
 import {SaleComponentModule} from '../domain/commercial/sale/sale-component.module';
+import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import {SaleComponentModule} from '../domain/commercial/sale/sale-component.modu
     LocaleTextEditModule,
     SockComponentModule,
     SaleComponentModule,
+    PercentInputModule,
   ]
 })
 export class SaleModule {

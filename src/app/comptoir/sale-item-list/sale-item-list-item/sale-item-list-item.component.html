@@ -52,10 +52,7 @@
             VAT: {{ item.vatRate | percent }}
           </ng-template>
           <ng-template cpInplaceInput>
-            <p-spinner [ngModel]="vatRate.editValue * 100"
-                       (ngModelChange)="vatRate.editValue = $event / 100"
-                       [min]="0" [step]="0.1"
-            ></p-spinner>
+            <cp-percent-input [(ngModel)]="vatRate.editValue"></cp-percent-input>
           </ng-template>
         </cp-shell-inplace-edit>
       </div>
@@ -126,10 +123,7 @@
             {{ item.discountRatio | percent }}
           </ng-template>
           <ng-template cpInplaceInput>
-            <p-spinner [ngModel]="discountRatio.editValue * 100"
-                       (ngModelChange)="discountRatio.editValue = $event / 100"
-                       [min]="0" [step]="0.1"
-            ></p-spinner>
+            <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
           </ng-template>
         </cp-shell-inplace-edit>
       </div>

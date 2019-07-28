@@ -84,11 +84,7 @@
         {{ value.discountRatio | percent }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [ngModel]="discountRatio.editValue * 100"
-                   (ngModelChange)="discountRatio.editValue = $event * 0.01"
-                   step="1" min="0" max="100"
-                   [class.ui-state-error]="invalid"
-        ></p-spinner>
+        <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>
@@ -105,11 +101,7 @@
         {{ value.vatRate | percent }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [ngModel]="vatRate.editValue * 100"
-                   (ngModelChange)="vatRate.editValue = $event * 0.01"
-                   step="1" min="0" max="100"
-                   [class.ui-state-error]="invalid"
-        ></p-spinner>
+        <cp-percent-input [(ngModel)]="vatRate.editValue"></cp-percent-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>
