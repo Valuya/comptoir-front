@@ -1,5 +1,18 @@
-<div class="account">
-  <cp-loading-content [loading]="loading$ | async">
-    {{ (value$ | async)?.accountingNumber }} {{ (value$ | async)?.name }}
-  </cp-loading-content>
-</div>
+<cp-loading-content [loading]="loading$ | async">
+  <div class="account">
+    <div class="icon" *ngIf="showIcon">
+      <i class="fa fa-money" *ngIf="(value$ | async)?.cash"></i>
+      <i class="fa fa-credit-card" *ngIf="(value$ | async)?.cash === false"></i>
+    </div>
+    <div class="name" *ngIf="showName">
+      {{ (value$ | async)?.name }}
+    </div>
+    <div class="description" *ngIf="showDescription">
+      <cp-locale-text [localeTexts]="(value$ |async)?.description"
+      ></cp-locale-text>
+    </div>
+    <div class="number" *ngIf="showNumber">
+      {{ (value$ | async)?.accountingNumber }}
+    </div>
+  </div>
+</cp-loading-content>

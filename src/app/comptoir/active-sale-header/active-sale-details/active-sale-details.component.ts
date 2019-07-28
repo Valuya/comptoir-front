@@ -10,11 +10,19 @@ export class ActiveSaleDetailsComponent implements OnInit {
 
   @Input()
   sale: WsSale;
+  @Input()
+  saleTotalPaid: number;
+
+  @Input()
+  showTotalDetails = false;
+  @Input()
+  showPaymentdDetails = false;
 
   @Output()
   saleUpdate = new EventEmitter<Partial<WsSale>>();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

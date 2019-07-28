@@ -1,0 +1,42 @@
+<div class="sale-transaction-input">
+
+  <div class="account-select" [hidden]="selectedAccountRef != null">
+    <cp-account-select-list [posRef]="posRef"
+                            (accountSelect)="onAccountSelected($event)"
+    ></cp-account-select-list>
+  </div>
+
+  <div class="amount-input" [hidden]="selectedAccountRef == null">
+    <p-panel>
+      <p-header>
+        <cp-account [ref]="selectedAccountRef"></cp-account>
+      </p-header>
+      <form class="input-form" (ngSubmit)="onAmountSubmit()" #inputForm="ngForm">
+        <cp-shell-inplace-edit>
+          <ng-template cpInplaceOutput>
+            <p-spinner name="amount"
+                       [(ngModel)]="transactionAmount"
+                       [step]="0.01" [min]="0.01"
+                       required cpFocusFirstInput
+            ></p-spinner>
+          </ng-template>
+        </cp-shell-inplace-edit>
+
+        <div class="actions">
+          <input type="submit" hidden>
+          <button type="button" pButton
+                  label="Back"
+                  (click)="onCancelAccountClick()"
+                  class="ui-button-secondary"
+          ></button>
+          <button type="button" pButton
+                  label="Add"
+                  (click)="onAmountSubmit()"
+                  [disabled]="inputForm.invalid"
+          ></button>
+        </div>
+      </form>
+    </p-panel>
+
+  </div>
+</div>

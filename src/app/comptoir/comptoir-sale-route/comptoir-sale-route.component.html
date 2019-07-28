@@ -2,7 +2,8 @@
   <ng-template cpContentBody>
     <div class="comptoir-sale">
       <header>
-        <cp-active-sale-header
+        <cp-active-sale-header [fillRoute]="isFillRoute$ | async"
+                               [payRoute]="isPayRoute$ | async"
         ></cp-active-sale-header>
       </header>
       <div class="content">

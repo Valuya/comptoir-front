@@ -1,0 +1,20 @@
+.entries-list {
+  .entry {
+    display: flex;
+    align-items: center;
+    margin: 1em;
+
+    > * {
+      flex: 1 1 auto;
+    }
+
+    > .amount {
+      text-align: right;
+    }
+
+    > .actions {
+      flex: 0 0 auto;
+      margin: 0 1em;
+    }
+  }
+}

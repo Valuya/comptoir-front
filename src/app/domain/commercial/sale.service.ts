@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api.service';
 import {
+  WsAccountingEntry,
+  WsAccountingEntryRef,
   WsBalance, WsBalanceRef, WsItem, WsItemVariant,
   WsItemVariantSale,
   WsItemVariantSaleRef, WsItemVariantSaleSearch, WsItemVariantSaleSearchResult,
@@ -15,6 +17,7 @@ import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {PricingUtils} from '../util/pricing-utils';
+import {AccountingService} from '../accounting/accounting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +30,7 @@ export class SaleService {
   constructor(
     private apiService: ApiService,
     private itemService: ItemService,
+    private accountingService: AccountingService,
   ) {
     this.saleCache = new CachedResourceClient<WsSaleRef, WsSale>(
       ref => this.doGet$(ref),
@@ -42,6 +46,20 @@ export class SaleService {
     );
   }
 
+  addPayment$(saleRef: WsSaleRef, entry: WsAccountingEntry): Observable<WsAccountingEntryRef> {
+    return this.apiService.api.addSalePayment({
+      id: saleRef.id,
+      wsAccountingEntry: entry
+    }) as any as Observable<WsAccountingEntryRef>;
+  }
+
+  removePayment$(saleRef: WsSaleRef, ref: WsAccountingEntryRef): Observable<any> {
+    this.accountingService.clearCachedEntry(ref);
+    return this.apiService.api.deleteSalePayment({
+      id: saleRef.id,
+      entryId: ref.id
+    }) as any as Observable<any>;
+  }
 
   createSale$(sale: WsSale): Observable<WsSaleRef> {
     return this.saleCache.createResource$(sale);
@@ -92,6 +110,9 @@ export class SaleService {
     }
   }
 
+  removeVariant(variantRef: WsItemVariantSaleRef): Observable<any> {
+    return this.variantCache.deleteResource$(variantRef);
+  }
 
   searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<WsSalesSearchResult> {
     const searchResult$ = this.apiService.api.findSales({
@@ -166,13 +187,13 @@ export class SaleService {
     return this.apiService.api.updateSale({
       id: val.id,
       wsSale: val
-    }) as any as Observable<WsItemVariantSaleRef>;
+    }) as any as Observable<WsSaleRef>;
   }
 
-  private doCreate$(val: WsSaleRef) {
+  private doCreate$(val: WsSale) {
     return this.apiService.api.createSale({
       wsSale: val
-    }) as any as Observable<WsItemVariantSaleRef>;
+    }) as any as Observable<WsSaleRef>;
   }
 
   private doDelete$(ref: WsSaleRef) {

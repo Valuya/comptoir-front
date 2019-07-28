@@ -1,0 +1,49 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'ACCOUNT_TYPE'">
+    <cp-account-type [accountType]="row.accountType"
+    ></cp-account-type>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'BIC'">
+    {{ row.bic }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'CASH'">
+    <i class="fa fa-check-circle" *ngIf="row.cash"></i>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'COMPANY'">
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'DESCRIPTION'">
+    <cp-locale-text [localeTexts]="row.description"
+    ></cp-locale-text>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'IBAN'">
+    {{ row.iban }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'NAME'">
+    {{ row.name }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

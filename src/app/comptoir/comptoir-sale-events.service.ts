@@ -1,5 +1,12 @@
 import {Injectable} from '@angular/core';
-import {InlineResponse200, InlineResponse200EventTypeEnum, WsItemVariantSale, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
+import {
+  InlineResponse200,
+  InlineResponse200EventTypeEnum,
+  WsAccountingEntry, WsAccountingEntryRef, WsAttributeDefinitionSearchResultList,
+  WsItemVariantSale,
+  WsSale,
+  WsSaleRef
+} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {ApiService} from '../api.service';
 import {SearchResult} from '../app-shell/shell-table/search-result';
@@ -11,6 +18,12 @@ export interface SaleItemupdateEvent {
   saleRef: WsSaleRef;
 }
 
+export interface SaleAccountingEntriesUpdateEvent {
+  results: SearchResult<WsAccountingEntry>;
+  saleRef: WsSaleRef;
+  transactionRef: WsAttributeDefinitionSearchResultList;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,7 +33,9 @@ export class ComptoirSaleEventsService {
   private curSubscriptionRef: WsSaleRef | null;
 
   private saleUpdates$ = new Subject<WsSale>();
+  private saleTotalPaid$ = new Subject<number>();
   private saleItemsUpdates$ = new Subject<SaleItemupdateEvent>();
+  private salePaymentEntries$ = new Subject<SaleAccountingEntriesUpdateEvent>();
   private enabled$ = new BehaviorSubject<boolean>(true);
 
   constructor(
@@ -51,6 +66,14 @@ export class ComptoirSaleEventsService {
     return this.saleItemsUpdates$;
   }
 
+  getPaymentEntriesUpdates(): Observable<SaleAccountingEntriesUpdateEvent> {
+    return this.salePaymentEntries$;
+  }
+
+  getSaleTotalPaidUpdates$(): Observable<number> {
+    return this.saleTotalPaid$;
+  }
+
   getEnabled$(): Observable<boolean> {
     return this.enabled$;
   }
@@ -72,12 +95,14 @@ export class ComptoirSaleEventsService {
 
     this.eventSource.addEventListener(InlineResponse200EventTypeEnum.UPDATE, m => this.onSaleUpdateMessage(m));
     this.eventSource.addEventListener(InlineResponse200EventTypeEnum.ITEMS, m => this.onSaleItemsUpdateMessage(m));
+    this.eventSource.addEventListener(InlineResponse200EventTypeEnum.PAYMENTENTRIES, m => this.onSalePaymentEntriesMessage(m));
     this.eventSource.addEventListener('error', e => this.onMessageError(e));
   }
 
   private onSaleUpdateMessage(messageEvent) {
     const compoirEvent: SomeSaleEvent = this.parseMessage(messageEvent);
     this.saleUpdates$.next(compoirEvent.wsSale);
+    this.saleTotalPaid$.next(compoirEvent.totalPaid)
   }
 
   private onSaleItemsUpdateMessage(messageEvent) {
@@ -90,6 +115,21 @@ export class ComptoirSaleEventsService {
       results: searchResults,
       saleRef: compoirEvent.saleRef
     });
+  }
+
+  private onSalePaymentEntriesMessage(messageEvent) {
+    const compoirEvent: SomeSaleEvent = this.parseMessage(messageEvent);
+    const searchResults: SearchResult<WsAccountingEntry> = {
+      list: compoirEvent.firstPage,
+      totalCount: compoirEvent.totalCount
+    };
+    const eventValue = {
+      results: searchResults,
+      saleRef: compoirEvent.saleRef,
+      transactionRef: compoirEvent.accountingTransactionRef
+    };
+    console.log(eventValue);
+    this.salePaymentEntries$.next(eventValue);
   }
 
   private parseMessage(messageEvent: MessageEvent): SomeSaleEvent {

@@ -1,0 +1,16 @@
+::ng-deep .account-list-item {
+  display: flex;
+  align-items: center;
+
+  > * {
+    flex: 1 1 auto;
+  }
+
+  > .icon {
+    flex: 0 0 auto;
+  }
+
+  > * {
+    margin: 1em;
+  }
+}

@@ -1,0 +1,19 @@
+<cp-loading-content [loading]="loading$ | async">
+  <div class="account-list-item">
+    <div class="icon">
+      <i class="fa fa-money" *ngIf="(account$ | async)?.cash"></i>
+      <i class="fa fa-credit-card" *ngIf="(account$ | async)?.cash === false"></i>
+    </div>
+
+    <div class="details">
+      <div class="name">
+        {{ (account$ | async)?.name}}
+      </div>
+      <div class="description">
+        <cp-locale-text [localeTexts]="(account$ | async)?.description"
+        ></cp-locale-text>
+      </div>
+    </div>
+
+  </div>
+</cp-loading-content>

@@ -12,6 +12,7 @@ import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {RouteUtils} from './util/route-utils';
 import {ResolvedRouteItem} from './util/resolved-route-item';
 import {ComptoirMenuItems} from './comptoir/comptoir-menu';
+import {AccountMenuItems} from './account/account-menu';
 
 const UserMenuItems: (MenuItem | ResolvedRouteItem<any>)[] = [
   {
@@ -97,6 +98,13 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     icon: 'fa fa-user-o',
     routerLink: ['/stock'],
     items: StockMenuItems,
+  },
+  account: {
+    label: 'Account',
+    title: 'Account',
+    icon: 'fa fa-pencil-square-o',
+    routerLink: ['/account'],
+    items: AccountMenuItems,
   },
   me: {
     icon: 'fa fa-user',

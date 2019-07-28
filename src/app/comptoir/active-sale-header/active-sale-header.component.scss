@@ -18,4 +18,10 @@
       font-size: .8em;
     }
   }
+  >.actions {
+    flex: 0 0 auto;
+    [hidden] {
+      display: none;
+    }
+  }
 }

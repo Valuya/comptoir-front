@@ -1,0 +1,9 @@
+::ng-deep .account {
+  display: flex;
+  align-items: center;
+
+  > * {
+    flex: 0 0 auto;
+    margin: 0 .3em;
+  }
+}
