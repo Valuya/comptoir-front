@@ -1,7 +1,7 @@
 <div class="account-type-select">
   <p-dropdown name="account-type"
               [ngModel]="valueSource$ | async"
-              (ngModelChange)="onChange($event)"
+              (ngModelChange)="fireChanges($event)"
               [options]="options"
               optionLabel="label"
   ></p-dropdown>

@@ -32,7 +32,7 @@ export class AppShellComponent implements OnInit {
   menuCollapsed$: Observable<boolean>;
 
   constructor(
-    private appMenuService: AppMenuService,
+    public appMenuService: AppMenuService,
     private messageService: MessageService,
     private notificationService: WebNotificationService,
   ) {
