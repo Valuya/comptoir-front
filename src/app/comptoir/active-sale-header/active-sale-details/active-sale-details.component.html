@@ -1,4 +1,4 @@
-<div class="sale-details" *ngIf="sale != null">
+<div class="sale-details" *ngIf="sale != null && sale.id != null">
 
   <div class="details">
     <div class="row">
@@ -8,9 +8,13 @@
                                [ngModel]="sale.discountRatio"
                                (ngModelChange)="fireChanges({discountRatio: $event})"
         >
-          <ng-template cpInplaceOutput >
-            <i class="fa fa-dollar"></i>
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-sun-o"></i>
             {{ sale.discountRatio | percent }}
+            <span *ngIf="sale.discountRatio > 0" class="discount-amount">
+              <span>-</span>
+              {{ sale.discountAmount | currency }}
+            </span>
           </ng-template>
           <ng-template cpInplaceInput>
             <p-spinner [ngModel]="discountRatio.editValue * 100"
@@ -59,18 +63,38 @@
     </div>
   </div>
 
-  <div class="sub-total">
+  <div class="total-details" *ngIf="showTotalDetails">
     <div class="vat-exclusive">
-      {{ sale.vatExclusiveAmount | currency }}
+      HTVA: {{ sale.vatExclusiveAmount | currency }}
     </div>
     <div class="vat">
-      {{ sale.vatAmount  |currency }}
+      TVA: {{ sale.vatAmount  |currency }}
     </div>
-    <div class="discount">
-      {{ -sale.discountAmount |currency}}
+  </div>
+  <div class="payment-details" *ngIf="showPaymentdDetails">
+    <div class="total">
+      À payer: {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
+    </div>
+    <div class="paid">
+      Payé: {{ saleTotalPaid | currency }}
     </div>
   </div>
   <div class="grand-total">
-    {{ (sale.vatExclusiveAmount + sale.vatAmount - sale.discountAmount) | currency }}
+    <div *ngIf="!showPaymentdDetails">
+      {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
+    </div>
+    <div *ngIf="showPaymentdDetails">
+      <div class="label">
+        <span *ngIf="(sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) >= 0; else: toReimburseLabel">
+          À payer
+        </span>
+        <ng-template #toReimburseLabel>
+          À rendre
+        </ng-template>
+      </div>
+      <div class="amount">
+        {{ (sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) | currency }}
+      </div>
+    </div>
   </div>
 </div>

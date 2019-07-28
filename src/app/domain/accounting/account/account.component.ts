@@ -10,10 +10,20 @@ import {AccountService} from '../account.service';
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
+
   @Input()
   set ref(value: WsAccountRef) {
     this.refSource$.next(value);
   }
+
+  @Input()
+  showIcon = true;
+  @Input()
+  showName = true;
+  @Input()
+  showDescription = false;
+  @Input()
+  showNumber = false;
 
   private refSource$ = new BehaviorSubject<WsAccountRef>(null);
 
@@ -27,6 +37,7 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.value$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.loadRef$(ref)),
       publishReplay(1), refCount()
     );

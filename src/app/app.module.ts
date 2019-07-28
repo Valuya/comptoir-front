@@ -7,6 +7,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MessageService} from 'primeng/primeng';
 import {AppShellModule} from './app-shell/app-shell.module';
 import {ToastModule} from 'primeng/toast';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import {ToastModule} from 'primeng/toast';
     AppRoutingModule,
     AppShellModule,
     ToastModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {enabled: true}),
   ],
   providers: [
     MessageService,

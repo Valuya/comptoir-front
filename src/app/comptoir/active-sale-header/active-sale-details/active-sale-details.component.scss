@@ -6,6 +6,7 @@
     flex: 1 1 auto;
   }
 
+
   > .details {
     > .row {
       display: flex;
@@ -18,7 +19,7 @@
     }
   }
 
-  >.sub-total, .grand-total {
+  >.total-details, .payment-details, .grand-total {
     text-align: right;
   }
 
@@ -37,5 +38,9 @@
     >i {
       margin-right: .3em;
     }
+  }
+
+  .discount-amount {
+    margin-left: 1em;
   }
 }

@@ -1,0 +1,17 @@
+<div class="entries-list">
+  <div *ngFor="let entry of entries" class="entry">
+    <div class="account">
+      <cp-account [ref]="entry.accountRef"
+      ></cp-account>
+    </div>
+    <div class="amount">
+      {{ entry.amount | currency }}
+    </div>
+    <div class="actions">
+      <a class="remove" role="button"
+         (click)="onRemoveClick(entry)">
+        <i class="fa fa-minus"></i>
+      </a>
+    </div>
+  </div>
+</div>

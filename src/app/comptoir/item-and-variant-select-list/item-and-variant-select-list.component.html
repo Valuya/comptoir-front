@@ -10,5 +10,10 @@
                           [viewLayout]="displayMode"
                           [autoSelectSingleVariant]="autoSelectSingleVariant"
                           (variantSelect)="onVariantSelected($event)"
-  ></cp-variant-select-list>
+  >
+    <button type="button" pButton
+            label="Back"
+            (click)="onBackToItemClicked()"
+    ></button>
+  </cp-variant-select-list>
 </div>

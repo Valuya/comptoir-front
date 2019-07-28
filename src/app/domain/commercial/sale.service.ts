@@ -1,18 +1,23 @@
 import {Injectable} from '@angular/core';
 import {ApiService} from '../../api.service';
 import {
-  WsBalance, WsBalanceRef,
+  WsAccountingEntry,
+  WsAccountingEntryRef,
+  WsBalance, WsBalanceRef, WsItem, WsItemVariant,
   WsItemVariantSale,
   WsItemVariantSaleRef, WsItemVariantSaleSearch, WsItemVariantSaleSearchResult,
   WsSale,
   WsSaleRef, WsSaleSearch, WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
+import {SearchResult} from '../../app-shell/shell-table/search-result';
+import {PricingUtils} from '../util/pricing-utils';
+import {AccountingService} from '../accounting/accounting.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +30,7 @@ export class SaleService {
   constructor(
     private apiService: ApiService,
     private itemService: ItemService,
+    private accountingService: AccountingService,
   ) {
     this.saleCache = new CachedResourceClient<WsSaleRef, WsSale>(
       ref => this.doGet$(ref),
@@ -40,6 +46,20 @@ export class SaleService {
     );
   }
 
+  addPayment$(saleRef: WsSaleRef, entry: WsAccountingEntry): Observable<WsAccountingEntryRef> {
+    return this.apiService.api.addSalePayment({
+      id: saleRef.id,
+      wsAccountingEntry: entry
+    }) as any as Observable<WsAccountingEntryRef>;
+  }
+
+  removePayment$(saleRef: WsSaleRef, ref: WsAccountingEntryRef): Observable<any> {
+    this.accountingService.clearCachedEntry(ref);
+    return this.apiService.api.deleteSalePayment({
+      id: saleRef.id,
+      entryId: ref.id
+    }) as any as Observable<any>;
+  }
 
   createSale$(sale: WsSale): Observable<WsSaleRef> {
     return this.saleCache.createResource$(sale);
@@ -61,7 +81,7 @@ export class SaleService {
     }
     const totalString$ = this.apiService.api.getSaleTotalPayed({
       id: ref.id
-    }) as Observable<string>;
+    }) as any as Observable<string>;
     return totalString$.pipe(
       map(stringValue => parseFloat(stringValue))
     );
@@ -90,6 +110,9 @@ export class SaleService {
     }
   }
 
+  removeVariant(variantRef: WsItemVariantSaleRef): Observable<any> {
+    return this.variantCache.deleteResource$(variantRef);
+  }
 
   searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<WsSalesSearchResult> {
     const searchResult$ = this.apiService.api.findSales({
@@ -112,15 +135,9 @@ export class SaleService {
   }
 
   createNewSaleItem$(curSale: WsSale, itemToAdd: WsItemVariantSaleRef): Observable<WsItemVariantSaleRef> {
-    const variant: WsItemVariantSale = {
-      saleRef: {id: curSale.id},
-      dateTime: new Date(),
-      itemVariantRef: itemToAdd,
-      quantity: 1,
-      vatExclusive: 0,
-      vatRate: 0,
-    };
-    return this.variantCache.createResource$(variant);
+    return this.itemService.getItemVariant$(itemToAdd).pipe(
+      mergeMap(itemVariant => this.createNewSaleItemVariant$(curSale, itemVariant))
+    );
   }
 
   isMultipleSale$(variantRef: WsItemVariantSaleRef): Observable<boolean> {
@@ -148,6 +165,17 @@ export class SaleService {
     return this.variantCache.updateResource$(newVariant);
   }
 
+
+  cacheSale(sale: WsSale) {
+    this.saleCache.setCachedValue(sale);
+  }
+
+  cacheSaleItems(results: SearchResult<WsItemVariantSale>) {
+    results.list.forEach(
+      variant => this.variantCache.setCachedValue(variant)
+    );
+  }
+
   private doGet$(ref: WsSaleRef) {
     return this.apiService.api.getSale({
       id: ref.id
@@ -159,13 +187,13 @@ export class SaleService {
     return this.apiService.api.updateSale({
       id: val.id,
       wsSale: val
-    }) as any as Observable<WsItemVariantSaleRef>;
+    }) as any as Observable<WsSaleRef>;
   }
 
-  private doCreate$(val: WsSaleRef) {
+  private doCreate$(val: WsSale) {
     return this.apiService.api.createSale({
       wsSale: val
-    }) as any as Observable<WsItemVariantSaleRef>;
+    }) as any as Observable<WsSaleRef>;
   }
 
   private doDelete$(ref: WsSaleRef) {
@@ -200,4 +228,27 @@ export class SaleService {
     }) as any as Observable<WsItemVariantSaleRef>;
   }
 
+  private createNewSaleItemVariant$(curSale: WsSale, itemVariant: WsItemVariant) {
+    return this.itemService.getItem$(itemVariant.itemRef).pipe(
+      mergeMap(item => this.createNewSaleItemVariantWithItem$(curSale, item, itemVariant))
+    );
+
+  }
+
+  private createNewSaleItemVariantWithItem$(curSale: WsSale, item: WsItem, itemVariant: WsItemVariant) {
+    const vatExclusive = item.vatExclusive;
+    const variantPricing = itemVariant.pricing;
+    const pricingAmount = itemVariant.pricingAmount;
+    const variantPrice = PricingUtils.applyPricing(vatExclusive, variantPricing, pricingAmount);
+    const itemVatRate = item.vatRate;
+    const variant: WsItemVariantSale = {
+      saleRef: {id: curSale.id},
+      dateTime: new Date(),
+      itemVariantRef: {id: itemVariant.id},
+      quantity: 1,
+      vatExclusive: variantPrice,
+      vatRate: itemVatRate,
+    };
+    return this.variantCache.createResource$(variant);
+  }
 }

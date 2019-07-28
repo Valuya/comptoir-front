@@ -1,0 +1,133 @@
+<div class="account-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>Type</label>
+    <cp-shell-inplace-edit name="accountType" #accountType
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.accountType"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-account-type-select [ngModel]="value.accountType"
+                                (ngModelChange)="updateValue({accountType: $event})"
+                                [disabled]="disabled"
+                                [invalid]="invalid"
+        ></cp-account-type-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Name</label>
+    <cp-shell-inplace-edit name="name" #name
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.name"
+                           [ngModel]="value.name"
+                           (ngModelChange)="updateValue({name: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.name }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText
+               [(ngModel)]="name.editValue"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Accounting number</label>
+    <cp-shell-inplace-edit name="accountingNumber" #accountingNumber
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.accountingNumber"
+                           [ngModel]="value.accountingNumber"
+                           (ngModelChange)="updateValue({accountingNumber: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.accountingNumber }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText
+               [(ngModel)]="accountingNumber.editValue"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Bic</label>
+    <cp-shell-inplace-edit name="bic" #bic
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.bic"
+                           [ngModel]="value.bic"
+                           (ngModelChange)="updateValue({bic: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.bic }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText
+               [(ngModel)]="bic.editValue"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Iban</label>
+    <cp-shell-inplace-edit name="iban" #iban
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.iban"
+                           [ngModel]="value.iban"
+                           (ngModelChange)="updateValue({iban: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.iban }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <input type="text" pInputText
+               [(ngModel)]="iban.editValue"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Cash</label>
+    <cp-shell-inplace-edit name="cash" #cash
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.cash"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <p-inputSwitch [ngModel]="value.cash"
+                       (ngModelChange)="updateValue({cash: $event})"
+                       [disabled]="disabled"
+        ></p-inputSwitch>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Description</label>
+    <cp-shell-inplace-edit name="description" #description
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.description"
+                           [ngModel]="value.description"
+                           (ngModelChange)="updateValue({description: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-locale-text [localeTexts]="value.description">
+        </cp-locale-text>
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-locale-text-edit #descriptionEdit [(ngModel)]="description.editValue">
+          <input type="text" pInputText
+                 [(ngModel)]="descriptionEdit.editingTextValue"
+          >
+        </cp-locale-text-edit>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+</div>

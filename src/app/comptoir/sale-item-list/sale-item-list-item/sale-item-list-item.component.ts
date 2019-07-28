@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemVariantSale} from '@valuya/comptoir-ws-api';
+import {PricingUtils} from '../../../domain/util/pricing-utils';
 
 @Component({
   selector: 'cp-sale-item-list-item',
@@ -25,4 +26,31 @@ export class SaleItemListItemComponent implements OnInit {
     this.itemChange.next(newValue);
   }
 
+  fireTotalChange(totalValue: number) {
+    const curVatRate = this.item.vatRate;
+    const newVatExclusive = PricingUtils.vatExclusviveFromTotal(totalValue, curVatRate);
+    return this.fireChanges({
+      total: totalValue,
+      vatExclusive: newVatExclusive
+    });
+  }
+
+  fireVatExclusiveChange(vatExclusiveValue: number) {
+    const curVatRate = this.item.vatRate;
+    const newTotal = PricingUtils.totalFromVatExclusive(vatExclusiveValue, curVatRate);
+    return this.fireChanges({
+      total: newTotal,
+      vatExclusive: vatExclusiveValue
+    });
+  }
+
+
+  fireVatRateChange(vatRateValue: number) {
+    const curVatExclusive = this.item.vatExclusive;
+    const newTotal = PricingUtils.totalFromVatExclusive(curVatExclusive, vatRateValue);
+    return this.fireChanges({
+      total: newTotal,
+      vatRate: vatRateValue
+    });
+  }
 }

@@ -29,7 +29,26 @@
 
   <div class="details">
     <cp-active-sale-details [sale]="sale$ | async"
+                            [saleTotalPaid]="saleTotalPaid$ | async"
+                            [showTotalDetails]="fillRoute"
+                            [showPaymentdDetails]="payRoute"
                             (saleUpdate)="onSaleUpdate($event)"
     ></cp-active-sale-details>
+  </div>
+
+  <div class="actions">
+    <button type="button" pButton
+            label="Pay"
+            icon="fa fa-money"
+            [hidden]="payRoute"w
+            [disabled]="(saleRef$ | async)?.id == null"
+            (click)="onPayClick()"
+    ></button>
+    <button type="button" pButton
+            label="Fill"
+            icon="fa fa-shopping-basket"
+            [hidden]="fillRoute"
+            (click)="onFillClick()"
+    ></button>
   </div>
 </div>

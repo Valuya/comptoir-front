@@ -5,6 +5,7 @@ import {Pagination} from '../../util/pagination';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {WsAccount, WsAccountRef, WsAccountSearch, WsAccountSearchResult} from '@valuya/comptoir-ws-api';
 import {switchMap} from 'rxjs/operators';
+import {SearchResult} from '../../app-shell/shell-table/search-result';
 
 @Injectable({
   providedIn: 'root'
@@ -41,12 +42,12 @@ export class AccountService {
     return this.accountCache.getResource$(ref);
   }
 
-  searchAccountList$(seachFilter: WsAccountSearch, pagination: Pagination): Observable<WsAccountSearchResult> {
+  searchAccountList$(seachFilter: WsAccountSearch, pagination: Pagination): Observable<SearchResult<WsAccountRef>> {
     return this.apiService.api.searchAccounts({
       offset: pagination.first,
       length: pagination.rows,
       wsAccountSearch: seachFilter
-    }) as any as Observable<WsAccountSearchResult>;
+    }) as any as Observable<SearchResult<WsAccountRef>>;
   }
 
   private doGet$(ref: WsAccountRef) {

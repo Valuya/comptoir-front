@@ -76,4 +76,9 @@ export const APP_MODULES_ROUTES: Route[] = [
     loadChildren: './stock/stock.module#StockModule',
     data: createAppRouteData(AppMenu.stock)
   },
+  {
+    path: 'account',
+    loadChildren: './account/account.module#AccountModule',
+    data: createAppRouteData(AppMenu.account)
+  },
 ];

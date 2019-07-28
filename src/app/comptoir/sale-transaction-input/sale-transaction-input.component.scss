@@ -1,0 +1,26 @@
+.sale-transaction-input {
+  >.account-select {
+
+  }
+
+  >.amount-input {
+    >.selected-account {
+      margin: 1em;
+    }
+    >.input-form {
+      margin: 1em;
+      text-align: center;
+
+      >.actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        >* {
+          margin: 1em;
+          flex: 0 0 auto;
+        }
+      }
+    }
+  }
+}

@@ -9,7 +9,15 @@ import {ComptoirSalePayRouteComponent} from './comptoir-sale-pay-route/comptoir-
 import {ComptoirInfoRouteComponent} from './comptoir-info-route/comptoir-info-route.component';
 import {SaleItemListComponent} from './sale-item-list/sale-item-list.component';
 import {DataViewModule} from 'primeng/dataview';
-import {AutoCompleteModule, CheckboxModule, DropdownModule, InputSwitchModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
+import {
+  AutoCompleteModule,
+  ButtonModule,
+  CheckboxModule,
+  DropdownModule, InplaceModule,
+  InputSwitchModule,
+  InputTextModule, PanelModule,
+  SpinnerModule
+} from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
 import {VariantSelectListComponent} from './variant-select-list/variant-select-list.component';
@@ -32,10 +40,17 @@ import {ItemVariantComponentModule} from '../domain/commercial/item-variant/item
 import {SockComponentModule} from '../domain/commercial/stock/sock-component.module';
 import {StockSelectModule} from '../domain/commercial/stock-select/stock-select.module';
 import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
-import { ActiveSaleHeaderComponent } from './active-sale-header/active-sale-header.component';
-import { ActiveSaleDetailsComponent } from './active-sale-header/active-sale-details/active-sale-details.component';
+import {ActiveSaleHeaderComponent} from './active-sale-header/active-sale-header.component';
+import {ActiveSaleDetailsComponent} from './active-sale-header/active-sale-details/active-sale-details.component';
 import {CustomerModule} from '../domain/thirdparty/customer/customer.module';
-import { ActiveSaleSelectComponent } from './active-sale-header/active-sale-select/active-sale-select.component';
+import {ActiveSaleSelectComponent} from './active-sale-header/active-sale-select/active-sale-select.component';
+import {AccountSelectListComponent} from './account-select-list/account-select-list.component';
+import {AccountSelectListItemComponent} from './account-select-list/account-select-list-item/account-select-list-item.component';
+import {AccountSelectGridItemComponent} from './account-select-list/account-select-grid-item/account-select-grid-item.component';
+import {SaleTransactionInputComponent} from './sale-transaction-input/sale-transaction-input.component';
+import {AccountComponentModule} from '../domain/accounting/account/account.module';
+import {SaleAccountingEntriesListComponent} from './sale-accounting-entries-list/sale-accounting-entries-list.component';
+import {AppShellModule} from '../app-shell/app-shell.module';
 
 
 @NgModule({
@@ -56,7 +71,12 @@ import { ActiveSaleSelectComponent } from './active-sale-header/active-sale-sele
     ItemAndVariantSelectListComponent,
     ActiveSaleHeaderComponent,
     ActiveSaleDetailsComponent,
-    ActiveSaleSelectComponent
+    ActiveSaleSelectComponent,
+    AccountSelectListComponent,
+    AccountSelectListItemComponent,
+    AccountSelectGridItemComponent,
+    SaleTransactionInputComponent,
+    SaleAccountingEntriesListComponent,
   ],
   imports: [
     CommonModule,
@@ -83,7 +103,11 @@ import { ActiveSaleSelectComponent } from './active-sale-header/active-sale-sele
     CheckboxModule,
     CustomerModule,
     AutoCompleteModule,
-
+    ButtonModule,
+    AccountComponentModule,
+    PanelModule,
+    InplaceModule,
+    AppShellModule,
   ]
 })
 export class ComptoirModule {

@@ -1,0 +1,20 @@
+version: '3.6'
+
+services:
+
+  front:
+    image: comptoir-front
+    environment:
+      ENABLE_SSL: 'true'
+#      COMPTOIR_WS_URL: 'https://dev.comptoir.valuya.be'
+      COMPTOIR_WS_URL: 'https://comptoir.local:8443'
+      COMPTOIR_SSL_CERT_FILE: '/certs/comptoir.local.pem'
+      COMPTOIR_SSL_KEY_FILE: '/certs/comptoir.local.key'
+    ports:
+      - '443:443'
+    volumes:
+      - valuya_dev-certs:/certs
+
+volumes:
+  valuya_dev-certs:
+    external: true

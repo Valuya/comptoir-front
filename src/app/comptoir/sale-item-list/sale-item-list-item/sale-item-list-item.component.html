@@ -30,7 +30,7 @@
       <div class="vat-exclusive">
         <cp-shell-inplace-edit name="vatExclusive" #vatExclusive
                                [ngModel]="item.vatExclusive"
-                               (ngModelChange)="fireChanges({vatExclusive: $event})"
+                               (ngModelChange)="fireVatExclusiveChange($event)"
         >
           <ng-template cpInplaceOutput>
             {{ item.vatExclusive | currency }}
@@ -46,7 +46,7 @@
       <div class="vat-rate">
         <cp-shell-inplace-edit name="vatRate" #vatRate
                                [ngModel]="item.vatRate"
-                               (ngModelChange)="fireChanges({vatRate: $event})"
+                               (ngModelChange)="fireVatRateChange($event)"
         >
           <ng-template cpInplaceOutput>
             VAT: {{ item.vatRate | percent }}
@@ -63,7 +63,7 @@
       <div class="total">
         <cp-shell-inplace-edit name="total" #total
                                [ngModel]="item.total"
-                               (ngModelChange)="fireChanges({total: $event})"
+                               (ngModelChange)="fireTotalChange($event)"
         >
           <ng-template cpInplaceOutput>
             {{ item.total | currency }}

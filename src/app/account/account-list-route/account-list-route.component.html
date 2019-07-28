@@ -1,0 +1,19 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="accountsTableHelper.loading$ | async"
+                    [rows]="accountsTableHelper.rows$ | async"
+                    [totalRecords]="accountsTableHelper.totalCount$ | async"
+                    [pagination]="accountsTableHelper.pagination$ | async"
+                    (paginationChange)="accountsTableHelper.setPagination($event)"
+                    [(selection)]="selectedAccounts"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-account-column [column]="column"
+                        [row]="row"
+        ></cp-account-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

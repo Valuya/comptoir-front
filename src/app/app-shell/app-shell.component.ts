@@ -3,6 +3,7 @@ import {AppMenuService} from './app-menu.service';
 import {Observable} from 'rxjs';
 import {MenuItem, MessageService} from 'primeng/api';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {WebNotificationService} from './web-notification.service';
 
 @Component({
   selector: 'cp-app-shell',
@@ -32,7 +33,8 @@ export class AppShellComponent implements OnInit {
 
   constructor(
     public appMenuService: AppMenuService,
-    public messageService: MessageService
+    private messageService: MessageService,
+    private notificationService: WebNotificationService,
   ) {
   }
 
@@ -41,6 +43,8 @@ export class AppShellComponent implements OnInit {
     this.breadcrumbMenu$ = this.appMenuService.breadcrumbMenu$;
     this.quickActionsMenu$ = this.appMenuService.quickActions$;
     this.menuCollapsed$ = this.appMenuService.appMenuCollapsed$;
+    this.notificationService.subscribeToNotifications$().subscribe(
+    );
   }
 
 

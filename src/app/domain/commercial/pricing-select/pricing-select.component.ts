@@ -65,6 +65,7 @@ export class PricingSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   fireChanges(newValue: WsItemVariantPricingEnum) {
+    this.valueSource$.next(newValue);
     if (this.onTouched) {
       this.onTouched();
     }

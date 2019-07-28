@@ -13,7 +13,7 @@ import {FormsModule} from '@angular/forms';
 import {CalendarModule, InputSwitchModule, InputTextareaModule, InputTextModule, SpinnerModule} from 'primeng/primeng';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 import {AccountSelectModule} from '../domain/accounting/account-select/account-select.module';
-import {AccountModule} from '../domain/accounting/account/account.module';
+import {AccountComponentModule} from '../domain/accounting/account/account.module';
 import {DateSelectModule} from '../domain/util/date-select/date-select.module';
 
 
@@ -29,7 +29,7 @@ import {DateSelectModule} from '../domain/util/date-select/date-select.module';
     InputSwitchModule,
     InputTextModule,
     ShellInplaceEditModule,
-    AccountModule,
+    AccountComponentModule,
     AccountSelectModule,
     InputTextareaModule,
     CalendarModule,

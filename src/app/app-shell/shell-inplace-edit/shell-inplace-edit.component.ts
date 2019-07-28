@@ -19,6 +19,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {InplaceEditService} from './inplace-edit.service';
 import {timer} from 'rxjs';
 import {OverlayPanel} from 'primeng/primeng';
+import {FocusFirstInputDirective} from '../focus-first-input.directive';
 
 @Component({
   selector: 'cp-shell-inplace-edit',
@@ -57,6 +58,9 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   private inputOverlay: OverlayPanel;
   @ViewChild('outputElement', {static: true})
   private outputElement: ElementRef;
+  @ViewChild('[focusFirstInput=true]', {static: false})
+  private focusInputDirective: FocusFirstInputDirective;
+
 
   value: any;
   editValue: any;
@@ -89,9 +93,11 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.inputOverlay.show(event, this.outputElement.nativeElement);
 
     this.editValue = this.value;
-    timer(10).subscribe(() => {
-      this.focusFirstInput();
-    });
+    if (this.focusInputDirective) {
+      timer(10).subscribe(() => {
+        this.focusInputDirective.focusFirstInput();
+      });
+    }
   }
 
   stopEdit() {
@@ -199,30 +205,17 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     }
   }
 
-  private focusFirstInput() {
-    if (this.inputOverlay != null) {
-      const overlayContainer = this.inputOverlay.container;
-      this.focusFirstInputOfElement(overlayContainer);
-    }
-    // if (this.inputTemplate != null) {
-    //   const element: HTMLElement = this.inputComponent.nativeElement;
-    //   this.focusFirstInputOfElement(element);
-    // }
-  }
-
-  private focusFirstInputOfElement(element: HTMLElement) {
-    const inputElements = element.getElementsByTagName('input');
-    if (inputElements.length > 0) {
-      const firstInput: HTMLInputElement = inputElements.item(0);
-      timer(10).subscribe(() => {
-        firstInput.focus({
-          preventScroll: true
-        });
-        const valueLength = firstInput.value.length;
-        firstInput.setSelectionRange(0, valueLength);
-      });
-    }
-  }
+  //
+  // private focusFirstInput() {
+  //   if (this.inputOverlay != null) {
+  //     const overlayContainer = this.inputOverlay.container;
+  //     this.focusFirstInputOfElement(overlayContainer);
+  //   }
+  //   // if (this.inputTemplate != null) {
+  //   //   const element: HTMLElement = this.inputComponent.nativeElement;
+  //   //   this.focusFirstInputOfElement(element);
+  //   // }
+  // }
 
   private fireChanges(value: any) {
     this.value = value;

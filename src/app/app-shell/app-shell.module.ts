@@ -7,6 +7,7 @@ import {LogoutRouteComponent} from './logout-route/logout-route.component';
 import {DashboardRouteComponent} from './dashboard-route/dashboard-route.component';
 import {ShellContentPageModule} from './shell-content-page/shell-content-page.module';
 import {ClockComponent} from './clock/clock.component';
+import { FocusFirstInputDirective } from './focus-first-input.directive';
 
 
 @NgModule({
@@ -15,8 +16,11 @@ import {ClockComponent} from './clock/clock.component';
     LogoutRouteComponent,
     DashboardRouteComponent,
     ClockComponent,
+    FocusFirstInputDirective,
   ],
-  exports: [],
+  exports: [
+    FocusFirstInputDirective
+  ],
   imports: [
     CommonModule,
     PanelMenuModule,

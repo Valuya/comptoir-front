@@ -35,7 +35,7 @@ export class ApiService {
     console.log(`Api service using ${backendUrl}`);
   }
 
-  private getAccessToken(name?: string, scopes?: string[]) {
+  getAccessTokenHeader(name?: string, scopes?: string[]) {
     if (this.authProvider == null) {
       return null;
     }
@@ -43,11 +43,34 @@ export class ApiService {
     if (auth == null) {
       return null;
     }
-    return HeaderUtils.toBearerAuthHeader(auth.token);
+    return HeaderUtils.toBearerAuthHeader(this.getAccessToken());
+  }
+
+  getAccessTokenQueryParam() {
+    if (this.authProvider == null) {
+      return null;
+    }
+    const auth = this.authProvider.auth;
+    if (auth == null) {
+      return null;
+    }
+    const base64Token = btoa(this.getAccessToken());
+    return base64Token;
+  }
+
+  private getAccessToken(name?: string, scopes?: string[]): string {
+    if (this.authProvider == null) {
+      return null;
+    }
+    const auth = this.authProvider.auth;
+    if (auth == null) {
+      return null;
+    }
+    return auth.token;
   }
 
   private onPreMiddleware(context: RequestContext): RequestArgs {
-    const token = this.getAccessToken();
+    const token = this.getAccessTokenHeader();
     const curHeaders = context.options.headers as Record<string, string>;
     const existingAuthHeader = HeaderUtils.findHeaderIgnoreCase('authorization', curHeaders);
     if (existingAuthHeader == null) {
