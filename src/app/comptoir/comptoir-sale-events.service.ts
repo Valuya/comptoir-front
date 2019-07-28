@@ -87,7 +87,8 @@ export class ComptoirSaleEventsService {
 
   private subscribeToSaleRef(ref) {
     const authToken = this.apiService.getAccessTokenQueryParam();
-    const url = `https://comptoir.local:8443/comptoir-ws/sale/${ref.id}/events?ngsw-bypass=true&oauth2_token=${authToken}`;
+    const apiUrl = this.apiService.getApiUrl();
+    const url = `${apiUrl}/sale/${ref.id}/events?ngsw-bypass=true&oauth2_token=${authToken}`;
     this.eventSource = new EventSource(url, {
       withCredentials: true,
     });

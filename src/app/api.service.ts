@@ -11,6 +11,7 @@ import {RuntimeConfig, RuntimeConfigToken} from './util/runtime-config';
 export class ApiService {
 
   api: DefaultApi;
+  private backendUrl: string;
 
   constructor(
     private authProvider: AuthProvider,
@@ -23,6 +24,7 @@ export class ApiService {
     if (runtimeConfig != null && runtimeConfig.backend != null && runtimeConfig.backend.url != null) {
       backendUrl = runtimeConfig.backend.url;
     }
+    this.backendUrl = backendUrl;
 
     this.api = new DefaultApi(new Configuration({
         basePath: backendUrl,
@@ -56,6 +58,10 @@ export class ApiService {
     }
     const base64Token = btoa(this.getAccessToken());
     return base64Token;
+  }
+
+  getApiUrl(): string {
+    return this.backendUrl + `/comptoir-ws`;
   }
 
   private getAccessToken(name?: string, scopes?: string[]): string {
