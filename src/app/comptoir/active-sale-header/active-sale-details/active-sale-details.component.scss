@@ -21,12 +21,24 @@
 
   >.total-details, .payment-details, .grand-total {
     text-align: right;
+
+    >div {
+      margin: .5em;
+    }
+
+    label {
+      margin-right: 1em;
+    }
   }
 
   .grand-total {
     flex: 0 0 auto;
-    margin: 1em;
-    font-size: 1.2em;
+    margin: 0 1em;
+
+    .amount {
+      font-weight: bold;
+      font-size: 1.5em;
+    }
   }
 
   ::ng-deep .inplace-output {

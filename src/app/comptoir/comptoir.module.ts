@@ -51,6 +51,7 @@ import {SaleTransactionInputComponent} from './sale-transaction-input/sale-trans
 import {AccountComponentModule} from '../domain/accounting/account/account.module';
 import {SaleAccountingEntriesListComponent} from './sale-accounting-entries-list/sale-accounting-entries-list.component';
 import {AppShellModule} from '../app-shell/app-shell.module';
+import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 
 
 @NgModule({
@@ -108,6 +109,7 @@ import {AppShellModule} from '../app-shell/app-shell.module';
     PanelModule,
     InplaceModule,
     AppShellModule,
+    PercentInputModule,
   ]
 })
 export class ComptoirModule {

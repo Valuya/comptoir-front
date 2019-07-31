@@ -8,7 +8,6 @@ import {MessageService} from 'primeng/primeng';
 import {AppShellModule} from './app-shell/app-shell.module';
 import {ToastModule} from 'primeng/toast';
 import {ServiceWorkerModule} from '@angular/service-worker';
-import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [

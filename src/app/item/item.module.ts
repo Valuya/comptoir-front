@@ -27,6 +27,7 @@ import {ItemDetailVariantDetailRouteComponent} from './item-detail-variant-detai
 import {PricingSelectModule} from '../domain/commercial/pricing-select/pricing-select.module';
 import {AttributeValuesModule} from '../domain/commercial/attribute-values/attribute-values.module';
 import {AttributeValuesSelectModule} from '../domain/commercial/attribute-values-select/attribute-values-select.module';
+import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import {AttributeValuesSelectModule} from '../domain/commercial/attribute-values
     PricingSelectModule,
     AttributeValuesModule,
     AttributeValuesSelectModule,
+    PercentInputModule,
   ]
 })
 export class ItemModule {

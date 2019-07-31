@@ -129,7 +129,6 @@ export class ComptoirSaleEventsService {
       saleRef: compoirEvent.saleRef,
       transactionRef: compoirEvent.accountingTransactionRef
     };
-    console.log(eventValue);
     this.salePaymentEntries$.next(eventValue);
   }
 

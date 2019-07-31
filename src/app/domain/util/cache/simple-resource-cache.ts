@@ -1,7 +1,7 @@
 import {ResourceCache} from './resouce-cache';
 import {ResourceRef} from './resource-ref';
-import {concat, EMPTY, Observable, of, throwError} from 'rxjs';
-import {take, tap} from 'rxjs/operators';
+import {concat, EMPTY, Observable, of, throwError, timer} from 'rxjs';
+import {delay, mergeMap, take, tap} from 'rxjs/operators';
 
 export class SimpleResourceCache<T extends ResourceRef> implements ResourceCache<T> {
 
@@ -17,7 +17,8 @@ export class SimpleResourceCache<T extends ResourceRef> implements ResourceCache
       return throwError('Invalid ref: ' + ref);
     }
     const cached$ = this.getCachedOrEmpty$(ref);
-    const fetched$ = this.fetcher(ref).pipe(
+    const fetched$ = of(null).pipe(
+      mergeMap(() => this.fetcher(ref)),
       tap(f => this.put(f)),
     );
     if (options && options.prependCachedValue) {

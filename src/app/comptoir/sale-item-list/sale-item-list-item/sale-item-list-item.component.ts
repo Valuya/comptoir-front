@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemVariantSale} from '@valuya/comptoir-ws-api';
 import {PricingUtils} from '../../../domain/util/pricing-utils';
+import {NumberUtils} from '../../../util/number-utils';
 
 @Component({
   selector: 'cp-sale-item-list-item',
@@ -26,30 +27,39 @@ export class SaleItemListItemComponent implements OnInit {
     this.itemChange.next(newValue);
   }
 
-  fireTotalChange(totalValue: number) {
-    const curVatRate = this.item.vatRate;
-    const newVatExclusive = PricingUtils.vatExclusviveFromTotal(totalValue, curVatRate);
+  fireTotalVatExclusiveChange(totalValue: number) {
+    const quantity = this.item.quantity;
+    const unitPrice = NumberUtils.toFixedDecimals(totalValue / quantity, 2);
     return this.fireChanges({
       total: totalValue,
-      vatExclusive: newVatExclusive
+      vatExclusive: unitPrice
+    });
+  }
+
+
+  fireTotalVatInclusiveChange(totalValue: number) {
+    const vatRate = this.item.vatRate;
+    const totalVatExclusive = PricingUtils.vatExclusviveFromTotal(totalValue, vatRate);
+    const quantity = this.item.quantity;
+    const unitPrice = NumberUtils.toFixedDecimals(totalVatExclusive / quantity, 2);
+    return this.fireChanges({
+      total: totalVatExclusive,
+      vatExclusive: unitPrice
     });
   }
 
   fireVatExclusiveChange(vatExclusiveValue: number) {
-    const curVatRate = this.item.vatRate;
-    const newTotal = PricingUtils.totalFromVatExclusive(vatExclusiveValue, curVatRate);
+    const quantity = this.item.quantity;
+    const totalValue = NumberUtils.toFixedDecimals(quantity * vatExclusiveValue);
     return this.fireChanges({
-      total: newTotal,
+      total: totalValue,
       vatExclusive: vatExclusiveValue
     });
   }
 
 
   fireVatRateChange(vatRateValue: number) {
-    const curVatExclusive = this.item.vatExclusive;
-    const newTotal = PricingUtils.totalFromVatExclusive(curVatExclusive, vatRateValue);
     return this.fireChanges({
-      total: newTotal,
       vatRate: vatRateValue
     });
   }
