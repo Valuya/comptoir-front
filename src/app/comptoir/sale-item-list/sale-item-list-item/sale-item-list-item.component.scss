@@ -21,10 +21,7 @@
         flex: 0 0 auto;
       }
 
-      > .total {
-        font-size: 1.5em;
-        font-weight: bold;
-      }
+
     }
 
     .info {
@@ -51,6 +48,25 @@
           flex: 0 0 auto;
           margin-right: .4em;
         }
+      }
+    }
+  }
+
+  > .total {
+    flex: 0 0 auto;
+    text-align: right;
+
+    >.vat-inclusive {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    >.vat-exclusive {
+      display: flex;
+      align-items: center;
+      font-size: 0.8em;
+      >* {
+        flex: 0 0 auto;
+        margin: 0 1em;
       }
     }
   }

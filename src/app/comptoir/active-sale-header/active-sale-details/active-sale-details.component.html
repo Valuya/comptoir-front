@@ -62,29 +62,35 @@
 
   <div class="total-details" *ngIf="showTotalDetails">
     <div class="vat-exclusive">
-      HTVA: {{ sale.vatExclusiveAmount | currency }}
+      <label>HTVA:</label>
+      {{ sale.vatExclusiveAmount | currency }}
     </div>
     <div class="vat">
-      TVA: {{ sale.vatAmount  |currency }}
+      <label>TVA:</label>
+      {{ sale.vatAmount  |currency }}
     </div>
   </div>
   <div class="payment-details" *ngIf="showPaymentdDetails">
     <div class="total">
-      À payer: {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
+      <label>À payer:</label>
+      {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
     </div>
     <div class="paid">
-      Payé: {{ saleTotalPaid | currency }}
+      <label>Payé: </label>
+      {{ saleTotalPaid | currency }}
     </div>
   </div>
   <div class="grand-total">
     <div *ngIf="!showPaymentdDetails">
-      {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
+      <div class="amount">
+        {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
+      </div>
     </div>
     <div *ngIf="showPaymentdDetails">
       <div class="label">
-        <span *ngIf="(sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) >= 0; else: toReimburseLabel">
+        <label *ngIf="(sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) >= 0; else: toReimburseLabel">
           À payer
-        </span>
+        </label>
         <ng-template #toReimburseLabel>
           À rendre
         </ng-template>
