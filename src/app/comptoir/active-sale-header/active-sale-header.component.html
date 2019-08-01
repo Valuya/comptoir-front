@@ -61,7 +61,7 @@
     ></button>
     <button type="button" pButton
             label="Reopen"
-            icon="fa fa-shopping-backet"
+            icon="fa fa-shopping-basket"
             [hidden]="(sale$ | async)?.closed !== true"
             (click)="onReopenClick()"
     ></button>
