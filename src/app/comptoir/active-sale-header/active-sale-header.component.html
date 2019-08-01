@@ -16,8 +16,8 @@
           <i class="fa fa-caret-down"></i>
         </ng-template>
         <ng-template cpInplaceInput>
-          <cp-active-sale-select [ngModel]="sale.editValue" *ngIf="sale.editing"
-                                 (ngModelChange)="sale.editValue=$event;sale.commitEdit()"
+          <cp-active-sale-select *ngIf="sale.editing"
+                                 (saleSelected)="sale.editValue=$event;sale.commitEdit()"
           ></cp-active-sale-select>
         </ng-template>
       </cp-shell-inplace-edit>
