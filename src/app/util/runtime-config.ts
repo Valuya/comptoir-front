@@ -1,15 +1,11 @@
 import {InjectionToken} from '@angular/core';
-import {BackendConfig} from './backend-config';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import {Observable} from 'rxjs';
+import {EnvironmentConfig} from '../../environments/environment-config';
 
-export const RuntimeConfigToken = new InjectionToken<RuntimeConfig>('comptoir.runtime.config');
+export const RuntimeConfigToken = new InjectionToken<EnvironmentConfig>('comptoir.runtime.config');
 
-export interface RuntimeConfig {
-  backend: BackendConfig;
-}
-
-export function fetchRuntimeComptoirConfig$(): Observable<RuntimeConfig> {
+export function fetchRuntimeComptoirConfig$(): Observable<EnvironmentConfig> {
   const responsePromise = fetch('/comptoir-runtime-config.json').then(
     response => {
       if (response.ok) {
@@ -24,7 +20,7 @@ export function fetchRuntimeComptoirConfig$(): Observable<RuntimeConfig> {
     return readData(reader);
   }).then(bodyString => {
     try {
-      return JSON.parse(bodyString) as RuntimeConfig;
+      return JSON.parse(bodyString) as EnvironmentConfig;
     } catch (e) {
       console.error(e);
       throw e;

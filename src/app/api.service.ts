@@ -1,9 +1,10 @@
-import {Inject, Injectable, Optional} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Configuration, DefaultApi, RequestArgs, RequestContext} from '@valuya/comptoir-ws-api';
 import {AuthProvider} from './util/auth-provider';
 import {HeaderUtils} from './util/header-utils';
-import {BackendConfig, BackendConfigToken} from './util/backend-config';
-import {RuntimeConfig, RuntimeConfigToken} from './util/runtime-config';
+import {RuntimeConfigToken} from './util/runtime-config';
+import {EnvironmentConfig, mergeConfigs} from '../environments/environment-config';
+import {environment} from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,26 +16,21 @@ export class ApiService {
 
   constructor(
     private authProvider: AuthProvider,
-    @Inject(BackendConfigToken)
-    private backendConfig: BackendConfig,
     @Inject(RuntimeConfigToken)
-    private runtimeConfig: RuntimeConfig
+    private runtimeConfig: EnvironmentConfig
   ) {
-    let backendUrl = backendConfig.url;
-    if (runtimeConfig != null && runtimeConfig.backend != null && runtimeConfig.backend.url != null) {
-      backendUrl = runtimeConfig.backend.url;
-    }
-    this.backendUrl = backendUrl;
+    const config = mergeConfigs(environment, runtimeConfig);
+    this.backendUrl = config.backend.url;
 
     this.api = new DefaultApi(new Configuration({
-        basePath: backendUrl,
+        basePath: this.backendUrl,
         accessToken: (name, scopes) => this.getAccessToken(name, scopes),
         middleware: [{
           pre: (context: RequestContext) => this.onPreMiddleware(context)
         }]
       })
     );
-    console.log(`Api service using ${backendUrl}`);
+    console.log(`Api service using ${this.backendUrl}`);
   }
 
   getAccessTokenHeader(name?: string, scopes?: string[]) {
