@@ -9,6 +9,7 @@
     <div class="add-payment">
       <cp-sale-transaction-input [posRef]="posRef$ | async"
                                  (transactionAdded)="onTransactionAdded($event)"
+                                 [transactionAmount]="remainingAmount$ | async"
       ></cp-sale-transaction-input>
     </div>
   </div>

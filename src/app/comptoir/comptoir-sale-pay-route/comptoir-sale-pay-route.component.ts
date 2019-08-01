@@ -14,6 +14,7 @@ export class ComptoirSalePayRouteComponent implements OnInit {
 
   entries$: Observable<WsAccountingEntry[]>;
   posRef$: Observable<WsPosRef>;
+  remainingAmount$: Observable<number>;
 
   constructor(
     private saleService: ComptoirSaleService,
@@ -25,6 +26,7 @@ export class ComptoirSalePayRouteComponent implements OnInit {
   ngOnInit() {
     this.entries$ = this.saleService.getAccountingEntriesTableHelper().rows$;
     this.posRef$ = this.comptoirService.pointOfSaleRef$;
+    this.remainingAmount$ = this.saleService.getSaleRemainingToPay$();
   }
 
   onTransactionAdded(newEntry: WsAccountingEntry) {

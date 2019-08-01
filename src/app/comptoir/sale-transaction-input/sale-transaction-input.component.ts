@@ -10,11 +10,12 @@ export class SaleTransactionInputComponent implements OnInit {
 
   @Input()
   posRef: WsPosRef;
+  @Input()
+  transactionAmount: number;
   @Output()
   transactionAdded = new EventEmitter<WsAccountingEntry>();
 
   selectedAccountRef: WsAccountRef | null;
-  transactionAmount: number;
 
   constructor() {
   }
