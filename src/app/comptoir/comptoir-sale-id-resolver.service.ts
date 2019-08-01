@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRoute, ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {concat, EMPTY, Observable, of} from 'rxjs';
 import {WsEmployee, WsSale} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../auth.service';
@@ -10,7 +10,7 @@ import {SaleService} from '../domain/commercial/sale.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ComptoirSaleIdResolverService {
+export class ComptoirSaleIdResolverService implements Resolve<WsSale> {
 
   constructor(private saleService: SaleService,
               private router: Router,
@@ -22,7 +22,8 @@ export class ComptoirSaleIdResolverService {
     const param = route.params.comptoirSaleId;
     let resovledSale$: Observable<WsSale>;
     if (param == null) {
-      resovledSale$ = this.getActive$(route);
+      this.navigateToActive(route);
+      return EMPTY;
     } else {
       const idParam = parseInt(param, 10);
       if (isNaN(idParam)) {
@@ -40,14 +41,19 @@ export class ComptoirSaleIdResolverService {
 
   private handleNonNumericParam$(route: ActivatedRouteSnapshot, idParam: string) {
     if (idParam === 'active') {
-      return this.getActive$(route).pipe(
-        tap(sale => this.router.navigate(['/comptoir/sale', (sale.id == null ? 'new' : sale.id)]))
-      );
+      this.navigateToActive(route);
+      return EMPTY;
     } else if (idParam === 'new') {
       return this.createNew$();
     } else {
-      return this.createNew$();
+      this.router.navigate(['/comptoir/sale/new']);
+      return EMPTY;
     }
+  }
+
+  private navigateToActive(route: ActivatedRouteSnapshot) {
+    this.getActive$(route)
+      .subscribe(sale => this.router.navigate(['/comptoir/sale', (sale.id == null ? 'new' : sale.id)]));
   }
 
   private getActive$(route: ActivatedRouteSnapshot) {
