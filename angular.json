@@ -26,7 +26,12 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              {
+                "input": "src/environments",
+                "output": "",
+                "glob": "comptoir-runtime-config.json"
+              }
             ],
             "styles": [
               "node_modules/primeng/resources/themes/nova-light/theme.css",
@@ -144,6 +149,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "comptoir-front"
 }

@@ -23,7 +23,12 @@ export function fetchRuntimeComptoirConfig$(): Observable<RuntimeConfig> {
   ).then(reader => {
     return readData(reader);
   }).then(bodyString => {
-    return JSON.parse(bodyString) as RuntimeConfig;
+    try {
+      return JSON.parse(bodyString) as RuntimeConfig;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   });
   return fromPromise(responsePromise);
 }
@@ -34,7 +39,7 @@ function readData(reader: ReadableStreamDefaultReader<Uint8Array>, previousData?
     const stringValue = textDecoder.decode(data.value);
     const newValue = previousData == null ? stringValue : previousData + stringValue;
     if (data.done) {
-      return newValue;
+      return Promise.resolve(newValue);
     } else {
       return readData(reader, newValue);
     }

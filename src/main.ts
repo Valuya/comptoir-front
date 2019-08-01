@@ -16,7 +16,7 @@ const configTokenProvider$ = fetchRuntimeComptoirConfig$().pipe(
   map(config => {
     return {
       provide: RuntimeConfigToken,
-      useValue: config
+      useValue: Object.assign({}, environment, config)
     } as ValueProvider;
   }),
   catchError(e => {
