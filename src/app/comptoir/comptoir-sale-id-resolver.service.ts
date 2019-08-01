@@ -59,7 +59,8 @@ export class ComptoirSaleIdResolverService implements Resolve<WsSale> {
   private getActive$(route: ActivatedRouteSnapshot) {
     const curActive = this.comptoirSaleService.getActiveSaleOptional();
     if (curActive == null) {
-      const open$ = this.comptoirSaleService.listOpenSales$().pipe(
+      const open$ = this.comptoirSaleService.getOpenSales$().pipe(
+        take(1),
         filter(r => r.totalCount > 0),
         map(r => r.list[0]),
       );

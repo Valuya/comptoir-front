@@ -41,16 +41,18 @@ export class SaleSelectListComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private comptoirService: ComptoirSaleService,
+    private saleService: ComptoirSaleService,
   ) {
   }
 
   ngOnInit() {
     this.subscription = new Subscription();
     this.tableHelper = new ShellTableHelper<WsSaleRef, WsSaleSearch>(
-      (searchFilter, pagination) => this.searchSales$(),
+      (searchFilter, pagination) => this.saleService.getOpenSales$(),
       {
-        noDebounce: this.noDebounce
+        noDebounce: this.noDebounce,
+        ignorePagination: true,
+        ignoreFilter: true,
       }
     );
     this.sortOptions = this.createSortOptions();
@@ -75,17 +77,10 @@ export class SaleSelectListComponent implements OnInit, OnDestroy {
     this.tableHelper.setPagination(pagination);
   }
 
-  onSortFieldChange($event: any) {
-  }
-
   onSaleClick(ref: WsSaleRef) {
     this.saleSelect.emit(ref);
   }
 
-
-  private searchSales$(): Observable<SearchResult<WsSaleRef>> {
-    return this.comptoirService.listOpenSales$();
-  }
 
   private createSortOptions() {
     return [

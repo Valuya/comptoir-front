@@ -81,6 +81,7 @@ export class ComptoirSaleService {
   private itemVariantsCaches: { [itemId: number]: SimpleSearchResultResourceCache<WsItemVariantRef> } = {};
   // Cache a page of variant for each item, to be used by the item-and-variant-select in the fill view
   private openSalesCaches: SimpleSearchResultResourceCache<WsSaleRef>;
+  private openSales$: Observable<SearchResult<WsSaleRef>>;
 
   constructor(
     private saleService: SaleService,
@@ -169,6 +170,9 @@ export class ComptoirSaleService {
 
     this.openSalesCaches = new SimpleSearchResultResourceCache<WsSaleRef>(
       () => this.searchOpenSales$()
+    );
+    this.openSales$ = this.openSalesCaches.getResults$().pipe(
+      publishReplay(1), refCount()
     );
 
   }
@@ -308,8 +312,8 @@ export class ComptoirSaleService {
     }
   }
 
-  listOpenSales$(): Observable<SearchResult<WsSaleRef>> {
-    return this.openSalesCaches.getOneResults$();
+  getOpenSales$(): Observable<SearchResult<WsSaleRef>> {
+    return this.openSales$;
   }
 
   closeActiveSale$(): Observable<any> {
