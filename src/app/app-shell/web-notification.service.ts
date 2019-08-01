@@ -25,8 +25,10 @@ export class WebNotificationService {
 
   subscribeToNotifications$(): Observable<any> {
     if (this.notificationsEnabled && this.swPush.isEnabled) {
+      const serverPublicKeyValue = environment.backend.swPushKey;
+      console.log('subscsribing to notification using key ' + serverPublicKeyValue);
       const subscriptionPromise$ = this.swPush.requestSubscription({
-        serverPublicKey: environment.backend.swPushKey,
+        serverPublicKey: serverPublicKeyValue,
       });
       return fromPromise(subscriptionPromise$).pipe(
         switchMap(subscription => this.register$(subscription))
