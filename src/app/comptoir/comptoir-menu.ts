@@ -31,7 +31,16 @@ export const ComptoirInfoRouteItem: MenuItem = {
   routerLink: ['/comptoir/info']
 };
 
+
+export const ComptoirNewSaleRouteItem: MenuItem = {
+  label: 'New sale',
+  title: 'New sale',
+  icon: 'fa fa-shopping-basket',
+  routerLink: ['/comptoir/sale/new']
+};
+
 export const ComptoirMenuItems: MenuItem[] = [
   ComptoirInfoRouteItem,
+  ComptoirNewSaleRouteItem,
   ComptoirSaleRouteItem,
 ];
