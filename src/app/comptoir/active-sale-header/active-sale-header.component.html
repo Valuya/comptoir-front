@@ -65,6 +65,9 @@
             [hidden]="(sale$ | async)?.closed !== true"
             (click)="onReopenClick()"
     ></button>
-
+    <button type="button" pButton
+            icon="fa fa-refresh"
+            (click)="onReloadClick()"
+    ></button>
   </div>
 </div>

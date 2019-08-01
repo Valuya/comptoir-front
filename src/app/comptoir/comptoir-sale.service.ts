@@ -268,7 +268,7 @@ export class ComptoirSaleService {
     this.removeAccountingEntrySource$.next(ref);
   }
 
-  reload() {
+  refresh() {
     this.reloadSource$.next(true);
   }
 
@@ -655,10 +655,9 @@ export class ComptoirSaleService {
     return this.activeSaleSource$.pipe(
       filter(s => s != null && s.id != null),
       take(1),
-      switchMap(curSale => {
-        this.saleItemsTableHelper.reload();
-        this.saleAccountingEntriessTableHelper.reload();
-        return this.saleService.getSale$({id: curSale.id}, true);
+      map(curSale => {
+        this.initSale(curSale);
+        return curSale;
       })
     );
   }

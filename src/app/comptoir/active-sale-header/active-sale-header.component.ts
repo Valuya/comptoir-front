@@ -75,4 +75,8 @@ export class ActiveSaleHeaderComponent implements OnInit {
         });
       });
   }
+
+  onReloadClick() {
+    this.saleService.refresh();
+  }
 }

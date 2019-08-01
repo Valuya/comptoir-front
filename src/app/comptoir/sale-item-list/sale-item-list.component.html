@@ -27,7 +27,8 @@
     <ng-template let-item pTemplate="listItem">
       <div class="list-item">
         <cp-sale-item-list-item [item]="item"
-                                (itemChange)="onSaeItemUpdate($event)"
+                                (itemChange)="onSaleItemUpdate($event)"
+                                (itemRemove)="onSaleitemRemove($event)"
         ></cp-sale-item-list-item>
       </div>
     </ng-template>

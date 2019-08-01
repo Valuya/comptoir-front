@@ -15,6 +15,8 @@ export class SaleItemListItemComponent implements OnInit {
 
   @Output()
   itemChange = new EventEmitter<WsItemVariantSale>();
+  @Output()
+  itemRemove = new EventEmitter<WsItemVariantSale>();
 
   constructor() {
   }
@@ -62,5 +64,9 @@ export class SaleItemListItemComponent implements OnInit {
     return this.fireChanges({
       vatRate: vatRateValue
     });
+  }
+
+  onRemoveItemClick(event: Event) {
+    this.itemRemove.next(this.item);
   }
 }

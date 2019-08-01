@@ -85,9 +85,12 @@ export class SaleItemListComponent implements OnInit {
     console.warn($event);
   }
 
-  onSaeItemUpdate(item: WsItemVariantSale) {
+  onSaleItemUpdate(item: WsItemVariantSale) {
     const ref: WsItemVariantSaleRef = {id: item.id};
     this.comptoirSaleService.udpdateSaleVariant(ref, item);
   }
 
+  onSaleitemRemove(item: WsItemVariantSale) {
+    this.comptoirSaleService.removeVariant({id: item.id});
+  }
 }
