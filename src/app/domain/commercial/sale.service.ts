@@ -114,14 +114,14 @@ export class SaleService {
     return this.variantCache.deleteResource$(variantRef);
   }
 
-  searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<WsSalesSearchResult> {
+  searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<SearchResult<WsSaleRef>> {
     const searchResult$ = this.apiService.api.findSales({
       offset: pagination.first,
       length: pagination.rows,
       sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
       wsSaleSearch: searchFilter
     }) as any as Observable<WsSalesSearchResult>;
-    return searchResult$;
+    return searchResult$ as Observable<SearchResult<WsSaleRef>>;
   }
 
   searchVariants$(searchFilter: WsItemVariantSaleSearch, pagination: Pagination): Observable<WsItemVariantSaleSearchResult> {

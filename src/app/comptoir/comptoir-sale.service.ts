@@ -13,7 +13,7 @@ import {
   WsItemVariantSaleSearchResult,
   WsItemVariantSearch,
   WsSale,
-  WsSaleRef
+  WsSaleRef, WsSaleSearch
 } from '@valuya/comptoir-ws-api';
 import {concatMap, delay, filter, map, mergeMap, publishReplay, refCount, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
@@ -79,6 +79,8 @@ export class ComptoirSaleService {
 
   // Cache a page of variant for each item, to be used by the item-and-variant-select in the fill view
   private itemVariantsCaches: { [itemId: number]: SimpleSearchResultResourceCache<WsItemVariantRef> } = {};
+  // Cache a page of variant for each item, to be used by the item-and-variant-select in the fill view
+  private openSalesCaches: SimpleSearchResultResourceCache<WsSaleRef>;
 
   constructor(
     private saleService: SaleService,
@@ -164,6 +166,18 @@ export class ComptoirSaleService {
         ignorePagination: true
       }
     );
+
+    this.openSalesCaches = new SimpleSearchResultResourceCache<WsSaleRef>(
+      () => this.searchOpenSales$()
+    );
+
+    this.listOpenSales$().subscribe(r => {
+      if (r.totalCount > 0) {
+        this.saleService.getSale$(r.list[0])
+          .subscribe(sale => this.activeSaleSource$.next(sale));
+      }
+    });
+
   }
 
 
@@ -301,6 +315,9 @@ export class ComptoirSaleService {
     }
   }
 
+  listOpenSales$(): Observable<SearchResult<WsSaleRef>> {
+    return this.openSalesCaches.getOneResults$();
+  }
 
   private applyNextSaleUpdate$(update: Partial<WsSale>, effectiveSale$: Observable<WsSale>): Observable<WsSaleRef> {
     this.updatingSaleInProgress$.next(true);
@@ -634,4 +651,21 @@ export class ComptoirSaleService {
     return sale.vatExclusiveAmount + sale.vatAmount - paid;
   }
 
+
+  private searchOpenSales$(): Observable<SearchResult<WsSaleRef>> {
+    return this.authService.getLoggedEmployeeCompanyRef$().pipe(
+      map(r => this.createSearchFilter(r)),
+      switchMap(searchFilter => this.saleService.searchSales$(searchFilter, PaginationUtils.create(10)))
+    );
+  }
+
+  private createSearchFilter(companyRef: WsCompanyRef | null): WsSaleSearch {
+    if (companyRef == null) {
+      return null;
+    }
+    return {
+      closed: false,
+      companyRef: companyRef as object,
+    };
+  }
 }

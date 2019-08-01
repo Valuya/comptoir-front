@@ -53,6 +53,10 @@ import {SaleAccountingEntriesListComponent} from './sale-accounting-entries-list
 import {AppShellModule} from '../app-shell/app-shell.module';
 import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.module';
+import {SaleSelectComponent} from '../domain/commercial/sale-select/sale-select.component';
+import {SaleSelectGridItemComponent} from './sale-select-list/sale-select-grid-item/sale-select-grid-item.component';
+import {SaleSelectListComponent} from './sale-select-list/sale-select-list.component';
+import {SaleSelectListItemComponent} from './sale-select-list/sale-select-list-item/sale-select-list-item.component';
 
 
 @NgModule({
@@ -79,6 +83,10 @@ import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.
     AccountSelectGridItemComponent,
     SaleTransactionInputComponent,
     SaleAccountingEntriesListComponent,
+    SaleSelectComponent,
+    SaleSelectListItemComponent,
+    SaleSelectGridItemComponent,
+    SaleSelectListComponent,
   ],
   imports: [
     CommonModule,
