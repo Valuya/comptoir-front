@@ -15,9 +15,7 @@ export class SimpleSearchResultResourceCache<T> {
       fetcher(),
       this.refetchSource$.pipe(
         takeUntil(this.invalidateSource$),
-        tap(() => console.log('refetch on ask...')),
         switchMap(() => fetcher()),
-        tap(a => console.log(a))
       )
     ).pipe(
       retry(),

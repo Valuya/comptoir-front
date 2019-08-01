@@ -41,6 +41,5 @@ export const ComptoirNewSaleRouteItem: MenuItem = {
 
 export const ComptoirMenuItems: MenuItem[] = [
   ComptoirInfoRouteItem,
-  ComptoirNewSaleRouteItem,
   ComptoirSaleRouteItem,
 ];

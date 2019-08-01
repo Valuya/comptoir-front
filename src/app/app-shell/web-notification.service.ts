@@ -59,7 +59,6 @@ export class WebNotificationService {
   private subscribe$() {
     const config = mergeConfigs(environment, this.runtimeConfig);
     const publicKey = config.backend.swPushKey;
-    console.log('subscsribing to notification using key ' + publicKey);
     const subscriptionPromise$ = this.swPush.requestSubscription({
       serverPublicKey: publicKey,
     });

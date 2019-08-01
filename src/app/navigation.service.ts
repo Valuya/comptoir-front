@@ -35,7 +35,6 @@ export class NavigationService {
     const redirectParam = params.redirect;
     const redirectUrlParam = params.redirectUrl;
 
-    console.log(params);
     if (redirectParam != null) {
       this.router.navigate(redirectParam);
     } else if (redirectUrlParam != null) {

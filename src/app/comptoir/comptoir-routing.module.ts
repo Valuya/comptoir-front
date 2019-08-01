@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ComptoirSaleRouteComponent} from './comptoir-sale-route/comptoir-sale-route.component';
 import {AppRoute, createAppRouteData} from '../util/app-route-data';
-import {ComptoirInfoRouteItem, ComptoirSaleRouteItem} from './comptoir-menu';
+import {ComptoirInfoRouteItem, ComptoirNewSaleRouteItem, ComptoirSaleRouteItem} from './comptoir-menu';
 import {ComptoirSaleIdResolverService} from './comptoir-sale-id-resolver.service';
 import {ComptoirInfoRouteComponent} from './comptoir-info-route/comptoir-info-route.component';
 import {ComptoirSaleFillRouteComponent} from './comptoir-sale-fill-route/comptoir-sale-fill-route.component';
@@ -44,7 +44,7 @@ export const ComptoirRoutes: AppRoute[] = [
           comptoirSale: ComptoirSaleIdResolverService,
         },
         component: ComptoirSaleRouteComponent,
-        data: createAppRouteData(ComptoirSaleRouteItem),
+        data: createAppRouteData(ComptoirSaleRouteItem, [ComptoirNewSaleRouteItem]),
         children: ComptoirSaleRoutes
       },
       {
@@ -53,7 +53,7 @@ export const ComptoirRoutes: AppRoute[] = [
           comptoirSale: ComptoirSaleIdResolverService,
         },
         component: ComptoirSaleRouteComponent,
-        data: createAppRouteData(ComptoirSaleRouteItem),
+        data: createAppRouteData(ComptoirSaleRouteItem, [ComptoirNewSaleRouteItem]),
       }
     ]
   },
