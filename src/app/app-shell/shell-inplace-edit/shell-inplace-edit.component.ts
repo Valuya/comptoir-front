@@ -11,7 +11,7 @@ import {
   Optional,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {InplaceOutputDirective} from './inplace-output.directive';
 import {InplaceInputDirective} from './inplace-input.directive';
@@ -58,8 +58,8 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   private inputOverlay: OverlayPanel;
   @ViewChild('outputElement', {static: true})
   private outputElement: ElementRef;
-  @ViewChild('[focusFirstInput=true]', {static: false})
-  private focusInputDirective: FocusFirstInputDirective;
+  @ViewChildren(FocusFirstInputDirective)
+  private focusInputDirectives: FocusFirstInputDirective[];
 
 
   value: any;
@@ -93,9 +93,10 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.inputOverlay.show(event, this.outputElement.nativeElement);
 
     this.editValue = this.value;
-    if (this.focusInputDirective) {
+    if (this.focusInputDirectives) {
       timer(10).subscribe(() => {
-        this.focusInputDirective.focusFirstInput();
+        this.focusInputDirectives
+          .forEach(d => d.focusFirstInput());
       });
     }
   }
