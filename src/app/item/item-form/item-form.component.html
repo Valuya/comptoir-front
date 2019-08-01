@@ -113,9 +113,7 @@
         {{ value.vatExclusive | currency }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [(ngModel)]="vatExclusive.editValue"
-                   [min]="0" [step]="0.01"
-        ></p-spinner>
+        <cp-currency-input [(ngModel)]="vatExclusive.editValue"></cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>

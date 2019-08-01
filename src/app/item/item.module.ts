@@ -28,6 +28,7 @@ import {PricingSelectModule} from '../domain/commercial/pricing-select/pricing-s
 import {AttributeValuesModule} from '../domain/commercial/attribute-values/attribute-values.module';
 import {AttributeValuesSelectModule} from '../domain/commercial/attribute-values-select/attribute-values-select.module';
 import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
+import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.module';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import {PercentInputModule} from '../domain/util/percent-input/percent-input.mod
     AttributeValuesModule,
     AttributeValuesSelectModule,
     PercentInputModule,
+    CurrencyInputModule,
   ]
 })
 export class ItemModule {

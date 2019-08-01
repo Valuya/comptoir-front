@@ -15,6 +15,7 @@ import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inpl
 import {AccountSelectModule} from '../domain/accounting/account-select/account-select.module';
 import {AccountComponentModule} from '../domain/accounting/account/account.module';
 import {DateSelectModule} from '../domain/util/date-select/date-select.module';
+import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.module';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import {DateSelectModule} from '../domain/util/date-select/date-select.module';
     CalendarModule,
     SpinnerModule,
     DateSelectModule,
+    CurrencyInputModule,
   ]
 })
 export class BalanceModule {
