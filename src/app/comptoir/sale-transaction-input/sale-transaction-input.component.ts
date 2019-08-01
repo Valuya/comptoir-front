@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsAccountingEntry, WsAccountRef, WsPosRef} from '@valuya/comptoir-ws-api';
+import {NumberUtils} from '../../util/number-utils';
 
 @Component({
   selector: 'cp-sale-transaction-input',
@@ -41,7 +42,7 @@ export class SaleTransactionInputComponent implements OnInit {
   private createTransaction(): WsAccountingEntry {
     return {
       accountRef: this.selectedAccountRef,
-      amount: this.transactionAmount,
+      amount: NumberUtils.toFixedDecimals(this.transactionAmount, 2),
       dateTime: new Date(),
       description: [],
       accountingTransactionRef: null,
