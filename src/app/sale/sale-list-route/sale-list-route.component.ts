@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
-import {concat, Observable, of} from 'rxjs';
-import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
+import {BehaviorSubject, concat, forkJoin, Observable, of} from 'rxjs';
+import {filter, map, mergeMap, publishReplay, refCount, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {
   AMOUNT_COLUMN,
@@ -19,6 +19,7 @@ import {WsEmployee, WsSale, WsSaleSearch, WsSalesSearchResult} from '@valuya/com
 import {AuthService} from '../../auth.service';
 import {Router} from '@angular/router';
 import {SaleService} from '../../domain/commercial/sale.service';
+import {MenuItem, MessageService} from 'primeng/api';
 
 @Component({
   selector: 'cp-sales-list-route',
@@ -28,7 +29,7 @@ import {SaleService} from '../../domain/commercial/sale.service';
 export class SaleListRouteComponent implements OnInit {
 
   salesTableHelper: ShellTableHelper<WsSale, WsSaleSearch>;
-  selectedSales: WsSale[] = [];
+  selectedSales$ = new BehaviorSubject<WsSale[]>([]);
   columns: TableColumn<SaleColumn>[] = [
     ID_COLUMN,
     DATETIME_COLUMN,
@@ -38,9 +39,13 @@ export class SaleListRouteComponent implements OnInit {
     AMOUNT_COLUMN
   ];
 
+  selectionMenu$: Observable<MenuItem[]>;
+  selectionLabel$: Observable<string | null>;
+
   constructor(private saleService: SaleService,
               private authService: AuthService,
               private router: Router,
+              private messageService: MessageService,
   ) {
   }
 
@@ -52,6 +57,13 @@ export class SaleListRouteComponent implements OnInit {
       filter(e => e != null),
       take(1),
     ).subscribe(employee => this.initFilter(employee));
+    this.selectionMenu$ = this.selectedSales$.pipe(
+      map(sales => this.createMenu(sales)),
+      publishReplay(1), refCount()
+    );
+    this.selectionLabel$ = this.selectedSales$.pipe(
+      map(s => s == null || s.length === 0 ? '' : `${s.length} sales selected`)
+    );
   }
 
   private searchSales$(searchFilter: WsSaleSearch | null, pagination: Pagination | null): Observable<SearchResult<WsSale>> {
@@ -84,5 +96,44 @@ export class SaleListRouteComponent implements OnInit {
 
   onRowSelect(sale: WsSale) {
     this.router.navigate(['/sale', sale.id]);
+  }
+
+  onSelectionChange$(sales: WsSale[]) {
+    this.selectedSales$.next(sales);
+  }
+
+  private createMenu(sales: WsSale[]): MenuItem[] {
+    if (sales.length === 0) {
+      return [];
+    }
+    return [{
+      label: 'Close',
+      command: () => this.closeSales(sales),
+    }, {
+      label: 'Reopen',
+      command: () => this.reopenSales(sales),
+    }];
+  }
+
+  private closeSales(sales: WsSale[]) {
+    const task$List = sales.map(sale => this.saleService.closeSale$({id: sale.id}));
+    const task$ = task$List.length === 0 ? of(null) : forkJoin(task$List);
+    task$.subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sales close'
+      });
+    });
+  }
+
+  private reopenSales(sales: WsSale[]) {
+    const task$List = sales.map(sale => this.saleService.openSale$({id: sale.id}));
+    const task$ = task$List.length === 0 ? of(null) : forkJoin(task$List);
+    task$.subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sales reopened'
+      });
+    });
   }
 }

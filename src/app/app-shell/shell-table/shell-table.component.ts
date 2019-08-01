@@ -57,4 +57,10 @@ export class ShellTableComponent implements OnInit {
     this.selection = rows;
     this.selectionChange.next(rows);
   }
+
+  stopEvent(event: Event) {
+    event.stopImmediatePropagation();
+    event.preventDefault();
+    return false;
+  }
 }

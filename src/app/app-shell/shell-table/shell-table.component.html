@@ -33,7 +33,11 @@
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr [pSelectableRow]="rowData">
         <td>
-          <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          <div cpClickStopPropagation class="checkbox-col">
+            <p-tableCheckbox [value]="rowData"
+                             (*click)="stopEvent($event)"
+            ></p-tableCheckbox>
+          </div>
         </td>
         <td *ngFor="let col of columns">
           <ng-template [ngTemplateOutlet]="columnTemplate"

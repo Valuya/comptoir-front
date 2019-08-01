@@ -10,7 +10,15 @@ import {SaleDetailsRouteComponent} from './sale-details-route/sale-details-route
 import {ShellDetailsFormModule} from '../app-shell/shell-details-form/shell-details-form.module';
 import {SaleFormComponent} from './sale-form/sale-form.component';
 import {FormsModule} from '@angular/forms';
-import {CalendarModule, InputSwitchModule, InputTextModule, SpinnerModule, TabMenuModule, TriStateCheckboxModule} from 'primeng/primeng';
+import {
+  CalendarModule,
+  InputSwitchModule,
+  InputTextModule,
+  SpinnerModule,
+  SplitButtonModule,
+  TabMenuModule,
+  TriStateCheckboxModule
+} from 'primeng/primeng';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 import {SaleFilterComponent} from './sale-filter/sale-filter.component';
 import {CustomerSelectModule} from '../domain/thirdparty/customer-select/customer-select.module';
@@ -68,6 +76,7 @@ import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.
     SaleComponentModule,
     PercentInputModule,
     CurrencyInputModule,
+    SplitButtonModule,
   ]
 })
 export class SaleModule {

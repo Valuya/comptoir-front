@@ -6,7 +6,8 @@
                     [totalRecords]="salesTableHelper.totalCount$ | async"
                     [pagination]="salesTableHelper.pagination$ | async"
                     (paginationChange)="salesTableHelper.setPagination($event)"
-                    [(selection)]="selectedSales"
+                    [selection]="selectedSales$ | async"
+                    (selectionChange)="onSelectionChange$($event)"
                     (rowSelect)="onRowSelect($event)"
     >
       <ng-template cpFilterContent>
@@ -14,6 +15,11 @@
                         (ngModelChange)="salesTableHelper.setFilter($event)"
                         name="filter"
         ></cp-sale-filter>
+        <p-splitButton *ngIf="(selectionMenu$ | async)?.length > 0"
+          [label]="(selectionLabel$ | async)"
+          icon="pi pi-check"
+          [model]="(selectionMenu$ | async)"></p-splitButton>
+
       </ng-template>
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-sale-column [column]="column"
