@@ -4,7 +4,7 @@ import {ApiService} from '../api.service';
 import {Observable, of, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {fromPromise} from 'rxjs/internal-compatibility';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, take} from 'rxjs/operators';
 import {WebNotificationSubscriptionRequest} from '@valuya/comptoir-ws-api';
 import {EnvironmentConfig, mergeConfigs} from '../../environments/environment-config';
 import {RuntimeConfigToken} from '../util/runtime-config';
@@ -30,6 +30,7 @@ export class WebNotificationService {
   subscribeToNotifications$(): Observable<any> {
     if (this.notificationsEnabled && this.swPush.isEnabled) {
       return this.swPush.subscription.pipe(
+        take(1),
         switchMap(subscription => this.unsubscribeIfRequired$(subscription)),
         switchMap(() => this.subscribe$()),
         switchMap(subscription => this.register$(subscription))
