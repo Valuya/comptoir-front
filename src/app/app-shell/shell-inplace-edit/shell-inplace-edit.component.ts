@@ -92,7 +92,9 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   startEdit(event: Event) {
     this.editing = true;
     this.editingChange.next(true);
-    this.inputOverlay.show(event, this.outputElement.nativeElement);
+    if (this.inputOverlay) {
+      this.inputOverlay.show(event, this.outputElement.nativeElement);
+    }
 
     this.editValue = this.value;
     this.focusFirstInput();

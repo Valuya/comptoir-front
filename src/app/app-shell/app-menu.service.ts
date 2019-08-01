@@ -228,6 +228,33 @@ export class AppMenuService {
     if (data == null || data.quickActions == null) {
       return [];
     }
-    return data.quickActions;
+    return data.quickActions.map(action => this.resolveQuickAction(action, snapshot));
+
+  }
+
+  private resolveQuickAction(action: MenuItem | (MenuItem & ResolvedRouteItem<any>), snapshot: ActivatedRouteSnapshot) {
+    const resolvedItem: ResolvedRouteItem<any> & MenuItem = action as ResolvedRouteItem<any> & MenuItem;
+    const emptyResolvedItem = resolvedItem.labelFactory == null && resolvedItem.routerLinkFactory == null;
+    if (emptyResolvedItem) {
+      return action;
+    }
+
+    if (resolvedItem != null) {
+
+      // Label
+      if (resolvedItem.labelFactory != null) {
+        const createdLabel = resolvedItem.labelFactory(snapshot);
+        resolvedItem.label = createdLabel;
+        resolvedItem.title = createdLabel;
+      }
+
+      // Router link
+      if (resolvedItem.routerLinkFactory != null) {
+        const routerLinkValue = resolvedItem.routerLinkFactory(snapshot);
+        resolvedItem.routerLink = routerLinkValue;
+      }
+
+    }
+    return resolvedItem;
   }
 }

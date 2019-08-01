@@ -4,7 +4,7 @@ import {Data, Route} from '@angular/router';
 
 export interface AppRouteData {
   menuItem?: MenuItem | MenuItem & ResolvedRouteItem<any>;
-  quickActions?: MenuItem[];
+  quickActions?: (MenuItem | MenuItem & ResolvedRouteItem<any>)[];
 }
 
 export interface AppRoute extends Route {
@@ -14,7 +14,7 @@ export interface AppRoute extends Route {
 
 export function createAppRouteData<T>(
   routeMenuItem: MenuItem | ResolvedRouteItem<T>,
-  quickActionItems?: MenuItem[]
+  quickActionItems?: (MenuItem | ResolvedRouteItem<T>)[]
 ): AppRouteData {
   return {
     menuItem: routeMenuItem,

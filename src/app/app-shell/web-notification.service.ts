@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {SwPush} from '@angular/service-worker';
 import {ApiService} from '../api.service';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import {switchMap} from 'rxjs/operators';
@@ -29,13 +29,9 @@ export class WebNotificationService {
 
   subscribeToNotifications$(): Observable<any> {
     if (this.notificationsEnabled && this.swPush.isEnabled) {
-      const config = mergeConfigs(environment, this.runtimeConfig);
-      const publicKey = config.backend.swPushKey;
-      console.log('subscsribing to notification using key ' + publicKey);
-      const subscriptionPromise$ = this.swPush.requestSubscription({
-        serverPublicKey: publicKey,
-      });
-      return fromPromise(subscriptionPromise$).pipe(
+      return this.swPush.subscription.pipe(
+        switchMap(subscription => this.unsubscribeIfRequired$(subscription)),
+        switchMap(() => this.subscribe$()),
         switchMap(subscription => this.register$(subscription))
       );
     } else {
@@ -49,5 +45,23 @@ export class WebNotificationService {
     return this.apiService.api.subscriptionWebNotifications({
       webNotificationSubscriptionRequest: subscriptionRequest
     }) as any as Observable<any>;
+  }
+
+  private unsubscribeIfRequired$(subscription: PushSubscription) {
+    if (subscription) {
+      return fromPromise(subscription.unsubscribe());
+    } else {
+      return of(null);
+    }
+  }
+
+  private subscribe$() {
+    const config = mergeConfigs(environment, this.runtimeConfig);
+    const publicKey = config.backend.swPushKey;
+    console.log('subscsribing to notification using key ' + publicKey);
+    const subscriptionPromise$ = this.swPush.requestSubscription({
+      serverPublicKey: publicKey,
+    });
+    return fromPromise(subscriptionPromise$);
   }
 }

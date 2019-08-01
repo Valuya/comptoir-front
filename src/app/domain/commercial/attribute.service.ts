@@ -14,6 +14,7 @@ import {AttributeDefinitionSelectItem} from './attribute-value/attribute-definit
 import {WsLocaleText} from '../lang/locale-text/ws-locale-text';
 import {AttributeSelectItem} from './attribute-value/attribute-select-item';
 import {LocaleTextUtils} from '../lang/locale-text/LocaleTextUtils';
+import {SearchResult} from '../../app-shell/shell-table/search-result';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,9 @@ export class AttributeService {
 
 
   createDefinitionItems$(refs: WsAttributeDefinitionRef[], locale: string): Observable<AttributeDefinitionSelectItem[]> {
+    if (refs == null || locale == null ) {
+      return of([]);
+    }
     const def$List = refs.map(ref => this.createDefinitionItem$(ref, locale));
     return def$List.length === 0 ? of([]) : forkJoin(def$List);
   }
@@ -94,13 +98,14 @@ export class AttributeService {
     );
   }
 
+
   createValueItems$(refs: WsAttributeValueRef[], locale: string): Observable<AttributeSelectItem[]> {
     const values$List = refs.map(ref => this.getAttributeValue$(ref));
     const valueDefs$ = values$List.length === 0 ? of([]) : forkJoin(values$List);
     return valueDefs$.pipe(
       switchMap(value => this.createItemFromValues$(value, locale)),
       map(items => this.updateItemsWithLocale(items, locale))
-    )
+    );
   }
 
 
@@ -198,7 +203,7 @@ export class AttributeService {
 
   private createItemFromValues$(values: WsAttributeValue[], locale: string) {
     const defRefs = values.map(value => value.attributeDefinitionRef);
-    const defItems$ = this.createDefinitionItems$(defRefs, locale);
+    const defItems$ = this.createDefinitionItems$(defRefs as WsAttributeDefinitionRef[], locale);
     return defItems$.pipe(
       map(items => {
         return this.updateItemWithValue(items, values);

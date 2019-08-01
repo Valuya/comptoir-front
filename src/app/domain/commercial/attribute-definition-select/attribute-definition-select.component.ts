@@ -113,7 +113,7 @@ export class AttributeDefinitionSelectComponent implements OnInit, ControlValueA
     }
     this.loadingSuggestions$.next(true);
     return this.attributeService.searchAttributeDefinitionList$(searchFilter, PaginationUtils.create(10)).pipe(
-      switchMap(results => this.attributeService.createDefinitionItems$(results[0].list, results[1]))
+      switchMap(results => this.attributeService.createDefinitionItems$(results[0], results[1]))
     );
   }
 

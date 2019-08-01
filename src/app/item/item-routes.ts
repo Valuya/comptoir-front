@@ -6,7 +6,7 @@ import {ItemListRouteComponent} from './item-list-route/item-list-route.componen
 import {ItemDetailsRouteComponent} from './item-details-route/item-details-route.component';
 import {ItemIdResolverService} from './item-id-resolver.service';
 import {
-  CreateNewItemQuickActionItem,
+  CreateNewItemQuickActionItem, CreateNewVariantQuickActionItem,
   ItemDetailsDetailsMenuItem,
   ItemDetailsVariantListMenuItem,
   ItemDetailsVariantsMenuItem,
@@ -35,7 +35,7 @@ export const ITEM_ROUTES: Routes = [
     resolve: {
       item: ItemIdResolverService
     },
-    data: createAppRouteData(ResolvedItemDetailsMenuItem),
+    data: createAppRouteData(ResolvedItemDetailsMenuItem, [CreateNewVariantQuickActionItem]),
     children: [
       {
         path: '',

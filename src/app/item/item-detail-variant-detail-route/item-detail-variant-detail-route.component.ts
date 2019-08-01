@@ -71,7 +71,9 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
     return this.saveAttributes$().pipe(
       tap(valueRefs => {
         this.formHelper.update({
-          attributeValueRefs: valueRefs
+          attributeValueRefs: valueRefs.map(ref => {
+            return {id: ref.id} as WsAttributeValueRef;
+          })
         });
       }),
       switchMap(() => this.formHelper.persist$()),
@@ -151,7 +153,7 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
     return companyRef$.pipe(
       map(companyRefValue => {
         const wsValue: WsAttributeValue = {
-          attributeDefinitionRef: defRef,
+          attributeDefinitionRef: {id: defRef.id},
           value: validValueTexts
         };
         return wsValue;

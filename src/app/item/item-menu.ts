@@ -11,6 +11,17 @@ export const CreateNewItemQuickActionItem = {
   icon: 'fa fa-plus',
   routerLink: ['/item/new'],
 };
+
+export const CreateNewVariantQuickActionItem = {
+  label: 'Create new variant',
+  title: 'Create new variant',
+  icon: 'fa fa-plus',
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsItem>(
+    FunctionsUtils.splitDomainObjectCallback<WsItem, any[]>(
+      item => ['/item', item.id, 'variant', 'new']
+    ), 'item'
+  ),
+};
 export const ItemDetailsVariantListMenuItem = {
   label: 'List',
   title: 'List',
