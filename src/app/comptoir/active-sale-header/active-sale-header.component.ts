@@ -20,6 +20,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   sale$: Observable<WsSale>;
   saleRef$: Observable<WsSaleRef>;
   saleTotalPaid$: Observable<number>;
+  saleRemaining$: Observable<number>;
 
   constructor(
     private saleService: ComptoirSaleService,
@@ -33,6 +34,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.sale$ = this.saleService.getSale$();
     this.saleRef$ = this.saleService.getSaleRef$();
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
+    this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();
   }
 
   onSaleChanged(ref: WsSaleRef) {
@@ -54,5 +56,14 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.router.navigate(['./fill'], {
       relativeTo: this.activatedRoute
     });
+  }
+
+  onCloseClick() {
+    this.saleService.closeActiveSale$()
+      .subscribe(() => {
+        this.router.navigate(['../new/fill'], {
+          relativeTo: this.activatedRoute
+        });
+      });
   }
 }

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import {concat, Observable, of} from 'rxjs';
 import {WsEmployee, WsSale} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../auth.service';
 import {ComptoirSaleService} from './comptoir-sale.service';
-import {delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {defaultIfEmpty, delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {SaleService} from '../domain/commercial/sale.service';
 
 @Injectable({
@@ -49,7 +49,17 @@ export class ComptoirSaleIdResolverService {
 
   private getActive$() {
     const curActive = this.comptoirSaleService.getActiveSaleOptional();
-    return curActive == null ? this.createNew$() : of(curActive);
+    if (curActive == null) {
+      const open$ = this.comptoirSaleService.listOpenSales$().pipe(
+        filter(r => r.totalCount > 0),
+        map(r => r.list[0]),
+        switchMap(ref => this.saleService.getSale$(ref)),
+      );
+      const new$ = this.createNew$();
+      return concat(open$, new$).pipe(take(1));
+    } else {
+      return of(curActive);
+    }
   }
 
   private createNew$() {

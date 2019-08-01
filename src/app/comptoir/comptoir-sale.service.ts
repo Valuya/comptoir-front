@@ -171,13 +171,6 @@ export class ComptoirSaleService {
       () => this.searchOpenSales$()
     );
 
-    this.listOpenSales$().subscribe(r => {
-      if (r.totalCount > 0) {
-        this.saleService.getSale$(r.list[0])
-          .subscribe(sale => this.activeSaleSource$.next(sale));
-      }
-    });
-
   }
 
 
@@ -317,6 +310,14 @@ export class ComptoirSaleService {
 
   listOpenSales$(): Observable<SearchResult<WsSaleRef>> {
     return this.openSalesCaches.getOneResults$();
+  }
+
+  closeActiveSale$(): Observable<any> {
+    return this.getSaleRef$().pipe(
+      take(1),
+      switchMap(ref => this.saleService.closeSale$(ref)),
+      tap(() => this.openSalesCaches.invalidate())
+    );
   }
 
   private applyNextSaleUpdate$(update: Partial<WsSale>, effectiveSale$: Observable<WsSale>): Observable<WsSaleRef> {
@@ -464,6 +465,7 @@ export class ComptoirSaleService {
     return this.saleService.createSale$(sale).pipe(
       switchMap(newSaleRef => this.saleService.getSale$(newSaleRef)),
       tap(newSale => this.initSale(newSale)),
+      tap(newSale => this.openSalesCaches.invalidate()),
     );
   }
 

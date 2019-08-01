@@ -10,7 +10,7 @@ import {
   WsSaleRef, WsSaleSearch, WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {Pagination} from '../../util/pagination';
@@ -173,6 +173,15 @@ export class SaleService {
   cacheSaleItems(results: SearchResult<WsItemVariantSale>) {
     results.list.forEach(
       variant => this.variantCache.setCachedValue(variant)
+    );
+  }
+
+
+  closeSale$(ref: WsSaleRef): Observable<any> {
+    return this.apiService.api.closeSale({
+      id: ref.id
+    }).pipe(
+      tap(() => this.saleCache.clearCache(ref))
     );
   }
 

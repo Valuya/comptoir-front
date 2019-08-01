@@ -18,7 +18,7 @@ export const ComptoirSaleRouteItem: MenuItem & ResolvedRouteItem = {
     FunctionsUtils.splitDomainObjectCallback<WsSale, any[]>(
       sale => ['/comptoir/sale', sale.id],
       value => ['/comptoir/sale/new'],
-      () => ['/comptoir/sale/active'],
+      () => ['/comptoir/sale/new'],
     ), 'comptoirSale'
   ),
   icon: 'fa fa-shopping-basket'

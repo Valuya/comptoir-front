@@ -51,5 +51,12 @@
             [hidden]="fillRoute"
             (click)="onFillClick()"
     ></button>
+    <button type="button" pButton
+            label="Close"
+            icon="fa fa-check"
+            [hidden]="fillRoute"
+            [disabled]="(saleRemaining$ | async) > 0"
+            (click)="onCloseClick()"
+    ></button>
   </div>
 </div>
