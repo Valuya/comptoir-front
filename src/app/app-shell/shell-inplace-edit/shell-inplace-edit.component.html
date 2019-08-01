@@ -22,6 +22,7 @@
 
   <p-overlayPanel #inputOverlay appendTo="body"
                   (onHide)="onOverlayHidden()"
+                  *ngIf="inputTemplate != null"
   >
     <div class="inplace-input-content">
       <div class="content" #inputComponent

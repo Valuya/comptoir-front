@@ -6,6 +6,10 @@
     {{ row.id | json }}
   </ng-container>
 
+  <ng-container *ngSwitchCase="'CLOSED'">
+    <i class="fa fa-check-circle" *ngIf="row.closed"></i>
+  </ng-container>
+
   <ng-container *ngSwitchCase="'CUSTOMER'">
     <cp-customer [ref]="row.customerRef"></cp-customer>
   </ng-container>

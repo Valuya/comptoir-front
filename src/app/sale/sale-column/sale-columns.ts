@@ -5,6 +5,7 @@ export const enum SaleColumn {
   CUSTOMER = 'CUSTOMER',
   DATETIME = 'DATETIME',
   AMOUNT = 'AMOUNT',
+  CLOSED = 'CLOSED',
   VAT_AMOUNT = 'VAT_AMOUNT',
   VAT_EXLUSIVE_AMOUNT = 'VAT_EXLUSIVE_AMOUNT',
   REFERENCE = 'REFERENCE'
@@ -20,6 +21,13 @@ export const ID_COLUMN: TableColumn<SaleColumn> = {
 export const CUSTOMER_COLUMN: TableColumn<SaleColumn> = {
   value: SaleColumn.CUSTOMER,
   header: 'Customer',
+  sortable: false,
+  widthWeight: 1
+};
+
+export const CLOSED_COLUMN: TableColumn<SaleColumn> = {
+  value: SaleColumn.CLOSED,
+  header: 'Closed',
   sortable: false,
   widthWeight: 1
 };

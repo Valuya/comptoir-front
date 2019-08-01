@@ -7,12 +7,13 @@
                              (ngModelChange)="onSaleChanged($event)"
       >
         <ng-template cpInplaceOutput>
-          <div *ngIf="(sale$ | async)?.id == null; else: definedSale">
-            New sale
-          </div>
+            <span *ngIf="(sale$ | async)?.id == null; else: definedSale">
+              New sale
+            </span>
           <ng-template #definedSale>
             Sale {{ (sale$ | async)?.id }}
           </ng-template>
+          <i class="fa fa-caret-down"></i>
         </ng-template>
         <ng-template cpInplaceInput>
           <cp-active-sale-select [ngModel]="sale.editValue" *ngIf="sale.editing"
@@ -40,7 +41,7 @@
     <button type="button" pButton
             label="Pay"
             icon="fa fa-money"
-            [hidden]="payRoute"w
+            [hidden]="payRoute" w
             [disabled]="(saleRef$ | async)?.id == null"
             (click)="onPayClick()"
     ></button>
@@ -49,6 +50,13 @@
             icon="fa fa-shopping-basket"
             [hidden]="fillRoute"
             (click)="onFillClick()"
+    ></button>
+    <button type="button" pButton
+            label="Close"
+            icon="fa fa-check"
+            [hidden]="fillRoute"
+            [disabled]="(saleRemaining$ | async) > 0"
+            (click)="onCloseClick()"
     ></button>
   </div>
 </div>

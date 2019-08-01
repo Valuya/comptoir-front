@@ -140,11 +140,7 @@
         {{ value.vatExclusive | currency }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [ngModel]="vatExclusive.editValue"
-                   (ngModelChange)="vatExclusive.editValue = $event "
-                   step="0.01" min="0"
-                   [class.ui-state-error]="invalid"
-        ></p-spinner>
+        <cp-currency-input [(ngModel)]="vatExclusive.editValue"></cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>
@@ -162,11 +158,7 @@
         {{ value.total | currency }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [ngModel]="total.editValue "
-                   (ngModelChange)="total.editValue = $event"
-                   step="0.01" min="0"
-                   [class.ui-state-error]="invalid"
-        ></p-spinner>
+        <cp-currency-input [(ngModel)]="total.editValue"></cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>

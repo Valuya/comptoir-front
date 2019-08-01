@@ -81,9 +81,7 @@
         {{ value.balance | currency }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [(ngModel)]="balance.editValue"
-                   step="0.01"
-        ></p-spinner>
+        <cp-currency-input [(ngModel)]="balance.editValue"></cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>

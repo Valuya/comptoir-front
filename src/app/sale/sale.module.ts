@@ -27,6 +27,7 @@ import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-
 import {SockComponentModule} from '../domain/commercial/stock/sock-component.module';
 import {SaleComponentModule} from '../domain/commercial/sale/sale-component.module';
 import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
+import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.module';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import {PercentInputModule} from '../domain/util/percent-input/percent-input.mod
     SockComponentModule,
     SaleComponentModule,
     PercentInputModule,
+    CurrencyInputModule,
   ]
 })
 export class SaleModule {

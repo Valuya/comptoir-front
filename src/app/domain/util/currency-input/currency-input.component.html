@@ -1,0 +1,6 @@
+<div class="currency-input">
+  <input [ngModel]="valueSource$ | async"
+         (ngModelChange)="onCurrencyChange($event)"
+         type="currency" pInputText
+  >
+</div>

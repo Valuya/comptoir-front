@@ -37,8 +37,10 @@ export class FocusFirstInputDirective implements OnInit {
         firstInput.focus({
           preventScroll: true
         });
-        const valueLength = firstInput.value.length;
-        firstInput.setSelectionRange(0, valueLength);
+        if (firstInput.setSelectionRange) {
+          const valueLength = firstInput.value.length;
+          firstInput.setSelectionRange(0, valueLength);
+        }
       });
     }
   }

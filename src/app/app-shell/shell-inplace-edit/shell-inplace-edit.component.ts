@@ -11,7 +11,7 @@ import {
   Optional,
   Output,
   TemplateRef,
-  ViewChild
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {InplaceOutputDirective} from './inplace-output.directive';
 import {InplaceInputDirective} from './inplace-input.directive';
@@ -58,8 +58,8 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   private inputOverlay: OverlayPanel;
   @ViewChild('outputElement', {static: true})
   private outputElement: ElementRef;
-  @ViewChild('[focusFirstInput=true]', {static: false})
-  private focusInputDirective: FocusFirstInputDirective;
+  @ViewChildren(FocusFirstInputDirective)
+  private focusInputDirectives: FocusFirstInputDirective[];
 
 
   value: any;
@@ -75,6 +75,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     if (this.editService) {
       this.editService.register(this);
     }
+    this.focusFirstInput();
   }
 
   ngOnDestroy(): void {
@@ -84,6 +85,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit(): void {
+    this.focusFirstInput();
   }
 
 
@@ -93,11 +95,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.inputOverlay.show(event, this.outputElement.nativeElement);
 
     this.editValue = this.value;
-    if (this.focusInputDirective) {
-      timer(10).subscribe(() => {
-        this.focusInputDirective.focusFirstInput();
-      });
-    }
+    this.focusFirstInput();
   }
 
   stopEdit() {
@@ -225,6 +223,15 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     }
     if (this.onChange) {
       this.onChange(value);
+    }
+  }
+
+  private focusFirstInput() {
+    if (this.focusInputDirectives) {
+      timer(10).subscribe(() => {
+        this.focusInputDirectives
+          .forEach(d => d.focusFirstInput());
+      });
     }
   }
 

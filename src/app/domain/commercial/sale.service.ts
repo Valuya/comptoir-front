@@ -10,7 +10,7 @@ import {
   WsSaleRef, WsSaleSearch, WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
+import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {Pagination} from '../../util/pagination';
@@ -114,14 +114,14 @@ export class SaleService {
     return this.variantCache.deleteResource$(variantRef);
   }
 
-  searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<WsSalesSearchResult> {
+  searchSales$(searchFilter: WsSaleSearch, pagination: Pagination): Observable<SearchResult<WsSaleRef>> {
     const searchResult$ = this.apiService.api.findSales({
       offset: pagination.first,
       length: pagination.rows,
       sort: PaginationUtils.sortMetaToQueryParam(pagination.multiSortMeta),
       wsSaleSearch: searchFilter
     }) as any as Observable<WsSalesSearchResult>;
-    return searchResult$;
+    return searchResult$ as Observable<SearchResult<WsSaleRef>>;
   }
 
   searchVariants$(searchFilter: WsItemVariantSaleSearch, pagination: Pagination): Observable<WsItemVariantSaleSearchResult> {
@@ -173,6 +173,15 @@ export class SaleService {
   cacheSaleItems(results: SearchResult<WsItemVariantSale>) {
     results.list.forEach(
       variant => this.variantCache.setCachedValue(variant)
+    );
+  }
+
+
+  closeSale$(ref: WsSaleRef): Observable<any> {
+    return this.apiService.api.closeSale({
+      id: ref.id
+    }).pipe(
+      tap(() => this.saleCache.clearCache(ref))
     );
   }
 

@@ -69,8 +69,7 @@
         {{ value.pricingAmount | currency }}
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [(ngModel)]="pricingAmount.value"
-        ></p-spinner>
+        <cp-currency-input [(ngModel)]="pricingAmount.editValue"></cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>
