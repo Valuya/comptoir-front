@@ -66,4 +66,13 @@ export class ActiveSaleHeaderComponent implements OnInit {
         });
       });
   }
+
+  onReopenClick() {
+    this.saleService.reopenActiveSale$()
+      .subscribe(ref => {
+        this.router.navigate(['../', ref.id, 'fill'], {
+          relativeTo: this.activatedRoute
+        });
+      });
+  }
 }

@@ -38,10 +38,11 @@
   </div>
 
   <div class="actions">
+
     <button type="button" pButton
             label="Pay"
             icon="fa fa-money"
-            [hidden]="payRoute" w
+            [hidden]="payRoute || (sale$ | async)?.closed"
             [disabled]="(saleRef$ | async)?.id == null"
             (click)="onPayClick()"
     ></button>
@@ -58,5 +59,12 @@
             [disabled]="(saleRemaining$ | async) > 0"
             (click)="onCloseClick()"
     ></button>
+    <button type="button" pButton
+            label="Reopen"
+            icon="fa fa-shopping-backet"
+            [hidden]="(sale$ | async)?.closed !== true"
+            (click)="onReopenClick()"
+    ></button>
+
   </div>
 </div>

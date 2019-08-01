@@ -324,6 +324,16 @@ export class ComptoirSaleService {
     );
   }
 
+  reopenActiveSale$(): Observable<WsSaleRef> {
+    return this.getSaleRef$().pipe(
+      take(1),
+      switchMap(ref => this.saleService.openSale$(ref)),
+      tap(() => this.openSalesCaches.refetch()),
+      switchMap(ref => this.saleService.getSale$(ref)),
+      tap(sale => this.initSale(sale)),
+    );
+  }
+
   private applyNextSaleUpdate$(update: Partial<WsSale>, effectiveSale$: Observable<WsSale>): Observable<WsSaleRef> {
     this.updatingSaleInProgress$.next(true);
     return effectiveSale$.pipe(

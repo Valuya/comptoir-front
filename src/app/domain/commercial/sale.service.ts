@@ -185,6 +185,15 @@ export class SaleService {
     );
   }
 
+  openSale$(ref: WsSaleRef): Observable<WsSaleRef > {
+    return this.apiService.api.openSale({
+      id: ref.id
+    }).pipe(
+      tap(() => this.saleCache.clearCache(ref))
+    );
+  }
+
+
   private doGet$(ref: WsSaleRef) {
     return this.apiService.api.getSale({
       id: ref.id
