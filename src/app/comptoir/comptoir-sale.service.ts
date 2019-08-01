@@ -316,7 +316,7 @@ export class ComptoirSaleService {
     return this.getSaleRef$().pipe(
       take(1),
       switchMap(ref => this.saleService.closeSale$(ref)),
-      tap(() => this.openSalesCaches.invalidate())
+      tap(() => this.openSalesCaches.refetch())
     );
   }
 
