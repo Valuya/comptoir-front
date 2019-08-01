@@ -18,7 +18,8 @@ export class EmployeeLoggedInGuard implements CanActivateChild {
     if (!loggedIn) {
       this.router.navigate(['/login'], {
         queryParams: {
-          reason: `Access denied to ${childRoute.outlet}`
+          reason: `Access denied to ${childRoute.outlet}`,
+          redirectUrl: state.url
         }
       });
     }

@@ -14,7 +14,7 @@ import {NavigationService} from '../../navigation.service';
 })
 export class LoginRouteComponent implements OnInit {
 
-  loginMessage$ = new BehaviorSubject<string>(null);
+  loginMessage$ : Observable<string>;
   loginError$ = new BehaviorSubject<string>(null);
   loading$ = new BehaviorSubject<boolean>(false);
 
@@ -26,11 +26,16 @@ export class LoginRouteComponent implements OnInit {
   constructor(private loginService: LoginService,
               private authService: AuthService,
               private router: Router,
+              private route: ActivatedRoute,
               private navigationService: NavigationService,
   ) {
   }
 
   ngOnInit() {
+    this.loginMessage$ = this.route.queryParams.pipe(
+      map(params => params.reason as string),
+      publishReplay(1), refCount()
+    );
   }
 
   submit() {
