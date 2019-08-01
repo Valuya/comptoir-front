@@ -23,8 +23,8 @@ pipeline {
                          ansiColor('xterm') {
 
                             sh """
-                               npm install || exit 1
-                               ./node_modules/.bin/ng build --c $BUILD_ENV || exit 1
+                               npm install
+                               ./node_modules/.bin/ng build --c $BUILD_ENV
                             """
                          }
                     }}
