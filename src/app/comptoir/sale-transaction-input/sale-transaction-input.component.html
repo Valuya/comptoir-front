@@ -6,7 +6,7 @@
     ></cp-account-select-list>
   </div>
 
-  <div class="amount-input" [hidden]="selectedAccountRef == null">
+  <div class="amount-input" *ngIf="selectedAccountRef != null">
     <p-panel>
       <p-header>
         <cp-account [ref]="selectedAccountRef"></cp-account>
@@ -14,11 +14,9 @@
       <form class="input-form" (ngSubmit)="onAmountSubmit()" #inputForm="ngForm">
         <cp-shell-inplace-edit>
           <ng-template cpInplaceOutput>
-            <p-spinner name="amount"
-                       [(ngModel)]="transactionAmount"
-                       [step]="0.01" [min]="0.01"
-                       required cpFocusFirstInput
-            ></p-spinner>
+            <cp-currency-input name="amount"
+                               [(ngModel)]="transactionAmount"
+            ></cp-currency-input>
           </ng-template>
         </cp-shell-inplace-edit>
 

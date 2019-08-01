@@ -140,7 +140,7 @@
                              (ngModelChange)="fireTotalVatInclusiveChange($event)"
       >
         <ng-template cpInplaceOutput>
-          {{ item.total * (1 + item.vatRate) | number:'.0-2' | currency }}
+          {{ item.total * (1 + item.vatRate)| currency }}
         </ng-template>
         <ng-template cpInplaceInput>
           <cp-currency-input [(ngModel)]="totalWithVat.editValue"></cp-currency-input>

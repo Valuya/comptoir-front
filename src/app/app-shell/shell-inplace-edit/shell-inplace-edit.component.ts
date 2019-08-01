@@ -75,6 +75,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     if (this.editService) {
       this.editService.register(this);
     }
+    this.focusFirstInput();
   }
 
   ngOnDestroy(): void {
@@ -84,6 +85,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit(): void {
+    this.focusFirstInput();
   }
 
 
@@ -93,12 +95,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.inputOverlay.show(event, this.outputElement.nativeElement);
 
     this.editValue = this.value;
-    if (this.focusInputDirectives) {
-      timer(10).subscribe(() => {
-        this.focusInputDirectives
-          .forEach(d => d.focusFirstInput());
-      });
-    }
+    this.focusFirstInput();
   }
 
   stopEdit() {
@@ -226,6 +223,15 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     }
     if (this.onChange) {
       this.onChange(value);
+    }
+  }
+
+  private focusFirstInput() {
+    if (this.focusInputDirectives) {
+      timer(10).subscribe(() => {
+        this.focusInputDirectives
+          .forEach(d => d.focusFirstInput());
+      });
     }
   }
 

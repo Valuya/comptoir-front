@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {concat, Observable, of} from 'rxjs';
+import {ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
+import {concat, EMPTY, Observable, of} from 'rxjs';
 import {WsEmployee, WsSale} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../auth.service';
 import {ComptoirSaleService} from './comptoir-sale.service';
-import {defaultIfEmpty, delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {delay, filter, map, take, tap} from 'rxjs/operators';
 import {SaleService} from '../domain/commercial/sale.service';
 
 @Injectable({
@@ -13,6 +13,7 @@ import {SaleService} from '../domain/commercial/sale.service';
 export class ComptoirSaleIdResolverService {
 
   constructor(private saleService: SaleService,
+              private router: Router,
               private comptoirSaleService: ComptoirSaleService,
               private authService: AuthService) {
   }
@@ -21,11 +22,11 @@ export class ComptoirSaleIdResolverService {
     const param = route.params.comptoirSaleId;
     let resovledSale$: Observable<WsSale>;
     if (param == null) {
-      resovledSale$ = this.getActive$();
+      resovledSale$ = this.getActive$(route);
     } else {
       const idParam = parseInt(param, 10);
       if (isNaN(idParam)) {
-        resovledSale$ = this.handleNonNumericParam$(param);
+        resovledSale$ = this.handleNonNumericParam$(route, param);
       } else {
         resovledSale$ = this.saleService.getSale$({id: idParam});
       }
@@ -37,9 +38,11 @@ export class ComptoirSaleIdResolverService {
   }
 
 
-  private handleNonNumericParam$(idParam: string) {
+  private handleNonNumericParam$(route: ActivatedRouteSnapshot, idParam: string) {
     if (idParam === 'active') {
-      return this.getActive$();
+      return this.getActive$(route).pipe(
+        tap(sale => this.router.navigate(['/comptoir/sale', (sale.id == null ? 'new' : sale.id)]))
+      );
     } else if (idParam === 'new') {
       return this.createNew$();
     } else {
@@ -47,13 +50,12 @@ export class ComptoirSaleIdResolverService {
     }
   }
 
-  private getActive$() {
+  private getActive$(route: ActivatedRouteSnapshot) {
     const curActive = this.comptoirSaleService.getActiveSaleOptional();
     if (curActive == null) {
       const open$ = this.comptoirSaleService.listOpenSales$().pipe(
         filter(r => r.totalCount > 0),
         map(r => r.list[0]),
-        switchMap(ref => this.saleService.getSale$(ref)),
       );
       const new$ = this.createNew$();
       return concat(open$, new$).pipe(take(1));
