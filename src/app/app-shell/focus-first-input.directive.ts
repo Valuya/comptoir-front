@@ -39,7 +39,10 @@ export class FocusFirstInputDirective implements OnInit {
         });
         if (firstInput.setSelectionRange) {
           const valueLength = firstInput.value.length;
-          firstInput.setSelectionRange(0, valueLength);
+          try {
+            firstInput.setSelectionRange(0, valueLength);
+          } catch (e) {
+          }
         }
       });
     }
