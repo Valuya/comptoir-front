@@ -1,0 +1,29 @@
+<div class="stock-variantt-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>Stock</label>
+    <cp-stock [ref]="value.stockRef"></cp-stock>
+  </div>
+
+  <div class="control">
+    <label>Item</label>
+    <cp-item-variant [ref]="value.itemVariantRef"
+    ></cp-item-variant>
+  </div>
+
+  <div class="control">
+    <label>Date</label>
+    <div>
+      {{ value.startDateTime | date:'short' }}
+    </div>
+  </div>
+
+  <div class="control">
+    <label>Quantity</label>
+    <div>
+      {{ value.quantity | number }}
+    </div>
+  </div>
+
+
+</div>

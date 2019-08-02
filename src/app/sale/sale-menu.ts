@@ -27,7 +27,7 @@ export const ResolvedSaleDetailsVariantDetailsMenuItem: MenuItem & ResolvedRoute
     (sale, variant) => (sale == null || variant == null) ? [] : ['/sale', sale.id, 'variant', variant.id],
     'sale', 'saleVariant'
   ),
-  icon: 'fa fa-shopping-basket',
+  icon: 'fa fa-shoppingw-basket',
 };
 
 const SaleDetailVariantMenuItems: MenuItem[] = [

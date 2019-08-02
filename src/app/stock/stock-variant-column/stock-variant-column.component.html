@@ -1,0 +1,68 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'STOCK'">
+    <cp-stock [ref]="row.stockRef"></cp-stock>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'COMMENT'">
+    {{ row.comment }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'COMMENT'">
+    <cp-locale-text [localeTexts]="row.comment"
+    ></cp-locale-text>
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'END_DATETIME'">
+    {{ row.endDateTime | date:'short' }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'START_DATETIME'">
+    {{ row.startDateTime | date:'short' }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'ITEM_VARIANT'">
+    <cp-item-variant [ref]="row.itemVariantRef"
+                     [showMainPicture]="true"
+                     [showItemName]="true"
+                     [showReference]="true"
+                     [layout]="'row'"
+    ></cp-item-variant>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'ORDER_POSITION'">
+    {{ row.orderPosition | number }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'PREVIOUS_ITEM'">
+    prev id: {{ row.previousItemStockRef?.id }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'QUANTITY'">
+    {{ row.quantity | number }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'STOCK_CHANGE_TYPE'">
+    {{ row.stockChangeType }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'SALE_VARIANT'">
+    sale variant: {{ row.stockChangeVariantSaleRef?.id }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

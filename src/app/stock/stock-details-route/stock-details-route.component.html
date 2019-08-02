@@ -1,14 +1,13 @@
 <cp-shell-content-page>
   <ng-template cpContentBody>
-    <cp-shell-details-form (formSubmit)="onFormSubmit()">
-      <ng-template cpFormContent let-form="form">
 
-        <cp-stock-form [ngModel]="formHelper.editingValue$ | async"
-                      (partialUpdate)="formHelper.update($event)"
-                      [validationResults]="formHelper.validationResults$ | async"
-        ></cp-stock-form>
+    <p-tabMenu [model]="detailsRoutesItems$ | async"></p-tabMenu>
 
-      </ng-template>
-    </cp-shell-details-form>
+    <div class="details-route-content">
+      <router-outlet></router-outlet>
+    </div>
+
   </ng-template>
+
+
 </cp-shell-content-page>

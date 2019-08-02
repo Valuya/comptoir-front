@@ -33,7 +33,7 @@ export class PaginationUtils {
       return null;
     }
     const newPagination = Object.assign({}, {
-      first: event.first,
+      first: event.first || 0,
       rows: event.rows,
       multiSortMeta: event.multiSortMeta,
       globalFilter: event.globalFilter

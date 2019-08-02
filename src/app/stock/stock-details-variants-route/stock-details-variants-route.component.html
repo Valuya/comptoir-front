@@ -1,0 +1,17 @@
+<div class="variants">
+  <cp-shell-table [columns]="columns"
+                  [loading]="stockVariantTableHelper.loading$ | async"
+                  [rows]="stockVariantTableHelper.rows$ | async"
+                  [totalRecords]="stockVariantTableHelper.totalCount$ | async"
+                  [pagination]="stockVariantTableHelper.pagination$ | async"
+                  (paginationChange)="stockVariantTableHelper.setPagination($event)"
+                  [(selection)]="selectedstockVariant"
+                  (rowSelect)="onRowSelect($event)"
+  >
+    <ng-template cpShellColumn let-row="row" let-column="column">
+      <cp-stock-variant-column [column]="column"
+                              [row]="row"
+      ></cp-stock-variant-column>
+    </ng-template>
+  </cp-shell-table>
+</div>

@@ -10,14 +10,31 @@ import {StockDetailsRouteComponent} from './stock-details-route/stock-details-ro
 import {ShellDetailsFormModule} from '../app-shell/shell-details-form/shell-details-form.module';
 import {StockFormComponent} from './stock-form/stock-form.component';
 import {FormsModule} from '@angular/forms';
-import {ButtonModule, InputSwitchModule, InputTextModule} from 'primeng/primeng';
+import {ButtonModule, InputSwitchModule, InputTextModule, TabMenuModule} from 'primeng/primeng';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 import {LocaleTextModule} from '../domain/lang/locale-text/locale-text.module';
 import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
+import {StockVariantColumnComponent} from './stock-variant-column/stock-variant-column.component';
+import {StockVariantFormComponent} from './stock-variant-form/stock-variant-form.component';
+import {StockDetailsVariantsRouteComponent} from './stock-details-variants-route/stock-details-variants-route.component';
+import {StockDetailsVariantDetailsRouteComponent} from './stock-details-variant-details-route/stock-details-variant-details-route.component';
+import {StockDetailsFormRouteComponent} from './stock-details-form-route/stock-details-form-route.component';
+import {SockComponentModule} from '../domain/commercial/stock/sock-component.module';
+import {ItemVariantComponentModule} from '../domain/commercial/item-variant/item-variant-component.module';
 
 
 @NgModule({
-  declarations: [StockListRouteComponent, StockColumnComponent, StockDetailsRouteComponent, StockFormComponent],
+  declarations: [
+    StockListRouteComponent,
+    StockColumnComponent,
+    StockDetailsRouteComponent,
+    StockFormComponent,
+    StockVariantColumnComponent,
+    StockVariantFormComponent,
+    StockDetailsFormRouteComponent,
+    StockDetailsVariantsRouteComponent,
+    StockDetailsVariantDetailsRouteComponent
+  ],
   imports: [
     CommonModule,
     StockRoutingModule,
@@ -31,6 +48,9 @@ import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-
     LocaleTextModule,
     LocaleTextEditModule,
     ButtonModule,
+    TabMenuModule,
+    SockComponentModule,
+    ItemVariantComponentModule,
   ]
 })
 export class StockModule {

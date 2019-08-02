@@ -2,9 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {WsItem, WsSale} from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
-import {map, publishReplay, refCount} from 'rxjs/operators';
 import {MenuItem} from 'primeng/api';
-import {ItemDetailMenuItems, ResolvedItemDetailsMenuItem} from '../../item/item-menu';
 import {AppMenuService} from '../../app-shell/app-menu.service';
 import {ResolvedSaleDetailsMenuItem, SaleDetailMenuItems} from '../sale-menu';
 import {RouteUtils} from '../../util/route-utils';
@@ -28,7 +26,7 @@ export class SaleDetailsRouteComponent implements OnInit {
 
   ngOnInit() {
     const routeSnapshot = this.activatedRoute.snapshot;
-    const sale = RouteUtils.findRouteDataInAncestors<WsItem>(routeSnapshot.pathFromRoot, 'sale');
+    const sale = RouteUtils.findRouteDataInAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
     this.detailsRoutesItems$ = of(this.createTabs(sale, routeSnapshot));
   }
 
