@@ -30,6 +30,7 @@ import {SaleVariantUpdate} from './sale-variant-update';
 import {ComptoirSaleEventsService, SaleAccountingEntriesUpdateEvent, SaleItemupdateEvent} from './comptoir-sale-events.service';
 import {Injectable} from '@angular/core';
 import {AccountingService} from '../domain/accounting/accounting.service';
+import {ComptoirService} from './comptoir-service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class ComptoirSaleService {
   private activeSaleSource$ = new BehaviorSubject<WsSale>(null);
 
   // Server sent update events
-  private serverEventEnabled = false;
+  private serverEventSubscribed = false;
   private saleUpdateEvents$: Observable<WsSale>;
   private saleTotalPaidEvents$: Observable<number>;
   private saleItemUpdateEvents$: Observable<SaleItemupdateEvent>;
@@ -89,7 +90,7 @@ export class ComptoirSaleService {
     private accountingService: AccountingService,
     private localeService: LocaleService,
     private authService: AuthService,
-    private saleEventsService: ComptoirSaleEventsService
+    private saleEventsService: ComptoirSaleEventsService,
   ) {
     // The most recent sale on which to apply further updates
     const effectiveEditingSale$: Observable<WsSale> = this.activeSaleSource$.pipe(
@@ -195,7 +196,7 @@ export class ComptoirSaleService {
       publishReplay(1), refCount()
     );
 
-    this.serverEventEnabled = true;
+    this.serverEventSubscribed = true;
 
     // Dont miss any event by subscribing early
     const subscription = new Subscription();
@@ -210,6 +211,10 @@ export class ComptoirSaleService {
     subscription.add(() => {
       this.saleEventsService.unsubscribe();
     });
+    const curSale = this.activeSaleSource$.getValue();
+    if (curSale != null && curSale.id != null) {
+      this.saleEventsService.subscribeToSale({id: curSale.id});
+    }
     return subscription;
   }
 
@@ -234,7 +239,7 @@ export class ComptoirSaleService {
           accountType: WsBalanceSearchAccountSearchAccountTypeEnum.PAYMENT
         }
       });
-      if (this.serverEventEnabled) {
+      if (this.serverEventSubscribed) {
         this.saleEventsService.subscribeToSale({id: sale.id});
       }
     }
@@ -679,9 +684,11 @@ export class ComptoirSaleService {
       take(1),
       switchMap(sale => this.saleService.getSale$({id: sale.id}, true)),
       map(curSale => {
-        this.activeSaleSource$.next(curSale);
-        this.openSalesCaches.refetch();
+        // this.activeSaleSource$.next(curSale);
+        // this.openSalesCaches.refetch();
         // this.initSale(curSale);
+        this.saleItemsTableHelper.reload();
+        this.saleAccountingEntriessTableHelper.reload();
         return curSale;
       })
     );

@@ -5,6 +5,7 @@ import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth.service';
 import {MessageService} from 'primeng/api';
 import {CompanyService} from '../domain/commercial/company.service';
+import {ComptoirSaleService} from './comptoir-sale.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class ComptoirService {
 
   pointOfSaleRef$ = new BehaviorSubject<WsPosRef | null>(null);
   defaultCustomerRef$ = new BehaviorSubject<WsCustomerRef | null>(null);
+  useServerSendEvents$ = new BehaviorSubject<boolean>(true);
 
   customerLoyaltyAmount$: Observable<number>;
   customerLoyaltyAmountReloadTrigger$ = new Subject<any>();
@@ -20,6 +22,7 @@ export class ComptoirService {
   constructor(
     private authService: AuthService,
     private messageService: MessageService,
+    private comptoirSaleService: ComptoirSaleService,
     private companyService: CompanyService
   ) {
     this.customerLoyaltyAmount$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(
@@ -49,6 +52,13 @@ export class ComptoirService {
       ref => this.onLoyaltyRateUpdated(),
       e => this.showUpdateError(e),
     );
+  }
+
+  setUseServerSentEvents(value: boolean) {
+    this.useServerSendEvents$.next(value);
+    if (value) {
+
+    }
   }
 
   private onLoyaltyRateUpdated() {

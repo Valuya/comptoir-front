@@ -5,6 +5,7 @@ import {concat, Observable, of, Subscription} from 'rxjs';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, map, publishReplay, refCount, tap} from 'rxjs/operators';
+import {ComptoirService} from '../comptoir-service';
 
 @Component({
   selector: 'cp-comptoir-sale-route',
@@ -17,10 +18,12 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
   isFillRoute$: Observable<boolean>;
   isPayRoute$: Observable<boolean>;
 
+  private serverEventSEnabledubscription: Subscription;
   private serverEventSubscription: Subscription;
 
   constructor(
     private saleService: ComptoirSaleService,
+    private comptoirService: ComptoirService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
@@ -51,11 +54,27 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
       map(segements => segements.findIndex(s => s.path === 'pay') >= 0),
       publishReplay(1), refCount()
     );
-    this.serverEventSubscription = this.saleService.subscribeToServerEvents$();
-    this.saleService.initSale(this.saleService.getActiveSaleOptional());
+    this.serverEventSEnabledubscription = this.comptoirService.useServerSendEvents$
+      .subscribe(enabled => {
+        if (enabled) {
+          if (this.serverEventSubscription != null) {
+            this.serverEventSubscription.unsubscribe();
+          }
+          this.serverEventSubscription = this.saleService.subscribeToServerEvents$();
+        } else {
+          if (this.serverEventSubscription) {
+            this.serverEventSubscription.unsubscribe();
+            this.serverEventSubscription = null;
+          }
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    this.serverEventSubscription.unsubscribe();
+    if (this.serverEventSubscription) {
+      this.serverEventSubscription.unsubscribe();
+      this.serverEventSubscription = null;
+    }
+    this.serverEventSEnabledubscription.unsubscribe();
   }
 }
