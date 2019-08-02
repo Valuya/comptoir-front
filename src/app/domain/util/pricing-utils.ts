@@ -16,7 +16,7 @@ export class PricingUtils {
   static vatExclusviveFromTotal(totalValue: number, curVatRate: number) {
     const vatExclusive = totalValue * (1 / (1 + curVatRate));
     return PricingUtils.fixedDecimals(vatExclusive);
-  };
+  }
 
   static totalFromVatExclusive(vatExclusiveValue: number, curVatRate: number) {
     const totalValue = vatExclusiveValue * (1 + curVatRate);
@@ -24,7 +24,7 @@ export class PricingUtils {
   }
 
   static fixedDecimals(priceValue: number): number {
-    const fixedDecimalString = priceValue.toFixed(2);
+    const fixedDecimalString = priceValue.toFixed(3);
     return parseFloat(fixedDecimalString);
   }
 }

@@ -29,7 +29,7 @@ export class SaleItemListItemComponent implements OnInit {
     this.itemChange.next(newValue);
   }
 
-  fireTotalVatExclusiveChange(totalValue: number) {
+    fireTotalVatExclusiveChange(totalValue: number) {
     const quantity = this.item.quantity;
     const unitPrice = NumberUtils.toFixedDecimals(totalValue / quantity, 2);
     return this.fireChanges({

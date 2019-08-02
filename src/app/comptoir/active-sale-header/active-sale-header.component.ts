@@ -31,7 +31,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sale$ = this.saleService.getSale$();
+    this.sale$ = this.saleService.getActiveSale$();
     this.saleRef$ = this.saleService.getSaleRef$();
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
     this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();

@@ -1,4 +1,4 @@
-import {BehaviorSubject, combineLatest, concat, forkJoin, merge, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, merge, Observable, of, Subject, Subscription} from 'rxjs';
 import {
   WsAccountingEntry,
   WsAccountingEntryRef,
@@ -93,8 +93,7 @@ export class ComptoirSaleService {
   ) {
     // The most recent sale on which to apply further updates
     const effectiveEditingSale$: Observable<WsSale> = this.activeSaleSource$.pipe(
-      filter(s => s != null),
-      switchMap(initSale => this.concatInitSaleAndItsUpdates$(initSale)),
+      switchMap(initSale => initSale == null ? of(null) : this.concatInitSaleAndItsUpdates$(initSale)),
       publishReplay(0), refCount()
     );
 
@@ -241,6 +240,15 @@ export class ComptoirSaleService {
     }
   }
 
+  createSaleIfRequired$(): Observable<WsSale | never> {
+    const activeSale = this.getActiveSaleOptional();
+    if (activeSale.id == null) {
+      return this.createSale$(activeSale);
+    } else {
+      return EMPTY;
+    }
+  }
+
   updateSale(update: Partial<WsSale>) {
     this.saleUpdatesSource$.next(update);
   }
@@ -274,6 +282,10 @@ export class ComptoirSaleService {
 
   getSale$(): Observable<WsSale> {
     return this.updatedSale$;
+  }
+
+  getActiveSale$(): Observable<WsSale | null> {
+    return this.activeSaleSource$;
   }
 
   getActiveSaleOptional(): WsSale | null {
@@ -320,7 +332,12 @@ export class ComptoirSaleService {
     return this.getSaleRef$().pipe(
       take(1),
       switchMap(ref => this.saleService.closeSale$(ref)),
-      tap(() => this.openSalesCaches.refetch())
+      tap(() => {
+        // this.activeSaleSource$.next(null);
+        // this.saleItemsTableHelper.setFilter(null);
+        // this.saleAccountingEntriessTableHelper.setFilter(null);
+        this.openSalesCaches.refetch();
+      })
     );
   }
 
@@ -330,7 +347,9 @@ export class ComptoirSaleService {
       switchMap(ref => this.saleService.openSale$(ref)),
       tap(() => this.openSalesCaches.refetch()),
       switchMap(ref => this.saleService.getSale$(ref)),
-      tap(sale => this.initSale(sale)),
+      tap(sale => {
+        this.openSalesCaches.refetch();
+      }),
     );
   }
 
@@ -457,7 +476,6 @@ export class ComptoirSaleService {
       return of(SearchResultFactory.emptyResults());
     }
     const searchFilter = Object.assign({}, entrySearch, {
-      saleRef: {id: sale.id},
       companyRef: companyRef as object,
     } as Partial<WsAccountingEntrySearch>);
     return this.accountingService.searchEntries$(searchFilter, pagination).pipe(
@@ -488,7 +506,7 @@ export class ComptoirSaleService {
     : Observable<WsItemVariantSaleRef> {
     if (curSale == null || curSale.id == null) {
       return this.createSale$(curSale).pipe(
-        switchMap(newSale => this.addOrAppendVariant$(newSale, [], itemToAdd))
+        switchMap(newSale => this.addOrAppendVariant$(newSale, [], itemToAdd)),
       );
     } else if (currentItems.length === 0) {
       return this.saleService.createNewSaleItem$(curSale, itemToAdd);
@@ -600,9 +618,9 @@ export class ComptoirSaleService {
         resultsFromEvent$,
       );
       const reloadedResults$ = this.reloadSource$.pipe(
-        switchMap(() => this.searchSaleItems$(searchFilter, PaginationUtils.create(100)))
+        switchMap(() => this.searchSaleItems$(searchFilter, PaginationUtils.create(100))),
       );
-      return merge(eventResults$, reloadedResults$);
+      return merge(reloadedResults$, eventResults$);
     } else {
       const restResults$ = this.searchSaleItems$(searchFilter, PaginationUtils.create(100));
       return restResults$;
@@ -628,7 +646,7 @@ export class ComptoirSaleService {
         resultsFromEvent$,
       );
       const reloadedResults$ = this.reloadSource$.pipe(
-        switchMap(() => this.searchSaleAccountingEntries$(searchFilter, PaginationUtils.create(100)))
+        switchMap(() => this.searchSaleAccountingEntries$(searchFilter, PaginationUtils.create(100))),
       );
       return merge(eventResults$, reloadedResults$);
     } else {
@@ -642,11 +660,15 @@ export class ComptoirSaleService {
     if (this.saleUpdateEvents$ == null) {
       return this.reloadSaleAndItems$();
     } else {
-      return this.saleUpdateEvents$.pipe(
+      const updates$ = this.saleUpdateEvents$.pipe(
         withLatestFrom(this.activeSaleSource$),
         // Check it is for the actual sale
-        filter(r => r[0].id === r[1].id),
+        filter(r => r[0] != null && r[1] != null && r[0].id === r[1].id),
         map(r => r[0])
+      );
+      return concat(
+        this.reloadSaleAndItems$(),
+        updates$
       );
     }
   }
@@ -655,14 +677,20 @@ export class ComptoirSaleService {
     return this.activeSaleSource$.pipe(
       filter(s => s != null && s.id != null),
       take(1),
+      switchMap(sale => this.saleService.getSale$({id: sale.id}, true)),
       map(curSale => {
-        this.initSale(curSale);
+        this.activeSaleSource$.next(curSale);
+        this.openSalesCaches.refetch();
+        // this.initSale(curSale);
         return curSale;
       })
     );
   }
 
   private getSaleAmountRemaining(sale: WsSale, paid: number) {
+    if (sale == null || paid == null) {
+      return 0;
+    }
     return sale.vatExclusiveAmount + sale.vatAmount - paid;
   }
 

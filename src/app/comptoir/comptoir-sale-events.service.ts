@@ -103,7 +103,7 @@ export class ComptoirSaleEventsService {
   private onSaleUpdateMessage(messageEvent) {
     const compoirEvent: SomeSaleEvent = this.parseMessage(messageEvent);
     this.saleUpdates$.next(compoirEvent.wsSale);
-    this.saleTotalPaid$.next(compoirEvent.totalPaid)
+    this.saleTotalPaid$.next(compoirEvent.totalPaid);
   }
 
   private onSaleItemsUpdateMessage(messageEvent) {

@@ -21,30 +21,38 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 
   constructor(
     private saleService: ComptoirSaleService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
   }
 
   ngOnInit() {
     this.sale$ = this.saleService.getSale$();
+    const curChildUrl = this.activatedRoute.children[0].snapshot.url;
     const routeUrl$ = this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
-      map(e => this.router.routerState.snapshot.url),
+      map(e => this.router.routerState.snapshot.url.split('/').map(a => {
+        return {path: a};
+      })),
+      tap(a => console.log(a)),
       publishReplay(1), refCount()
     );
     this.isFillRoute$ = concat(
-      of(true),
-      routeUrl$.pipe(map(segments => segments.indexOf('/fill') >= 0))
+      of(curChildUrl),
+      routeUrl$
     ).pipe(
+      map(segements => segements.findIndex(s => s.path === 'fill') >= 0),
       publishReplay(1), refCount()
     );
     this.isPayRoute$ = concat(
-      of(false),
-      routeUrl$.pipe(map(segments => segments.indexOf('/pay') >= 0))
+      of(curChildUrl),
+      routeUrl$
     ).pipe(
+      map(segements => segements.findIndex(s => s.path === 'pay') >= 0),
       publishReplay(1), refCount()
     );
     this.serverEventSubscription = this.saleService.subscribeToServerEvents$();
+    this.saleService.initSale(this.saleService.getActiveSaleOptional());
   }
 
   ngOnDestroy(): void {
