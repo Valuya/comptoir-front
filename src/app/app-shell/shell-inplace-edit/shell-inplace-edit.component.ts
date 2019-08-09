@@ -43,6 +43,8 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   validating: boolean;
   @Input()
   disabled: boolean;
+  @Input()
+  showHoverEffect: boolean;
 
   @Output()
   editingChange = new EventEmitter<boolean>();
