@@ -265,9 +265,7 @@ export class ComptoirSaleService {
     return this.getSaleRef$().pipe(
       take(1),
       switchMap(ref => this.saleService.closeSale$(ref)),
-      tap(() => {
-        this.openSalesCaches.refetch();
-      })
+      tap(() => this.openSalesCaches.invalidate()),
     );
   }
 
@@ -276,7 +274,7 @@ export class ComptoirSaleService {
       take(1),
       switchMap(ref => this.saleService.openSale$(ref)),
       switchMap(ref => this.saleService.getSale$(ref)),
-      tap(() => this.openSalesCaches.refetch()),
+      tap(() => this.openSalesCaches.invalidate()),
     );
   }
 
@@ -285,7 +283,7 @@ export class ComptoirSaleService {
       take(1),
       switchMap(ref => this.saleService.cancelSale$(ref)),
       tap(() => this.activeSaleSource$.next(null)),
-      tap(() => this.openSalesCaches.refetch()),
+      tap(() => this.openSalesCaches.invalidate()),
     );
   }
 
@@ -471,7 +469,9 @@ export class ComptoirSaleService {
   private searchOpenSales$(): Observable<SearchResult<WsSaleRef>> {
     return this.authService.getLoggedEmployeeCompanyRef$().pipe(
       map(r => this.createOpenSalesSearchFilter(r)),
-      switchMap(searchFilter => this.saleService.searchSales$(searchFilter, PaginationUtils.create(10)))
+      switchMap(searchFilter => searchFilter == null ?
+        of(SearchResultFactory.emptyResults()) : this.saleService.searchSales$(searchFilter, PaginationUtils.create(10))
+      ),
     );
   }
 

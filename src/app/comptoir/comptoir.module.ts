@@ -13,10 +13,13 @@ import {
   AutoCompleteModule,
   ButtonModule,
   CheckboxModule,
-  DropdownModule, InplaceModule,
+  DropdownModule,
+  InplaceModule,
   InputSwitchModule,
-  InputTextModule, PanelModule,
-  SpinnerModule
+  InputTextModule,
+  PanelModule,
+  SpinnerModule,
+  TabMenuModule
 } from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
@@ -118,6 +121,7 @@ import {SaleSelectListItemComponent} from './sale-select-list/sale-select-list-i
     AppShellModule,
     PercentInputModule,
     CurrencyInputModule,
+    TabMenuModule,
   ]
 })
 export class ComptoirModule {

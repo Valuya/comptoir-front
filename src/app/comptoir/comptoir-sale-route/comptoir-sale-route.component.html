@@ -1,5 +1,10 @@
 <cp-shell-content-page>
   <ng-template cpContentBody>
+
+    <p-tabMenu [model]="openSalesMenuModel$ | async">
+
+    </p-tabMenu>
+
     <div class="comptoir-sale">
       <header>
         <cp-active-sale-header [fillRoute]="isFillRoute$ | async"
