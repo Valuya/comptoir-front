@@ -1,10 +1,12 @@
 import {Inject, Injectable} from '@angular/core';
-import {Configuration, DefaultApi, RequestArgs, RequestContext} from '@valuya/comptoir-ws-api';
+import {Configuration, DefaultApi, RequestArgs, RequestContext, ResponseContext} from '@valuya/comptoir-ws-api';
 import {AuthProvider} from './util/auth-provider';
 import {HeaderUtils} from './util/header-utils';
 import {RuntimeConfigToken} from './util/runtime-config';
 import {EnvironmentConfig, mergeConfigs} from '../environments/environment-config';
 import {environment} from '../environments/environment';
+import {AjaxResponse} from 'rxjs/ajax';
+import {NavigationService} from './navigation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ export class ApiService {
   constructor(
     private authProvider: AuthProvider,
     @Inject(RuntimeConfigToken)
-    private runtimeConfig: EnvironmentConfig
+    private runtimeConfig: EnvironmentConfig,
+    private navigationService: NavigationService,
   ) {
     const config = mergeConfigs(environment, runtimeConfig);
     this.backendUrl = config.backend.url;
@@ -26,7 +29,8 @@ export class ApiService {
         basePath: this.backendUrl,
         accessToken: (name, scopes) => this.getAccessToken(name, scopes),
         middleware: [{
-          pre: (context: RequestContext) => this.onPreMiddleware(context)
+          pre: (context: RequestContext) => this.onPreMiddleware(context),
+          post: (context: ResponseContext) => this.onPostMiddleware(context),
         }]
       })
     );
@@ -79,5 +83,16 @@ export class ApiService {
       curHeaders.authorization = token;
     }
     return context;
+  }
+
+  private onPostMiddleware(context: ResponseContext): AjaxResponse {
+    const response = context.response;
+    if (response != null) {
+      const code = response.status;
+      if (code === 401) {
+        this.navigationService.navigateToLoginWithReason(`You session has expired. Please log in again`);
+      }
+    }
+    return response;
   }
 }

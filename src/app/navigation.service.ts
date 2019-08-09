@@ -31,6 +31,17 @@ export class NavigationService {
     ));
   }
 
+  navigateToLoginWithReason(reasonValue: string, redirect?: string) {
+    const currentUrl = this.router.url;
+    this.router.navigate(['/login'], {
+      queryParams: {
+        reason: reasonValue,
+        redirectUrl: redirect || currentUrl
+      }
+    });
+
+  }
+
   private doUnlessRedirectParams(params: Params, callback: () => void) {
     const redirectParam = params.redirect;
     const redirectUrlParam = params.redirectUrl;

@@ -3,12 +3,14 @@ import {ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, U
 import {Observable} from 'rxjs';
 import {AuthService} from '../auth.service';
 import {filter, map, take} from 'rxjs/operators';
+import {NavigationService} from '../navigation.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeLoggedInGuard implements CanActivateChild {
   constructor(private router: Router,
+              private navigationService: NavigationService,
               private authService: AuthService) {
 
   }
@@ -16,12 +18,8 @@ export class EmployeeLoggedInGuard implements CanActivateChild {
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const loggedIn = this.authService.hasAuth();
     if (!loggedIn) {
-      this.router.navigate(['/login'], {
-        queryParams: {
-          reason: `Access denied to ${childRoute.outlet}`,
-          redirectUrl: state.url
-        }
-      });
+      // TODO: i18n
+      this.navigationService.navigateToLoginWithReason(`You need to authenticate to access this route`, state.url);
     }
     return loggedIn;
   }
