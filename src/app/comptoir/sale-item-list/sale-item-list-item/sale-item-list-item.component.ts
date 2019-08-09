@@ -29,9 +29,9 @@ export class SaleItemListItemComponent implements OnInit {
     this.itemChange.next(newValue);
   }
 
-    fireTotalVatExclusiveChange(totalValue: number) {
+  fireTotalVatExclusiveChange(totalValue: number) {
     const quantity = this.item.quantity;
-    const unitPrice = NumberUtils.toFixedDecimals(totalValue / quantity, 2);
+    const unitPrice = NumberUtils.toFixedDecimals(totalValue / quantity, 4);
     return this.fireChanges({
       total: totalValue,
       vatExclusive: unitPrice
@@ -43,7 +43,7 @@ export class SaleItemListItemComponent implements OnInit {
     const vatRate = this.item.vatRate;
     const totalVatExclusive = PricingUtils.vatExclusviveFromTotal(totalValue, vatRate);
     const quantity = this.item.quantity;
-    const unitPrice = NumberUtils.toFixedDecimals(totalVatExclusive / quantity, 2);
+    const unitPrice = NumberUtils.toFixedDecimals(totalVatExclusive / quantity, 4);
     return this.fireChanges({
       total: totalVatExclusive,
       vatExclusive: unitPrice
@@ -52,7 +52,7 @@ export class SaleItemListItemComponent implements OnInit {
 
   fireVatExclusiveChange(vatExclusiveValue: number) {
     const quantity = this.item.quantity;
-    const totalValue = NumberUtils.toFixedDecimals(quantity * vatExclusiveValue);
+    const totalValue = NumberUtils.toFixedDecimals(quantity * vatExclusiveValue, 4);
     return this.fireChanges({
       total: totalValue,
       vatExclusive: vatExclusiveValue

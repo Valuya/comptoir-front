@@ -44,7 +44,7 @@ export class CurrencyInputComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    const currencyValue = NumberUtils.toFixedDecimals(obj, 2);
+    const currencyValue = NumberUtils.toFixedDecimals(obj, 4);
     this.valueSource$.next(currencyValue);
   }
 
@@ -52,13 +52,14 @@ export class CurrencyInputComponent implements OnInit, ControlValueAccessor {
     if (this.onTouched) {
       this.onTouched();
     }
-    if (this.onChange) {      this.onChange(newValue);
+    if (this.onChange) {
+      this.onChange(newValue);
     }
   }
 
   onCurrencyChange(currencyValue: number) {
     this.valueSource$.next(currencyValue);
-    const value = NumberUtils.toFixedDecimals(currencyValue, 2);
+    const value = NumberUtils.toFixedDecimals(currencyValue, 4);
     this.fireChanges(value);
   }
 }
