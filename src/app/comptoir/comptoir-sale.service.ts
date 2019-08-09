@@ -275,11 +275,17 @@ export class ComptoirSaleService {
     return this.getSaleRef$().pipe(
       take(1),
       switchMap(ref => this.saleService.openSale$(ref)),
-      tap(() => this.openSalesCaches.refetch()),
       switchMap(ref => this.saleService.getSale$(ref)),
-      tap(sale => {
-        this.openSalesCaches.refetch();
-      }),
+      tap(() => this.openSalesCaches.refetch()),
+    );
+  }
+
+  cancelSale$(): Observable<WsSaleRef> {
+    return this.getSaleRef$().pipe(
+      take(1),
+      switchMap(ref => this.saleService.cancelSale$(ref)),
+      tap(() => this.activeSaleSource$.next(null)),
+      tap(() => this.openSalesCaches.refetch()),
     );
   }
 
