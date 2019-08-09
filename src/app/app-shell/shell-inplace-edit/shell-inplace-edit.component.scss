@@ -34,6 +34,7 @@
     }
   }
 }
+
 ::ng-deep .inplace-input-content {
   display: flex;
   align-items: center;
@@ -50,6 +51,7 @@
   > .actions > * {
     padding: .3em;
     border-radius: .3em;
+    font-size: .8em;
 
     &:hover {
       cursor: pointer;

@@ -19,7 +19,7 @@ import {
   InputTextModule,
   PanelModule,
   SpinnerModule,
-  TabMenuModule
+  TabMenuModule, TriStateCheckboxModule
 } from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
@@ -124,6 +124,7 @@ import {ToastModule} from 'primeng/toast';
     CurrencyInputModule,
     ToastModule,
     TabMenuModule,
+    TriStateCheckboxModule,
   ]
 })
 export class ComptoirModule {

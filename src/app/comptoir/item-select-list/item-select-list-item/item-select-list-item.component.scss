@@ -23,6 +23,19 @@
       >*{
         margin: .2em 0;
       }
+      .details {
+        font-size: .8em;
+        >* {
+          display: inline-block;
+          vertical-align: middle;
+          margin: .3em;
+          >* {
+            display: inline-block;
+            vertical-align: middle;
+            margin: .2em;
+          }
+        }
+      }
     }
 
     .ref-line {

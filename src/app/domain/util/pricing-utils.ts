@@ -1,4 +1,5 @@
-import {WsItemVariantPricingEnum} from '@valuya/comptoir-ws-api';
+import {WsItemVariantPricingEnum, WsItemVariantSale, WsSale} from '@valuya/comptoir-ws-api';
+import {NumberUtils} from '../../util/number-utils';
 
 export class PricingUtils {
 
@@ -13,9 +14,10 @@ export class PricingUtils {
     }
   }
 
-  static vatExclusviveFromTotal(totalValue: number, curVatRate: number) {
-    const vatExclusive = totalValue * (1 / (1 + curVatRate));
-    return PricingUtils.fixedDecimals(vatExclusive);
+  static vatExclusviveFromTotal(totalValue: number, curVatRate: number, discountRate: number) {
+    const withoutVat = totalValue / (1 + curVatRate);
+    const withoutDiscount = withoutVat / (1 - discountRate);
+    return PricingUtils.fixedDecimals(withoutDiscount);
   }
 
   static totalFromVatExclusive(vatExclusiveValue: number, curVatRate: number) {
@@ -24,7 +26,17 @@ export class PricingUtils {
   }
 
   static fixedDecimals(priceValue: number): number {
-    const fixedDecimalString = priceValue.toFixed(3);
-    return parseFloat(fixedDecimalString);
+    return NumberUtils.toFixedDecimals(priceValue, 4);
+  }
+
+  static getDiscountRateFromAmount(item: WsItemVariantSale, amount: number): number {
+    const amountRate = PricingUtils.fixedDecimals(amount / item.vatExclusive);
+    return amountRate;
+  }
+
+  static getSaleDiscountRateFromAmount(sale: WsSale, amonut: number) {
+    const saleTotal = sale.vatExclusiveAmount + sale.discountAmount;
+    const amountRatio = amonut / saleTotal;
+    return amountRatio;
   }
 }

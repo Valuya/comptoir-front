@@ -27,10 +27,18 @@
 
       <div class="details-right">
         <div class="price">
-          {{ (item$ | async)?.vatExclusive | currency }}
+          {{ itemTotal$ | async | currency }}
         </div>
-        <div class="vat">
-          {{ (item$ | async)?.vatRate | percent}}
+        <div class="details"  [hidden]="(item$ | async) == null">
+          <div class="vat-exclusive">
+            <span>{{ (item$ | async)?.vatExclusive | currency }}</span>
+            <span>vat excl.</span>
+          </div>
+          <div class="vat">
+            <span>+</span>
+            <span>{{ (item$ | async)?.vatRate | percent}}</span>
+            <span>vat</span>
+          </div>
         </div>
       </div>
     </div>

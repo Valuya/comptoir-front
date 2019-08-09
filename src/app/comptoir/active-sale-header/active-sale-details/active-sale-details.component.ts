@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsSale} from '@valuya/comptoir-ws-api';
+import {PricingUtils} from '../../../domain/util/pricing-utils';
 
 @Component({
   selector: 'cp-active-sale-details',
@@ -29,5 +30,10 @@ export class ActiveSaleDetailsComponent implements OnInit {
 
   fireChanges(update: Partial<WsSale>) {
     this.saleUpdate.emit(update);
+  }
+
+  onSaleDiscountAmountChange(amonut: number) : number{
+    const discountRatio = PricingUtils.getSaleDiscountRateFromAmount(this.sale, amonut);
+    return discountRatio;
   }
 }

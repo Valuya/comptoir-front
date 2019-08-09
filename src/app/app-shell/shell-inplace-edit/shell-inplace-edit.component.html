@@ -1,6 +1,6 @@
 <div class="shell-inplace-edit"
      [class.editing]="editing"
-     [class.active]="outputTemplate != null && (inputTemplate != null || showHoverEffect) && !disabled"
+     [class.active]="outputTemplate != null && (inputTemplate != null || forceHoverEffect) && !disabled"
 >
   <div class="inplace-output"
        #outputElement
@@ -9,9 +9,15 @@
        tabIndex="0" role="button"
        [cpFocusFirstInput]="inputTemplate == null"
   >
-    <ng-container
-      *ngTemplateOutlet="outputTemplate || inputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
-    ></ng-container>
+    <ng-template [ngIf]="showEmptyLabel !== true || editValue !== null">
+      <ng-container
+        *ngTemplateOutlet="outputTemplate || inputTemplate; context: {valid: errors?.length === 0, invalid: errors?.length > 0}"
+      >
+      </ng-container>
+    </ng-template>
+    <span *ngIf="showEmptyLabel === true && editValue === null">
+      &lt;empty&gt;
+    </span>
   </div>
 
   <div class="errors" *ngIf="errors?.length > 0">
@@ -39,6 +45,11 @@
              tabIndex="0" role="button"
         >
           <i class="fa fa-undo"></i>
+        </div>
+        <div class="nullify" (click)="onNullifyClick()"
+             tabIndex="1" role="button" title="Nullify"
+        >
+          <i class="fa fa-times"></i>
         </div>
         <!--      <div class="submit" (click)="onSubmitClick()">-->
         <!--        <i class="fa fa-check"></i>-->
