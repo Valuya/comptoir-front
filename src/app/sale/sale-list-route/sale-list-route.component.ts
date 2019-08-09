@@ -112,6 +112,9 @@ export class SaleListRouteComponent implements OnInit {
     }, {
       label: 'Reopen',
       command: () => this.reopenSales(sales),
+    }, {
+      label: 'Cancel',
+      command: () => this.cancelSales(sales),
     }];
   }
 
@@ -119,6 +122,8 @@ export class SaleListRouteComponent implements OnInit {
     const task$List = sales.map(sale => this.saleService.closeSale$({id: sale.id}));
     const task$ = task$List.length === 0 ? of(null) : forkJoin(task$List);
     task$.subscribe(() => {
+      this.salesTableHelper.reload();
+      this.selectedSales$.next([]);
       this.messageService.add({
         severity: 'success',
         summary: 'Sales close'
@@ -130,9 +135,24 @@ export class SaleListRouteComponent implements OnInit {
     const task$List = sales.map(sale => this.saleService.openSale$({id: sale.id}));
     const task$ = task$List.length === 0 ? of(null) : forkJoin(task$List);
     task$.subscribe(() => {
+      this.salesTableHelper.reload();
+      this.selectedSales$.next([]);
       this.messageService.add({
         severity: 'success',
         summary: 'Sales reopened'
+      });
+    });
+  }
+
+  private cancelSales(sales: WsSale[]) {
+    const task$List = sales.map(sale => this.saleService.cancelSale$({id: sale.id}));
+    const task$ = task$List.length === 0 ? of(null) : forkJoin(task$List);
+    task$.subscribe(() => {
+      this.salesTableHelper.reload();
+      this.selectedSales$.next([]);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sales cancelled'
       });
     });
   }
