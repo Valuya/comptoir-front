@@ -185,8 +185,17 @@ export class SaleService {
     );
   }
 
-  openSale$(ref: WsSaleRef): Observable<WsSaleRef > {
+  openSale$(ref: WsSaleRef): Observable<WsSaleRef> {
     return this.apiService.api.openSale({
+      id: ref.id
+    }).pipe(
+      tap(() => this.saleCache.clearCache(ref))
+    );
+  }
+
+
+  cancelSale$(ref: WsSaleRef): Observable<any> {
+    return this.apiService.api.deleteSale({
       id: ref.id
     }).pipe(
       tap(() => this.saleCache.clearCache(ref))

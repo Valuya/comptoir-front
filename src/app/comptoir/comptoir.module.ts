@@ -13,10 +13,13 @@ import {
   AutoCompleteModule,
   ButtonModule,
   CheckboxModule,
-  DropdownModule, InplaceModule,
+  DropdownModule,
+  InplaceModule,
   InputSwitchModule,
-  InputTextModule, PanelModule,
-  SpinnerModule
+  InputTextModule,
+  PanelModule,
+  SpinnerModule,
+  TabMenuModule
 } from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
@@ -120,6 +123,7 @@ import {ToastModule} from 'primeng/toast';
     PercentInputModule,
     CurrencyInputModule,
     ToastModule,
+    TabMenuModule,
   ]
 })
 export class ComptoirModule {

@@ -39,6 +39,13 @@
             (click)="onFillClick()"
     ></button>
 
+    <button type="button" pButton
+            label="Cancel"
+            icon="fa fa-times"
+            [hidden]="(saleRef$ | async)?.id == null || (sale$ | async)?.closed"
+            (click)="onCancelSaleClick()"
+    ></button>
+
   </div>
 
   <div class="details">

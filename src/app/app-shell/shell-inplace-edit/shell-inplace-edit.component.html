@@ -1,6 +1,6 @@
 <div class="shell-inplace-edit"
      [class.editing]="editing"
-     [class.active]="outputTemplate != null && inputTemplate != null && !disabled"
+     [class.active]="outputTemplate != null && (inputTemplate != null || showHoverEffect) && !disabled"
 >
   <div class="inplace-output"
        #outputElement

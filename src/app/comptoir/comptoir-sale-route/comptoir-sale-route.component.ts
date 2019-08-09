@@ -1,11 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
-import {WsSale} from '@valuya/comptoir-ws-api';
+import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {combineLatest, concat, Observable, of, Subscription} from 'rxjs';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, map, publishReplay, refCount, tap} from 'rxjs/operators';
 import {ComptoirService} from '../comptoir-service';
+import {MenuItem} from 'primeng/api';
+import {ComptoirNewSaleRouteItem} from '../comptoir-menu';
 
 @Component({
   selector: 'cp-comptoir-sale-route',
@@ -19,6 +21,9 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
   isPayRoute$: Observable<boolean>;
 
   loading$: Observable<boolean>;
+
+  openSales$: Observable<WsSaleRef[]>;
+  openSalesMenuModel$: Observable<MenuItem[]>;
 
   constructor(
     private saleService: ComptoirSaleService,
@@ -52,8 +57,41 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
       map(segements => segements.findIndex(s => s.path === 'pay') >= 0),
       publishReplay(1), refCount()
     );
+
+    this.openSales$ = this.saleService.getOpenSales$().pipe(
+      map(r => r.list),
+      tap(e => console.log(e)),
+      publishReplay(1), refCount()
+    );
+    this.openSalesMenuModel$ = this.openSales$.pipe(
+      map(refs => this.createOpenSaleMenu(refs)),
+      publishReplay(1), refCount()
+    );
   }
 
   ngOnDestroy(): void {
   }
+
+  isSaleSelected(ref: WsSaleRef): boolean {
+    const curSale = this.saleService.getActiveSaleOptional();
+    return curSale == null ? ref == null : ref != null && curSale.id === ref.id;
+  }
+
+  getSaleHeader(ref: WsSaleRef) {
+    return ref.id == null ? 'New Sale' : `Sale #${ref.id}`;
+  }
+
+  private createOpenSaleMenu(refs: WsSaleRef[]): MenuItem[] {
+    const salesItems = refs.map(ref => {
+      return {
+        label: this.getSaleHeader(ref),
+        routerLink: ['/comptoir/sale', ref.id]
+      } as MenuItem;
+    });
+    return [
+      ComptoirNewSaleRouteItem,
+      ...salesItems
+    ];
+  }
+
 }

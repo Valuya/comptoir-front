@@ -8,7 +8,8 @@ export const enum SaleColumn {
   CLOSED = 'CLOSED',
   VAT_AMOUNT = 'VAT_AMOUNT',
   VAT_EXLUSIVE_AMOUNT = 'VAT_EXLUSIVE_AMOUNT',
-  REFERENCE = 'REFERENCE'
+  REFERENCE = 'REFERENCE',
+  ACTION_JUMP_TO_POS = 'JUMP_TO_POS',
 }
 
 export const ID_COLUMN: TableColumn<SaleColumn> = {
@@ -66,6 +67,13 @@ export const VAT_AMOUNT_COLUMN: TableColumn<SaleColumn> = {
 export const VAT_EXCLUSIVE_AMOUNT_COLUMN: TableColumn<SaleColumn> = {
   value: SaleColumn.VAT_EXLUSIVE_AMOUNT,
   header: 'Vat exclusive amount',
+  sortable: false,
+  widthWeight: 1
+};
+
+export const ACTION_JUMP_TO_POS_COLUMN: TableColumn<SaleColumn> = {
+  value: SaleColumn.ACTION_JUMP_TO_POS,
+  header: '',
   sortable: false,
   widthWeight: 1
 };
