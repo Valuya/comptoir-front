@@ -31,18 +31,6 @@
           </cp-shell-inplace-edit>
         </div>
 
-        <div class="control">
-          <label>Use server events</label>
-          <cp-shell-inplace-edit name="server-sent-events" #serverSentEvents
-          >
-            <ng-template cpInplaceOutput>
-              <p-inputSwitch [ngModel]="comptoirService.useServerSendEvents$ | async"
-                             (ngModelChange)="comptoirService.setUseServerSentEvents($event)"
-              ></p-inputSwitch>
-            </ng-template>
-          </cp-shell-inplace-edit>
-        </div>
-
       </div>
 
 
