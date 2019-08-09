@@ -103,7 +103,9 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   stopEdit() {
     this.editing = false;
     this.editingChange.next(false);
-    this.inputOverlay.hide();
+    if (this.inputOverlay) {
+      this.inputOverlay.hide();
+    }
   }
 
   onOutputClick(event: Event) {
@@ -162,7 +164,11 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     switch (keyCode) {
       case 0x0D: // enter
       case 0x20: // space
-        this.startEdit(keyboardEvent);
+        if (this.inputTemplate != null) {
+          this.startEdit(keyboardEvent);
+        } else {
+          this.commitEdit();
+        }
         break;
       default:
         return;

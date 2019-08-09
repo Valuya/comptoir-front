@@ -87,16 +87,16 @@
       </div>
     </div>
     <div *ngIf="showPaymentdDetails">
+      <div class="amount">
+        {{ sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid | currency }}
+      </div>
       <div class="label">
-        <label *ngIf="(sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) >= 0; else: toReimburseLabel">
-          À payer
-        </label>
+        <span *ngIf="(sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) >= 0; else: toReimburseLabel">
+          À encaisser
+        </span>
         <ng-template #toReimburseLabel>
           À rendre
         </ng-template>
-      </div>
-      <div class="amount">
-        {{ (sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) | currency }}
       </div>
     </div>
   </div>

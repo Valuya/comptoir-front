@@ -1,8 +1,10 @@
-<div class="active-sale ui-widget">
+<div class="active-sale ui-widget"
+     [class.loading]="updating$ | async">
 
   <div class="menu">
     <div class="sale">
       <cp-shell-inplace-edit name="sale" #sale
+                             [disabled]="updating$ | async"
                              [ngModel]="saleRef$ | async"
                              (ngModelChange)="onSaleChanged($event)"
       >
@@ -28,6 +30,17 @@
     </div>
   </div>
 
+  <div class="secondary-actions">
+
+    <button type="button" pButton
+            label="Fill"
+            icon="fa fa-shopping-basket"
+            [hidden]="fillRoute"
+            (click)="onFillClick()"
+    ></button>
+
+  </div>
+
   <div class="details">
     <cp-active-sale-details [sale]="sale$ | async"
                             [saleTotalPaid]="saleTotalPaid$ | async"
@@ -46,12 +59,7 @@
             [disabled]="(saleRef$ | async)?.id == null"
             (click)="onPayClick()"
     ></button>
-    <button type="button" pButton
-            label="Fill"
-            icon="fa fa-shopping-basket"
-            [hidden]="fillRoute"
-            (click)="onFillClick()"
-    ></button>
+
     <button type="button" pButton
             label="Close"
             icon="fa fa-check"
@@ -65,9 +73,6 @@
             [hidden]="(sale$ | async)?.closed !== true"
             (click)="onReopenClick()"
     ></button>
-    <button type="button" pButton
-            icon="fa fa-refresh"
-            (click)="onReloadClick()"
-    ></button>
+
   </div>
 </div>

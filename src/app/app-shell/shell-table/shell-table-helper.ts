@@ -41,7 +41,7 @@ export class ShellTableHelper<T, F> {
     this.pagination$.next(pagination);
   }
 
-  reload() {
+  reload(): Observable<T[]> {
     const filterAndPagination$ = forkJoin(
       this.filter$.pipe(take(1)),
       this.pagination$.pipe(take(1)),

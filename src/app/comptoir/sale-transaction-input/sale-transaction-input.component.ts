@@ -42,7 +42,7 @@ export class SaleTransactionInputComponent implements OnInit {
   private createTransaction(): WsAccountingEntry {
     return {
       accountRef: this.selectedAccountRef,
-      amount: NumberUtils.toFixedDecimals(this.transactionAmount, 2),
+      amount: NumberUtils.toFixedDecimals(this.transactionAmount, 4),
       dateTime: new Date(),
       description: [],
       accountingTransactionRef: null,

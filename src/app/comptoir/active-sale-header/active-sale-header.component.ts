@@ -21,6 +21,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   saleRef$: Observable<WsSaleRef>;
   saleTotalPaid$: Observable<number>;
   saleRemaining$: Observable<number>;
+  updating$: Observable<boolean>;
 
   constructor(
     private saleService: ComptoirSaleService,
@@ -35,6 +36,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.saleRef$ = this.saleService.getSaleRef$();
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
     this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();
+    this.updating$ = this.saleService.isUpdating$();
   }
 
   onSaleChanged(ref: WsSaleRef) {
@@ -76,7 +78,4 @@ export class ActiveSaleHeaderComponent implements OnInit {
       });
   }
 
-  onReloadClick() {
-    this.saleService.refresh();
-  }
 }
