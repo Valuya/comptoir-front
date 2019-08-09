@@ -4,6 +4,8 @@ import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {take} from 'rxjs/operators';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'cp-active-sale-header',
@@ -11,6 +13,8 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./active-sale-header.component.scss']
 })
 export class ActiveSaleHeaderComponent implements OnInit {
+
+  CLOSE_SALE_CONFIRM_MESSAGE_KEY = 'close-sale-confirm';
 
   @Input()
   fillRoute: boolean;
@@ -27,7 +31,8 @@ export class ActiveSaleHeaderComponent implements OnInit {
     private saleService: ComptoirSaleService,
     private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private messageService: MessageService,
   ) {
   }
 
@@ -61,12 +66,10 @@ export class ActiveSaleHeaderComponent implements OnInit {
   }
 
   onCloseClick() {
-    this.saleService.closeActiveSale$()
-      .subscribe(() => {
-        this.router.navigate(['../new/fill'], {
-          relativeTo: this.activatedRoute
-        });
-      });
+    this.saleRemaining$.pipe(
+      take(1),
+    ).subscribe(remaining => this.closeSaleWithRemainingCheck(remaining));
+
   }
 
   onReopenClick() {
@@ -78,4 +81,47 @@ export class ActiveSaleHeaderComponent implements OnInit {
       });
   }
 
+  onCloseConfirmRejected() {
+    this.messageService.clear(this.CLOSE_SALE_CONFIRM_MESSAGE_KEY);
+  }
+
+  onCloseConfirmed() {
+    this.messageService.clear(this.CLOSE_SALE_CONFIRM_MESSAGE_KEY);
+    this.closeSaleAndGoToNewSale();
+  }
+
+  private closeSaleWithRemainingCheck(remaining: number) {
+    if (remaining === 0) {
+      this.closeSaleAndGoToNewSale();
+    } else if (remaining > 0) {
+      // TODO: i18n
+      this.messageService.add({
+        key: this.CLOSE_SALE_CONFIRM_MESSAGE_KEY,
+        summary: 'Vente non payée',
+        detail: `Cette vente n'est pas entièrement payée. \n`
+          + `Une ristourne va devoir être créée.`,
+        sticky: true,
+        severity: 'warn'
+      });
+    } else if (remaining < 0) {
+      // TODO: i18n
+      this.messageService.add({
+        key: this.CLOSE_SALE_CONFIRM_MESSAGE_KEY,
+        summary: 'Vente avec cash à rendre',
+        detail: `Cette vente a reçu plus de paiments que le montant dû.\n`
+          + `La différence sera traitée comme du cash rendu au client.`,
+        sticky: true,
+        severity: 'warn'
+      });
+    }
+  }
+
+  private closeSaleAndGoToNewSale() {
+    this.saleService.closeActiveSale$()
+      .subscribe(() => {
+        this.router.navigate(['../new/fill'], {
+          relativeTo: this.activatedRoute
+        });
+      });
+  }
 }
