@@ -580,7 +580,7 @@ export class ComptoirSaleService {
   }
 
   private applyUpdateSaleEvent$(event: UpdateSaleEvent<any>, state: SaleState) {
-    const saleToUpdate: WsSale = Object.assign({}, state, event.update);
+    const saleToUpdate: WsSale = Object.assign({}, state.sale, event.update);
 
     this.updatingSaleInProgress$.next(true);
     return this.saleService.saveSale(saleToUpdate).pipe(
