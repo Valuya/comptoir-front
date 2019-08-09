@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {WsAuth, WsCompanyRef, WsEmployee} from '@valuya/comptoir-ws-api';
 import * as moment from 'moment';
-import {BehaviorSubject, concat, Observable, of} from 'rxjs';
-import {filter, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
+import {BehaviorSubject, concat, Observable, of, Subscription, timer} from 'rxjs';
+import {filter, map, publishReplay, refCount, retry, switchMap, take} from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {AuthProvider} from './util/auth-provider';
 import {LoginService} from './login/login.service';
-import {Router} from '@angular/router';
 import {NavigationService} from './navigation.service';
 
 @Injectable({
@@ -17,6 +16,8 @@ export class AuthService {
 
   private auth$ = new BehaviorSubject<WsAuth | null>(null);
   private loggedEmployee$: Observable<WsEmployee | null>;
+
+  private authRefreshSubscripion: Subscription;
 
   constructor(private apiService: ApiService,
               private loginService: LoginService,
@@ -41,12 +42,15 @@ export class AuthService {
   }
 
   setAuth(auth: WsAuth) {
+    this.authRefreshSubscripion.unsubscribe();
     this.authProvider.auth = auth;
     this.auth$.next(auth);
     this.saveAuth(auth);
+    this.watchAuthExpiration(auth);
   }
 
   clearAuth() {
+    this.authRefreshSubscripion.unsubscribe();
     this.authProvider.auth = null;
     this.auth$.next(null);
     this.saveAuth(null);
@@ -119,4 +123,17 @@ export class AuthService {
     }
   }
 
+  private watchAuthExpiration(auth: WsAuth) {
+    const expiratoin = auth.expirationDateTime;
+    const expirationMoment = moment(expiratoin);
+    const aBitBeforeExpiration = expirationMoment.add(-3, 'minute');
+
+    if (this.authRefreshSubscripion) {
+      this.authRefreshSubscripion.unsubscribe();
+    }
+    this.authRefreshSubscripion = timer(aBitBeforeExpiration.toDate()).pipe(
+      switchMap(() => this.loginService.refreshToken(auth.refreshToken)),
+      retry(3)
+    ).subscribe(newAuth => this.setAuth(newAuth));
+  }
 }
