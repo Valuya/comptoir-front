@@ -12,7 +12,9 @@
         <cp-account [ref]="selectedAccountRef"></cp-account>
       </p-header>
       <form class="input-form" (ngSubmit)="onAmountSubmit()" #inputForm="ngForm">
-        <cp-shell-inplace-edit>
+        <cp-shell-inplace-edit name="transaction-amount"
+                               [ngModel]="transactionAmount"
+                               (ngModelChange)="onAmountSubmit()">
           <ng-template cpInplaceOutput>
             <cp-currency-input name="amount"
                                [(ngModel)]="transactionAmount"
