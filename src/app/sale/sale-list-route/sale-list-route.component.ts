@@ -12,7 +12,7 @@ import {
   ID_COLUMN,
   CLOSED_COLUMN,
   REFERENCE_COLUMN,
-  SaleColumn
+  SaleColumn, ACTION_JUMP_TO_POS_COLUMN
 } from '../sale-column/sale-columns';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsSale, WsSaleSearch, WsSalesSearchResult} from '@valuya/comptoir-ws-api';
@@ -36,7 +36,8 @@ export class SaleListRouteComponent implements OnInit {
     REFERENCE_COLUMN,
     CUSTOMER_COLUMN,
     CLOSED_COLUMN,
-    AMOUNT_COLUMN
+    AMOUNT_COLUMN,
+    ACTION_JUMP_TO_POS_COLUMN,
   ];
 
   selectionMenu$: Observable<MenuItem[]>;

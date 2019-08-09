@@ -34,6 +34,17 @@
   </ng-container>
 
 
+  <ng-container *ngSwitchCase="'JUMP_TO_POS'">
+    <cp-shell-inplace-edit [showHoverEffect]="true">
+      <ng-template cpInplaceOutput>
+        <a [routerLink]="['/comptoir/sale/', row.id]">
+          <i class="fa fa-shopping-basket"></i>
+        </a>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </ng-container>
+
+
   <ng-container *ngSwitchDefault>
     default
   </ng-container>
