@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   setAuth(auth: WsAuth) {
-    this.authRefreshSubscripion.unsubscribe();
+    this.unsubscribeAuthExpiration();
     this.authProvider.auth = auth;
     this.auth$.next(auth);
     this.saveAuth(auth);
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   clearAuth() {
-    this.authRefreshSubscripion.unsubscribe();
+    this.unsubscribeAuthExpiration();
     this.authProvider.auth = null;
     this.auth$.next(null);
     this.saveAuth(null);
@@ -128,12 +128,16 @@ export class AuthService {
     const expirationMoment = moment(expiratoin);
     const aBitBeforeExpiration = expirationMoment.add(-3, 'minute');
 
-    if (this.authRefreshSubscripion) {
-      this.authRefreshSubscripion.unsubscribe();
-    }
+    this.unsubscribeAuthExpiration();
     this.authRefreshSubscripion = timer(aBitBeforeExpiration.toDate()).pipe(
       switchMap(() => this.loginService.refreshToken(auth.refreshToken)),
       retry(3)
     ).subscribe(newAuth => this.setAuth(newAuth));
+  }
+
+  private unsubscribeAuthExpiration() {
+    if (this.authRefreshSubscripion) {
+      this.authRefreshSubscripion.unsubscribe();
+    }
   }
 }
