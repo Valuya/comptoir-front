@@ -1,4 +1,4 @@
-import {BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, Observable, of, ReplaySubject, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, EMPTY, forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {
   WsAccountingEntry,
   WsAccountingEntryRef,
@@ -20,15 +20,16 @@ import {
   catchError,
   concatMap,
   debounceTime,
-  delay, filter,
+  delay,
+  distinctUntilChanged,
+  filter,
   map,
   mergeMap,
   publishReplay,
   refCount,
   switchMap,
   take,
-  tap,
-  withLatestFrom
+  tap
 } from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
@@ -59,11 +60,12 @@ export class ComptoirSaleService {
 
   // Sale source, emitting when active sale is changed only (navigation to another sale ref)
   private activeSaleSource$ = new BehaviorSubject<WsSale>(null);
-  // Sale event queue - need to buffer some of them as we may need to fetch an initial state before applying them
-  private saleEventsSource$ = new ReplaySubject<SaleEvent>(10);
+  // Sale event queue
+  private saleEventsSource$ = new Subject<SaleEvent>();
   // Current sale state
   private saleState$: Observable<SaleState | null>;
 
+  private creatingSaleInProgress$ = new BehaviorSubject<boolean>(false);
   private updatingSaleInProgress$ = new BehaviorSubject<boolean>(false);
   private updatingItemsInProgress$ = new BehaviorSubject<boolean>(false);
   private updatingPaymentsInProgress$ = new BehaviorSubject<boolean>(false);
@@ -108,7 +110,10 @@ export class ComptoirSaleService {
     );
 
     this.saleState$ = this.activeSaleSource$.pipe(
+      distinctUntilChanged(),
+      // tap(s => console.log('sale ' + s.id)),
       switchMap(sale => this.getNextSaleStates$(sale)),
+      // tap(() => console.log('state')),
       publishReplay(1), refCount()
     );
 
@@ -158,12 +163,18 @@ export class ComptoirSaleService {
   }
 
   createSaleIfRequired$(): Observable<WsSale | never> {
-    const activeSale = this.getActiveSaleOptional();
-    if (activeSale.id == null) {
-      return this.createSale$(activeSale);
-    } else {
-      return EMPTY;
-    }
+    return this.creatingSaleInProgress$.pipe(
+      filter(busy => !busy),
+      take(1),
+      map(() => this.getActiveSaleOptional()),
+      mergeMap(activeSale => {
+        if (activeSale.id == null) {
+          return this.createSale$(activeSale);
+        } else {
+          return EMPTY;
+        }
+      })
+    );
   }
 
   updateSale<K extends keyof WsSale>(update: Partial<WsSale>) {
@@ -361,10 +372,13 @@ export class ComptoirSaleService {
   }
 
   private createSale$(sale: WsSale) {
+    this.creatingSaleInProgress$.next(true);
     return this.saleService.createSale$(sale).pipe(
       switchMap(newSaleRef => this.saleService.getSale$(newSaleRef)),
+      delay(0),
       tap(newSale => this.initSale(newSale)),
       tap(newSale => this.openSalesCaches.invalidate()),
+      tap(newSale => this.creatingSaleInProgress$.next(false)),
     );
   }
 
@@ -479,16 +493,11 @@ export class ComptoirSaleService {
       refetchPayments: true,
       refetchItems: true
     });
-    return concat(
-      initState$,
-      this.applyNextSaleEvents$()
-    );
-  }
-
-  private applyNextSaleEvents$(): Observable<SaleState> {
-    return this.saleEventsSource$.pipe(
+    const nextStates$ = this.saleEventsSource$.pipe(
+      // tap(e => console.log('event on ' + e.saleRef.id)),
       concatMap(event => this.applySaleEvent$(event))
     );
+    return merge(initState$, nextStates$);
   }
 
   private refetchState$(state: SaleState, options?: {
@@ -536,6 +545,7 @@ export class ComptoirSaleService {
     return this.saleState$.pipe(
       filter(state => state.sale.id != null),
       take(1),
+      // tap(() => console.log('apply event')),
       switchMap(state => this.applySaleEventOnState$(event, state)),
       catchError(e => {
         console.warn('Event error:');
@@ -547,8 +557,7 @@ export class ComptoirSaleService {
 
   private applySaleEventOnState$(event: SaleEvent, state: SaleState): Observable<SaleState | never> {
     if (event.saleRef.id !== state.sale.id) {
-      // We replayed an event for a previous sale
-      return EMPTY;
+      throw new Error('Sale mismatch');
     }
 
     let updatedState$: Observable<SaleState>;
