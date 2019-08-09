@@ -60,6 +60,7 @@ import {SaleSelectGridItemComponent} from './sale-select-list/sale-select-grid-i
 import {SaleSelectListComponent} from './sale-select-list/sale-select-list.component';
 import {SaleSelectListItemComponent} from './sale-select-list/sale-select-list-item/sale-select-list-item.component';
 import {ToastModule} from 'primeng/toast';
+import {SaleComponentModule} from '../domain/commercial/sale/sale-component.module';
 
 
 @NgModule({
@@ -125,6 +126,7 @@ import {ToastModule} from 'primeng/toast';
     ToastModule,
     TabMenuModule,
     TriStateCheckboxModule,
+    SaleComponentModule,
   ]
 })
 export class ComptoirModule {

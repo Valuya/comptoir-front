@@ -6,13 +6,12 @@ import {BehaviorSubject, concat, forkJoin, Observable, of} from 'rxjs';
 import {filter, map, mergeMap, publishReplay, refCount, take, toArray} from 'rxjs/operators';
 import {TableColumn} from '../../util/table-column';
 import {
-  AMOUNT_COLUMN,
   CUSTOMER_COLUMN,
   DATETIME_COLUMN,
   ID_COLUMN,
   CLOSED_COLUMN,
   REFERENCE_COLUMN,
-  SaleColumn, ACTION_JUMP_TO_POS_COLUMN
+  SaleColumn, ACTION_JUMP_TO_POS_COLUMN, TOTAL_AMOUNT_COLUMN, ITEM_COUNT_COLUMN
 } from '../sale-column/sale-columns';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {WsEmployee, WsSale, WsSaleSearch, WsSalesSearchResult} from '@valuya/comptoir-ws-api';
@@ -36,7 +35,8 @@ export class SaleListRouteComponent implements OnInit {
     REFERENCE_COLUMN,
     CUSTOMER_COLUMN,
     CLOSED_COLUMN,
-    AMOUNT_COLUMN,
+    ITEM_COUNT_COLUMN,
+    TOTAL_AMOUNT_COLUMN,
     ACTION_JUMP_TO_POS_COLUMN,
   ];
 

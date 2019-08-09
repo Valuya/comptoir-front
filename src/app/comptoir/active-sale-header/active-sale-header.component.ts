@@ -25,6 +25,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   saleRef$: Observable<WsSaleRef>;
   saleTotalPaid$: Observable<number>;
   saleRemaining$: Observable<number>;
+  saleItemsCount$: Observable<number>;
   updating$: Observable<boolean>;
 
   constructor(
@@ -42,6 +43,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
     this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();
     this.updating$ = this.saleService.isUpdating$();
+    this.saleItemsCount$ = this.saleService.getItemsTableHelper().totalCount$;
   }
 
   onSaleChanged(ref: WsSaleRef) {

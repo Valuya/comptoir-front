@@ -4,10 +4,11 @@ export const enum SaleColumn {
   ID = 'ID',
   CUSTOMER = 'CUSTOMER',
   DATETIME = 'DATETIME',
-  AMOUNT = 'AMOUNT',
   CLOSED = 'CLOSED',
   VAT_AMOUNT = 'VAT_AMOUNT',
   VAT_EXLUSIVE_AMOUNT = 'VAT_EXLUSIVE_AMOUNT',
+  TOTAL_AMOUNT = 'TOTAL_AMOUNT',
+  ITEM_COUNT = 'ITEM_COUNT',
   REFERENCE = 'REFERENCE',
   ACTION_JUMP_TO_POS = 'JUMP_TO_POS',
 }
@@ -42,14 +43,6 @@ export const DATETIME_COLUMN: TableColumn<SaleColumn> = {
 };
 
 
-export const AMOUNT_COLUMN: TableColumn<SaleColumn> = {
-  value: SaleColumn.AMOUNT,
-  header: 'Amount',
-  sortable: false,
-  widthWeight: 1
-};
-
-
 export const REFERENCE_COLUMN: TableColumn<SaleColumn> = {
   value: SaleColumn.REFERENCE,
   header: 'Reference',
@@ -70,6 +63,23 @@ export const VAT_EXCLUSIVE_AMOUNT_COLUMN: TableColumn<SaleColumn> = {
   sortable: false,
   widthWeight: 1
 };
+
+
+export const TOTAL_AMOUNT_COLUMN: TableColumn<SaleColumn> = {
+  value: SaleColumn.TOTAL_AMOUNT,
+  header: 'Total',
+  sortable: false,
+  widthWeight: 1
+};
+
+
+export const ITEM_COUNT_COLUMN: TableColumn<SaleColumn> = {
+  value: SaleColumn.ITEM_COUNT,
+  header: 'Items',
+  sortable: false,
+  widthWeight: 1
+};
+
 
 export const ACTION_JUMP_TO_POS_COLUMN: TableColumn<SaleColumn> = {
   value: SaleColumn.ACTION_JUMP_TO_POS,

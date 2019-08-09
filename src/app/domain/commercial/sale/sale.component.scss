@@ -1,0 +1,18 @@
+.sale {
+  display: inline-flex;
+  align-items: center;
+
+  > * {
+    flex: 0 0 auto;
+
+    &:not(:first-child) {
+      margin-left: .3em;
+    }
+  }
+
+  .content {
+    span:not(:first-child) {
+      margin-left: .2em;
+    }
+  }
+}

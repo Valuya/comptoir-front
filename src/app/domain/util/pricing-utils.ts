@@ -39,4 +39,8 @@ export class PricingUtils {
     const amountRatio = amonut / saleTotal;
     return amountRatio;
   }
+
+  static getSaleTotal(sale: WsSale) {
+    return sale.vatExclusiveAmount + sale.vatAmount;
+  }
 }
