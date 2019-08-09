@@ -59,6 +59,7 @@ import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.
 import {SaleSelectGridItemComponent} from './sale-select-list/sale-select-grid-item/sale-select-grid-item.component';
 import {SaleSelectListComponent} from './sale-select-list/sale-select-list.component';
 import {SaleSelectListItemComponent} from './sale-select-list/sale-select-list-item/sale-select-list-item.component';
+import {ToastModule} from 'primeng/toast';
 
 
 @NgModule({
@@ -121,6 +122,7 @@ import {SaleSelectListItemComponent} from './sale-select-list/sale-select-list-i
     AppShellModule,
     PercentInputModule,
     CurrencyInputModule,
+    ToastModule,
     TabMenuModule,
   ]
 })

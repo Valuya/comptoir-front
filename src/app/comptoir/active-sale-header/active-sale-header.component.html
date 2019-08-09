@@ -71,7 +71,6 @@
             label="Close"
             icon="fa fa-check"
             [hidden]="fillRoute"
-            [disabled]="(saleRemaining$ | async) > 0"
             (click)="onCloseClick()"
     ></button>
     <button type="button" pButton
@@ -82,4 +81,32 @@
     ></button>
 
   </div>
+
 </div>
+
+<p-toast position="center" [modal]="true" [baseZIndex]="5000"
+         [key]="CLOSE_SALE_CONFIRM_MESSAGE_KEY"
+         (onClose)="onCloseConfirmRejected()">
+  <ng-template let-message pTemplate="message">
+    <div class="confirm-toast-content">
+      <header>
+        <i class="pi pi-exclamation-triangle"></i>
+        <h2>{{message.summary}}</h2>
+      </header>
+      <div class="message">
+        {{ message.detail }}
+      </div>
+      <div class="actions">
+        <button type="button" pButton
+                label="Cancel"
+                (click)="onCloseConfirmRejected()"
+                class="ui-button-secondary"
+        ></button>
+        <button type="button" pButton
+                label="Add"
+                (click)="onCloseConfirmed()"
+        ></button>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
