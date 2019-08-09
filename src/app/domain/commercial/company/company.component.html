@@ -1,0 +1,8 @@
+<div class="company">
+  <div *ngIf="showName">
+    <cp-locale-text [localeTexts]="(company$ | async)?.name"></cp-locale-text>
+  </div>
+  <div *ngIf="showDescription">
+    <cp-locale-text [localeTexts]="(company$ | async)?.description"></cp-locale-text>
+  </div>
+</div>

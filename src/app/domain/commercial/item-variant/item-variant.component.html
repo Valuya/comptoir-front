@@ -1,7 +1,7 @@
 <cp-loading-content [loading]="loading$ |async">
   <div class="item-variant" [ngClass]="layout" >
 
-    <div class="main-picture">
+    <div class="main-picture" *ngIf="showMainPicture">
       <div class="variant-picture" *ngIf="(value$ | async)?.mainPictureRef != null; else: itemPicture ">
         <cp-picture [ref]="(value$ | async)?.mainPictureRef"
         >

@@ -42,7 +42,7 @@ export class SaleItemListItemComponent implements OnInit {
   fireTotalVatInclusiveChange(totalValue: number) {
     const vatRate = this.item.vatRate;
     const discountRate = this.item.discountRatio;
-    const totalVatExclusive = PricingUtils.vatExclusviveFromTotal(totalValue, vatRate, discountRate);
+    const totalVatExclusive = PricingUtils.getVatExclusviveFromTotal(totalValue, vatRate, discountRate);
     const quantity = this.item.quantity;
     const unitPrice = NumberUtils.toFixedDecimals(totalVatExclusive / quantity, 4);
     return this.fireChanges({

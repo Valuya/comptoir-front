@@ -209,7 +209,10 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.stopEdit();
   }
 
-  commitEdit() {
+  commitEdit(value?: any) {
+    if (value !== undefined) {
+      this.editValue = value;
+    }
     this.fireChanges(this.editValue);
     this.stopEdit();
   }

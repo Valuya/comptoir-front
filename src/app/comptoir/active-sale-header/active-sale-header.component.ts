@@ -100,6 +100,10 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.closeSaleAndGoToNewSale();
   }
 
+  getRedirectUrl() {
+    return this.router.routerState.snapshot.url;
+  }
+
   private closeSaleWithRemainingCheck(remaining: number) {
     if (remaining === 0) {
       this.closeSaleAndGoToNewSale();

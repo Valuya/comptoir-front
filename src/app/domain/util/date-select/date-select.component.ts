@@ -3,6 +3,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map, publishReplay, refCount} from 'rxjs/operators';
 import {LocaleService} from '../../../locale.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'cp-date-select',
@@ -25,6 +26,7 @@ export class DateSelectComponent implements OnInit, ControlValueAccessor {
 
   valueSource$ = new BehaviorSubject<string | null>(null);
   dateValue$: Observable<Date>;
+  stringValue$: Observable<string>;
   locale$: Observable<string>;
 
   private onChange: (value: string) => void;
@@ -38,6 +40,10 @@ export class DateSelectComponent implements OnInit, ControlValueAccessor {
     this.dateValue$ = this.valueSource$.pipe(
       distinctUntilChanged(),
       map(dateString => this.parseDate(dateString)),
+      publishReplay(1), refCount()
+    );
+    this.stringValue$ = this.dateValue$.pipe(
+      map(date => moment(date).format('YYYY-MM-DD')),
       publishReplay(1), refCount()
     );
 
@@ -59,6 +65,12 @@ export class DateSelectComponent implements OnInit, ControlValueAccessor {
     this.valueSource$.next(obj);
   }
 
+  onStringValueChange(value: string) {
+    const momentValue = moment(value);
+    const dateValue = momentValue.toDate();
+    this.fireChanges(dateValue);
+  }
+
   fireChanges(newValue: Date) {
     const dateString = newValue.toISOString();
     this.valueSource$.next(dateString);
@@ -75,7 +87,7 @@ export class DateSelectComponent implements OnInit, ControlValueAccessor {
     if (dateString == null) {
       return new Date();
     }
-    const unixTime =  Date.parse(dateString);
+    const unixTime = Date.parse(dateString);
     if (unixTime == null || isNaN(unixTime)) {
       return new Date();
     }

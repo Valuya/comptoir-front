@@ -43,7 +43,7 @@ export class VariantSelectListItemComponent implements OnInit {
       publishReplay(1), refCount()
     );
     this.variantAmountVatInclusive$ = this.variantAmountVatExclusive$.pipe(
-      withLatestFrom(variantItem$, (vatExcl, item) => PricingUtils.totalFromVatExclusive(vatExcl, item.vatRate)),
+      withLatestFrom(variantItem$, (vatExcl, item) => PricingUtils.getVatInclusiveromVatExclusive(vatExcl, item.vatRate)),
       publishReplay(1), refCount()
     );
 

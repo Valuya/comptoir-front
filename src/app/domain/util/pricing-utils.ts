@@ -14,13 +14,13 @@ export class PricingUtils {
     }
   }
 
-  static vatExclusviveFromTotal(totalValue: number, curVatRate: number, discountRate: number) {
+  static getVatExclusviveFromTotal(totalValue: number, curVatRate: number, discountRate: number) {
     const withoutVat = totalValue / (1 + curVatRate);
     const withoutDiscount = withoutVat / (1 - discountRate);
     return PricingUtils.fixedDecimals(withoutDiscount);
   }
 
-  static totalFromVatExclusive(vatExclusiveValue: number, curVatRate: number) {
+  static getVatInclusiveromVatExclusive(vatExclusiveValue: number, curVatRate: number) {
     const totalValue = vatExclusiveValue * (1 + curVatRate);
     return PricingUtils.fixedDecimals(totalValue);
   }
@@ -43,4 +43,5 @@ export class PricingUtils {
   static getSaleTotal(sale: WsSale) {
     return sale.vatExclusiveAmount + sale.vatAmount;
   }
+
 }

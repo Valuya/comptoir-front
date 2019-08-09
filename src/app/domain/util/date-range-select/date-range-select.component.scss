@@ -1,0 +1,36 @@
+.date-range-select {
+
+
+}
+::ng-deep .date-range-select-input-content {
+  max-width: 20em;
+  overflow: hidden;
+
+  .suggestions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    font-size: .9em;
+
+    > * {
+      flex: 0 0 auto;
+      margin: .2em;
+    }
+  }
+
+  .free-range {
+    > .control {
+      display: flex;
+      align-items: center;
+
+      > * {
+        flex: 1 1 auto;
+      }
+
+      > label {
+        flex: 1 1 4em;
+      }
+    }
+  }
+}

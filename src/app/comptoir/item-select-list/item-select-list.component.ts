@@ -7,9 +7,14 @@ import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
-import {MULTIPLE_SALE_COLUMN, NAME_COLUMN, REFERENCE_COLUMN, VAT_EXCLUSIVE_COLUMN} from '../../item/item-column/item-columns';
+import {
+  MULTIPLE_SALE_COLUMN,
+  NAME_COLUMN,
+  REFERENCE_COLUMN,
+  VAT_EXCLUSIVE_COLUMN,
+  VAT_RATE_COLUMN
+} from '../../item/item-column/item-columns';
 import {LazyLoadEvent, SelectItem} from 'primeng/api';
-import {VAT_RATE_COLUMN} from '../../sale/sale-variant-column/sale-variant-columns';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {ItemService} from '../../domain/commercial/item.service';
 

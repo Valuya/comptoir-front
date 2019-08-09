@@ -9,7 +9,6 @@ import {
   WsSale
 } from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
-import * as Columns from '../sale-variant-column/sale-variant-columns';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {filter, map, mergeMap, publishReplay, refCount, take, toArray} from 'rxjs/operators';
@@ -20,6 +19,7 @@ import {SearchResultFactory} from '../../app-shell/shell-table/search-result.fac
 import {CompanyService} from '../../domain/commercial/company.service';
 import {ItemService} from '../../domain/commercial/item.service';
 import {SaleService} from '../../domain/commercial/sale.service';
+import {SaleVariantColumn, SaleVariantColumns} from '../sale-variant-column/sale-variant-columns';
 
 @Component({
   selector: 'cp-sale-details-variants-route',
@@ -30,17 +30,16 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
 
   saleVariantTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
   selectedsaleVariant: WsItemVariantSale[] = [];
-  columns: TableColumn<Columns.SaleVariantColumn>[] = [
-    Columns.QUANTITY_COLUMN,
-    Columns.ITEM_VARIANT_COLUMN,
-    Columns.STOCK_COLUMN,
-    Columns.COMMENT_COLUMN,
-    Columns.INCLUDE_CUSTOMER_LOYALTY_COLUMN,
-    Columns.DISCOUNT_RATIO_COLUMN,
-
-    Columns.VAT_EXCLUSIVE_COLUMN,
-    Columns.VAT_RATE_COLUMN,
-    Columns.TOTAL_COLUMN,
+  columns: TableColumn<SaleVariantColumn>[] = [
+    SaleVariantColumns.QUANTITY_COLUMN,
+    SaleVariantColumns.ITEM_VARIANT_COLUMN,
+    SaleVariantColumns.STOCK_COLUMN,
+    SaleVariantColumns.COMMENT_COLUMN,
+    SaleVariantColumns.INCLUDE_CUSTOMER_LOYALTY_COLUMN,
+    SaleVariantColumns.DISCOUNT_RATIO_COLUMN,
+    SaleVariantColumns.VAT_EXCLUSIVE_COLUMN,
+    SaleVariantColumns.VAT_RATE_COLUMN,
+    SaleVariantColumns.TOTAL_COLUMN,
   ];
   sale$: Observable<WsSale | null>;
 
@@ -71,7 +70,8 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
       .subscribe(r => this.initFilter(r[0], r[1]));
   }
 
-  private searchSaleVariant$(searchFilter: WsItemVariantSaleSearch | null, pagination: Pagination | null): Observable<SearchResult<WsItemVariantSale>> {
+  private searchSaleVariant$(searchFilter: WsItemVariantSaleSearch | null, pagination: Pagination | null)
+    : Observable<SearchResult<WsItemVariantSale>> {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }

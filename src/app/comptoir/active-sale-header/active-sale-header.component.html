@@ -59,6 +59,13 @@
             [hidden]="(saleRef$ | async)?.id == null || (sale$ | async)?.closed"
             (click)="onCancelSaleClick()"
     ></button>
+    <button type="button" pButton
+            icon="fa fa-print"
+            title="Print receipt"
+            [hidden]="fillRoute"
+            [routerLink]="['/sale', (saleRef$ | async)?.id, 'bill']"
+            [queryParams]="{triggerPrint: 'true', redirectUrl: getRedirectUrl()}"
+    ></button>
 
   </div>
 

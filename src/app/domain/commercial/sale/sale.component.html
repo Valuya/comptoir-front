@@ -1,26 +1,31 @@
 <div class="sale">
-  <div class="icon"  *ngIf="showIcon">
+  <div class="icon" *ngIf="showIcon">
     <i class="fa fa-shopping-cart"></i>
   </div>
-  <div class="id"  *ngIf="showId">
-    {{ (value$ | async)?.id }}
+  <div class="id" *ngIf="showId">
+    Sale #{{ (value$ | async)?.id }}
   </div>
 
   <div class="content">
 
-    <div class="vatExclusiveAmount"  *ngIf="showVatExclusive">
+    <div class="vatExclusiveAmount" *ngIf="showVatExclusive">
       <cp-loading-content [loading]="loading$ |async">
         {{ (value$ | async)?.vatExclusiveAmount | currency }}
       </cp-loading-content>
     </div>
+    <div class="vatExclusiveAmount" *ngIf="showVat">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.vatAmount | currency }}
+      </cp-loading-content>
+    </div>
 
-    <div class="total"  *ngIf="showTotal">
+    <div class="total" *ngIf="showTotal">
       <cp-loading-content [loading]="loading$ |async">
         {{ total$ | async | currency }}
       </cp-loading-content>
     </div>
 
-    <div class="reference"  *ngIf="showReference">
+    <div class="reference" *ngIf="showReference">
       <cp-loading-content [loading]="loading$ |async">
         {{ (value$ | async)?.reference }}
       </cp-loading-content>

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {delay, distinctUntilChanged, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsCompanyRef, WsItemVariantSale, WsItemVariantSaleSearch, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {SaleService} from '../sale.service';
 import {AuthService} from '../../../auth.service';
@@ -28,6 +28,8 @@ export class SaleComponent implements OnInit {
   @Input()
   showVatExclusive: boolean;
   @Input()
+  showVat: boolean;
+  @Input()
   showTotal: boolean;
   @Input()
   showDateTime: boolean;
@@ -51,10 +53,12 @@ export class SaleComponent implements OnInit {
 
   ngOnInit() {
     this.value$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.loadRef$(ref)),
       publishReplay(1), refCount()
     );
     this.itemCount$ = this.refSource$.pipe(
+      delay(0),
       switchMap(ref => this.searchItemCount$(ref)),
       publishReplay(1), refCount()
     );

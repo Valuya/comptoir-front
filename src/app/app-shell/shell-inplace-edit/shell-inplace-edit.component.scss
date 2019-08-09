@@ -33,6 +33,9 @@
       }
     }
   }
+  ::ng-deep .placeholder {
+    opacity: .6;
+  }
 }
 
 ::ng-deep .inplace-input-content {
@@ -59,4 +62,7 @@
     }
   }
 
+  .placeholder {
+    opacity: .6;
+  }
 }

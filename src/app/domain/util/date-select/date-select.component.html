@@ -1,9 +1,8 @@
 <div class="date-select">
-  <p-calendar [ngModel]="dateValue$ | async"
-              (ngModelChange)="fireChanges($event)"
-              [disabled]="disabled"
-              [inputStyleClass]="invalid ? 'ui-state-error': ''"
-              [showTime]="showTime"
+  <input type="date" pInputText
+         [ngModel]="stringValue$ | async"
+         (ngModelChange)="onStringValueChange($event)"
+         [disabled]="disabled"
+         [class.ui-state-error]="invalid"
   >
-  </p-calendar>
 </div>

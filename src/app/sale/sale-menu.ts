@@ -46,6 +46,24 @@ export const ResolvedSaleDetailsDetailsMenuItem: MenuItem & ResolvedRouteItem<Ws
   ),
 };
 
+export const ResolvedSaleDetailsBillMenuItem: MenuItem & ResolvedRouteItem<WsSale> = {
+  label: 'Bill',
+  title: 'Bill',
+  icon: 'fa fa-list',
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsSale>(
+    FunctionsUtils.splitDomainObjectCallback<WsSale, any[]>(
+      sale => ['/sale', sale.id, 'bill']
+    ), 'sale'
+  ),
+};
+
+export const PrintMenuItem: MenuItem & ResolvedRouteItem<WsSale> = {
+  label: 'Print',
+  title: 'Print',
+  icon: 'fa fa-print',
+  command: () => window.print()
+};
+
 export const SaleDetailsVariantsMenuItem: MenuItem & ResolvedRouteItem<WsSale> = {
   label: 'Content',
   title: 'Content',
@@ -59,6 +77,7 @@ export const SaleDetailsVariantsMenuItem: MenuItem & ResolvedRouteItem<WsSale> =
 };
 export const SaleDetailMenuItems: MenuItem[] = [
   ResolvedSaleDetailsDetailsMenuItem,
+  ResolvedSaleDetailsBillMenuItem,
   SaleDetailsVariantsMenuItem
 ];
 

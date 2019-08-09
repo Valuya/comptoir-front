@@ -1,7 +1,7 @@
-<div class="sale-filter filter-form" *ngIf="value != null">
+<div class="sale-filter filter-form ui-widget" *ngIf="(valueSource$ | async) != null">
   <div class="control">
     <label>Closed</label>
-    <p-triStateCheckbox [ngModel]="value.closed"
+    <p-triStateCheckbox [ngModel]="(valueSource$ | async).closed"
                         (ngModelChange)="updateValue({closed: $event})"
                         [disabled]="disabled"
     ></p-triStateCheckbox>
@@ -10,7 +10,7 @@
   <div class="control">
     <label>Customer</label>
     <div>
-      <cp-customer-select [ngModel]="value.customerRef"
+      <cp-customer-select [ngModel]="(valueSource$ | async).customerRef"
                           (ngModelChange)="updateValue({customerRef: $event})"
                           [disabled]="disabled"
       ></cp-customer-select>
@@ -19,20 +19,12 @@
 
 
   <div class="control">
-    <label>From</label>
-    {{ value.fromDateTime | json }}
-    <cp-date-select [ngModel]="value.fromDateTime"
-                    (ngModelChange)="updateValue({fromDateTime: $event})"
-                    [disabled]="disabled"
-    ></cp-date-select>
-  </div>
-
-  <div class="control">
-    <label>To</label>
-    <cp-date-select [ngModel]="value.toDateTime"
-                    (ngModelChange)="updateValue({toDateTime: $event})"
-                    [disabled]="disabled"
-    ></cp-date-select>
+    <cp-date-range-select [ngModel]="dateRange$ | async"
+                          (ngModelChange)="updateDateRange($event)"
+                          [disabled]="disabled"
+                          [showSuggestions]="true"
+                          [showFreeRange]="true"
+    ></cp-date-range-select>
   </div>
 
 </div>

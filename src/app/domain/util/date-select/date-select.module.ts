@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DateSelectComponent} from './date-select.component';
-import {CalendarModule} from 'primeng/primeng';
+import {CalendarModule, InputTextModule} from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 
 
@@ -10,7 +10,8 @@ import {FormsModule} from '@angular/forms';
   imports: [
     CommonModule,
     CalendarModule,
-    FormsModule
+    FormsModule,
+    InputTextModule
   ],
   exports: [DateSelectComponent]
 })
