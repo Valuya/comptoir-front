@@ -22,7 +22,7 @@ export class LocaleService {
     );
     this.viewLocale$ = concat(
       of(this.appLocale),
-      of('fr'),//Some hardcoded default
+      of('fr'), // Some hardcoded default
       employeeLocaleAndUpdates$
     ).pipe(
       publishReplay(1), refCount()

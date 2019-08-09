@@ -31,7 +31,7 @@ export class ItemAndVariantSelectListComponent implements OnInit {
 
   ngOnInit() {
     this.debouncedSelectionType$ = this.selectionTypeSource$$.pipe(
-      debounceTime(300),
+      debounceTime(30),
       publishReplay(1), refCount()
     );
   }
