@@ -14,7 +14,6 @@ export class ComptoirService {
 
   pointOfSaleRef$ = new BehaviorSubject<WsPosRef | null>(null);
   defaultCustomerRef$ = new BehaviorSubject<WsCustomerRef | null>(null);
-  useServerSendEvents$ = new BehaviorSubject<boolean>(true);
 
   customerLoyaltyAmount$: Observable<number>;
   customerLoyaltyAmountReloadTrigger$ = new Subject<any>();
@@ -52,13 +51,6 @@ export class ComptoirService {
       ref => this.onLoyaltyRateUpdated(),
       e => this.showUpdateError(e),
     );
-  }
-
-  setUseServerSentEvents(value: boolean) {
-    this.useServerSendEvents$.next(value);
-    if (value) {
-
-    }
   }
 
   private onLoyaltyRateUpdated() {

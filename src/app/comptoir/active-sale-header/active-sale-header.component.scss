@@ -5,6 +5,10 @@
   padding: .5em;
   margin-bottom: 1em;
 
+  &.loading {
+    opacity: .3;
+  }
+
   >*{
     flex: 1 1 auto;
   }
@@ -26,6 +30,12 @@
     >* {
       display: block;
       margin: .2em;
+    }
+  }
+  >.secondary-actions {
+    flex: 0 0 auto;
+    [hidden] {
+      display: none;
     }
   }
 }

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {WsSale} from '@valuya/comptoir-ws-api';
-import {concat, Observable, of, Subscription} from 'rxjs';
+import {combineLatest, concat, Observable, of, Subscription} from 'rxjs';
 import {AuthService} from '../../auth.service';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, map, publishReplay, refCount, tap} from 'rxjs/operators';
@@ -18,8 +18,7 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
   isFillRoute$: Observable<boolean>;
   isPayRoute$: Observable<boolean>;
 
-  private serverEventSEnabledubscription: Subscription;
-  private serverEventSubscription: Subscription;
+  loading$: Observable<boolean>;
 
   constructor(
     private saleService: ComptoirSaleService,
@@ -37,7 +36,6 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
       map(e => this.router.routerState.snapshot.url.split('/').map(a => {
         return {path: a};
       })),
-      tap(a => console.log(a)),
       publishReplay(1), refCount()
     );
     this.isFillRoute$ = concat(
@@ -54,27 +52,8 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
       map(segements => segements.findIndex(s => s.path === 'pay') >= 0),
       publishReplay(1), refCount()
     );
-    this.serverEventSEnabledubscription = this.comptoirService.useServerSendEvents$
-      .subscribe(enabled => {
-        if (enabled) {
-          if (this.serverEventSubscription != null) {
-            this.serverEventSubscription.unsubscribe();
-          }
-          this.serverEventSubscription = this.saleService.subscribeToServerEvents$();
-        } else {
-          if (this.serverEventSubscription) {
-            this.serverEventSubscription.unsubscribe();
-            this.serverEventSubscription = null;
-          }
-        }
-      });
   }
 
   ngOnDestroy(): void {
-    if (this.serverEventSubscription) {
-      this.serverEventSubscription.unsubscribe();
-      this.serverEventSubscription = null;
-    }
-    this.serverEventSEnabledubscription.unsubscribe();
   }
 }

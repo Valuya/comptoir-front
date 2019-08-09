@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {WsAuth, WsCompanyRef, WsEmployee} from '@valuya/comptoir-ws-api';
 import * as moment from 'moment';
 import {BehaviorSubject, concat, Observable, of} from 'rxjs';
-import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
+import {filter, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
 import {ApiService} from './api.service';
 import {AuthProvider} from './util/auth-provider';
 import {LoginService} from './login/login.service';
@@ -65,6 +65,14 @@ export class AuthService {
   getLoggedEmployeeCompanyRef$(): Observable<WsCompanyRef | null> {
     return this.loggedEmployee$.pipe(
       map(employee => employee == null ? null : employee.companyRef as WsCompanyRef)
+    );
+  }
+
+  getNextNonNullLoggedEmployeeCompanyRef$(): Observable<WsCompanyRef> {
+    return this.loggedEmployee$.pipe(
+      map(employee => employee == null ? null : employee.companyRef as WsCompanyRef),
+      filter(ref => ref != null),
+      take(1),
     );
   }
 

@@ -1,4 +1,4 @@
-import {BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, merge, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, concat, EMPTY, forkJoin, Observable, of, ReplaySubject, Subject} from 'rxjs';
 import {
   WsAccountingEntry,
   WsAccountingEntryRef,
@@ -13,9 +13,23 @@ import {
   WsItemVariantSaleSearchResult,
   WsItemVariantSearch,
   WsSale,
-  WsSaleRef, WsSaleSearch
+  WsSaleRef,
+  WsSaleSearch
 } from '@valuya/comptoir-ws-api';
-import {concatMap, delay, filter, map, mergeMap, publishReplay, refCount, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {
+  catchError,
+  concatMap,
+  debounceTime,
+  delay, filter,
+  map,
+  mergeMap,
+  publishReplay,
+  refCount,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import {ShellTableHelper} from '../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../util/pagination';
 import {AuthService} from '../auth.service';
@@ -26,63 +40,47 @@ import {SaleService} from '../domain/commercial/sale.service';
 import {ItemService} from '../domain/commercial/item.service';
 import {LocaleService} from '../locale.service';
 import {SimpleSearchResultResourceCache} from '../domain/util/cache/simple-search-result-resource-cache';
-import {SaleVariantUpdate} from './sale-variant-update';
-import {ComptoirSaleEventsService, SaleAccountingEntriesUpdateEvent, SaleItemupdateEvent} from './comptoir-sale-events.service';
 import {Injectable} from '@angular/core';
 import {AccountingService} from '../domain/accounting/accounting.service';
-import {ComptoirService} from './comptoir-service';
+import {SaleEvent} from './sale-event/sale-event';
+import {SaleEventType} from './sale-event/sale-event-type';
+import {UpdateSaleEvent} from './sale-event/update-sale-event';
+import {AddItemVariantEvent} from './sale-event/add-item-variant-event';
+import {SaleState} from './sale-state';
+import {RemoveSaleVariantEvent} from './sale-event/remove-sale-variant-event';
+import {UpdateSaleVariantEvent} from './sale-event/update-sale-variant-event';
+import {AddSalePaymentEvent} from './sale-event/add-sale-payment-event';
+import {RemoveSalePaymentEvent} from './sale-event/remove-sale-payment-event';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComptoirSaleService {
 
-  // Sale source, emitting when active sale is changed only
+  // Sale source, emitting when active sale is changed only (navigation to another sale ref)
   private activeSaleSource$ = new BehaviorSubject<WsSale>(null);
+  // Sale event queue - need to buffer some of them as we may need to fetch an initial state before applying them
+  private saleEventsSource$ = new ReplaySubject<SaleEvent>(10);
+  // Current sale state
+  private saleState$: Observable<SaleState | null>;
 
-  // Server sent update events
-  private serverEventSubscribed = false;
-  private saleUpdateEvents$: Observable<WsSale>;
-  private saleTotalPaidEvents$: Observable<number>;
-  private saleItemUpdateEvents$: Observable<SaleItemupdateEvent>;
-  private salePaymentEntriesEvents$: Observable<SaleAccountingEntriesUpdateEvent>;
-
-  // Queue of sale updates to apply
-  private saleUpdatesSource$ = new Subject<Partial<WsSale>>();
   private updatingSaleInProgress$ = new BehaviorSubject<boolean>(false);
-  // Queue of sale items to add
-  private addVariantSource$ = new Subject<WsItemVariantRef>();
-  private addingItemInProgress$ = new BehaviorSubject<boolean>(false);
-  // Queue of sale items to remove
-  private removeVariantSource$ = new Subject<WsItemVariantSaleRef>();
-  private removingVariantInProgress$ = new BehaviorSubject<boolean>(false);
-  // Queue of item updates to apply
-  private updateVariantSource$ = new Subject<Partial<SaleVariantUpdate>>();
-  private updatingItemInProgress$ = new BehaviorSubject<boolean>(false);
-  // Queue of accounting entries to add
-  private addAccountingEntrySource$ = new Subject<WsAccountingEntry>();
-  private addingAccountingEntriesInProgress$ = new BehaviorSubject<boolean>(false);
-  // Queue of accounting entries to remove
-  private removeAccountingEntrySource$ = new Subject<WsAccountingEntryRef>();
-  private removingAccountingEntriesInProgress$ = new BehaviorSubject<boolean>(false);
+  private updatingItemsInProgress$ = new BehaviorSubject<boolean>(false);
+  private updatingPaymentsInProgress$ = new BehaviorSubject<boolean>(false);
 
-  // Trigger to refresh sale and items
-  private reloadSource$ = new Subject<boolean>();
-
-  // Updated sale values, emitting whenever a value has been refetched
-  private nonCachedUpdatedSale$: Observable<WsSale>;
-  private updatedSale$: Observable<WsSale>;
-  private saleRef$: Observable<WsSale>;
-  private saleTotalPaid$: Observable<number>;
-  private saleRemaining$: Observable<number>;
+  // Updated sale values, emitted on each state update
+  private sale$: Observable<WsSale | null>;
+  private saleRef$: Observable<WsSale | null>;
+  private saleTotalPaid$: Observable<number | null>;
+  private saleRemaining$: Observable<number | null>;
+  // Tables helpers are used for lists to allow easy sorting/filtering
   private saleItemsTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
   private saleAccountingEntriessTableHelper: ShellTableHelper<WsAccountingEntry, WsAccountingEntrySearch>;
 
   // Cache a page of variant for each item, to be used by the item-and-variant-select in the fill view
   private itemVariantsCaches: { [itemId: number]: SimpleSearchResultResourceCache<WsItemVariantRef> } = {};
-  // Cache a page of variant for each item, to be used by the item-and-variant-select in the fill view
+  // Cache a page of open sales, to be used by the active-sale-select component
   private openSalesCaches: SimpleSearchResultResourceCache<WsSaleRef>;
-  private openSales$: Observable<SearchResult<WsSaleRef>>;
 
   constructor(
     private saleService: SaleService,
@@ -90,71 +88,9 @@ export class ComptoirSaleService {
     private accountingService: AccountingService,
     private localeService: LocaleService,
     private authService: AuthService,
-    private saleEventsService: ComptoirSaleEventsService,
   ) {
-    // The most recent sale on which to apply further updates
-    const effectiveEditingSale$: Observable<WsSale> = this.activeSaleSource$.pipe(
-      switchMap(initSale => initSale == null ? of(null) : this.concatInitSaleAndItsUpdates$(initSale)),
-      publishReplay(0), refCount()
-    );
-
-    // Each source of updates is applied - using concatMap to process them all in order
-    // FIXME: there might still be unordered actions processed- as adding/updating/removing actions are
-    // treated in parrallel queues
-    const saleUpdated$ = this.saleUpdatesSource$.pipe(
-      concatMap(update => this.applyNextSaleUpdate$(update, effectiveEditingSale$)),
-    );
-    const itemAdded$ = this.addVariantSource$.pipe(
-      concatMap(variantRef => this.addNextVariant$(variantRef, effectiveEditingSale$)),
-    );
-    const itemRemoved$ = this.removeVariantSource$.pipe(
-      concatMap(ref => this.removeNextVariant$(ref)),
-    );
-    const itemUpdated$ = this.updateVariantSource$.pipe(
-      concatMap(variantUpdate => this.applyNextVariantUpdate$(variantUpdate, effectiveEditingSale$)),
-    );
-    const accountingEntryAdded$ = this.addAccountingEntrySource$.pipe(
-      concatMap(entry => this.addNextAccountingEntry$(entry, effectiveEditingSale$)),
-    );
-    const accountingEntryRemoved$ = this.removeAccountingEntrySource$.pipe(
-      concatMap(ref => this.removeNextAccountingEntry$(ref, effectiveEditingSale$)),
-    );
-
-    this.nonCachedUpdatedSale$ = merge(
-      saleUpdated$, this.activeSaleSource$,
-      itemAdded$, itemUpdated$, itemRemoved$,
-      accountingEntryAdded$, accountingEntryRemoved$
-    ).pipe(
-      // TODO: when polling server on each update, we may optimize further: no need to refetch everything for each of
-      // those events
-      concatMap(r => this.refreshSalePostUpades$()),
-      publishReplay(0), refCount()
-    );
-    // Assumes server pushes updates, except for reloads
-    const reloaded$ = this.reloadSource$.pipe(
-      switchMap(sale => this.reloadSaleAndItems$())
-    );
-
-    this.updatedSale$ = merge(effectiveEditingSale$, this.nonCachedUpdatedSale$, reloaded$).pipe(
-      publishReplay(1), refCount()
-    );
-    this.saleTotalPaid$ = this.nonCachedUpdatedSale$.pipe(
-      switchMap(sale => this.getSaleTotalPaid(sale)),
-      publishReplay(1), refCount()
-    );
-
-    this.saleRef$ = this.activeSaleSource$.pipe(
-      map(s => s == null || s.id == null ? null : {id: s.id}),
-      publishReplay(1), refCount()
-    );
-
-    this.saleRemaining$ = combineLatest(this.updatedSale$, this.saleTotalPaid$).pipe(
-      map(results => this.getSaleAmountRemaining(results[0], results[1])),
-      publishReplay(1), refCount()
-    );
-
     this.saleItemsTableHelper = new ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>(
-      (searchFilter, pagination) => this.getSaleItemEventResults$(searchFilter),
+      (searchFilter, pagination) => this.searchSaleItems$(searchFilter),
       {
         noDebounce: true,
         ignorePagination: true,
@@ -167,62 +103,39 @@ export class ComptoirSaleService {
         ignorePagination: true
       }
     );
-
     this.openSalesCaches = new SimpleSearchResultResourceCache<WsSaleRef>(
       () => this.searchOpenSales$()
     );
-    this.openSales$ = this.openSalesCaches.getResults$().pipe(
+
+    this.saleState$ = this.activeSaleSource$.pipe(
+      switchMap(sale => this.getNextSaleStates$(sale)),
       publishReplay(1), refCount()
     );
 
-  }
-
-
-  subscribeToServerEvents$(): Subscription {
-    // Dont miss any event
-    this.saleUpdateEvents$ = this.saleEventsService.getUpdates$().pipe(
-      tap(sale => this.saleService.cacheSale(sale)),
+    this.sale$ = this.saleState$.pipe(
+      map(state => state == null ? null : state.sale),
       publishReplay(1), refCount()
     );
-    this.saleTotalPaidEvents$ = this.saleEventsService.getSaleTotalPaidUpdates$().pipe(
-      publishReplay(1), refCount()
-    );
-    this.saleItemUpdateEvents$ = this.saleEventsService.getItemsUpdates$().pipe(
-      tap(event => this.saleService.cacheSaleItems(event.results)),
-      publishReplay(1), refCount()
-    );
-    this.salePaymentEntriesEvents$ = this.saleEventsService.getPaymentEntriesUpdates().pipe(
-      tap(event => this.accountingService.cacheEntries(event.results)),
+    this.saleTotalPaid$ = this.saleState$.pipe(
+      map(state => state == null ? null : state.totalPaid),
       publishReplay(1), refCount()
     );
 
-    this.serverEventSubscribed = true;
+    this.saleRef$ = this.activeSaleSource$.pipe(
+      map(s => s == null || s.id == null ? null : {id: s.id}),
+      publishReplay(1), refCount()
+    );
 
-    // Dont miss any event by subscribing early
-    const subscription = new Subscription();
-    const saleUpdateSubscription = this.saleUpdateEvents$.subscribe();
-    const saleItemsSubscription = this.saleItemUpdateEvents$.subscribe();
-    const saleTotalPaidSubscription = this.saleTotalPaidEvents$.subscribe();
-    const salePaymentEntriesSubscription = this.salePaymentEntriesEvents$.subscribe();
-    subscription.add(saleUpdateSubscription);
-    subscription.add(saleItemsSubscription);
-    subscription.add(saleTotalPaidSubscription);
-    subscription.add(salePaymentEntriesSubscription);
-    subscription.add(() => {
-      this.saleEventsService.unsubscribe();
-    });
-    const curSale = this.activeSaleSource$.getValue();
-    if (curSale != null && curSale.id != null) {
-      this.saleEventsService.subscribeToSale({id: curSale.id});
-    }
-    return subscription;
+    this.saleRemaining$ = combineLatest(this.sale$, this.saleTotalPaid$).pipe(
+      map(results => this.getSaleAmountRemaining(results[0], results[1])),
+      publishReplay(1), refCount()
+    );
   }
 
   initSale(sale: WsSale) {
     if (sale == null) {
       throw new Error('No sale');
     }
-    this.activeSaleSource$.next(sale);
 
     if (sale.id == null) {
       this.saleItemsTableHelper.setFilter(null);
@@ -236,13 +149,12 @@ export class ComptoirSaleService {
         companyRef: sale.companyRef,
         accountingTransactionRef: sale.accountingTransactionRef,
         accountSearch: {
-          accountType: WsBalanceSearchAccountSearchAccountTypeEnum.PAYMENT
+          accountType: WsBalanceSearchAccountSearchAccountTypeEnum.PAYMENT,
+          companyRef: sale.companyRef,
         }
       });
-      if (this.serverEventSubscribed) {
-        this.saleEventsService.subscribeToSale({id: sale.id});
-      }
     }
+    this.activeSaleSource$.next(sale);
   }
 
   createSaleIfRequired$(): Observable<WsSale | never> {
@@ -254,43 +166,48 @@ export class ComptoirSaleService {
     }
   }
 
-  updateSale(update: Partial<WsSale>) {
-    this.saleUpdatesSource$.next(update);
+  updateSale<K extends keyof WsSale>(update: Partial<WsSale>) {
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new UpdateSaleEvent(curSaleRef, update));
   }
 
   addVariant(ref: WsItemVariantRef) {
-    this.addVariantSource$.next(ref);
+    const curSale = this.activeSaleSource$.getValue();
+    if (curSale.id == null) {
+      throw new Error('Cannot add variant to new sale');
+    }
+
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new AddItemVariantEvent(curSaleRef, ref));
   }
 
   removeVariant(ref: WsItemVariantSaleRef) {
-    this.removeVariantSource$.next(ref);
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new RemoveSaleVariantEvent(curSaleRef, ref));
   }
 
-  udpdateSaleVariant(ref: WsItemVariantSaleRef, partialUpdate: Partial<WsItemVariantSale>) {
-    this.updateVariantSource$.next({
-      variantRef: ref,
-      update: partialUpdate
-    });
+  udpdateSaleVariant<K extends keyof WsItemVariantSale>(ref: WsItemVariantSaleRef, partialUpdate: Partial<WsItemVariantSale>) {
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new UpdateSaleVariantEvent(curSaleRef, ref, partialUpdate));
   }
 
   addTransaction(newEntry: WsAccountingEntry) {
-    this.addAccountingEntrySource$.next(newEntry);
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new AddSalePaymentEvent(curSaleRef, newEntry));
   }
 
   removeTransaction(ref: WsAccountingEntryRef) {
-    this.removeAccountingEntrySource$.next(ref);
-  }
-
-  refresh() {
-    this.reloadSource$.next(true);
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new RemoveSalePaymentEvent(curSaleRef, ref));
   }
 
   getSale$(): Observable<WsSale> {
-    return this.updatedSale$;
-  }
-
-  getActiveSale$(): Observable<WsSale | null> {
-    return this.activeSaleSource$;
+    return this.sale$;
   }
 
   getActiveSaleOptional(): WsSale | null {
@@ -330,7 +247,7 @@ export class ComptoirSaleService {
   }
 
   getOpenSales$(): Observable<SearchResult<WsSaleRef>> {
-    return this.openSales$;
+    return this.openSalesCaches.getResults$();
   }
 
   closeActiveSale$(): Observable<any> {
@@ -338,9 +255,6 @@ export class ComptoirSaleService {
       take(1),
       switchMap(ref => this.saleService.closeSale$(ref)),
       tap(() => {
-        // this.activeSaleSource$.next(null);
-        // this.saleItemsTableHelper.setFilter(null);
-        // this.saleAccountingEntriessTableHelper.setFilter(null);
         this.openSalesCaches.refetch();
       })
     );
@@ -358,78 +272,26 @@ export class ComptoirSaleService {
     );
   }
 
-  private applyNextSaleUpdate$(update: Partial<WsSale>, effectiveSale$: Observable<WsSale>): Observable<WsSaleRef> {
-    this.updatingSaleInProgress$.next(true);
-    return effectiveSale$.pipe(
-      take(1),
-      map(curSale => Object.assign({}, curSale, update) as WsSale),
-      mergeMap(updatedSale => this.saleService.saveSale(updatedSale)),
-      delay(0),
-      tap(() => this.updatingSaleInProgress$.next(false))
-    );
-  }
-
-  private addNextVariant$(ref: WsItemVariantRef, curSale$: Observable<WsSale>): Observable<WsItemVariantSaleRef> {
-    this.addingItemInProgress$.next(true);
-    return forkJoin(
-      curSale$.pipe(take(1)),
-      this.saleItemsTableHelper.rows$.pipe(take(1))
+  isUpdating$(): Observable<boolean> {
+    return combineLatest(
+      this.updatingPaymentsInProgress$,
+      this.updatingItemsInProgress$,
+      this.updatingSaleInProgress$
     ).pipe(
-      mergeMap(results => this.addOrAppendVariant$(results[0], results[1], ref)),
-      delay(0),
-      tap(() => this.addingItemInProgress$.next(false)),
+      debounceTime(100),
+      map(r => r[0] || r[1] || r[2]),
+      publishReplay(1), refCount()
     );
   }
 
-  private removeNextVariant$(ref: WsItemVariantSaleRef): Observable<any> {
-    this.removingVariantInProgress$.next(true);
-    return this.saleService.removeVariant(ref).pipe(
-      delay(0),
-      tap(() => this.removingVariantInProgress$.next(false)),
-    );
-  }
 
-  private applyNextVariantUpdate$(variantUpdate: Partial<SaleVariantUpdate>, effectiveEditingSale$: Observable<WsSale>)
-    : Observable<WsItemVariantSaleRef> {
-    const variantRef = variantUpdate.variantRef;
-    const variantPartialUpdate = variantUpdate.update;
-
-    this.updatingItemInProgress$.next(true);
-    return this.searchCurrentVariant$(variantRef, effectiveEditingSale$).pipe(
-      map(curVariant => Object.assign({}, curVariant, variantPartialUpdate) as WsItemVariantSale),
-      mergeMap(updatedVariant => this.saleService.saveVariant(updatedVariant)),
-      delay(0),
-      tap(() => this.updatingItemInProgress$.next(false))
-    );
-  }
-
-  private addNextAccountingEntry$(entry: WsAccountingEntry, effectiveEditingSale$: Observable<WsSale>)
-    : Observable<WsAccountingEntryRef> {
-    this.addingAccountingEntriesInProgress$.next(true);
-    return effectiveEditingSale$.pipe(
-      take(1),
-      mergeMap(sale => this.saleService.addPayment$({id: sale.id}, entry)),
-      delay(0),
-      tap(() => this.addingAccountingEntriesInProgress$.next(false))
-    );
-  }
-
-  private removeNextAccountingEntry$(ref: WsAccountingEntryRef, effectiveEditingSale$: Observable<WsSale>): Observable<any> {
-    this.removingAccountingEntriesInProgress$.next(true);
-    return effectiveEditingSale$.pipe(
-      take(1),
-      mergeMap(sale => this.saleService.removePayment$({id: sale.id}, ref)),
-      delay(0),
-      tap(() => this.removingAccountingEntriesInProgress$.next(false)),
-    );
-  }
-
-  private searchSaleItems$(searchFilter: WsItemVariantSaleSearch, pagination: Pagination): Observable<SearchResult<WsItemVariantSale>> {
+  private searchSaleItemsWithPagination$(searchFilter: WsItemVariantSaleSearch, pagination: Pagination)
+    : Observable<SearchResult<WsItemVariantSale>> {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
     const sale$ = this.activeSaleSource$.pipe(take(1));
-    const companyRef$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(take(1));
+    const companyRef$ = this.authService.getNextNonNullLoggedEmployeeCompanyRef$();
 
     return forkJoin(sale$, companyRef$).pipe(
       switchMap(r => this.searchSaleItemsForSale$(r[0], r[1], searchFilter, pagination))
@@ -507,12 +369,10 @@ export class ComptoirSaleService {
   }
 
 
-  private addOrAppendVariant$(curSale: WsSale | null, currentItems: WsItemVariantSale[], itemToAdd: WsItemVariantRef)
+  private addOrAppendVariant$(curSale: WsSale, currentItems: WsItemVariantSale[], itemToAdd: WsItemVariantRef)
     : Observable<WsItemVariantSaleRef> {
     if (curSale == null || curSale.id == null) {
-      return this.createSale$(curSale).pipe(
-        switchMap(newSale => this.addOrAppendVariant$(newSale, [], itemToAdd)),
-      );
+      throw new Error('Non persisted sale');
     } else if (currentItems.length === 0) {
       return this.saleService.createNewSaleItem$(curSale, itemToAdd);
     } else {
@@ -557,80 +417,16 @@ export class ComptoirSaleService {
     );
   }
 
-  private getSaleTotalPaid(ref: WsSaleRef): Observable<number> {
-    if (ref == null || ref.id == null) {
-      return of(0);
-    }
-    const reloaded$ = this.reloadSource$.pipe(
-      switchMap(() => this.saleService.getSaleTotalPaid$(ref))
-    );
-    if (this.saleTotalPaidEvents$ != null) {
-      return merge(
-        reloaded$,
-        this.saleTotalPaidEvents$
-      );
-    } else {
-      return merge(
-        reloaded$,
-        this.saleService.getSaleTotalPaid$(ref)
-      );
-    }
-  }
 
-  private concatInitSaleAndItsUpdates$(initSale: WsSale): Observable<WsSale> {
-    if (initSale.id == null) {
-      return of(initSale);
-    }
-
-    if (this.saleUpdateEvents$ != null) {
-      const saleUpdates$ = this.saleUpdateEvents$.pipe(
-        filter(update => update.id === initSale.id),
-      );
-      return concat(
-        of(initSale),
-        saleUpdates$,
-      );
-    } else {
-      if (this.nonCachedUpdatedSale$ == null) {
-        throw new Error('No sale update observable setup when expected');
-      }
-      return concat(
-        of(initSale),
-        this.nonCachedUpdatedSale$
-      );
-    }
-  }
-
-  private searchCurrentVariant$(variantRef: WsItemVariantSaleRef, effectiveEditingSale$: Observable<WsSale>) {
-    // get it from the sale service cache rather than this table helper
-    return this.saleService.getVariant$(variantRef);
-  }
-
-  private getSaleItemEventResults$(searchFilter: WsItemVariantSaleSearch)
+  private searchSaleItems$(searchFilter: WsItemVariantSaleSearch)
     : Observable<SearchResult<WsItemVariantSale>> {
     const emptyResults$ = of(SearchResultFactory.emptyResults());
     if (searchFilter == null) {
       return emptyResults$;
     }
 
-    if (this.saleItemUpdateEvents$ != null) {
-      const resultsFromEvent$ = this.saleItemUpdateEvents$.pipe(
-        filter(event => event.saleRef.id === searchFilter.saleRef.id),
-        map(event => event.results),
-      );
-      const eventResults$ = concat(
-        emptyResults$,
-        resultsFromEvent$,
-      );
-      const reloadedResults$ = this.reloadSource$.pipe(
-        switchMap(() => this.searchSaleItems$(searchFilter, PaginationUtils.create(100))),
-      );
-      return merge(reloadedResults$, eventResults$);
-    } else {
-      const restResults$ = this.searchSaleItems$(searchFilter, PaginationUtils.create(100));
-      return restResults$;
-    }
-
+    const restResults$ = this.searchSaleItemsWithPagination$(searchFilter, PaginationUtils.create(100));
+    return restResults$;
   }
 
   private getSaleAccountingEntries$(searchFilter: WsAccountingEntrySearch)
@@ -641,57 +437,8 @@ export class ComptoirSaleService {
       return emptyResults$;
     }
 
-    if (this.salePaymentEntriesEvents$ != null) {
-      const resultsFromEvent$ = this.salePaymentEntriesEvents$.pipe(
-        filter(event => event.transactionRef.id === searchFilter.accountingTransactionRef.id),
-        map(event => event.results),
-      );
-      const eventResults$ = concat(
-        emptyResults$,
-        resultsFromEvent$,
-      );
-      const reloadedResults$ = this.reloadSource$.pipe(
-        switchMap(() => this.searchSaleAccountingEntries$(searchFilter, PaginationUtils.create(100))),
-      );
-      return merge(eventResults$, reloadedResults$);
-    } else {
-      const restResults$ = this.searchSaleAccountingEntries$(searchFilter, PaginationUtils.create(100));
-      return restResults$;
-    }
-  }
-
-
-  private refreshSalePostUpades$(): Observable<WsSale> {
-    if (this.saleUpdateEvents$ == null) {
-      return this.reloadSaleAndItems$();
-    } else {
-      const updates$ = this.saleUpdateEvents$.pipe(
-        withLatestFrom(this.activeSaleSource$),
-        // Check it is for the actual sale
-        filter(r => r[0] != null && r[1] != null && r[0].id === r[1].id),
-        map(r => r[0])
-      );
-      return concat(
-        this.reloadSaleAndItems$(),
-        updates$
-      );
-    }
-  }
-
-  private reloadSaleAndItems$() {
-    return this.activeSaleSource$.pipe(
-      filter(s => s != null && s.id != null),
-      take(1),
-      switchMap(sale => this.saleService.getSale$({id: sale.id}, true)),
-      map(curSale => {
-        // this.activeSaleSource$.next(curSale);
-        // this.openSalesCaches.refetch();
-        // this.initSale(curSale);
-        this.saleItemsTableHelper.reload();
-        this.saleAccountingEntriessTableHelper.reload();
-        return curSale;
-      })
-    );
+    const restResults$ = this.searchSaleAccountingEntries$(searchFilter, PaginationUtils.create(100));
+    return restResults$;
   }
 
   private getSaleAmountRemaining(sale: WsSale, paid: number) {
@@ -701,15 +448,14 @@ export class ComptoirSaleService {
     return sale.vatExclusiveAmount + sale.vatAmount - paid;
   }
 
-
   private searchOpenSales$(): Observable<SearchResult<WsSaleRef>> {
     return this.authService.getLoggedEmployeeCompanyRef$().pipe(
-      map(r => this.createSearchFilter(r)),
+      map(r => this.createOpenSalesSearchFilter(r)),
       switchMap(searchFilter => this.saleService.searchSales$(searchFilter, PaginationUtils.create(10)))
     );
   }
 
-  private createSearchFilter(companyRef: WsCompanyRef | null): WsSaleSearch {
+  private createOpenSalesSearchFilter(companyRef: WsCompanyRef | null): WsSaleSearch {
     if (companyRef == null) {
       return null;
     }
@@ -718,4 +464,198 @@ export class ComptoirSaleService {
       companyRef: companyRef as object,
     };
   }
+
+
+  private getNextSaleStates$(sale: WsSale): Observable<SaleState> {
+    if (sale == null) {
+      return of(null);
+    }
+    const seedState = this.createSaleState(sale, [], 0, []);
+    if (sale.id == null) {
+      return of(seedState);
+    }
+    const initState$ = this.refetchState$(seedState, {
+      refetchTotalPaid: true,
+      refetchPayments: true,
+      refetchItems: true
+    });
+    return concat(
+      initState$,
+      this.applyNextSaleEvents$()
+    );
+  }
+
+  private applyNextSaleEvents$(): Observable<SaleState> {
+    return this.saleEventsSource$.pipe(
+      concatMap(event => this.applySaleEvent$(event))
+    );
+  }
+
+  private refetchState$(state: SaleState, options?: {
+    refetchSale?: boolean,
+    refetchItems?: boolean,
+    refetchTotalPaid?: boolean,
+    refetchPayments?: boolean,
+  }): Observable<SaleState> {
+    const saleId = state.sale.id;
+    if (saleId == null) {
+      return of(state);
+    }
+    const nonNullOptions = options || {};
+
+    const sale$ = nonNullOptions.refetchSale ? this.saleService.getSale$({id: saleId}, true) : of(state.sale);
+    const saleItems$ = nonNullOptions.refetchItems ? this.saleItemsTableHelper.reload() : of(state.items);
+    const totalPaid$ = nonNullOptions.refetchTotalPaid ? this.saleService.getSaleTotalPaid$({id: saleId}) : of(state.totalPaid);
+    const paymentItems$ = nonNullOptions.refetchPayments ? this.saleAccountingEntriessTableHelper.reload() : of(state.paymentItems);
+
+    this.updatingSaleInProgress$.next(true);
+    this.updatingItemsInProgress$.next(true);
+    this.updatingPaymentsInProgress$.next(true);
+    return combineLatest(sale$, saleItems$, totalPaid$, paymentItems$).pipe(
+      map(r => this.createSaleState(r[0], r[1], r[2], r[3])),
+      delay(0),
+      tap(() => {
+        this.updatingSaleInProgress$.next(false);
+        this.updatingItemsInProgress$.next(false);
+        this.updatingPaymentsInProgress$.next(false);
+      })
+    );
+  }
+
+  private createSaleState(saleValue: WsSale, itemsValue: WsItemVariantSale[],
+                          totalPaidValue: number, paymentsValue: WsAccountingEntry[]): SaleState {
+    return {
+      sale: saleValue,
+      items: itemsValue,
+      totalPaid: totalPaidValue,
+      paymentItems: paymentsValue
+    };
+  }
+
+  private applySaleEvent$(event: SaleEvent): Observable<SaleState> {
+    return this.saleState$.pipe(
+      filter(state => state.sale.id != null),
+      take(1),
+      switchMap(state => this.applySaleEventOnState$(event, state)),
+      catchError(e => {
+        console.warn('Event error:');
+        console.warn(e);
+        return this.saleState$.pipe(take(1));
+      }),
+    );
+  }
+
+  private applySaleEventOnState$(event: SaleEvent, state: SaleState): Observable<SaleState | never> {
+    if (event.saleRef.id !== state.sale.id) {
+      // We replayed an event for a previous sale
+      return EMPTY;
+    }
+
+    let updatedState$: Observable<SaleState>;
+    switch (event.type) {
+      case SaleEventType.UPDATE_SALE:
+        updatedState$ = this.applyUpdateSaleEvent$(event as UpdateSaleEvent<any>, state);
+        break;
+      case SaleEventType.ADD_ITEM_VARIANT:
+        updatedState$ = this.applyAddItemVariantEvent$(event as AddItemVariantEvent, state);
+        break;
+      case SaleEventType.REMOVE_SALE_VARIANT:
+        updatedState$ = this.applyRemoveSaleVariantEvent$(event as RemoveSaleVariantEvent, state);
+        break;
+      case SaleEventType.UPDATE_SALE_VARIANT:
+        updatedState$ = this.applyUpdateSaleVariantEvent$(event as UpdateSaleVariantEvent<any>, state);
+        break;
+      case SaleEventType.ADD_SALE_PAYMENT:
+        updatedState$ = this.applyAddSalePaymentEvent(event as AddSalePaymentEvent, state);
+        break;
+      case SaleEventType.REMOVE_SALE_PAYMENT:
+        updatedState$ = this.applyRemoveSalePaymentEvent(event as RemoveSalePaymentEvent, state);
+        break;
+      default:
+        throw new Error('Unhandled event');
+    }
+    // We could return local state right away, but then would need to sync it with server updates.
+    // We rather refetch sale and items on each update
+    return updatedState$;
+  }
+
+  private applyUpdateSaleEvent$(event: UpdateSaleEvent<any>, state: SaleState) {
+    const saleToUpdate: WsSale = Object.assign({}, state, event.update);
+
+    this.updatingSaleInProgress$.next(true);
+    return this.saleService.saveSale(saleToUpdate).pipe(
+      delay(0),
+      tap(() => this.updatingSaleInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchSale: true
+      })),
+    );
+  }
+
+  private applyAddItemVariantEvent$(event: AddItemVariantEvent, state: SaleState) {
+    this.updatingItemsInProgress$.next(true);
+    return this.addOrAppendVariant$(state.sale, state.items, event.variantRef).pipe(
+      delay(0),
+      tap(() => this.updatingItemsInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchSale: true,
+        refetchItems: true
+      })),
+    );
+  }
+
+  private applyRemoveSaleVariantEvent$(event: RemoveSaleVariantEvent, state: SaleState) {
+    const variantRef = event.saleVariantRef;
+    this.updatingItemsInProgress$.next(true);
+    return this.saleService.removeVariant(variantRef).pipe(
+      delay(0),
+      tap(() => this.updatingItemsInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchSale: true,
+        refetchItems: true
+      })),
+    );
+  }
+
+  private applyUpdateSaleVariantEvent$(event: UpdateSaleVariantEvent<any>, state: SaleState) {
+    const variantRef = event.variantRef;
+    const curVariant = state.items.find(i => i.id === variantRef.id);
+    const variantToUpdate = Object.assign({}, curVariant, event.update);
+
+    this.updatingItemsInProgress$.next(true);
+    return this.saleService.saveVariant(variantToUpdate).pipe(
+      delay(0),
+      tap(() => this.updatingItemsInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchSale: true,
+        refetchItems: true
+      })),
+    );
+  }
+
+  private applyAddSalePaymentEvent(event: AddSalePaymentEvent, state: SaleState) {
+    this.updatingPaymentsInProgress$.next(true);
+    return this.saleService.addPayment$(event.saleRef, event.entry).pipe(
+      delay(0),
+      tap(() => this.updatingPaymentsInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchPayments: true,
+        refetchTotalPaid: true
+      })),
+    );
+  }
+
+
+  private applyRemoveSalePaymentEvent(event: RemoveSalePaymentEvent, state: SaleState) {
+    this.updatingPaymentsInProgress$.next(true);
+    return this.saleService.removePayment$(event.saleRef, event.accountingEntryRef).pipe(
+      delay(0),
+      tap(() => this.updatingPaymentsInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchPayments: true,
+        refetchTotalPaid: true
+      })),
+    );
+  }
+
 }
