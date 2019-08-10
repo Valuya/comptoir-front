@@ -8,8 +8,6 @@
           <div class="balance">
             <cp-balance-form [ngModel]="formHelper.editingValue$ | async"
                              (ngModelChange)="formHelper.update($event)"
-                             (countClashClick)="onCountCashClick($event)"
-                             (moneyPilesChange)="onMoneyPileschange($event)"
                              [validationResults]="formHelper.validationResults$ | async"
             ></cp-balance-form>
 

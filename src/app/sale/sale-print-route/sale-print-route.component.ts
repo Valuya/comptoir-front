@@ -1,9 +1,7 @@
-import {AfterContentChecked, AfterContentInit, Component, OnInit} from '@angular/core';
+import {AfterContentInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AppMenuService} from '../../app-shell/app-menu.service';
 import {RouteUtils} from '../../util/route-utils';
 import {WsSale} from '@valuya/comptoir-ws-api';
-import {timer} from 'rxjs';
 import {delay, filter, map, mergeMap, publishReplay, refCount, take} from 'rxjs/operators';
 
 @Component({
@@ -12,12 +10,12 @@ import {delay, filter, map, mergeMap, publishReplay, refCount, take} from 'rxjs/
   styleUrls: ['./sale-print-route.component.scss']
 })
 export class SalePrintRouteComponent implements OnInit, AfterContentInit {
-  private sale: WsSale;
+
+  sale: WsSale;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private menuService: AppMenuService,
   ) {
   }
 

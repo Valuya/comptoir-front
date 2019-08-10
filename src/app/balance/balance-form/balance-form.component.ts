@@ -1,14 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {WsAccountRef, WsAccountSearch, WsBalance, WsBalanceRef, WsCompanyRef, WsMoneyPile} from '@valuya/comptoir-ws-api';
+import {Component, Input, OnInit} from '@angular/core';
+import {WsBalance} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
-import {AuthService} from '../../auth.service';
-import {AccountService} from '../../domain/accounting/account.service';
-import {map, publishReplay, refCount, switchMap, tap, toArray} from 'rxjs/operators';
-import {PaginationUtils} from '../../util/pagination-utils';
-import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
-import {WsAttributeDefinitionSearchResultList} from '@valuya/comptoir-ws-api/models/WsAttributeDefinitionSearchResultList';
-import {BalanceService} from '../../domain/accounting/balance.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'cp-balance-form',
@@ -31,11 +25,6 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   @Input()
   countCashVisible: boolean;
 
-  @Output()
-  countClashClick = new EventEmitter<boolean>();
-  @Output()
-  moneyPilesChange = new EventEmitter<WsMoneyPile[]>();
-
   valueSource$ = new BehaviorSubject<WsBalance | null>(null);
 
 
@@ -43,11 +32,7 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   private onTouched: () => void;
 
 
-  constructor(
-    private authService: AuthService,
-    private accountService: AccountService,
-    private balanceService: BalanceService,
-  ) {
+  constructor() {
   }
 
   ngOnInit() {
