@@ -3,10 +3,48 @@
     <cp-shell-details-form (formSubmit)="onFormSubmit()">
       <ng-template cpFormContent let-form="form">
 
-        <cp-balance-form [ngModel]="formHelper.editingValue$ | async"
-                      (partialUpdate)="formHelper.update($event)"
-                      [validationResults]="formHelper.validationResults$ | async"
-        ></cp-balance-form>
+        <div class="balance-details">
+
+          <div class="balance">
+            <cp-balance-form [ngModel]="formHelper.editingValue$ | async"
+                             (ngModelChange)="formHelper.update($event)"
+                             (countClashClick)="onCountCashClick($event)"
+                             (moneyPilesChange)="onMoneyPileschange($event)"
+                             [validationResults]="formHelper.validationResults$ | async"
+            ></cp-balance-form>
+
+            <div class="counted control" *ngIf="moneyPileFormVisible">
+              <label>Counted</label>
+              <div>
+                {{ moneyPilesTotal$ | async | currency }}
+              </div>
+            </div>
+          </div>
+
+          <div class="money-piles">
+            <div class="header">
+              <p-toggleButton onIcon="fa fa-calculator"
+                              offIcon="fa fa-calculator"
+                              onLabel="Ignore cash amounts"
+                              offLabel="Count cash amounts"
+                              class="count-cash-button"
+                              [disabled]="(formHelper.editingValue$ | async)?.id != null"
+                              [ngModel]="moneyPileFormVisible"
+                              (ngModelChange)="onCountCashClick(true)"
+              ></p-toggleButton>
+            </div>
+
+            <form class="count-cash" *ngIf="moneyPileFormVisible && (moneyPiles$ | async)?.length > 0">
+              <cp-count-cash-form name="piles-count"
+                                  [ngModel]="moneyPiles$ | async"
+                                  (ngModelChange)="onMoneyPilesChange($event)"
+                                  [disabled]="(formHelper.editingValue$ | async)?.closed"
+              ></cp-count-cash-form>
+            </form>
+          </div>
+
+        </div>
+
 
       </ng-template>
     </cp-shell-details-form>

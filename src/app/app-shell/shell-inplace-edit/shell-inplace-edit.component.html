@@ -6,8 +6,8 @@
        #outputElement
        (click)="onOutputClick($event)"
        (keydown)="onOutputKeyDown($event)"
-       tabIndex="0" role="button"
-       [cpFocusFirstInput]="inputTemplate == null"
+       [attr.tabIndex]="inputTemplate != null" role="button"
+       [cpFocusFirstInput]="inputTemplate == null && ignoreFocus !== true"
   >
     <ng-template [ngIf]="showEmptyLabel !== true || editValue !== null">
       <ng-container

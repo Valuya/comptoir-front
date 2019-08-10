@@ -1,0 +1,29 @@
+.count-cash-form {
+  .row {
+    display: flex;
+    align-items: center;
+
+    >* {
+      flex: 0 0 auto;
+      margin: .3em;
+    }
+
+    .currency-value {
+      width: 4em;
+    }
+
+    .quantity {
+      width: 8em;
+      overflow: hidden;
+      input {
+        width: 100%;
+      }
+    }
+
+    .total {
+      flex: 1 1 auto;
+      min-width: 8em;
+      text-align: right;
+    }
+  }
+}

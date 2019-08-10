@@ -83,9 +83,7 @@ export class AccountSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private searchSuggestions$(saearchQuery: string) {
-    return this.authService.getLoggedEmployeeCompanyRef$().pipe(
-      filter(ref => ref != null),
-      take(1),
+    return this.authService.getNextNonNullLoggedEmployeeCompanyRef$().pipe(
       map(companyRef => this.createSearchFilter(companyRef, saearchQuery)),
       switchMap(searchFilter => this.searchAccountRefs$(searchFilter)),
       map(results => results.list),
@@ -121,15 +119,18 @@ export class AccountSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   private createSearchFilter(companyRef: WsCompanyRef, query: string): WsAccountSearch {
+    if (query == null || query.length == null || query.length < 3) {
+      query = null;
+    }
     return {
       companyRef: companyRef as object,
-      multiSearch: query
+      multiSearch: query,
     };
   }
 
   private searchAccounts$(list: WsAccountRef[]) {
     if (list == null || list.length === 0) {
-      return [];
+      return of([]);
     }
     const items$List = list.map(ref => this.fetchRef$(ref));
     return forkJoin(...items$List);

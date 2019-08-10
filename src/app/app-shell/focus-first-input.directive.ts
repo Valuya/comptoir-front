@@ -1,10 +1,10 @@
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {AfterContentChecked, AfterContentInit, Directive, ElementRef, Input, OnInit} from '@angular/core';
 import {timer} from 'rxjs';
 
 @Directive({
   selector: '[cpFocusFirstInput]'
 })
-export class FocusFirstInputDirective implements OnInit {
+export class FocusFirstInputDirective implements OnInit, AfterContentInit {
 
   @Input('cpFocusFirstInput')
   private enabled = true;
@@ -13,6 +13,9 @@ export class FocusFirstInputDirective implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngAfterContentInit(): void {
     this.focusFirstInput();
   }
 

@@ -1,0 +1,12 @@
+.balance-details {
+  display: flex;
+  align-items: flex-start;
+
+  >* {
+    flex: 1 1 auto;
+  }
+
+  >.count-cash {
+    flex: 0 1 auto;
+  }
+}

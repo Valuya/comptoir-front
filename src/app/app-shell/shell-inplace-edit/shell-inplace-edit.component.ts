@@ -47,6 +47,8 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   forceHoverEffect: boolean;
   @Input()
   showEmptyLabel: boolean;
+  @Input()
+  ignoreFocus: boolean;
 
   @Output()
   editingChange = new EventEmitter<boolean>();

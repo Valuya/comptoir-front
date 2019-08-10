@@ -1,7 +1,14 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {WsBalance} from '@valuya/comptoir-ws-api';
+import {WsAccountRef, WsAccountSearch, WsBalance, WsBalanceRef, WsCompanyRef, WsMoneyPile} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
+import {AuthService} from '../../auth.service';
+import {AccountService} from '../../domain/accounting/account.service';
+import {map, publishReplay, refCount, switchMap, tap, toArray} from 'rxjs/operators';
+import {PaginationUtils} from '../../util/pagination-utils';
+import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
+import {WsAttributeDefinitionSearchResultList} from '@valuya/comptoir-ws-api/models/WsAttributeDefinitionSearchResultList';
+import {BalanceService} from '../../domain/accounting/balance.service';
 
 @Component({
   selector: 'cp-balance-form',
@@ -21,20 +28,30 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   disabled = false;
   @Input()
   validationResults: ValidationResult<WsBalance>;
+  @Input()
+  countCashVisible: boolean;
 
   @Output()
-  partialUpdate = new EventEmitter<Partial<WsBalance>>();
+  countClashClick = new EventEmitter<boolean>();
+  @Output()
+  moneyPilesChange = new EventEmitter<WsMoneyPile[]>();
 
-  value: WsBalance;
+  valueSource$ = new BehaviorSubject<WsBalance | null>(null);
+
 
   private onChange: (value: WsBalance) => void;
   private onTouched: () => void;
 
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private accountService: AccountService,
+    private balanceService: BalanceService,
+  ) {
   }
 
   ngOnInit() {
+
   }
 
   registerOnChange(fn: any): void {
@@ -50,14 +67,15 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    this.value = obj;
+    this.valueSource$.next(obj);
   }
 
   updateValue(update: Partial<WsBalance>) {
-    this.partialUpdate.emit(update);
-    const newValue = Object.assign({}, this.value, update);
+    const curValue = this.valueSource$.getValue();
+    const newValue = Object.assign({}, curValue, update);
     this.fireChanges(newValue);
   }
+
 
   private fireChanges(newValue: WsBalance) {
     if (this.onTouched) {
@@ -67,4 +85,6 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
       this.onChange(newValue);
     }
   }
+
+
 }
