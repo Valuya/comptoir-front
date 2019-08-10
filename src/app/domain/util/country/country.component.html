@@ -1,0 +1,5 @@
+<cp-loading-content [loading]="loading$ | async">
+  <div class="country">
+    {{ (country$ | async)?.code }}
+  </div>
+</cp-loading-content>
