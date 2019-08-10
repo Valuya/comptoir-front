@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsSaleSearch} from '@valuya/comptoir-ws-api';
+import {DateRange} from '../../domain/util/date-range-select/date-range';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Component({
   selector: 'cp-sale-filter',
@@ -15,10 +17,12 @@ import {WsSaleSearch} from '@valuya/comptoir-ws-api';
   ]
 })
 export class SaleFilterComponent implements OnInit, ControlValueAccessor {
+
   @Input()
   disabled = false;
 
-  value: WsSaleSearch;
+  valueSource$ = new BehaviorSubject<WsSaleSearch | null>(null);
+  dateRange$: Observable<DateRange | null>;
 
   private onChange: (value: WsSaleSearch) => void;
   private onTouched: () => void;
@@ -42,16 +46,35 @@ export class SaleFilterComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    this.value = obj;
+    this.valueSource$.next(obj);
   }
 
   updateValue(update: Partial<WsSaleSearch>) {
-    const newValue = Object.assign({}, this.value, update);
+    const curValue = this.valueSource$.getValue();
+    const newValue = Object.assign({}, curValue, update);
     this.fireChanges(newValue);
   }
 
+  getDateRange(value: WsSaleSearch): DateRange {
+    return {
+      from: value == null ? null : value.fromDateTime,
+      until: value == null ? null : value.toDateTime
+    };
+  }
+
+  updateDateRange(range: DateRange | null) {
+    if (range == null) {
+      this.updateValue(null);
+    } else {
+      this.updateValue({
+        fromDateTime: range.from,
+        toDateTime: range.until,
+      });
+    }
+  }
+
   private fireChanges(newValue: WsSaleSearch) {
-    this.value = newValue;
+    this.valueSource$.next(newValue);
     if (this.onTouched) {
       this.onTouched();
     }

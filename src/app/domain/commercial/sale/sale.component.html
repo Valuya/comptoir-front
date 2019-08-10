@@ -1,26 +1,54 @@
 <div class="sale">
-  <div class="icon">
+  <div class="icon" *ngIf="showIcon">
     <i class="fa fa-shopping-cart"></i>
+  </div>
+  <div class="id" *ngIf="showId">
+    Sale #{{ (value$ | async)?.id }}
   </div>
 
   <div class="content">
 
-    <div class="vatExclusiveAmount">
+    <div class="vatExclusiveAmount" *ngIf="showVatExclusive">
       <cp-loading-content [loading]="loading$ |async">
-        <cp-locale-text [localeTexts]="(value$ |async)?.vatExclusiveAmount"></cp-locale-text>
+        {{ (value$ | async)?.vatExclusiveAmount | currency }}
+      </cp-loading-content>
+    </div>
+    <div class="vatExclusiveAmount" *ngIf="showVat">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.vatAmount | currency }}
       </cp-loading-content>
     </div>
 
-    <div class="reference">
+    <div class="total" *ngIf="showTotal">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ total$ | async | currency }}
+      </cp-loading-content>
+    </div>
+
+    <div class="reference" *ngIf="showReference">
       <cp-loading-content [loading]="loading$ |async">
         {{ (value$ | async)?.reference }}
       </cp-loading-content>
     </div>
 
 
-    <div class="dateteime">
+    <div class="dateteime" *ngIf="showDateTime">
       <cp-loading-content [loading]="loading$ |async">
         {{ (value$ | async)?.dateTime | date }}
+      </cp-loading-content>
+    </div>
+
+
+    <div class="item-count" *ngIf="showItemCount">
+      <cp-loading-content [loading]="loadingItemCount$ |async">
+        <ng-template [ngIf]="(itemCount$ | async) > 0"
+                     [ngIfElse]="emptySaleItemCount">
+          <span>{{ itemCount$ | async | number:'.0' }}</span>
+          <span>items </span>
+        </ng-template>
+        <ng-template #emptySaleItemCount>
+          <span>Empty</span>
+        </ng-template>
       </cp-loading-content>
     </div>
   </div>

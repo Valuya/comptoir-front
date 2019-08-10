@@ -18,24 +18,26 @@
     {{ row.dateTime | date }}
   </ng-container>
 
-
-  <ng-container *ngSwitchCase="'AMOUNT'">
-    {{ (row.vatExclusiveAmount + row.vatAmount) | currency }}
-  </ng-container>
-
-
   <ng-container *ngSwitchCase="'VAT_AMOUNT'">
     {{  (row.vatAmount) | currency}}
   </ng-container>
 
 
   <ng-container *ngSwitchCase="'VAT_EXLUSIVE_AMOUNT'">
-    {{  (row.vatExclusiveAmount) | currency}}
+    <cp-sale [ref]="{id: row.id}" [showVatExclusive]="true"></cp-sale>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'TOTAL_AMOUNT'">
+    <cp-sale [ref]="{id: row.id}" [showTotal]="true"></cp-sale>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'ITEM_COUNT'">
+    <cp-sale [ref]="{id: row.id}" [showItemCount]="true"></cp-sale>
   </ng-container>
 
 
   <ng-container *ngSwitchCase="'JUMP_TO_POS'">
-    <cp-shell-inplace-edit [showHoverEffect]="true">
+    <cp-shell-inplace-edit [forceHoverEffect]="true">
       <ng-template cpInplaceOutput>
         <a [routerLink]="['/comptoir/sale/', row.id]">
           <i class="fa fa-shopping-basket"></i>

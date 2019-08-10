@@ -5,15 +5,7 @@ import {WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch} from '
 import {Observable} from 'rxjs';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {LazyLoadEvent, MessageService, SelectItem} from 'primeng/api';
-import {
-  DATETIME_COLUMN,
-  DISCOUNT_RATIO_COLUMN,
-  INCLUDE_CUSTOMER_LOYALTY_COLUMN,
-  ITEM_VARIANT_COLUMN,
-  QUANTITY_COLUMN,
-  TOTAL_COLUMN,
-  VAT_RATE_COLUMN
-} from '../../sale/sale-variant-column/sale-variant-columns';
+import {SaleVariantColumns} from '../../sale/sale-variant-column/sale-variant-columns';
 
 @Component({
   selector: 'cp-sale-item-list',
@@ -66,13 +58,13 @@ export class SaleItemListComponent implements OnInit {
 
   private createSortOptions() {
     return [
-      DATETIME_COLUMN,
-      ITEM_VARIANT_COLUMN,
-      QUANTITY_COLUMN,
-      DISCOUNT_RATIO_COLUMN,
-      INCLUDE_CUSTOMER_LOYALTY_COLUMN,
-      VAT_RATE_COLUMN,
-      TOTAL_COLUMN,
+      SaleVariantColumns.DATETIME_COLUMN,
+      SaleVariantColumns.ITEM_VARIANT_COLUMN,
+      SaleVariantColumns.QUANTITY_COLUMN,
+      SaleVariantColumns.DISCOUNT_RATIO_COLUMN,
+      SaleVariantColumns.INCLUDE_CUSTOMER_LOYALTY_COLUMN,
+      SaleVariantColumns.VAT_RATE_COLUMN,
+      SaleVariantColumns.TOTAL_COLUMN,
     ].map(col => {
       return {
         value: col.value,

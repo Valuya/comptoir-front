@@ -1,0 +1,22 @@
+<div class="count-cash-form">
+  <div class="row" *ngFor="let row of value; let i=index">
+    <i [ngClass]="row.unitAmount > 2 ? 'fa fa-money' : 'fa fa-circle-o'"></i>
+    <div class="currency-value">
+      {{ row.unitAmount | currency }}
+    </div>
+    <div class="quantity">
+      <cp-shell-inplace-edit [ignoreFocus]="i > 0">
+        <ng-template cpInplaceOutput>
+          <input type="number" pInputText
+                 [ngModel]="row.count"
+                 (ngModelChange)="onQuantityChange(i,$event)"
+                 [disabled]="disabled"
+          >
+        </ng-template>
+      </cp-shell-inplace-edit>
+    </div>
+    <div class="total">
+      {{ row.total | currency }}
+    </div>
+  </div>
+</div>

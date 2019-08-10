@@ -16,7 +16,7 @@ export class SaleSelectListItemComponent implements OnInit {
     this.refSource$.next(value);
   }
 
-  private refSource$ = new BehaviorSubject<WsSaleRef | null>(null);
+  refSource$ = new BehaviorSubject<WsSaleRef | null>(null);
   loading$ = new BehaviorSubject<boolean>(false);
   sale$: Observable<WsSale>;
 

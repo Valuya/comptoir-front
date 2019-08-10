@@ -3,8 +3,8 @@ import {ApiService} from '../../api.service';
 import {Observable} from 'rxjs';
 import {Pagination} from '../../util/pagination';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
-import {WsBalance, WsBalanceRef, WsBalanceSearch, WsBalanceSearchResult} from '@valuya/comptoir-ws-api';
-import {mergeMap, switchMap} from 'rxjs/operators';
+import {WsBalance, WsBalanceRef, WsBalanceSearch, WsBalanceSearchResult, WsMoneyPile, WsMoneyPileRef} from '@valuya/comptoir-ws-api';
+import {mergeMap, switchMap, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +33,19 @@ export class BalanceService {
     }
   }
 
-  getBalance$(ref: WsBalanceRef): Observable<WsBalance> {
+  getBalance$(ref: WsBalanceRef, forceFetch?: boolean): Observable<WsBalance> {
+    if (forceFetch) {
+      this.balanceCache.clearCache(ref);
+    }
     return this.balanceCache.getResource$(ref);
+  }
+
+  closeBlance$(ref: WsBalanceRef): Observable<WsBalance> {
+    return this.apiService.api.closeBalance({
+      id: ref.id
+    }).pipe(
+      tap(() => this.balanceCache.clearCache(ref))
+    );
   }
 
   searchBalanceList$(seachFilter: WsBalanceSearch, pagination: Pagination): Observable<WsBalanceSearchResult> {
@@ -43,6 +54,25 @@ export class BalanceService {
       length: pagination.rows,
       wsBalanceSearch: seachFilter
     }) as any as Observable<WsBalanceSearchResult>;
+  }
+
+  saveMoneyPile(pile: WsMoneyPile): Observable<WsMoneyPileRef> {
+    if (pile.id == null) {
+      return this.apiService.api.createMoneyPile({
+        wsMoneyPile: pile,
+      });
+    } else {
+      return this.apiService.api.updateMoneyPile({
+        id: pile.id,
+        wsMoneyPile: pile
+      });
+    }
+  }
+
+  getMoneyPile(pileRef: WsMoneyPileRef): Observable<WsMoneyPileRef> {
+    return this.apiService.api.getMoneyPile({
+      id: pileRef.id
+    });
   }
 
   private doGet$(ref: WsBalanceRef) {
@@ -64,6 +94,7 @@ export class BalanceService {
       wsBalance: val
     }) as any as Observable<WsBalanceRef>;
   }
+
 
   // private doDelete$(ref: WsBalanceRef) {
   //   return this.apiService.api.remo({

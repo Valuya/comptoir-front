@@ -44,7 +44,11 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   @Input()
   disabled: boolean;
   @Input()
-  showHoverEffect: boolean;
+  forceHoverEffect: boolean;
+  @Input()
+  showEmptyLabel: boolean;
+  @Input()
+  ignoreFocus: boolean;
 
   @Output()
   editingChange = new EventEmitter<boolean>();
@@ -120,6 +124,11 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
 
   onCancelClick() {
     this.cancelEdit();
+  }
+
+  onNullifyClick() {
+    this.fireChanges(null);
+    this.stopEdit();
   }
 
   onInputFocusOut(event: FocusEvent) {
@@ -202,7 +211,10 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
     this.stopEdit();
   }
 
-  commitEdit() {
+  commitEdit(value?: any) {
+    if (value !== undefined) {
+      this.editValue = value;
+    }
     this.fireChanges(this.editValue);
     this.stopEdit();
   }

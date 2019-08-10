@@ -1,7 +1,9 @@
 <cp-shell-content-page>
   <ng-template cpContentBody>
 
-    <p-tabMenu [model]="detailsRoutesItems$ | async"></p-tabMenu>
+    <div class="menu non-printable">
+      <p-tabMenu [model]="detailsRoutesItems$ | async"></p-tabMenu>
+    </div>
 
     <div class="details-route-content">
       <router-outlet></router-outlet>

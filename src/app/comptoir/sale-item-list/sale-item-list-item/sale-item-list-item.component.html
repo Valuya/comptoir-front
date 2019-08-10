@@ -19,7 +19,8 @@
                                (ngModelChange)="fireChanges({quantity: $event})"
         >
           <ng-template cpInplaceOutput>
-            {{ item.quantity }} x
+            <span>{{ item.quantity }}</span>
+            <span>x</span>
           </ng-template>
           <ng-template cpInplaceInput>
             <p-spinner [(ngModel)]="quantity.editValue"
@@ -35,7 +36,8 @@
                                (ngModelChange)="fireVatExclusiveChange($event)"
         >
           <ng-template cpInplaceOutput>
-            {{ item.vatExclusive | currency }}
+            <span>{{ item.vatExclusive | currency }}</span>
+            <span>htva</span>
           </ng-template>
           <ng-template cpInplaceInput>
             <cp-currency-input [(ngModel)]="vatExclusive.editValue"></cp-currency-input>
@@ -43,13 +45,49 @@
         </cp-shell-inplace-edit>
       </div>
 
+
+
+      <div class="discount-ratio" title="Discount ratio">
+        <cp-shell-inplace-edit name="discountRatio" #discountRatio
+                               [ngModel]="item.discountRatio"
+                               (ngModelChange)="fireChanges({discountRatio: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-sun-o" *ngIf=" item.discountRatio == null"></i>
+            <span *ngIf="item.discountRatio != null" class="discount-line">
+              <span>-</span>
+              <span>
+                {{ item.discountRatio | percent }}
+              </span>
+              <span>discount</span>
+            </span>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <div class="percent">
+              <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
+              <span>%</span>
+            </div>
+            <div class="amount">
+              <cp-currency-input
+                [ngModel]="discountRatio.editValue * item.vatExclusive"
+                (ngModelChange)="discountRatio.editValue = onDiscountAmountChange($event)"
+              ></cp-currency-input>
+              <span>€</span>
+            </div>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
+
       <div class="vat-rate">
         <cp-shell-inplace-edit name="vatRate" #vatRate
                                [ngModel]="item.vatRate"
                                (ngModelChange)="fireVatRateChange($event)"
         >
           <ng-template cpInplaceOutput>
-            VAT: {{ item.vatRate | percent }}
+            <span>+</span>
+            <span>{{ item.vatRate | percent }}</span>
+            <span>tva</span>
           </ng-template>
           <ng-template cpInplaceInput>
             <cp-percent-input [(ngModel)]="vatRate.editValue"></cp-percent-input>
@@ -60,6 +98,20 @@
     </div>
 
     <div class="info">
+      <div class="customer-loyalty" title="Apply customer loyalty discount">
+        <cp-shell-inplace-edit name="includeCustomerLoyalty" #includeCustomerLoyalty
+        >
+          <ng-template cpInplaceOutput>
+            <label for="customer-loyalty">
+              <i class="fa fa-user-plus"></i>
+            </label>
+            <p-triStateCheckbox id="customer-loyalty"
+                                [ngModel]="item.includeCustomerLoyalty"
+                                (ngModelChange)="fireChanges({includeCustomerLoyalty: $event})"
+            ></p-triStateCheckbox>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
 
       <div class="stock">
         <cp-shell-inplace-edit name="stockRef" #stockRef
@@ -98,36 +150,6 @@
         </cp-shell-inplace-edit>
       </div>
 
-      <div class="discount-ratio" title="Discount ratio">
-        <cp-shell-inplace-edit name="discountRatio" #discountRatio
-                               [ngModel]="item.discountRatio"
-                               (ngModelChange)="fireChanges({discountRatio: $event})"
-        >
-          <ng-template cpInplaceOutput>
-            <i class="fa fa-sun-o"></i>
-            {{ item.discountRatio | percent }}
-          </ng-template>
-          <ng-template cpInplaceInput>
-            <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
-          </ng-template>
-        </cp-shell-inplace-edit>
-      </div>
-
-
-      <div class="customer-loyalty" title="Apply customer loyalty discount">
-        <cp-shell-inplace-edit name="includeCustomerLoyalty" #includeCustomerLoyalty
-        >
-          <ng-template cpInplaceOutput>
-            <label for="customer-loyalty">
-              <i class="fa fa-user-plus"></i>
-            </label>
-            <p-checkbox [binary]="true" id="customer-loyalty"
-                        [ngModel]="item.includeCustomerLoyalty"
-                        (ngModelChange)="fireChanges({includeCustomerLoyalty: $event})"
-            ></p-checkbox>
-          </ng-template>
-        </cp-shell-inplace-edit>
-      </div>
 
     </div>
   </div>
@@ -136,30 +158,19 @@
   <div class="total">
     <div class="vat-inclusive">
       <cp-shell-inplace-edit name="totalWithVat" #totalWithVat
-                             [ngModel]="item.total * (1 + item.vatRate)"
+                             [ngModel]="item.total * (1 - item.discountRatio) * (1 + item.vatRate)"
                              (ngModelChange)="fireTotalVatInclusiveChange($event)"
       >
         <ng-template cpInplaceOutput>
-          {{ item.total * (1 + item.vatRate)| currency }}
+          {{ item.quantity * item.vatExclusive * (1 - item.discountRatio) * (1 + item.vatRate )| currency }}
         </ng-template>
         <ng-template cpInplaceInput>
           <cp-currency-input [(ngModel)]="totalWithVat.editValue"></cp-currency-input>
         </ng-template>
       </cp-shell-inplace-edit>
     </div>
-    <div class="vat-exclusive">
-      <label>HTVA: </label>
-      <cp-shell-inplace-edit name="total" #total
-                             [ngModel]="item.total"
-                             (ngModelChange)="fireTotalVatExclusiveChange($event)"
-      >
-        <ng-template cpInplaceOutput>
-          {{ item.total | currency }}
-        </ng-template>
-        <ng-template cpInplaceInput>
-          <cp-currency-input [(ngModel)]="total.editValue "></cp-currency-input>
-        </ng-template>
-      </cp-shell-inplace-edit>
+    <div class="total-details">
+
     </div>
   </div>
 

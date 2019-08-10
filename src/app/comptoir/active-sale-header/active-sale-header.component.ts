@@ -25,6 +25,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   saleRef$: Observable<WsSaleRef>;
   saleTotalPaid$: Observable<number>;
   saleRemaining$: Observable<number>;
+  saleItemsCount$: Observable<number>;
   updating$: Observable<boolean>;
 
   constructor(
@@ -42,6 +43,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
     this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();
     this.updating$ = this.saleService.isUpdating$();
+    this.saleItemsCount$ = this.saleService.getItemsTableHelper().totalCount$;
   }
 
   onSaleChanged(ref: WsSaleRef) {
@@ -96,6 +98,10 @@ export class ActiveSaleHeaderComponent implements OnInit {
   onCloseConfirmed() {
     this.messageService.clear(this.CLOSE_SALE_CONFIRM_MESSAGE_KEY);
     this.closeSaleAndGoToNewSale();
+  }
+
+  getRedirectUrl() {
+    return this.router.routerState.snapshot.url;
   }
 
   private closeSaleWithRemainingCheck(remaining: number) {

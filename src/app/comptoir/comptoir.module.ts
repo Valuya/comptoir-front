@@ -19,7 +19,7 @@ import {
   InputTextModule,
   PanelModule,
   SpinnerModule,
-  TabMenuModule
+  TabMenuModule, TriStateCheckboxModule
 } from 'primeng/primeng';
 import {FormsModule} from '@angular/forms';
 import {ItemSelectListComponent} from './item-select-list/item-select-list.component';
@@ -60,6 +60,7 @@ import {SaleSelectGridItemComponent} from './sale-select-list/sale-select-grid-i
 import {SaleSelectListComponent} from './sale-select-list/sale-select-list.component';
 import {SaleSelectListItemComponent} from './sale-select-list/sale-select-list-item/sale-select-list-item.component';
 import {ToastModule} from 'primeng/toast';
+import {SaleComponentModule} from '../domain/commercial/sale/sale-component.module';
 
 
 @NgModule({
@@ -124,6 +125,8 @@ import {ToastModule} from 'primeng/toast';
     CurrencyInputModule,
     ToastModule,
     TabMenuModule,
+    TriStateCheckboxModule,
+    SaleComponentModule,
   ]
 })
 export class ComptoirModule {

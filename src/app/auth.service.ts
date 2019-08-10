@@ -130,7 +130,7 @@ export class AuthService {
 
     this.unsubscribeAuthExpiration();
     this.authRefreshSubscripion = timer(aBitBeforeExpiration.toDate()).pipe(
-      switchMap(() => this.loginService.refreshToken(auth.refreshToken)),
+      switchMap(() => this.loginService.refreshToken$(auth.refreshToken)),
       retry(3)
     ).subscribe(newAuth => this.setAuth(newAuth));
   }

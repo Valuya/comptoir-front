@@ -19,10 +19,27 @@
     }
   }
 
-  >.total-details, .payment-details, .grand-total {
+  > .total-details, .payment-details {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    > * {
+      flex: 0 0 auto;
+      margin: .3em;
+
+      > span, ::ng-deep .inplace-output > *> * {
+        display: inline-block;
+        vertical-align: middle;
+        margin: .2em;
+      }
+    }
+  }
+
+  > .total-details, .payment-details, .grand-total {
     text-align: right;
 
-    >div {
+    > div {
       margin: .5em;
     }
 
@@ -39,6 +56,7 @@
       font-weight: bold;
       font-size: 1.5em;
     }
+
     .label {
       font-size: .8em;
     }
@@ -47,10 +65,12 @@
   ::ng-deep .inplace-output {
     display: flex !important;
     align-items: center;
-    >* {
+
+    > * {
       flex: 0 0 auto;
     }
-    >i {
+
+    > i {
       margin-right: .3em;
     }
   }

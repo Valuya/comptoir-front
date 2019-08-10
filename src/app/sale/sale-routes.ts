@@ -11,10 +11,11 @@ import {
   SaleDetailsVariantsMenuItem,
   SaleListMenuItem,
   ResolvedSaleDetailsMenuItem,
-  ResolvedSaleDetailsVariantDetailsMenuItem
+  ResolvedSaleDetailsVariantDetailsMenuItem, ResolvedSaleDetailsBillMenuItem, PrintMenuItem
 } from './sale-menu';
 import {SaleDetailsVariantDetailsRouteComponent} from './sale-details-variant-details-route/sale-details-variant-details-route.component';
 import {AppRoute, createAppRouteData} from '../util/app-route-data';
+import {SalePrintRouteComponent} from './sale-print-route/sale-print-route.component';
 
 
 export const CreateNewSaleQuickActionItem = {
@@ -46,8 +47,17 @@ export const SALE_ROUTES: AppRoute[] = [
       {
         path: '',
         pathMatch: 'full',
+        redirectTo: 'details'
+      },
+      {
+        path: 'details',
         component: SaleDetailsFormRouteComponent,
         data: createAppRouteData(ResolvedSaleDetailsDetailsMenuItem)
+      },
+      {
+        path: 'bill',
+        component: SalePrintRouteComponent,
+        data: createAppRouteData(ResolvedSaleDetailsBillMenuItem, [PrintMenuItem])
       },
       {
         path: 'variant',

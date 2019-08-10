@@ -38,6 +38,7 @@
 
   <ng-container *ngSwitchCase="'ITEM_VARIANT'">
     <cp-item-variant [ref]="row.itemVariantRef"
+                     [showItemName]="true"
     ></cp-item-variant>
   </ng-container>
 
@@ -46,11 +47,16 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'TOTAL'">
-    {{ row.total | currency }}
+    {{ PRICING_UTILS.getVatInclusiveromVatExclusive(row.total, row.vatRate) | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'VAT_EXCLUSIVE'">
     {{ row.vatExclusive | currency }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchCase="'VAT_INCLUSIVE'">
+    {{ PRICING_UTILS.getVatInclusiveromVatExclusive(row.vatExclusive, row.vatRate) | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'VAT_RATE'">

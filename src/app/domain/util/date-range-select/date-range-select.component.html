@@ -1,0 +1,50 @@
+<div class="date-range-select">
+  <cp-shell-inplace-edit name="free-range" #freeRange
+                         [disabled]="disabled"
+                         [ngModel]="value"
+                         (ngModelChange)="onValueChange($event)">
+    <ng-template cpInplaceOutput>
+      <span *ngIf="value == null || value.from == null || value.until == null"
+            class="placeholder">
+        <i class="fa fa-calendar-o"></i>
+        Date range...
+      </span>
+      <cp-date-range [range]="value"></cp-date-range>
+    </ng-template>
+    <ng-template cpInplaceInput>
+      <div class="date-range-select-input-content">
+
+        <div class="suggestions" *ngIf="showSuggestions">
+          <cp-shell-inplace-edit *ngFor="let suggestionItem of suggestions"
+                                 [forceHoverEffect]="true"
+          >
+            <ng-template cpInplaceOutput>
+              <div class="suggestion"
+                   (click)="freeRange.commitEdit(suggestionItem.value)"
+              >
+                <cp-date-range [range]="suggestionItem.value"></cp-date-range>
+              </div>
+            </ng-template>
+          </cp-shell-inplace-edit>
+        </div>
+        <div class="free-range" *ngIf="showFreeRange && freeRange.editValue != null">
+          <div class="control">
+            <label>From</label>
+            <cp-date-select [ngModel]="freeRange.editValue.from"
+                            (ngModelChange)="freeRange.editValue.from = $event"
+                            [disabled]="disabled"
+            ></cp-date-select>
+          </div>
+
+          <div class="control">
+            <label>Until</label>
+            <cp-date-select [ngModel]="freeRange.editValue.until"
+                            (ngModelChange)="freeRange.editValue.until = $event"
+                            [disabled]="disabled"
+            ></cp-date-select>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </cp-shell-inplace-edit>
+</div>

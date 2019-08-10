@@ -23,6 +23,7 @@
                                  (ngModelChange)="comptoirService.setCustomerLoyaltyRate($event)"
           >
             <ng-template cpInplaceOutput>
+              <i class="fa fa-user-plus"></i>
               {{ loyalty.value | percent }}
             </ng-template>
             <ng-template cpInplaceInput let-invalid="invalid">

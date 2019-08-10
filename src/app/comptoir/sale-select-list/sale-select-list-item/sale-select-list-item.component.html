@@ -9,22 +9,31 @@
       <div class="right-content">
         <div class="top">
           <div class="id">
-            {{ (sale$ | async)?.id }}
+            <cp-sale [ref]="refSource$ | async"
+                     [showId]="true"></cp-sale>
           </div>
           <div class="amount">
-            {{ (sale$ | async)?.vatExclusiveAmount | currency }}
+            <cp-sale [ref]="refSource$ | async"
+                     [showTotal]="true"></cp-sale>
           </div>
         </div>
 
         <div class="bottom">
-          <div class="date">
-            {{ (sale$ | async)?.dateTime | date:'short' }}
+          <div class="items">
+            <cp-sale [ref]="refSource$ | async"
+                     [showItemCount]="true"></cp-sale>
           </div>
-
+          <i class="fa fa-dot-circle-o"></i>
+          <div class="date">
+            <cp-sale [ref]="refSource$ | async"
+                     [showDateTime]="true"></cp-sale>
+          </div>
+          <i class="fa fa-dot-circle-o"></i>
           <div class="customer">
             <cp-customer [ref]="(sale$ | async)?.customerRef">
             </cp-customer>
           </div>
+
         </div>
 
       </div>

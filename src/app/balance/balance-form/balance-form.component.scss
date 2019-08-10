@@ -1,0 +1,21 @@
+.balance-form {
+  display: flex;
+  align-items: flex-start;
+
+  > * {
+    flex: 1 1 auto;
+  }
+
+  .side-column {
+    flex: 0 0 20em;
+    margin-left: 1em;
+  }
+}
+
+.count-cash-button {
+  padding: .3em;
+  margin: 0 1em;
+
+  &.active {
+  }
+}

@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {WsBalance} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'cp-balance-form',
@@ -21,11 +22,11 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   disabled = false;
   @Input()
   validationResults: ValidationResult<WsBalance>;
+  @Input()
+  countCashVisible: boolean;
 
-  @Output()
-  partialUpdate = new EventEmitter<Partial<WsBalance>>();
+  valueSource$ = new BehaviorSubject<WsBalance | null>(null);
 
-  value: WsBalance;
 
   private onChange: (value: WsBalance) => void;
   private onTouched: () => void;
@@ -35,6 +36,7 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
+
   }
 
   registerOnChange(fn: any): void {
@@ -50,14 +52,15 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    this.value = obj;
+    this.valueSource$.next(obj);
   }
 
   updateValue(update: Partial<WsBalance>) {
-    this.partialUpdate.emit(update);
-    const newValue = Object.assign({}, this.value, update);
+    const curValue = this.valueSource$.getValue();
+    const newValue = Object.assign({}, curValue, update);
     this.fireChanges(newValue);
   }
+
 
   private fireChanges(newValue: WsBalance) {
     if (this.onTouched) {
@@ -67,4 +70,6 @@ export class BalanceFormComponent implements OnInit, ControlValueAccessor {
       this.onChange(newValue);
     }
   }
+
+
 }

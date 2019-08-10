@@ -4,21 +4,33 @@
   align-items: center;
 
   > .item {
-    flex: 1 1 14em;
+    flex: 1 1 40%;
     padding: .5em;
   }
 
   > .details {
-    flex: 1 1 auto;
+    flex: 1 1 60%;
     padding: 0 .5em;
 
     .amounts {
       display: flex;
       align-items: center;
-      justify-content: space-evenly;
+      justify-content: flex-start;
 
       > * {
         flex: 0 0 auto;
+        margin: 0 .3em;
+
+
+        ::ng-deep .inplace-output {
+          text-align: right;
+
+          > * {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 .2em;
+          }
+        }
       }
 
 
@@ -30,6 +42,7 @@
 
       > * {
         flex: 0 0 auto;
+        padding: .2em;
       }
 
       > .comment {
@@ -56,15 +69,17 @@
     flex: 0 0 auto;
     text-align: right;
 
-    >.vat-inclusive {
+    > .vat-inclusive {
       font-size: 1.5em;
       font-weight: bold;
     }
-    >.vat-exclusive {
+
+    > .vat-exclusive {
       display: flex;
       align-items: center;
       font-size: 0.8em;
-      >* {
+
+      > * {
         flex: 0 0 auto;
         margin: 0 1em;
       }

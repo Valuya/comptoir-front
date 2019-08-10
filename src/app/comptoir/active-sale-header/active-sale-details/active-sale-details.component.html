@@ -3,24 +3,6 @@
   <div class="details">
     <div class="row">
 
-      <div class="discountRatio" title="Discount">
-        <cp-shell-inplace-edit name="discountRatio" #discountRatio
-                               [ngModel]="sale.discountRatio"
-                               (ngModelChange)="fireChanges({discountRatio: $event})"
-        >
-          <ng-template cpInplaceOutput>
-            <i class="fa fa-sun-o"></i>
-            {{ sale.discountRatio | percent }}
-            <span *ngIf="sale.discountRatio > 0" class="discount-amount">
-              <span>-</span>
-              {{ sale.discountAmount | currency }}
-            </span>
-          </ng-template>
-          <ng-template cpInplaceInput>
-            <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
-          </ng-template>
-        </cp-shell-inplace-edit>
-      </div>
 
 
       <div class="customer" title="Customer">
@@ -62,22 +44,55 @@
 
   <div class="total-details" *ngIf="showTotalDetails">
     <div class="vat-exclusive">
-      <label>HTVA:</label>
-      {{ sale.vatExclusiveAmount | currency }}
+      <span>{{ (sale.vatExclusiveAmount + sale.discountAmount) | currency }}</span>
+      <span>htva</span>
     </div>
+
+    <div class="discount" >
+      <div class="discountRatio" title="Discount">
+        <cp-shell-inplace-edit name="discountRatio" #discountRatio
+                               [ngModel]="sale.discountRatio"
+                               (ngModelChange)="fireChanges({discountRatio: $event})"
+        >
+          <ng-template cpInplaceOutput>
+            <i class="fa fa-sun-o" *ngIf="sale.discountRatio == null"></i>
+            <span *ngIf="sale.discountRatio != null">
+              <span>-</span>
+              <span>{{ sale.discountAmount | currency }}</span>
+              <span>discount</span>
+            </span>
+          </ng-template>
+          <ng-template cpInplaceInput>
+            <div class="percent">
+              <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
+              <span>%</span>
+            </div>
+            <div class="amount">
+              <cp-currency-input [ngModel]="sale.discountAmount"
+                                 (ngModelChange)="discountRatio.editValue = onSaleDiscountAmountChange($event)"
+              ></cp-currency-input>
+              <span>€</span>
+            </div>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+    </div>
+
     <div class="vat">
-      <label>TVA:</label>
-      {{ sale.vatAmount  |currency }}
+      <span>+</span>
+      <span>{{ sale.vatAmount  |currency }}</span>
+      <span>tva</span>
     </div>
   </div>
   <div class="payment-details" *ngIf="showPaymentdDetails">
     <div class="total">
-      <label>À payer:</label>
-      {{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}
+      <span>{{ (sale.vatExclusiveAmount + sale.vatAmount) | currency }}</span>
+      <span>due</span>
     </div>
     <div class="paid">
-      <label>Payé: </label>
-      {{ saleTotalPaid | currency }}
+      <span>-</span>
+      <span>{{ saleTotalPaid | currency }}</span>
+      <span>paid</span>
     </div>
   </div>
   <div class="grand-total">
@@ -89,14 +104,6 @@
     <div *ngIf="showPaymentdDetails">
       <div class="amount">
         {{ sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid | currency }}
-      </div>
-      <div class="label">
-        <span *ngIf="(sale.vatExclusiveAmount + sale.vatAmount - saleTotalPaid) >= 0; else: toReimburseLabel">
-          À encaisser
-        </span>
-        <ng-template #toReimburseLabel>
-          À rendre
-        </ng-template>
       </div>
     </div>
   </div>

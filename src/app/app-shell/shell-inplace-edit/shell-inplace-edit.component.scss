@@ -8,7 +8,8 @@
     padding: .1em;
     min-height: 1.2em;
     min-width: 2em;
-    display: inline-block;
+    display: block;
+    position: relative;
 
     .empty-output {
       opacity: .7;
@@ -33,7 +34,11 @@
       }
     }
   }
+  ::ng-deep .placeholder {
+    opacity: .6;
+  }
 }
+
 ::ng-deep .inplace-input-content {
   display: flex;
   align-items: center;
@@ -50,6 +55,7 @@
   > .actions > * {
     padding: .3em;
     border-radius: .3em;
+    font-size: .8em;
 
     &:hover {
       cursor: pointer;
@@ -57,4 +63,7 @@
     }
   }
 
+  .placeholder {
+    opacity: .6;
+  }
 }

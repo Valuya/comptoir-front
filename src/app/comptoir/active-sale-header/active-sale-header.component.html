@@ -25,8 +25,22 @@
       </cp-shell-inplace-edit>
     </div>
 
-    <div class="date">
-      {{ (sale$ | async)?.dateTime | date }}
+    <div class="details">
+      <div class="items">
+        <ng-template [ngIf]="(saleItemsCount$ | async) > 0"
+                     [ngIfElse]="emptySaleItemCount">
+          <span>{{ saleItemsCount$ | async | number:'.0' }}</span>
+          <span>items </span>
+        </ng-template>
+        <ng-template #emptySaleItemCount>
+          <span>Empty</span>
+        </ng-template>
+      </div>
+      <i class="fa fa-dot-circle-o"></i>
+      <div class="date">
+        {{ (sale$ | async)?.dateTime | date:'short' }}
+      </div>
+
     </div>
   </div>
 
@@ -44,6 +58,13 @@
             icon="fa fa-times"
             [hidden]="(saleRef$ | async)?.id == null || (sale$ | async)?.closed"
             (click)="onCancelSaleClick()"
+    ></button>
+    <button type="button" pButton
+            icon="fa fa-print"
+            title="Print receipt"
+            [hidden]="fillRoute"
+            [routerLink]="['/sale', (saleRef$ | async)?.id, 'bill']"
+            [queryParams]="{triggerPrint: 'true', redirectUrl: getRedirectUrl()}"
     ></button>
 
   </div>

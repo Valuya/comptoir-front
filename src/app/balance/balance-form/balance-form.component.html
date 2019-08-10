@@ -1,88 +1,98 @@
-<div class="balance-form form" *ngIf="value != null">
+<div class="balance-form " *ngIf="(valueSource$ | async) != null">
+  <div class="form-column form">
 
-  <div class="control">
-    <label>Account</label>
-    <cp-shell-inplace-edit name="account" #account
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.accountRef"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        <cp-account-select [ngModel]="value.accountRef"
-                           (ngModelChange)="updateValue({accountRef: $event})"
-                           [disabled]="disabled"
-                           [invalid]="invalid"
-        ></cp-account-select>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
+    <div class="control">
+      <label>Account</label>
+      <cp-shell-inplace-edit name="account" #account
+                             [disabled]="disabled"
+                             [errors]="validationResults?.errors?.accountRef"
+      >
+        <ng-template cpInplaceOutput let-invalid="invalid">
+          <cp-account-select [ngModel]="(valueSource$ | async).accountRef"
+                             (ngModelChange)="updateValue({accountRef: $event})"
+                             [disabled]="disabled"
+                             [invalid]="invalid"
+          ></cp-account-select>
+        </ng-template>
+      </cp-shell-inplace-edit>
+    </div>
 
-  <div class="control">
-    <label>Closed</label>
-    <cp-shell-inplace-edit name="closed" #closed
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.closed"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        <p-inputSwitch [ngModel]="value.closed"
-                       (ngModelChange)="updateValue({closed: $event})"
-                       [class.ui-state-error]="invalid"
-        ></p-inputSwitch>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-  <div class="control">
-    <label>Comment</label>
-    <cp-shell-inplace-edit name="comment" #comment
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.comment"
-                           [ngModel]="value.comment"
-                           (ngModelChange)="updateValue({comment: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.comment }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
+    <div class="control">
+      <label>Comment</label>
+      <cp-shell-inplace-edit name="comment" #comment
+                             [disabled]="disabled"
+                             [errors]="validationResults?.errors?.comment"
+                             [ngModel]="(valueSource$ | async).comment"
+                             (ngModelChange)="updateValue({comment: $event})"
+      >
+        <ng-template cpInplaceOutput let-invalid="invalid">
+          {{ (valueSource$ | async).comment }}
+        </ng-template>
+        <ng-template cpInplaceInput let-invalid="invalid">
         <textarea pInputTextarea
                   [(ngModel)]="comment.editValue"
                   [class.ui-state-error]="invalid"
                   autofocus
         ></textarea>
-      </ng-template>
-    </cp-shell-inplace-edit>
+        </ng-template>
+      </cp-shell-inplace-edit>
+    </div>
+
+    <div class="control">
+      <label>Date</label>
+      <cp-shell-inplace-edit name="date" #date
+                             [disabled]="disabled"
+                             [errors]="validationResults?.errors?.dateTime"
+      >
+        <ng-template cpInplaceOutput let-invalid="invalid">
+          <cp-date-select [ngModel]="(valueSource$ | async).dateTime"
+                          (ngModelChange)="updateValue({dateTime: $event})"
+                          [disabled]="disabled"
+                          [invalid]="invalid"
+                          [showTime]="true"
+          ></cp-date-select>
+        </ng-template>
+      </cp-shell-inplace-edit>
+    </div>
+
+    <div class="control">
+      <label>Balance</label>
+      <div>
+        <cp-shell-inplace-edit name="balance" #balance
+                               [disabled]="disabled"
+                               [errors]="validationResults?.errors?.balance"
+                               [ngModel]="(valueSource$ | async).balance"
+                               (ngModelChange)="updateValue({balance: $event})"
+        >
+          <ng-template cpInplaceOutput let-invalid="invalid">
+            {{ (valueSource$ | async).balance | currency }}
+          </ng-template>
+          <ng-template cpInplaceInput let-invalid="invalid">
+            <cp-currency-input [(ngModel)]="balance.editValue"></cp-currency-input>
+          </ng-template>
+        </cp-shell-inplace-edit>
+
+      </div>
+    </div>
+
+
+    <div class="control">
+      <label>Closed</label>
+      <cp-shell-inplace-edit name="closed" #closed
+                             [disabled]="true"
+                             [errors]="validationResults?.errors?.closed"
+      >
+        <ng-template cpInplaceOutput let-invalid="invalid">
+          <p-inputSwitch [ngModel]="(valueSource$ | async).closed"
+                         (ngModelChange)="updateValue({closed: $event})"
+                         [disabled]="true"
+                         [class.ui-state-error]="invalid"
+          ></p-inputSwitch>
+        </ng-template>
+      </cp-shell-inplace-edit>
+    </div>
+
+
   </div>
 
-  <div class="control">
-    <label>Date</label>
-    <cp-shell-inplace-edit name="date" #date
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.dateTime"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        <cp-date-select [ngModel]="value.dateTime"
-                        (ngModelChange)="updateValue({dateTime: $event})"
-                        [disabled]="disabled"
-                        [invalid]="invalid"
-                        [showTime]="true"
-        ></cp-date-select>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-  <div class="control">
-    <label>Balance</label>
-    <cp-shell-inplace-edit name="balance" #balance
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.balance"
-                           [ngModel]="value.balance"
-                           (ngModelChange)="updateValue({balance: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.balance | currency }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
-        <cp-currency-input [(ngModel)]="balance.editValue"></cp-currency-input>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
 </div>

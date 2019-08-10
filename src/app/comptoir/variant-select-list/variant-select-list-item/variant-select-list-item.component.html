@@ -19,9 +19,8 @@
       </div>
 
       <div class="details-right">
-        <div class="item">
-          <cp-item [ref]="(variant$ | async)?.itemRef"
-          ></cp-item>
+        <div class="amount">
+          {{ variantAmountVatInclusive$ | async | currency }}
         </div>
       </div>
     </div>

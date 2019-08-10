@@ -36,6 +36,10 @@ import {SockComponentModule} from '../domain/commercial/stock/sock-component.mod
 import {SaleComponentModule} from '../domain/commercial/sale/sale-component.module';
 import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.module';
+import {DateRangeSelectModule} from '../domain/util/date-range-select/date-range-select.module';
+import { SalePrintComponent } from './sale-print/sale-print.component';
+import {CompanyModule} from '../domain/commercial/company/company.module';
+import { SalePrintRouteComponent } from './sale-print-route/sale-print-route.component';
 
 
 @NgModule({
@@ -49,7 +53,9 @@ import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.
     SaleVariantFormComponent,
     SaleDetailsFormRouteComponent,
     SaleDetailsVariantsRouteComponent,
-    SaleDetailsVariantDetailsRouteComponent
+    SaleDetailsVariantDetailsRouteComponent,
+    SalePrintComponent,
+    SalePrintRouteComponent
   ],
   imports: [
     CommonModule,
@@ -77,6 +83,8 @@ import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.
     PercentInputModule,
     CurrencyInputModule,
     SplitButtonModule,
+    DateRangeSelectModule,
+    CompanyModule,
   ]
 })
 export class SaleModule {
