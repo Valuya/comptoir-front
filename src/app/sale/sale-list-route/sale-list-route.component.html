@@ -12,13 +12,13 @@
     >
       <ng-template cpFilterContent>
         <cp-sale-filter [ngModel]="salesTableHelper.filter$ | async"
-                        (ngModelChange)="salesTableHelper.setFilter($event)"
+                        (ngModelChange)="onFilterChange($event)"
                         name="filter"
         ></cp-sale-filter>
         <p-splitButton *ngIf="(selectionMenu$ | async)?.length > 0"
-          [label]="(selectionLabel$ | async)"
-          icon="pi pi-check"
-          [model]="(selectionMenu$ | async)"></p-splitButton>
+                       [label]="(selectionLabel$ | async)"
+                       icon="pi pi-check"
+                       [model]="(selectionMenu$ | async)"></p-splitButton>
 
       </ng-template>
       <ng-template cpShellColumn let-row="row" let-column="column">

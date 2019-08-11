@@ -1,29 +1,23 @@
 import {SaleVariantIdResolverService} from './sale-variant-id-resolver.service';
 import {SaleDetailsFormRouteComponent} from './sale-details-form-route/sale-details-form-route.component';
 import {SaleDetailsVariantsRouteComponent} from './sale-details-variants-route/sale-details-variants-route.component';
-import {Routes} from '@angular/router';
 import {SaleListRouteComponent} from './sale-list-route/sale-list-route.component';
 import {SaleDetailsRouteComponent} from './sale-details-route/sale-details-route.component';
 import {SaleIdResolverService} from './sale-id-resolver.service';
 import {
+  PrintMenuItem,
+  ResolvedSaleDetailsBillMenuItem,
   ResolvedSaleDetailsDetailsMenuItem,
-  SaleDetailsVariantListMenuItem,
-  SaleDetailsVariantsMenuItem,
-  SaleListMenuItem,
   ResolvedSaleDetailsMenuItem,
-  ResolvedSaleDetailsVariantDetailsMenuItem, ResolvedSaleDetailsBillMenuItem, PrintMenuItem
+  ResolvedSaleDetailsVariantDetailsMenuItem,
+  SaleDetailsVariantListMenuItem,
+  SaleDetailsVariantsMenuItem, SaleListMenuItem
 } from './sale-menu';
 import {SaleDetailsVariantDetailsRouteComponent} from './sale-details-variant-details-route/sale-details-variant-details-route.component';
 import {AppRoute, createAppRouteData} from '../util/app-route-data';
 import {SalePrintRouteComponent} from './sale-print-route/sale-print-route.component';
+import {SaleSearchFilterResolverService} from './sale-search-filter-resolver.service';
 
-
-export const CreateNewSaleQuickActionItem = {
-  label: 'Create new sale',
-  title: 'Create new sale',
-  icon: 'fa fa-plus',
-  routerLink: ['/sale/new'],
-};
 
 export const SALE_ROUTES: AppRoute[] = [
   {
@@ -34,7 +28,13 @@ export const SALE_ROUTES: AppRoute[] = [
   {
     path: 'list',
     component: SaleListRouteComponent,
-    data: createAppRouteData(SaleListMenuItem, [CreateNewSaleQuickActionItem])
+    data: {
+      menuItem: SaleListMenuItem,
+    },
+    resolve: {
+      saleSearchFilter: SaleSearchFilterResolverService
+    },
+    runGuardsAndResolvers: 'paramsOrQueryParamsChange'
   },
   {
     path: ':saleId',

@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {Location} from '@angular/common';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {take} from 'rxjs/operators';
+import {WsSaleSearch} from '@valuya/comptoir-ws-api';
+import {DateUtils} from './util/date-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +41,6 @@ export class NavigationService {
         redirectUrl: redirect || currentUrl
       }
     });
-
   }
 
   private doUnlessRedirectParams(params: Params, callback: () => void) {
