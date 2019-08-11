@@ -9,6 +9,10 @@ import {CountryService} from '../country.service';
 import {PaginationUtils} from '../../../util/pagination-utils';
 import {SearchResult} from '../../../app-shell/shell-table/search-result';
 
+interface CountryRef {
+  code: string;
+}
+
 @Component({
   selector: 'cp-country-select',
   templateUrl: './country-select.component.html',
@@ -26,10 +30,10 @@ export class CountrySelectComponent implements OnInit, ControlValueAccessor {
   @Input()
   invalid: boolean;
 
-  valueSource$ = new BehaviorSubject<string | null>(null);
+  valueSource$ = new BehaviorSubject<CountryRef | null>(null);
   valueItem$: Observable<CountrySelectItem | null>;
 
-  private onChange: (value: string) => void;
+  private onChange: (value: CountryRef) => void;
   private onTouched: () => void;
 
   suggestionQuerySource$ = new Subject<string>();
@@ -68,7 +72,7 @@ export class CountrySelectComponent implements OnInit, ControlValueAccessor {
     this.valueSource$.next(obj);
   }
 
-  fireChanges(newValue: string) {
+  fireChanges(newValue: CountryRef) {
     if (this.onTouched) {
       this.onTouched();
     }
@@ -90,11 +94,11 @@ export class CountrySelectComponent implements OnInit, ControlValueAccessor {
     );
   }
 
-  private fetchRef$(ref: string | null): Observable<WsCountry | null> {
+  private fetchRef$(ref: CountryRef | null): Observable<WsCountry | null> {
     if (ref == null) {
       return of(null);
     }
-    return this.countryService.getCountry$(ref);
+    return this.countryService.getCountry$(ref.code);
   }
 
   private createItem(country: WsCountry): CountrySelectItem {
@@ -120,7 +124,7 @@ export class CountrySelectComponent implements OnInit, ControlValueAccessor {
     if (codes == null || codes.length === 0) {
       return of([]);
     }
-    const items$List = codes.map(ref => this.fetchRef$(ref));
+    const items$List = codes.map(ref => this.fetchRef$({code: ref}));
     return forkJoin(...items$List);
   }
 

@@ -9,7 +9,10 @@
       <div class="details-left">
         <div class="ref-line">
           <div class="ref item-ref">
-            {{ (variant$ | async)?.variantReference }}
+            <cp-item-variant [ref]="{id: (variant$ | async)?.id}"
+                             *ngIf="(variant$ | async)?.id != null"
+                             [showReference]="true">
+            </cp-item-variant>
           </div>
         </div>
         <div class="attributes">

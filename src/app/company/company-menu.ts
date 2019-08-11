@@ -18,6 +18,16 @@ export const CompanyDetailsMenuItem: MenuItem = {
   icon: 'fa fa-edit',
 };
 
+export const ResolvedCompanyPrestashopMenuItem: MenuItem & ResolvedRouteItem<WsCompany> = {
+  label: 'Import prestashop',
+  routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsCompany>(
+    FunctionsUtils.splitDomainObjectCallback<WsCompany, any[]>(
+      company => ['/company', company.id, 'import']
+    ), 'company'
+  ),
+  icon: 'fa fa-download',
+};
+
 
 export const ResolvedCompanyDetailsMenuItem: MenuItem & ResolvedRouteItem<WsCompany> = {
   labelFactory: RouteUtils.createLabelFactoryFromRouteDataEntities<WsCompany>(

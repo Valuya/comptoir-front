@@ -15,12 +15,19 @@ import {CountrySelectModule} from '../domain/util/country-select/country-select.
 import {CountryModule} from '../domain/util/country/country.module';
 import {AppShellModule} from '../app-shell/app-shell.module';
 import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
+import {PresathopImportComponent} from './presathop-import/presathop-import.component';
+import {PrestashopImportFormComponent} from './prestashop-import-form/prestashop-import-form.component';
+import {DialogModule} from 'primeng/dialog';
+import {ButtonModule} from 'primeng/button';
+import {ProgressSpinnerModule} from 'primeng/primeng';
 
 
 @NgModule({
   declarations: [
     CompanyFormComponent,
-    CompanyDetailsRouteComponent
+    CompanyDetailsRouteComponent,
+    PresathopImportComponent,
+    PrestashopImportFormComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +43,9 @@ import {PercentInputModule} from '../domain/util/percent-input/percent-input.mod
     CountryModule,
     AppShellModule,
     PercentInputModule,
+    DialogModule,
+    ButtonModule,
+    ProgressSpinnerModule,
 
 
   ]

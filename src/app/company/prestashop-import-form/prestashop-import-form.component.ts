@@ -1,36 +1,34 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {WsItem} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
-import {PricingUtils} from '../../domain/util/pricing-utils';
+import {WsCompany, WsPrestashopImportParams} from '@valuya/comptoir-ws-api';
 
 @Component({
-  selector: 'cp-item-form',
-  templateUrl: './item-form.component.html',
-  styleUrls: ['./item-form.component.scss'],
+  selector: 'cp-prestashop-import-form',
+  templateUrl: './prestashop-import-form.component.html',
+  styleUrls: ['./prestashop-import-form.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: ItemFormComponent,
+      useExisting: PrestashopImportFormComponent,
       multi: true
     }
   ]
 })
-export class ItemFormComponent implements OnInit, ControlValueAccessor {
+export class PrestashopImportFormComponent implements OnInit, ControlValueAccessor {
 
-  pricingUtils = PricingUtils;
 
   @Input()
   disabled = false;
   @Input()
-  validationResults: ValidationResult<WsItem>;
+  validationResults: ValidationResult<WsPrestashopImportParams>;
 
   @Output()
-  partialUpdate = new EventEmitter<Partial<WsItem>>();
+  partialUpdate = new EventEmitter<Partial<WsPrestashopImportParams>>();
 
-  value: WsItem;
+  value: WsPrestashopImportParams;
 
-  private onChange: (value: WsItem) => void;
+  private onChange: (value: WsPrestashopImportParams) => void;
   private onTouched: () => void;
 
 
@@ -39,6 +37,7 @@ export class ItemFormComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
   }
+
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -56,13 +55,14 @@ export class ItemFormComponent implements OnInit, ControlValueAccessor {
     this.value = obj;
   }
 
-  updateValue(update: Partial<WsItem>) {
+  updateValue(update: Partial<WsPrestashopImportParams>) {
     this.partialUpdate.emit(update);
     const newValue = Object.assign({}, this.value, update);
     this.fireChanges(newValue);
   }
 
-  private fireChanges(newValue: WsItem) {
+  private fireChanges(newValue: WsPrestashopImportParams) {
+    this.value = newValue;
     if (this.onTouched) {
       this.onTouched();
     }
@@ -70,4 +70,5 @@ export class ItemFormComponent implements OnInit, ControlValueAccessor {
       this.onChange(newValue);
     }
   }
+
 }

@@ -1,9 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {AppRoute} from '../util/app-route-data';
-import {CompanyDetailsMenuItem, ResolvedCompanyDetailsMenuItem} from './company-menu';
+import {AppRoute, createAppRouteData} from '../util/app-route-data';
+import {CompanyDetailsMenuItem, ResolvedCompanyDetailsMenuItem, ResolvedCompanyPrestashopMenuItem} from './company-menu';
 import {CompanyDetailsRouteComponent} from './company-details-route/company-details-route.component';
 import {CompanyIdResolverService} from './company-id-resolver.service';
+import {PresathopImportComponent} from './presathop-import/presathop-import.component';
+import {AppMenu} from '../app-menu';
 
 
 export const CompanyRoutes: AppRoute[] = [
@@ -17,9 +19,7 @@ export const CompanyRoutes: AppRoute[] = [
     resolve: {
       company: CompanyIdResolverService
     },
-    data: {
-      menuItem: ResolvedCompanyDetailsMenuItem
-    },
+    data: createAppRouteData(ResolvedCompanyDetailsMenuItem),
     children: [
       {
         path: '',
@@ -29,9 +29,12 @@ export const CompanyRoutes: AppRoute[] = [
       {
         path: 'details',
         component: CompanyDetailsRouteComponent,
-        data: {
-          menuItem: CompanyDetailsMenuItem
-        },
+        data: createAppRouteData(CompanyDetailsMenuItem, [ResolvedCompanyPrestashopMenuItem]),
+      },
+      {
+        path: 'import',
+        component: PresathopImportComponent,
+        data: createAppRouteData(ResolvedCompanyPrestashopMenuItem),
       }
     ]
   }

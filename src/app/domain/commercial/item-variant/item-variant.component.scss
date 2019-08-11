@@ -19,7 +19,7 @@
     flex: 1 1 auto;
     display: flex;
 
-    >* {
+    > * {
       margin: .3em;
       flex: 0 0 auto;
     }
@@ -34,5 +34,16 @@
       align-items: stretch;
     }
 
+  }
+
+  .ref {
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+
+      &:not(:first-child) {
+        margin-left: .3em;
+      }
+    }
   }
 }

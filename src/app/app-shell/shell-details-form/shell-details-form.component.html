@@ -1,5 +1,6 @@
 <div class="shell-details-form ui-widget">
-  <form #detailsForm (ngSubmit)="onSubmit()">
+  <form #detailsForm (ngSubmit)="onSubmit()"
+  >
 
     <div class="form-content">
       <ng-container *ngTemplateOutlet="formContentTemplate; context: {form: detailsForm}"
@@ -9,9 +10,9 @@
     <div class="form-actions">
       <input type="submit" hidden>
       <button pButton type="button"
-              [disabled]="detailsForm.invalid"
+              [disabled]="detailsForm.invalid || submitDisabled"
               (click)="onSubmit()"
-              label="Save"
+              [label]="submitLabel"
       ></button>
     </div>
 

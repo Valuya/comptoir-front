@@ -44,7 +44,7 @@ export const ComptoirRoutes: AppRoute[] = [
           comptoirSale: ComptoirSaleIdResolverService,
         },
         component: ComptoirSaleRouteComponent,
-        data: createAppRouteData(ComptoirSaleRouteItem, [ComptoirNewSaleRouteItem]),
+        data: createAppRouteData(ComptoirSaleRouteItem,),
         children: ComptoirSaleRoutes
       },
       {
@@ -53,7 +53,7 @@ export const ComptoirRoutes: AppRoute[] = [
           comptoirSale: ComptoirSaleIdResolverService,
         },
         component: ComptoirSaleRouteComponent,
-        data: createAppRouteData(ComptoirSaleRouteItem, [ComptoirNewSaleRouteItem]),
+        data: createAppRouteData(ComptoirSaleRouteItem),
       }
     ]
   },

@@ -9,6 +9,7 @@ import {ShellContentPageModule} from './shell-content-page/shell-content-page.mo
 import {ClockComponent} from './clock/clock.component';
 import {FocusFirstInputDirective} from './focus-first-input.directive';
 import {ClickStopPropagationDirective} from './click-stop-propagation.directive';
+import { ByPassSafeHtmlPipe } from './by-pass-safe-html.pipe';
 
 
 @NgModule({
@@ -18,11 +19,13 @@ import {ClickStopPropagationDirective} from './click-stop-propagation.directive'
     DashboardRouteComponent,
     ClockComponent,
     FocusFirstInputDirective,
-    ClickStopPropagationDirective
+    ClickStopPropagationDirective,
+    ByPassSafeHtmlPipe
   ],
   exports: [
     FocusFirstInputDirective,
-    ClickStopPropagationDirective
+    ClickStopPropagationDirective,
+    ByPassSafeHtmlPipe
   ],
   imports: [
     CommonModule,

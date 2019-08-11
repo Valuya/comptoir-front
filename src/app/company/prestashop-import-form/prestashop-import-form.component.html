@@ -1,0 +1,51 @@
+<div class="company-form form" *ngIf="value != null">
+
+  <div class="control">
+    <label>Url</label>
+    <cp-shell-inplace-edit>
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <input type="text" pInputText name="dbUrl"
+               [ngModel]="value.dbUrl"
+               (ngModelChange)="updateValue({dbUrl: $event})"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Driver class</label>
+    <cp-shell-inplace-edit [noAutoFocus]="true">
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <input type="text" pInputText name="driverClassName"
+               [ngModel]="value.driverClassName"
+               (ngModelChange)="updateValue({driverClassName: $event})"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>User</label>
+    <cp-shell-inplace-edit [noAutoFocus]="true">
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <input type="text" pInputText name="dbUsername"
+               [ngModel]="value.dbUsername"
+               (ngModelChange)="updateValue({dbUsername: $event})"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Password</label>
+    <cp-shell-inplace-edit [noAutoFocus]="true">
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <input type="text" pInputText name="dbPassword"
+               [ngModel]="value.dbPassword"
+               (ngModelChange)="updateValue({dbPassword: $event})"
+        >
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+</div>

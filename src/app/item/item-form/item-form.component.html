@@ -90,10 +90,9 @@
                              [invalid]="invalid"
         >
           <ng-template cpLocalizedEdit>
-            <input type="text" pInputText
-                   [(ngModel)]="descriptionTexts.editingTextValue"
-                   autofocus
-            >
+            <p-editor [(ngModel)]="descriptionTexts.editingTextValue"
+                      [style]="{'height': '200px'}"
+            ></p-editor>
           </ng-template>
         </cp-locale-text-edit>
       </ng-template>
@@ -132,6 +131,23 @@
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
         <cp-percent-input [(ngModel)]="vatRate.editValue"></cp-percent-input>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+  <div class="control">
+    <label>Total</label>
+    <cp-shell-inplace-edit name="total" #total
+                           [disabled]="disabled"
+                           [ngModel]="pricingUtils.getVatInclusiveromVatExclusive(value.vatExclusive, value.vatRate)"
+                           (ngModelChange)="updateValue({vatExclusive: pricingUtils.getVatExclusviveFromTotal($event, value.vatRate, 0)})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ total.editValue | currency }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-currency-input [(ngModel)]="total.editValue">
+        </cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>
