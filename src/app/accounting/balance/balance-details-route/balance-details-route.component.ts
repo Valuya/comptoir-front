@@ -13,6 +13,7 @@ import {PaginationUtils} from '../../../util/pagination-utils';
 import {AuthService} from '../../../auth.service';
 import {AccountService} from '../../../domain/accounting/account.service';
 import {WsAttributeDefinitionSearchResultList} from '@valuya/comptoir-ws-api/models/WsAttributeDefinitionSearchResultList';
+import {RouteUtils} from '../../../util/route-utils';
 
 @Component({
   selector: 'cp-balances-details-route',
@@ -47,9 +48,8 @@ export class BalanceDetailsRouteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = new Subscription();
-    const routeSubscription = this.activatedRoute.data.pipe(
-      map(data => data.balance),
-    ).subscribe(balance => this.formHelper.init(balance));
+    const routeSubscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'balance')
+      .subscribe(balance => this.formHelper.init(balance));
     this.subscription.add(routeSubscription);
 
     const moneyPileSusbcription = this.pileChangeSource$.pipe(

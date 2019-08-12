@@ -21,7 +21,7 @@ export class SalePrintRouteComponent implements OnInit, AfterContentInit {
 
   ngOnInit() {
     const routeSnapshot = this.activatedRoute.snapshot;
-    this.sale = RouteUtils.findRouteDataInAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
+    this.sale = RouteUtils.findRouteDataInRouteSnapshotAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
 
   }
 

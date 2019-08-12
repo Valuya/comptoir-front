@@ -19,7 +19,7 @@ export class StockVariantIdResolverService {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<WsItemVariantStock> | Promise<WsItemVariantStock> | WsItemVariantStock {
     const param = route.params.variantId;
-    const resolvedStock: WsStock = RouteUtils.findRouteDataInAncestors(route.pathFromRoot, 'stock');
+    const resolvedStock: WsStock = RouteUtils.findRouteDataInRouteSnapshotAncestors(route.pathFromRoot, 'stock');
 
     if (param == null) {
       return this.createNew$(resolvedStock);

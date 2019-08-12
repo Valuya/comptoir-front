@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
 import {StockService} from '../../domain/commercial/stock.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-stock-details-form-route',
@@ -33,9 +34,8 @@ export class StockDetailsFormRouteComponent implements OnInit, OnDestroy {
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.stock),
-    ).subscribe(stock => this.formHelper.init(stock));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'stock')
+      .subscribe(stock => this.formHelper.init(stock));
 
   }
 

@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
-import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
+import {WsSale} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
-import {map, mergeMap, switchMap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
-import {ApiService} from '../../api.service';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
 import {SaleService} from '../../domain/commercial/sale.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-sale-details-form-route',
@@ -29,15 +29,12 @@ export class SaleDetailsFormRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.formHelper = new ShellFormHelper<WsSale>(
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.sale),
-    ).subscribe(sale => this.formHelper.init(sale));
-
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'sale')
+      .subscribe(sale => this.formHelper.init(sale));
   }
 
   ngOnDestroy(): void {

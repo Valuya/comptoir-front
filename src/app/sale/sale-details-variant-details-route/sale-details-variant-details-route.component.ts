@@ -9,6 +9,7 @@ import {map, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators'
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {SaleService} from '../../domain/commercial/sale.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-sale-details-variant-details-route',
@@ -34,15 +35,10 @@ export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestro
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.saleVariant),
-    ).subscribe(saleVariant => this.formHelper.init(saleVariant));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'saleVariant')
+      .subscribe(saleVariant => this.formHelper.init(saleVariant));
 
-    const sale$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.sale))
-    );
-    this.sale$ = combineLatest(...sale$List).pipe(
-      map(list => list.find(sale => sale != null)),
+    this.sale$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'sale').pipe(
       publishReplay(1), refCount(),
     );
   }

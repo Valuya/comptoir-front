@@ -9,6 +9,7 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {PosService} from '../../domain/commercial/pos.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-pos-details-route',
@@ -34,9 +35,8 @@ export class PosDetailsRouteComponent implements OnInit, OnDestroy {
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.pos),
-    ).subscribe(pos => this.formHelper.init(pos));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'pos')
+      .subscribe(pos => this.formHelper.init(pos as WsPos));
   }
 
   ngOnDestroy(): void {

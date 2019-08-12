@@ -23,7 +23,7 @@ export class ItemDetailsRouteComponent implements OnInit {
 
   ngOnInit() {
     const routeSnapshot = this.activatedRoute.snapshot;
-    const item = RouteUtils.findRouteDataInAncestors<WsItem>(routeSnapshot.pathFromRoot, 'item');
+    const item = RouteUtils.findRouteDataInRouteSnapshotAncestors<WsItem>(routeSnapshot.pathFromRoot, 'item');
     this.detailsRoutesItems$ = of(this.createTabs(item, routeSnapshot));
   }
 

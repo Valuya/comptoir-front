@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
 import {ItemService} from '../../domain/commercial/item.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-item-detail-form-route',
@@ -34,9 +35,8 @@ export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.item),
-    ).subscribe(item => this.formHelper.init(item));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'item')
+      .subscribe(item => this.formHelper.init(item as WsItem));
   }
 
 

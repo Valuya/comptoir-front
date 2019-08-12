@@ -19,7 +19,7 @@ export class SaleVariantIdResolverService {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<WsItemVariantSale> | Promise<WsItemVariantSale> | WsItemVariantSale {
     const param = route.params.variantId;
-    const resolvedSale: WsSale = RouteUtils.findRouteDataInAncestors(route.pathFromRoot, 'sale');
+    const resolvedSale: WsSale = RouteUtils.findRouteDataInRouteSnapshotAncestors(route.pathFromRoot, 'sale');
 
     if (param == null) {
       return this.createNew$(resolvedSale);

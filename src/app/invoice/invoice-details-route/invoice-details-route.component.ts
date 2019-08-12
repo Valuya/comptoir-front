@@ -9,6 +9,7 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {InvoiceService} from '../../domain/commercial/invoice.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-invoices-details-route',
@@ -34,9 +35,8 @@ export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.invoice),
-    ).subscribe(invoice => this.formHelper.init(invoice));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'invoice')
+      .subscribe(invoice => this.formHelper.init(invoice));
   }
 
   ngOnDestroy(): void {

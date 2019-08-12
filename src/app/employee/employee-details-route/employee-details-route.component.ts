@@ -9,6 +9,7 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {EmployeeService} from '../../domain/thirdparty/employee.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-employees-details-route',
@@ -33,9 +34,8 @@ export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.employee),
-    ).subscribe(employee => this.formHelper.init(employee));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'employee')
+      .subscribe(employee => this.formHelper.init(employee as WsEmployee));
   }
 
   ngOnDestroy(): void {

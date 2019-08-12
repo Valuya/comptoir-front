@@ -26,7 +26,7 @@ export class SaleDetailsRouteComponent implements OnInit {
 
   ngOnInit() {
     const routeSnapshot = this.activatedRoute.snapshot;
-    const sale = RouteUtils.findRouteDataInAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
+    const sale = RouteUtils.findRouteDataInRouteSnapshotAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
     this.detailsRoutesItems$ = of(this.createTabs(sale, routeSnapshot));
   }
 

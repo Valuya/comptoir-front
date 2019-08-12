@@ -13,6 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SaleService} from '../../domain/commercial/sale.service';
 import {MenuItem, MessageService} from 'primeng/api';
 import {SaleSearchFilterUtils} from '../sale-search-filter-utils';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-sales-list-route',
@@ -58,9 +59,8 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
       map(s => s == null || s.length === 0 ? '' : `${s.length} sales selected`)
     );
 
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.saleSearchFilter),
-    ).subscribe(searchFilter => this.salesTableHelper.setFilter(searchFilter));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'saleSearchFilter')
+      .subscribe(searchFilter => this.salesTableHelper.setFilter(searchFilter as WsSaleSearch));
   }
 
   ngOnDestroy(): void {

@@ -11,6 +11,7 @@ import {combineLatest, concat, forkJoin, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {StockService} from '../../domain/commercial/stock.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-stock-details-variants-route',
@@ -47,15 +48,8 @@ export class StockDetailsVariantsRouteComponent implements OnInit {
     this.stockVariantTableHelper = new ShellTableHelper<WsItemVariantStock, WsItemVariantStockSearch>(
       (searchFilter, pagination) => this.searchStockVariant$(searchFilter, pagination)
     );
-    const companyRef$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(
-      filter(c => c != null),
-      take(1)
-    );
-    const item$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.stock))
-    );
-    this.stock$ = combineLatest(...item$List).pipe(
-      map(list => list.find(stock => stock != null)),
+    const companyRef$ = this.authService.getNextNonNullLoggedEmployeeCompanyRef$();
+    this.stock$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'stock').pipe(
       publishReplay(1), refCount(),
     );
     forkJoin(companyRef$, this.stock$.pipe(filter(i => i != null), take(1)))

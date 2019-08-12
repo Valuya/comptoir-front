@@ -9,6 +9,7 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {CustomerService} from '../../domain/thirdparty/customer.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-customers-details-route',
@@ -34,9 +35,8 @@ export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.customer),
-    ).subscribe(customer => this.formHelper.init(customer));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'customer')
+      .subscribe(customer => this.formHelper.init(customer));
   }
 
   ngOnDestroy(): void {

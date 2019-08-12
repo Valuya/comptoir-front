@@ -13,6 +13,7 @@ import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AccountingService} from '../../domain/accounting/accounting.service';
 import {AccountingEntrySearchFilterSerializer} from '../accounting-entry-search-filter-serializer';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-accounting-entry-list-route',
@@ -62,9 +63,8 @@ export class AccountingEntryListRouteComponent implements OnInit, OnDestroy {
       map(s => s == null || s.length === 0 ? '' : `${s.length} accountingEntrys selected`)
     );
 
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.accountingEntrySearchFilter),
-    ).subscribe(searchFilter => this.accountingEntrysTableHelper.setFilter(searchFilter));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'accountingEntrySearchFilter')
+      .subscribe(searchFilter => this.accountingEntrysTableHelper.setFilter(searchFilter as WsAccountingEntrySearch));
   }
 
   ngOnDestroy(): void {

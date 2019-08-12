@@ -19,6 +19,7 @@ import {combineLatest, concat, forkJoin, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {ItemService} from '../../domain/commercial/item.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-item-detail-variants-route',
@@ -54,13 +55,9 @@ export class ItemDetailVariantsRouteComponent implements OnInit {
       filter(c => c != null),
       take(1)
     );
-    const item$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.item))
-    );
-    this.item$ = combineLatest(...item$List).pipe(
-      map(list => list.find(item => item != null)),
+    this.item$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'item').pipe(
       publishReplay(1), refCount(),
-    );
+    ) as any as Observable<WsItem>;
     forkJoin(companyRef$, this.item$.pipe(filter(i => i != null), take(1)))
       .subscribe(r => this.initFilter(r[0], r[1]));
   }
