@@ -1,16 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import {WsItemVariant, WsItemVariantRef} from '@valuya/comptoir-ws-api';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {WsItemVariantRef, WsItemVariantSale} from '@valuya/comptoir-ws-api';
 import {MessageService} from 'primeng/api';
 import {ComptoirSaleService} from '../comptoir-sale.service';
-import {switchMap} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {SaleItemListComponent} from '../sale-item-list/sale-item-list.component';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'cp-comptoir-sale-fill-route',
   templateUrl: './comptoir-sale-fill-route.component.html',
   styleUrls: ['./comptoir-sale-fill-route.component.scss']
 })
-export class ComptoirSaleFillRouteComponent implements OnInit {
+export class ComptoirSaleFillRouteComponent implements OnInit, OnDestroy {
+
+  @ViewChild(SaleItemListComponent, {static: true})
+  private saleItemListChild: SaleItemListComponent;
+
+  private subscription: Subscription;
 
   constructor(
     private messageService: MessageService,
@@ -20,6 +26,12 @@ export class ComptoirSaleFillRouteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.subscription = this.saleService.getLastUpdatedItem$()
+      .subscribe(item => this.scrollToUpdatedItem(item));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onVariantSelected(ref: WsItemVariantRef) {
@@ -31,9 +43,7 @@ export class ComptoirSaleFillRouteComponent implements OnInit {
           this.notifyAdded();
         }
       );
-
   }
-
 
   private notifyAdded() {
     this.messageService.add({
@@ -41,5 +51,9 @@ export class ComptoirSaleFillRouteComponent implements OnInit {
       life: 500,
       summary: 'Adding 1'
     });
+  }
+
+  private scrollToUpdatedItem(item: WsItemVariantSale) {
+    this.saleItemListChild.highlightUpdatedItem(item);
   }
 }
