@@ -1,0 +1,25 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-table [columns]="columns"
+                    [loading]="accountingEntrysTableHelper.loading$ | async"
+                    [rows]="accountingEntrysTableHelper.rows$ | async"
+                    [totalRecords]="accountingEntrysTableHelper.totalCount$ | async"
+                    [pagination]="accountingEntrysTableHelper.pagination$ | async"
+                    (paginationChange)="accountingEntrysTableHelper.setPagination($event)"
+                    [selection]="selectedAccountingEntrys$ | async"
+                    (selectionChange)="onSelectionChange$($event)"
+                    (rowSelect)="onRowSelect($event)"
+    >
+      <ng-template cpFilterContent>
+        <cp-accounting-entry-filter [ngModel]="accountingEntrysTableHelper.filter$ | async"
+                                    (ngModelChange)="onFilterChange($event)"
+        ></cp-accounting-entry-filter>
+      </ng-template>
+      <ng-template cpShellColumn let-row="row" let-column="column">
+        <cp-accounting-entry-column [column]="column"
+                                    [row]="row"
+        ></cp-accounting-entry-column>
+      </ng-template>
+    </cp-shell-table>
+  </ng-template>
+</cp-shell-content-page>

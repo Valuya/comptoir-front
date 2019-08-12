@@ -60,7 +60,6 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
 
     this.subscription = this.activatedRoute.data.pipe(
       map(data => data.saleSearchFilter),
-      tap(a => console.log(a)),
     ).subscribe(searchFilter => this.salesTableHelper.setFilter(searchFilter));
   }
 

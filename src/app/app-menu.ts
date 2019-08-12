@@ -14,6 +14,7 @@ import {ResolvedRouteItem} from './util/resolved-route-item';
 import {ComptoirMenuItems} from './comptoir/comptoir-menu';
 import {AccountMenuItems} from './account/account-menu';
 import {CompanyMenuItems} from './company/company-menu';
+import {AccountingMenuItems} from './accounting/accounting-menu';
 
 const UserMenuItems: (MenuItem | ResolvedRouteItem<any>)[] = [
   {
@@ -42,6 +43,13 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     label: 'Home',
     title: 'Home',
     routerLink: ['/'],
+  },
+  accounting: {
+    label: 'Accounting',
+    title: 'Accounting',
+    icon: 'fa fa-calculator',
+    routerLink: ['/accounting'],
+    items: AccountingMenuItems,
   },
   account: {
     label: 'Account',
@@ -123,7 +131,6 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     routerLink: ['/stock'],
     items: StockMenuItems,
   },
-
 
 
   me: {
