@@ -9,7 +9,10 @@
       <div class="details-left">
         <div class="ref-line">
           <div class="ref item-ref">
-            {{ (item$ | async)?.reference }}
+            <cp-item [ref]="{id: (item$ | async)?.id}"
+                     *ngIf="(item$ | async)?.id != null"
+                     [showReference]="true"
+            ></cp-item>
           </div>
           <div class="multiple-sale" *ngIf="(item$ | async)?.multipleSale">
             <i class="fa fa-sitemap"></i>
@@ -19,17 +22,13 @@
           <cp-locale-text [localeTexts]="(item$ | async)?.name"
           ></cp-locale-text>
         </div>
-        <div class="description">
-          <cp-locale-text [localeTexts]="(item$ | async)?.description"
-          ></cp-locale-text>
-        </div>
       </div>
 
       <div class="details-right">
         <div class="price">
           {{ itemTotal$ | async | currency }}
         </div>
-        <div class="details"  [hidden]="(item$ | async) == null">
+        <div class="details" [hidden]="(item$ | async) == null">
           <div class="vat-exclusive">
             <span>{{ (item$ | async)?.vatExclusive | currency }}</span>
             <span>vat excl.</span>

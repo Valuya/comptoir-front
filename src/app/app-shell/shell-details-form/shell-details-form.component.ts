@@ -1,4 +1,4 @@
-import {Component, ContentChild, EventEmitter, OnInit, Output, TemplateRef} from '@angular/core';
+import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import {FormContentDirective} from './form-content.directive';
 import {InplaceEditService} from '../shell-inplace-edit/inplace-edit.service';
 
@@ -10,6 +10,10 @@ import {InplaceEditService} from '../shell-inplace-edit/inplace-edit.service';
 })
 export class ShellDetailsFormComponent implements OnInit {
 
+  @Input()
+  submitLabel = 'Save';
+  @Input()
+  submitDisabled: boolean;
   @Output()
   formSubmit = new EventEmitter<any>();
 

@@ -48,7 +48,7 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
   @Input()
   showEmptyLabel: boolean;
   @Input()
-  ignoreFocus: boolean;
+  noAutoFocus: boolean;
 
   @Output()
   editingChange = new EventEmitter<boolean>();

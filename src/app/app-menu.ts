@@ -13,6 +13,7 @@ import {RouteUtils} from './util/route-utils';
 import {ResolvedRouteItem} from './util/resolved-route-item';
 import {ComptoirMenuItems} from './comptoir/comptoir-menu';
 import {AccountMenuItems} from './account/account-menu';
+import {CompanyMenuItems} from './company/company-menu';
 
 const UserMenuItems: (MenuItem | ResolvedRouteItem<any>)[] = [
   {
@@ -20,6 +21,12 @@ const UserMenuItems: (MenuItem | ResolvedRouteItem<any>)[] = [
     routerLink: ['/me/profile'],
     label: 'Profile',
     title: 'Profile'
+  },
+  {
+    icon: 'fa fa-building',
+    routerLink: ['/me/company'],
+    label: 'Company',
+    title: 'Company'
   },
   {
     icon: 'fa fa-sign-out',
@@ -36,33 +43,12 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     title: 'Home',
     routerLink: ['/'],
   },
-  comptoir: {
-    label: 'Comptoir',
-    title: 'Comptoir',
-    icon: 'fa fa-shopping-basket',
-    routerLink: ['/comptoir'],
-    items: ComptoirMenuItems
-  },
-  sale: {
-    label: 'Sales',
-    title: 'Sales',
-    icon: 'fa fa-shopping-cart',
-    routerLink: ['/sale'],
-    items: SaleMenuItems
-  },
-  pos: {
-    label: 'Points of sale',
-    title: 'Points of sale',
-    icon: 'fa fa-building',
-    routerLink: ['/pos'],
-    items: PosMenuItems
-  },
-  item: {
-    label: 'Items',
-    title: 'Items',
-    icon: 'fa fa-square',
-    routerLink: ['/item'],
-    items: ItemMenuItems
+  account: {
+    label: 'Account',
+    title: 'Account',
+    icon: 'fa fa-pencil-square-o',
+    routerLink: ['/account'],
+    items: AccountMenuItems,
   },
   balance: {
     label: 'Balance',
@@ -70,6 +56,19 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     icon: 'fa fa-balance-scale',
     routerLink: ['/balance'],
     items: BalanceMenuItems,
+  },
+  comptoir: {
+    label: 'Comptoir',
+    title: 'Comptoir',
+    icon: 'fa fa-shopping-basket',
+    routerLink: ['/comptoir'],
+    items: ComptoirMenuItems
+  },
+  company: {
+    label: 'Company',
+    title: 'Company',
+    icon: 'fa fa-building',
+    items: CompanyMenuItems
   },
   customer: {
     label: 'Customer',
@@ -92,6 +91,31 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     routerLink: ['/invoice'],
     items: InvoiceMenuItems,
   },
+
+
+  item: {
+    label: 'Items',
+    title: 'Items',
+    icon: 'fa fa-square',
+    routerLink: ['/item'],
+    items: ItemMenuItems
+  },
+
+  pos: {
+    label: 'Points of sale',
+    title: 'Points of sale',
+    icon: 'fa fa-building',
+    routerLink: ['/pos'],
+    items: PosMenuItems
+  },
+  sale: {
+    label: 'Sales',
+    title: 'Sales',
+    icon: 'fa fa-shopping-cart',
+    routerLink: ['/sale'],
+    items: SaleMenuItems
+  },
+
   stock: {
     label: 'Stock',
     title: 'Stock',
@@ -99,13 +123,9 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     routerLink: ['/stock'],
     items: StockMenuItems,
   },
-  account: {
-    label: 'Account',
-    title: 'Account',
-    icon: 'fa fa-pencil-square-o',
-    routerLink: ['/account'],
-    items: AccountMenuItems,
-  },
+
+
+
   me: {
     icon: 'fa fa-user',
     routerLink: ['/me'],

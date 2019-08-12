@@ -5,7 +5,7 @@
       {{ row.unitAmount | currency }}
     </div>
     <div class="quantity">
-      <cp-shell-inplace-edit [ignoreFocus]="i > 0">
+      <cp-shell-inplace-edit [noAutoFocus]="i > 0">
         <ng-template cpInplaceOutput>
           <input type="number" pInputText
                  [ngModel]="row.count"

@@ -1,0 +1,67 @@
+<cp-shell-content-page>
+  <ng-template cpContentBody>
+    <cp-shell-details-form submitLabel="Import"
+                           [submitDisabled]="importing$ | async"
+                           (formSubmit)="onFormSubmit()">
+      <ng-template cpFormContent let-form="form">
+
+        <div class="control">
+          <label>Backend</label>
+          <cp-shell-inplace-edit name="backend" #backend
+                                 [(ngModel)]="backendName"
+          >
+            <ng-template cpInplaceOutput let-invalid="invalid">
+              {{ backendName}}
+            </ng-template>
+            <ng-template cpInplaceInput>
+              <input type="text" pInputText name="backendNameInput"
+                     [(ngModel)]="backendName"
+              >
+            </ng-template>
+          </cp-shell-inplace-edit>
+        </div>
+
+
+        <cp-prestashop-import-form [(ngModel)]="importForm"
+        ></cp-prestashop-import-form>
+
+        <p-progressSpinner *ngIf="importing$ | async"
+        ></p-progressSpinner>
+      </ng-template>
+    </cp-shell-details-form>
+  </ng-template>
+</cp-shell-content-page>
+
+<p-dialog *ngIf="importedSummary !=null"
+          [visible]="true"
+          [closable]="true"
+          (onHide)="closeSummary()"
+          styleClass="import-summary-dialog"
+>
+  <p-header>
+    Import succeeded
+  </p-header>
+  <div class="content">
+    <div>
+      {{ importedSummary.attributeDefinitionCount}} attributes definitions
+    </div>
+    <div>
+      {{ importedSummary.attributeValueCount}} attributes values
+    </div>
+    <div>
+      {{ importedSummary.itemCount}} items
+    </div>
+    <div>
+      {{ importedSummary.itemVariantCount}} item variants
+    </div>
+    <div>
+      {{ importedSummary.defaultItemVariantCount}} default variants
+    </div>
+  </div>
+
+  <div class="actions">
+    <button pButton (click)="closeSummary()"
+            label="Close"
+    ></button>
+  </div>
+</p-dialog>

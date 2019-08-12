@@ -12,6 +12,10 @@ const LoggedUserRoutes: Route[] = [
   {
     path: 'profile',
     redirectTo: '/employee/me'
+  },
+  {
+    path: 'company',
+    redirectTo: '/company/mine/details'
   }
 ];
 export const APP_MODULES_ROUTES: Route[] = [
@@ -22,30 +26,9 @@ export const APP_MODULES_ROUTES: Route[] = [
     data: createAppRouteData(AppMenu.home),
   },
   {
-    path: 'me',
-    data: createAppRouteData(AppMenu.me),
-    children: LoggedUserRoutes
-  },
-  {
-    path: 'comptoir',
-    loadChildren: './comptoir/comptoir.module#ComptoirModule',
-    data: createAppRouteData(AppMenu.comptoir)
-  },
-  {
-    path: 'sale',
-    loadChildren: './sale/sale.module#SaleModule',
-    data: createAppRouteData(AppMenu.sale)
-  },
-  {
-    path: 'pos',
-    loadChildren: './pos/pos.module#PosModule',
-    data: createAppRouteData(AppMenu.pos)
-  },
-  {
-    path: 'item',
-    loadChildren: './item/item.module#ItemModule',
-    data: createAppRouteData(AppMenu.item)
-
+    path: 'account',
+    loadChildren: './account/account.module#AccountModule',
+    data: createAppRouteData(AppMenu.account)
   },
   {
     path: 'balance',
@@ -53,6 +36,17 @@ export const APP_MODULES_ROUTES: Route[] = [
     data: createAppRouteData(AppMenu.balance)
 
   },
+  {
+    path: 'company',
+    loadChildren: './company/company.module#CompanyModule',
+    data: createAppRouteData(AppMenu.company)
+  },
+  {
+    path: 'comptoir',
+    loadChildren: './comptoir/comptoir.module#ComptoirModule',
+    data: createAppRouteData(AppMenu.comptoir)
+  },
+
   {
     path: 'customer',
     loadChildren: './customer/customer.module#CustomerModule',
@@ -72,13 +66,29 @@ export const APP_MODULES_ROUTES: Route[] = [
 
   },
   {
+    path: 'item',
+    loadChildren: './item/item.module#ItemModule',
+    data: createAppRouteData(AppMenu.item)
+
+  },
+  {
+    path: 'me',
+    data: createAppRouteData(AppMenu.me),
+    children: LoggedUserRoutes
+  },
+  {
+    path: 'pos',
+    loadChildren: './pos/pos.module#PosModule',
+    data: createAppRouteData(AppMenu.pos)
+  },
+  {
+    path: 'sale',
+    loadChildren: './sale/sale.module#SaleModule',
+    data: createAppRouteData(AppMenu.sale)
+  },
+  {
     path: 'stock',
     loadChildren: './stock/stock.module#StockModule',
     data: createAppRouteData(AppMenu.stock)
-  },
-  {
-    path: 'account',
-    loadChildren: './account/account.module#AccountModule',
-    data: createAppRouteData(AppMenu.account)
   },
 ];

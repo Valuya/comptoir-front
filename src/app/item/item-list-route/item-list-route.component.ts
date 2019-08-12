@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {TableColumn} from '../../util/table-column';
 import {
-  DESCRIPTION_COLUMN,
   ItemColumn,
   MAIN_PICTURE_COLUMN,
   MULTIPLE_SALE_COLUMN,
@@ -18,7 +17,7 @@ import {Pagination} from '../../util/pagination';
 import {concat, Observable, of} from 'rxjs';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
-import {WsEmployee, WsItem, WsItemRef, WsItemSearch, WsItemSearchResult} from '@valuya/comptoir-ws-api';
+import {WsEmployee, WsItem, WsItemSearch, WsItemSearchResult} from '@valuya/comptoir-ws-api';
 import {ItemService} from '../../domain/commercial/item.service';
 
 @Component({
@@ -34,7 +33,6 @@ export class ItemListRouteComponent implements OnInit {
     MAIN_PICTURE_COLUMN,
     REFERENCE_COLUMN,
     NAME_COLUMN,
-    DESCRIPTION_COLUMN,
     MULTIPLE_SALE_COLUMN,
     VAT_RATE_COLUMN,
     VAT_EXCLUSIVE_COLUMN,

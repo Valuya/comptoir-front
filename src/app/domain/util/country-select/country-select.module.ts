@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {CountrySelectComponent} from './country-select.component';
 import {FormsModule} from '@angular/forms';
 import {AutoCompleteModule} from 'primeng/primeng';
+import {CountryModule} from '../country/country.module';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import {AutoCompleteModule} from 'primeng/primeng';
     CommonModule,
     FormsModule,
     AutoCompleteModule,
+    CountryModule,
   ]
 })
 export class CountrySelectModule {

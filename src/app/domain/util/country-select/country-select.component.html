@@ -5,5 +5,9 @@
                   [suggestions]="suggestions$ | async"
                   [dropdown]="true"
                   (completeMethod)="onSearchQuery($event)"
-  ></p-autoComplete>
+  >
+    <ng-template pTemplate="item" let-item>
+      <cp-country [ref]="item.ref"></cp-country>
+    </ng-template>
+  </p-autoComplete>
 </div>

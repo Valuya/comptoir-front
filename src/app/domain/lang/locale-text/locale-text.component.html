@@ -1,6 +1,5 @@
-<div class="text">
-  {{ localizedValue$ | async }}
+<div class="text" [innerHtml]="localizedValue$ | async | byPassSafeHtml">
 </div>
 <div class="locale" [hidden]="(localizedValueLocale$ | async) === (viewLocale$ | async)">
-  {{ localizedValueLocale$ | async }}
+  {{ localizedValueLocale$ | async  }}
 </div>

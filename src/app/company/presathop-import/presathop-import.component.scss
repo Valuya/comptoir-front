@@ -1,0 +1,13 @@
+
+::ng-deep .import-summary-dialog {
+  .content {
+    >div {
+      margin: .3em;
+
+    }
+    .actions {
+      margin: 1em;
+      text-align: center;
+    }
+  }
+}

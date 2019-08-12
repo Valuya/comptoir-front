@@ -14,7 +14,7 @@ import {ButtonModule} from 'primeng/button';
 import {ShellDetailsFormModule} from '../app-shell/shell-details-form/shell-details-form.module';
 import {FormsModule} from '@angular/forms';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
-import {InputSwitchModule, InputTextModule, SpinnerModule, TabMenuModule} from 'primeng/primeng';
+import {EditorModule, InputSwitchModule, InputTextModule, SpinnerModule, TabMenuModule} from 'primeng/primeng';
 import {LocaleTextModule} from '../domain/lang/locale-text/locale-text.module';
 import {LocaleTextEditModule} from '../domain/lang/locale-text-edit/locale-text-edit.module';
 import {PictureModule} from '../domain/commercial/picture/picture.module';
@@ -29,6 +29,7 @@ import {AttributeValuesModule} from '../domain/commercial/attribute-values/attri
 import {AttributeValuesSelectModule} from '../domain/commercial/attribute-values-select/attribute-values-select.module';
 import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.module';
+import {AppShellModule} from '../app-shell/app-shell.module';
 
 
 @NgModule({
@@ -67,6 +68,8 @@ import {CurrencyInputModule} from '../domain/util/currency-input/currency-input.
     AttributeValuesSelectModule,
     PercentInputModule,
     CurrencyInputModule,
+    EditorModule,
+    AppShellModule,
   ]
 })
 export class ItemModule {

@@ -1,5 +1,5 @@
 <cp-loading-content [loading]="loading$ |async">
-  <div class="item-variant" [ngClass]="layout" >
+  <div class="item-variant" [ngClass]="layout">
 
     <div class="main-picture" *ngIf="showMainPicture">
       <div class="variant-picture" *ngIf="(value$ | async)?.mainPictureRef != null; else: itemPicture ">
@@ -16,7 +16,10 @@
 
     <div class="details" [ngClass]="layout">
       <div class="ref item-ref" *ngIf="showReference">
-        {{ (value$ | async)?.variantReference }}
+        <cp-item [showReference]="true"
+                 [ref]="(value$ | async)?.itemRef"
+        ></cp-item>
+        <span>{{ (value$ | async)?.variantReference }}</span>
       </div>
       <div class="name" *ngIf="showItemName">
         <cp-item [ref]="(value$ | async)?.itemRef"

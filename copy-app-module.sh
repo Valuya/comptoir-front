@@ -83,7 +83,6 @@ fi
 
 filterSources() {
   path="$1"
-  rel_path="$(echo $path | sed s@${SRC_PATH}@@)"
 
   if [[ -z "${SRC_FILES_REGEXP}" || "${#SRC_FILES_REGEXP[*]}" = "0" ]] ; then
     echo "true"
@@ -91,55 +90,61 @@ filterSources() {
   fi
   MATCH=false
   for REGEX in ${SRC_FILES_REGEXP}; do
-    echo "$rel_path" | grep -e "$REGEX" && MATCH=true && break;
+    echo "$path" | grep -e "$REGEX" && MATCH=true && break;
   done
-  echo $MATCH
+  echo ${MATCH}
 }
 
-tmp=$(mktemp)
-find "$SRC_PATH" -type d >"$tmp"
+pathListTmpFile=$(mktemp)
+find "$SRC_PATH" -type d >"$pathListTmpFile"
 
 echo
 
-while read DIR; do
-  INCLUDED=$(filterSources "$DIR")
-  [ "$INCLUDED" = "false" ] && continue
+while read DIR_PATH; do
 
-  DEST_DIR_PATH=$(echo "$DIR" | sed "s:$SRC_PATH:$DEST_PATH:" | sed "s:${MOD_SRC}:${MOD_DEST}:g")
+  SRC_REL_DIR_PATH=$(echo ${DIR_PATH} | sed "s@${SRC_PATH}@@")
+  INCLUDED=$(filterSources "$SRC_REL_DIR_PATH")
+  [[ "$INCLUDED" = "false" ]] && continue
+
+  DEST_REL_DIR_PATH=$(echo "$SRC_REL_DIR_PATH" | sed "s:${MOD_SRC}:${MOD_DEST}:g")
+  DEST_DIR_PATH="${DEST_PATH}${DEST_REL_DIR_PATH}"
 
   echo "mkdir $DEST_DIR_PATH"
-  if [ "$DRY_RUN" = "false" ]; then
+  if [[ "$DRY_RUN" = "false" ]]; then
     mkdir -p "$DEST_DIR_PATH"
   fi
-done <"$tmp"
+done <"$pathListTmpFile"
 
 echo
 
-find "$SRC_PATH" -type f >$tmp
-while read FILE; do
-  INCLUDED=$(filterSources "$FILE")
-  [ "$INCLUDED" = "false" ] && continue
+find "$SRC_PATH" -type f >${pathListTmpFile}
+while read FILE_PATH; do
 
-  DEST_FILE_PATH=$(echo $FILE | sed "s:$SRC_PATH:$DEST_PATH:" | sed "s:${MOD_SRC}:${MOD_DEST}:g")
+  SRC_REL_FILE_PATH=$(echo ${FILE_PATH} | sed "s@${SRC_PATH}@@")
+  INCLUDED=$(filterSources "$SRC_REL_FILE_PATH")
+  [[ "$INCLUDED" = "false" ]] &&  continue
 
-  sedTmp=$(mktemp)
-  cat $FILE >$sedTmp
+  DEST_REL_FILE_PATH=$(echo ${SRC_REL_FILE_PATH} | sed "s:${MOD_SRC}:${MOD_DEST}:g")
+  DEST_FILE_PATH="${DEST_PATH}${DEST_REL_FILE_PATH}"
 
-  for SUBSTITUTION in $SUBSTITUTIONS; do
-    FROM=$(echo $SUBSTITUTION | cut -d: -f1)
-    TO=$(echo $SUBSTITUTION | cut -d: -f2)
-    sed -i "s:${FROM}:${TO}:g" $sedTmp
+  fileContentTmpFile=$(mktemp)
+  cat ${FILE_PATH} >${fileContentTmpFile}
+
+  for SUBSTITUTION in ${SUBSTITUTIONS}; do
+    FROM=$(echo ${SUBSTITUTION} | cut -d: -f1)
+    TO=$(echo ${SUBSTITUTION} | cut -d: -f2)
+    sed -i "s:${FROM}:${TO}:g" ${fileContentTmpFile}
   done
-  sed -i "s:${MOD_SRC}:${MOD_DEST}:g" $sedTmp
+  sed -i "s:${MOD_SRC}:${MOD_DEST}:g" ${fileContentTmpFile}
 
   echo "write into $DEST_FILE_PATH"
-  if [ "$DRY_RUN" = "false" ]; then
-    cat $sedTmp >$DEST_FILE_PATH
+  if [[ "$DRY_RUN" = "false" ]]; then
+    cat ${fileContentTmpFile} >${DEST_FILE_PATH}
   fi
 
-  rm "$sedTmp"
-done <"$tmp"
-rm "$tmp"
+  rm "$fileContentTmpFile"
+done <"$pathListTmpFile"
+rm "$pathListTmpFile"
 
 
 echo

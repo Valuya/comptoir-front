@@ -1,16 +1,16 @@
 <cp-shell-content-page>
   <ng-template cpContentBody>
 
-    <p-tabMenu [model]="openSalesMenuModel$ | async">
-
-    </p-tabMenu>
-
     <div class="comptoir-sale">
       <header>
+        <p-tabMenu [model]="openSalesMenuModel$ | async">
+        </p-tabMenu>
+
         <cp-active-sale-header [fillRoute]="isFillRoute$ | async"
                                [payRoute]="isPayRoute$ | async"
         ></cp-active-sale-header>
       </header>
+
       <div class="content">
         <router-outlet></router-outlet>
       </div>
