@@ -1,8 +1,30 @@
-<div class="customer-select">
+<div class="locale-select">
   <p-autoComplete [ngModel]="valueSource$ | async"
                   (ngModelChange)="fireChanges($event)"
                   [suggestions]="suggestions$ | async"
                   [dropdown]="true"
                   (completeMethod)="onSearchQuery($event)"
-  ></p-autoComplete>
+                  hidden
+  >
+    <ng-template pTemplate="item" let-item>
+      <cp-locale [locale]="item"
+                 [showFlag]="true" [showCode]="true"
+      ></cp-locale>
+    </ng-template>
+  </p-autoComplete>
+  <div class="locale-icon-select">
+    <div *ngFor="let locale of (supportedLocales$ | async)"
+         [class.selected]="locale === (valueSource$ | async)"
+         class="locale-icon"
+         (click)="fireChanges(locale)"
+    >
+      <cp-shell-inplace-edit [forceHoverEffect]="true">
+        <ng-template cpInplaceOutput>
+          <cp-locale [locale]="locale"
+                     [showFlag]="showFlag" [showCode]="showCode"
+          ></cp-locale>
+        </ng-template>
+      </cp-shell-inplace-edit>
+    </div>
+  </div>
 </div>

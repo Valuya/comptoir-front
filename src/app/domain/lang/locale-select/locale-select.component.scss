@@ -1,0 +1,15 @@
+.locale-icon-select {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+
+  .locale-icon {
+    flex: 0 0 1em;
+    border: 2px solid transparent;
+
+    &.selected {
+      border: 2px solid red;
+    }
+  }
+}

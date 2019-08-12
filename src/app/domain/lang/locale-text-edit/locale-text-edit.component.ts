@@ -5,7 +5,7 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {LocalizedEditDirective} from './localized-edit.directive';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsLocaleText} from '../locale-text/ws-locale-text';
-import {distinctUntilChanged} from 'rxjs/operators';
+import {distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
 
 @Component({
   selector: 'cp-locale-text-edit',
@@ -54,11 +54,13 @@ export class LocaleTextEditComponent implements OnInit, OnDestroy, ControlValueA
   }
 
   ngOnInit() {
-    this.editLocale$ = this.editService != null ? this.editService.editingLocale$ : this.localeService.viewLocale$;
+    this.editLocale$ = this.editService != null ? this.editService.getEditingLocale$() : this.localeService.viewLocale$;
     this.subscription = new Subscription();
 
-    const editsSubscription = combineLatest(this.editingTextValue$, this.editLocale$)
-      .pipe(distinctUntilChanged())
+    const editsSubscription = this.editingTextValue$.pipe(
+      distinctUntilChanged(),
+      withLatestFrom(this.editLocale$)
+    )
       .subscribe(results => this.updateLocalizedText(results[0], results[1]));
     this.subscription.add(editsSubscription);
 
@@ -100,6 +102,10 @@ export class LocaleTextEditComponent implements OnInit, OnDestroy, ControlValueA
     }
   }
 
+  onEditLocaleChange(locale: string) {
+    this.editService.setEditingLocale(locale);
+  }
+
   private updateLocalizedText(textValue: string, localeValue: string) {
     if (localeValue == null) {
       return;
@@ -139,4 +145,5 @@ export class LocaleTextEditComponent implements OnInit, OnDestroy, ControlValueA
       this.editingTextValue$.next(localeText.text);
     }
   }
+
 }
