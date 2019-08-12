@@ -6,7 +6,7 @@
                   [pagination]="stockVariantTableHelper.pagination$ | async"
                   (paginationChange)="stockVariantTableHelper.setPagination($event)"
                   [(selection)]="selectedstockVariant"
-                  (rowSelect)="onRowSelect($event)"
+                  (rowClick)="onRowSelect($event)"
   >
     <ng-template cpShellColumn let-row="row" let-column="column">
       <cp-stock-variant-column [column]="column"

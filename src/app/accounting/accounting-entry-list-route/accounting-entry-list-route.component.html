@@ -8,7 +8,7 @@
                     (paginationChange)="accountingEntrysTableHelper.setPagination($event)"
                     [selection]="selectedAccountingEntrys$ | async"
                     (selectionChange)="onSelectionChange$($event)"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpFilterContent>
         <cp-accounting-entry-filter [ngModel]="accountingEntrysTableHelper.filter$ | async"

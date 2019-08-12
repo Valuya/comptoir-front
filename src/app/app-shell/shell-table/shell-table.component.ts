@@ -32,7 +32,7 @@ export class ShellTableComponent implements OnInit {
   @Output()
   selectionChange = new EventEmitter<any[]>();
   @Output()
-  rowSelect = new EventEmitter<any>();
+  rowClick = new EventEmitter<any>();
 
   @ContentChild(ShellColumnDirective, {static: false, read: TemplateRef})
   columnTemplate: TemplateRef<any>;
@@ -48,7 +48,11 @@ export class ShellTableComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-    this.rowSelect.next(event.data);
+    this.rowClick.next(event.data);
+  }
+
+  onRowClick(row: any) {
+    this.rowClick.next(row);
   }
 
   onLazyLoad(event: LazyLoadEvent) {
@@ -64,6 +68,7 @@ export class ShellTableComponent implements OnInit {
   stopEvent(event: Event) {
     event.stopImmediatePropagation();
     event.preventDefault();
+    console.log('stopped ' + event);
     return false;
   }
 

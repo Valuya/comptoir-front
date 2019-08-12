@@ -7,7 +7,7 @@
                     [pagination]="employeesTableHelper.pagination$ | async"
                     (paginationChange)="employeesTableHelper.setPagination($event)"
                     [(selection)]="selectedEmployees"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-employee-column [column]="column"

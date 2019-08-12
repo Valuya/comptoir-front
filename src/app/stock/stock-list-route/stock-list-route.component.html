@@ -7,7 +7,7 @@
                     [pagination]="stocksTableHelper.pagination$ | async"
                     (paginationChange)="stocksTableHelper.setPagination($event)"
                     [(selection)]="selectedStocks"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-stock-column [column]="column"

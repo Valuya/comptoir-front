@@ -7,7 +7,7 @@
                     [pagination]="invoicesTableHelper.pagination$ | async"
                     (paginationChange)="invoicesTableHelper.setPagination($event)"
                     [(selection)]="selectedInvoices"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-invoice-column [column]="column"

@@ -40,11 +40,11 @@ export class AccountTypeSelectComponent implements OnInit, ControlValueAccessor 
   }
 
   ngOnInit() {
+    this.options = this.createSelectItems();
     this.valueItem$ = this.valueSource$.pipe(
       map(type => this.findSelectItem(type)),
       publishReplay(1), refCount()
     );
-    this.options = this.createSelectItems();
   }
 
   registerOnChange(fn: any): void {

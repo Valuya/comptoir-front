@@ -6,7 +6,7 @@
                   [pagination]="saleVariantTableHelper.pagination$ | async"
                   (paginationChange)="saleVariantTableHelper.setPagination($event)"
                   [(selection)]="selectedsaleVariant"
-                  (rowSelect)="onRowSelect($event)"
+                  (rowClick)="onRowSelect($event)"
   >
     <ng-template cpShellColumn let-row="row" let-column="column">
       <cp-sale-variant-column [column]="column"

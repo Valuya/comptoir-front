@@ -7,7 +7,7 @@
                     [pagination]="itemTableHelper.pagination$ | async"
                     (paginationChange)="itemTableHelper.setPagination($event)"
                     [(selection)]="selecteditem"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-item-column [column]="column"

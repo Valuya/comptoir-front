@@ -8,7 +8,7 @@
                     (paginationChange)="salesTableHelper.setPagination($event)"
                     [selection]="selectedSales$ | async"
                     (selectionChange)="onSelectionChange$($event)"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpFilterContent>
         <cp-sale-filter [ngModel]="salesTableHelper.filter$ | async"
