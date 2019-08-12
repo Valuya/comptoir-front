@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {WsBalance, WsCompanyRef} from '@valuya/comptoir-ws-api';
-import {Observable, of} from 'rxjs';
-import {ApiService} from '../api.service';
-import {AuthService} from '../auth.service';
+import {Observable} from 'rxjs';
+import {AuthService} from '../../auth.service';
 import {filter, map, take} from 'rxjs/operators';
-import {BalanceService} from '../domain/accounting/balance.service';
+import {BalanceService} from '../../domain/accounting/balance.service';
 
 @Injectable({
   providedIn: 'root'

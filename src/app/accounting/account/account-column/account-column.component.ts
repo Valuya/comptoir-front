@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {WsAccount} from '@valuya/comptoir-ws-api';
-import {TableColumn} from '../../util/table-column';
+import {TableColumn} from '../../../util/table-column';
 import {AccountColumn} from './account-columns';
 
 @Component({

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsAccount} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
+import {ValidationResult} from '../../../app-shell/shell-details-form/validation-result';
 
 @Component({
   selector: 'cp-account-form',

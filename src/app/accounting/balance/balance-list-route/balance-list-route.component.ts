@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
-import {Pagination} from '../../util/pagination';
-import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
+import {ShellTableHelper} from '../../../app-shell/shell-table/shell-table-helper';
+import {Pagination} from '../../../util/pagination';
+import {SearchResultFactory} from '../../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
-import {TableColumn} from '../../util/table-column';
+import {TableColumn} from '../../../util/table-column';
 import {ACCOUNT_COLUMN, BALANCE_COLUMN, BalanceColumn, CLOSED_COLUMN, DATETIME_COLUMN, ID_COLUMN} from '../balance-column/balance-columns';
-import {SearchResult} from '../../app-shell/shell-table/search-result';
+import {SearchResult} from '../../../app-shell/shell-table/search-result';
 import {WsBalance, WsBalanceSearch, WsBalanceSearchResult, WsEmployee} from '@valuya/comptoir-ws-api';
-import {AuthService} from '../../auth.service';
+import {AuthService} from '../../../auth.service';
 import {Router} from '@angular/router';
-import {BalanceService} from '../../domain/accounting/balance.service';
+import {BalanceService} from '../../../domain/accounting/balance.service';
 
 @Component({
   selector: 'cp-balances-list-route',
@@ -74,6 +74,6 @@ export class BalanceListRouteComponent implements OnInit {
   }
 
   onRowSelect(balance: WsBalance) {
-    this.router.navigate(['/balance', balance.id]);
+    this.router.navigate(['/accounting/balance', balance.id]);
   }
 }

@@ -1,4 +1,4 @@
-import {TableColumn} from '../../util/table-column';
+import {TableColumn} from '../../../util/table-column';
 
 export const enum BalanceColumn {
   ID = 'ID',

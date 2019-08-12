@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {WsAccount, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
-import {AuthService} from '../auth.service';
+import {AuthService} from '../../auth.service';
 import {filter, map, take} from 'rxjs/operators';
-import {AccountService} from '../domain/accounting/account.service';
+import {AccountService} from '../../domain/accounting/account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,7 @@ export class AccountIdResolverService implements Resolve<WsAccount> {
     return this.authService.getLoggedEmployeeCompanyRef$().pipe(
       filter(ref => ref != null),
       take(1),
-      map(companyRef => this.createNew(companyRef))
+      map(companyRef => this.createNew(companyRef as WsCompanyRef))
     );
   }
 

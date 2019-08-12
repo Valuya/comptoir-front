@@ -1,10 +1,9 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {CustomerListRouteComponent} from './customer-list-route/customer-list-route.component';
 import {CustomerDetailsRouteComponent} from './customer-details-route/customer-details-route.component';
 import {CustomerIdResolverService} from './customer-id-resolver.service';
 import {CreateNewCustomerQuickActionItem, CustomerListMenuItem, ResolvedCustomerDetailsMenuItem} from './customer-menu';
-import {CreateNewBalanceQuickActionItem} from '../balance/balance-menu';
 import {AppRoute} from '../util/app-route-data';
 
 

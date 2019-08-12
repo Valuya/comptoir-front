@@ -4,7 +4,7 @@ import {AccountListRouteComponent} from './account-list-route/account-list-route
 import {AccountDetailsRouteComponent} from './account-details-route/account-details-route.component';
 import {AccountIdResolverService} from './account-id-resolver.service';
 import {AccountListMenuItem, CreateNewAccountQuickActionItem, ResolvedAccountDetailsMenuItem} from './account-menu';
-import {AppRoute} from '../util/app-route-data';
+import {AppRoute} from '../../util/app-route-data';
 
 
 export const ACCOUNT_ROUTES: AppRoute[] = [

@@ -10,7 +10,7 @@ import {SearchResult} from '../../app-shell/shell-table/search-result';
 import {LazyLoadEvent, SelectItem} from 'primeng/api';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
 import {AccountService} from '../../domain/accounting/account.service';
-import {NAME_COLUMN} from '../../account/account-column/account-columns';
+import {NAME_COLUMN} from '../../accounting/account/account-column/account-columns';
 
 @Component({
   selector: 'cp-account-select-list',
@@ -21,6 +21,7 @@ export class AccountSelectListComponent implements OnInit, OnDestroy {
 
   @Input()
   viewLayout: 'list' | 'grid' = 'list';
+
   @Input()
   set posRef(value: WsPosRef | null) {
     this.posRefSource$.next(value);
@@ -79,14 +80,14 @@ export class AccountSelectListComponent implements OnInit, OnDestroy {
     this.accountSelect.emit(ref);
   }
 
-  private createSearchFilter(companyRef: WsCompanyRef | null, posRef?: WsPosRef | null): WsAccountSearch {
+  private createSearchFilter(companyRef: WsCompanyRef | null, posRefValue?: WsPosRef | null): WsAccountSearch {
     if (companyRef == null) {
       return null;
     }
     return {
       companyRef: companyRef as object,
       accountType: WsAccountSearchAccountTypeEnum.PAYMENT,
-      posRef: posRef,
+      posRef: posRefValue,
     };
   }
 

@@ -2,7 +2,6 @@ import {MenuItem} from 'primeng/api';
 import {SaleMenuItems} from './sale/sale-menu';
 import {PosMenuItems} from './pos/pos-menu';
 import {ItemMenuItems} from './item/item-menu';
-import {BalanceMenuItems} from './balance/balance-menu';
 import {CustomerMenuItems} from './customer/customer-menu';
 import {EmployeeMenuItems} from './employee/employee-menu';
 import {InvoiceMenuItems} from './invoice/invoice-menu';
@@ -12,7 +11,6 @@ import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {RouteUtils} from './util/route-utils';
 import {ResolvedRouteItem} from './util/resolved-route-item';
 import {ComptoirMenuItems} from './comptoir/comptoir-menu';
-import {AccountMenuItems} from './account/account-menu';
 import {CompanyMenuItems} from './company/company-menu';
 import {AccountingMenuItems} from './accounting/accounting-menu';
 
@@ -50,20 +48,6 @@ export const AppMenu: { [key: string]: MenuItem | ResolvedRouteItem<any> } = {
     icon: 'fa fa-calculator',
     routerLink: ['/accounting'],
     items: AccountingMenuItems,
-  },
-  account: {
-    label: 'Account',
-    title: 'Account',
-    icon: 'fa fa-pencil-square-o',
-    routerLink: ['/account'],
-    items: AccountMenuItems,
-  },
-  balance: {
-    label: 'Balance',
-    title: 'Balance',
-    icon: 'fa fa-balance-scale',
-    routerLink: ['/balance'],
-    items: BalanceMenuItems,
   },
   comptoir: {
     label: 'Comptoir',

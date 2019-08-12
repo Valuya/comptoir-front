@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {BalanceListRouteComponent} from './balance-list-route/balance-list-route.component';
 import {BalanceDetailsRouteComponent} from './balance-details-route/balance-details-route.component';
 import {BalanceIdResolverService} from './balance-id-resolver.service';
 import {BalanceListMenuItem, CreateNewBalanceQuickActionItem, ResolvedBalanceDetailsMenuItem} from './balance-menu';
-import {AppRoute} from '../util/app-route-data';
+import {AppRoute} from '../../util/app-route-data';
 
 
 export const BALANCE_ROUTES: AppRoute[] = [

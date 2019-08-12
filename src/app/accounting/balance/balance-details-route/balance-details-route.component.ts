@@ -1,17 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
+import {ShellFormHelper} from '../../../app-shell/shell-details-form/shell-form-helper';
 import {WsAccountRef, WsAccountSearch, WsBalance, WsBalanceRef, WsCompanyRef, WsMoneyPile} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, combineLatest, concat, forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {catchError, debounceTime, map, mergeMap, publishReplay, refCount, switchMap, take, toArray} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
-import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
-import {NavigationService} from '../../navigation.service';
-import {BalanceService} from '../../domain/accounting/balance.service';
-import {PaginationUtils} from '../../util/pagination-utils';
-import {AuthService} from '../../auth.service';
-import {AccountService} from '../../domain/accounting/account.service';
+import {ValidationResult} from '../../../app-shell/shell-details-form/validation-result';
+import {ValidationResultFactory} from '../../../app-shell/shell-details-form/validation-result.factory';
+import {NavigationService} from '../../../navigation.service';
+import {BalanceService} from '../../../domain/accounting/balance.service';
+import {PaginationUtils} from '../../../util/pagination-utils';
+import {AuthService} from '../../../auth.service';
+import {AccountService} from '../../../domain/accounting/account.service';
 import {WsAttributeDefinitionSearchResultList} from '@valuya/comptoir-ws-api/models/WsAttributeDefinitionSearchResultList';
 
 @Component({

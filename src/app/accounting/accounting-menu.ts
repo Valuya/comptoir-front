@@ -1,4 +1,7 @@
-export const AccountingEntriesItem = {
+import {BalancesMenuItem} from './balance/balance-menu';
+import {AccountsMenuitem} from './account/account-menu';
+
+export const AccountingEntriesMenuItem = {
   label: 'Entries',
   title: 'Accounting entries',
   icon: 'fa fa-list',
@@ -12,5 +15,7 @@ export const AccountingEntriesListItem = {
 };
 
 export const AccountingMenuItems = [
-  AccountingEntriesItem,
+  AccountingEntriesMenuItem,
+  BalancesMenuItem,
+  AccountsMenuitem
 ];

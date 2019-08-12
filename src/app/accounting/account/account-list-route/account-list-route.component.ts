@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
-import {Pagination} from '../../util/pagination';
-import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
+import {ShellTableHelper} from '../../../app-shell/shell-table/shell-table-helper';
+import {Pagination} from '../../../util/pagination';
+import {SearchResultFactory} from '../../../app-shell/shell-table/search-result.factory';
 import {concat, Observable, of} from 'rxjs';
 import {filter, map, mergeMap, take, toArray} from 'rxjs/operators';
-import {TableColumn} from '../../util/table-column';
-import {SearchResult} from '../../app-shell/shell-table/search-result';
+import {TableColumn} from '../../../util/table-column';
+import {SearchResult} from '../../../app-shell/shell-table/search-result';
 import {WsAccount, WsAccountSearch, WsAccountSearchResult, WsEmployee} from '@valuya/comptoir-ws-api';
-import {AuthService} from '../../auth.service';
+import {AuthService} from '../../../auth.service';
 import {Router} from '@angular/router';
-import {AccountService} from '../../domain/accounting/account.service';
+import {AccountService} from '../../../domain/accounting/account.service';
 import {
   ACCOUNT_TYPE_COLUMN,
   AccountColumn,
@@ -82,6 +82,6 @@ export class AccountListRouteComponent implements OnInit {
   }
 
   onRowSelect(account: WsAccount) {
-    this.router.navigate(['/account', account.id]);
+    this.router.navigate(['/accounting/account', account.id]);
   }
 }

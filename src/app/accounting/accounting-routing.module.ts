@@ -2,8 +2,11 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AppRoute, createAppRouteData} from '../util/app-route-data';
 import {AccountingEntryListRouteComponent} from './accounting-entry-list-route/accounting-entry-list-route.component';
-import {AccountingEntriesItem, AccountingEntriesListItem} from './accounting-menu';
+import {AccountingEntriesMenuItem, AccountingEntriesListItem} from './accounting-menu';
 import {AccountingEntrySearchFilterResolverService} from './accounting-entry-search-filter-resolver.service';
+import {AppMenu} from '../app-menu';
+import {BalancesMenuItem} from './balance/balance-menu';
+import {AccountsMenuitem} from './account/account-menu';
 
 
 const ACCOUNTING_ENTRIES_ROUTES: AppRoute[] = [
@@ -31,9 +34,19 @@ const ACCOUNTING_ROUTES: Routes = [
   },
   {
     path: 'entry',
-    data: createAppRouteData(AccountingEntriesItem),
+    data: createAppRouteData(AccountingEntriesMenuItem),
     children: ACCOUNTING_ENTRIES_ROUTES
-  }
+  },
+  {
+    path: 'balance',
+    loadChildren: './balance/balance.module#BalanceModule',
+    data: createAppRouteData(BalancesMenuItem)
+  },
+  {
+    path: 'account',
+    loadChildren: './account/account.module#AccountModule',
+    data: createAppRouteData(AccountsMenuitem)
+  },
 ];
 
 @NgModule({

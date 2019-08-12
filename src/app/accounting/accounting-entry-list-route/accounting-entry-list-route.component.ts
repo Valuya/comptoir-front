@@ -73,7 +73,7 @@ export class AccountingEntryListRouteComponent implements OnInit, OnDestroy {
 
 
   onRowSelect(accountingEntry: WsAccountingEntry) {
-    this.router.navigate(['/accountingEntry', accountingEntry.id]);
+    this.router.navigate(['/accounting/entry/', accountingEntry.id]);
   }
 
   onSelectionChange$(accountingEntrys: WsAccountingEntry[]) {

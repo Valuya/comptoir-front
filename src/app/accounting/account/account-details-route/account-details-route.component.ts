@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
+import {ShellFormHelper} from '../../../app-shell/shell-details-form/shell-form-helper';
 import {WsAccount, WsAccountRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {map, mergeMap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
-import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
-import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
-import {NavigationService} from '../../navigation.service';
-import {AccountService} from '../../domain/accounting/account.service';
+import {ValidationResult} from '../../../app-shell/shell-details-form/validation-result';
+import {ValidationResultFactory} from '../../../app-shell/shell-details-form/validation-result.factory';
+import {NavigationService} from '../../../navigation.service';
+import {AccountService} from '../../../domain/accounting/account.service';
 
 @Component({
   selector: 'cp-accounts-details-route',
