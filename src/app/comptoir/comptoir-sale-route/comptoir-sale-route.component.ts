@@ -114,6 +114,9 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
   }
 
   private findSelectedSale(menu: MenuItem[], sale: WsSale) {
+    if (menu == null || sale == null) {
+      return null;
+    }
     return menu.find((i: MenuItem & { saleRef?: WsSaleRef }) => i.saleRef != null && i.saleRef.id === sale.id);
   }
 
