@@ -4,6 +4,14 @@ import {DateRange} from '../domain/util/date-range-select/date-range';
 
 export class DateUtils {
 
+  static formatDateString(date: Date): string {
+    return moment(date).format('YYYY-MM-DD');
+  }
+
+  static parseDateString(dateString: string): Date {
+    return moment(dateString, 'YYYY-MM-DD').toDate();
+  }
+
   static getDateRangeSelectItem(range: DateRange): SelectItem {
     if (range == null) {
       return null;

@@ -3,6 +3,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsSaleSearch} from '@valuya/comptoir-ws-api';
 import {DateRange} from '../../domain/util/date-range-select/date-range';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {MenuItem} from 'primeng/api';
+import {map, publishReplay, refCount} from 'rxjs/operators';
 
 @Component({
   selector: 'cp-sale-filter',
@@ -24,6 +26,9 @@ export class SaleFilterComponent implements OnInit, ControlValueAccessor {
   valueSource$ = new BehaviorSubject<WsSaleSearch | null>(null);
   dateRange$: Observable<DateRange | null>;
 
+  openTabsMenuModel: MenuItem[];
+  activeOpenTabItem$: Observable<MenuItem>;
+
   private onChange: (value: WsSaleSearch) => void;
   private onTouched: () => void;
 
@@ -31,6 +36,39 @@ export class SaleFilterComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit() {
+    const openMenuItem = {
+      label: 'Open sales',
+      command: () => this.updateValue({
+        closed: false
+      })
+    };
+    const closedMenuItem = {
+      label: 'Closed sales',
+      command: () => this.updateValue({
+        closed: true
+      })
+    };
+    this.openTabsMenuModel = [
+      openMenuItem,
+      closedMenuItem
+    ];
+    this.activeOpenTabItem$ = this.valueSource$.pipe(
+      map(searchFilter => searchFilter.closed),
+      map(closedvalue => {
+        if (closedvalue === true) {
+          return closedMenuItem;
+        } else if (closedvalue === false) {
+          return openMenuItem;
+        } else {
+          return null;
+        }
+      }),
+      publishReplay(1), refCount()
+    );
+    this.dateRange$ = this.valueSource$.pipe(
+      map(searchFilter => this.getDateRange(searchFilter)),
+      publishReplay(1), refCount()
+    );
   }
 
   registerOnChange(fn: any): void {
@@ -64,7 +102,10 @@ export class SaleFilterComponent implements OnInit, ControlValueAccessor {
 
   updateDateRange(range: DateRange | null) {
     if (range == null) {
-      this.updateValue(null);
+      this.updateValue({
+        fromDateTime: null,
+        toDateTime: null
+      });
     } else {
       this.updateValue({
         fromDateTime: range.from,

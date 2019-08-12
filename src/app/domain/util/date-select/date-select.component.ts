@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map, publishReplay, refCount} from 'rxjs/operators';
 import {LocaleService} from '../../../locale.service';
 import * as moment from 'moment';
+import {DateUtils} from '../../../util/date-utils';
 
 @Component({
   selector: 'cp-date-select',
@@ -43,7 +44,7 @@ export class DateSelectComponent implements OnInit, ControlValueAccessor {
       publishReplay(1), refCount()
     );
     this.stringValue$ = this.dateValue$.pipe(
-      map(date => moment(date).format('YYYY-MM-DD')),
+      map(date => DateUtils.formatDateString(date)),
       publishReplay(1), refCount()
     );
 

@@ -89,4 +89,5 @@ export class RouteUtils {
       .reduce((cur, next) => RouteUtils.reduceRoutePathFromRoot(cur, next), []);
     return routePath;
   }
+
 }
