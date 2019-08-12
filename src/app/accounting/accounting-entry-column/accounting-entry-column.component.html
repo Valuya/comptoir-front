@@ -1,0 +1,45 @@
+<div *ngIf="row != null && column != null"
+     [ngSwitch]="column.value"
+     [ngClass]="column.value"
+>
+  <ng-container *ngSwitchCase="'ID'">
+    {{ row.id | json }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'ACCOUNT'">
+    <cp-account [ref]="row.accountRef" [showIcon]="true" [showName]="true"></cp-account>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'TRANSACTION'">
+    {{ row.accountingTransactionRef | json }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'AMOUNT'">
+    {{ row.amount | currency }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'CUSTOMER'">
+    <cp-customer [ref]="row.customerRef"></cp-customer>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'DATETIME'">
+    {{ row.dateTime | date:'short' }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'DESCRIPTION'">
+    <cp-locale-text [localeTexts]="row.description"></cp-locale-text>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'VAT_ENTRY'">
+    {{ row.vatAccountingEntryRef | json }}
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'VAT_RATE'">
+    {{ row.vatRate | percent }}
+  </ng-container>
+
+
+  <ng-container *ngSwitchDefault>
+    default
+  </ng-container>
+</div>

@@ -60,7 +60,6 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 
     this.openSales$ = this.saleService.getOpenSales$().pipe(
       map(r => r.list),
-      tap(e => console.log(e)),
       publishReplay(1), refCount()
     );
     this.openSalesMenuModel$ = this.openSales$.pipe(

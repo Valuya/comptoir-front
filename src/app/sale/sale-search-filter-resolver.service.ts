@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {WsSaleSearch} from '@valuya/comptoir-ws-api';
+import {WsCompanyRef, WsSaleSearch} from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
 import {SaleSearchFilterUtils} from './sale-search-filter-utils';
 import {AuthService} from '../auth.service';
@@ -24,11 +24,13 @@ export class SaleSearchFilterResolverService implements Resolve<WsSaleSearch> {
     }
 
     return this.authService.getNextNonNullLoggedEmployeeCompanyRef$().pipe(
-      map(companyref => {
-        return Object.assign({}, wsSaleSearch, {
-          companyRef: companyref
-        }) as WsSaleSearch;
-      })
+      map(companyRef => this.setFilterCompanyRef(wsSaleSearch, companyRef))
     );
+  }
+
+  private setFilterCompanyRef(searchFilter: WsSaleSearch, companyRefValue: WsCompanyRef) {
+    return Object.assign({}, searchFilter, {
+      companyRef: companyRefValue
+    }) as WsSaleSearch;
   }
 }

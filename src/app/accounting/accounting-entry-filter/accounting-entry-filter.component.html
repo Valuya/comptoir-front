@@ -1,0 +1,36 @@
+<div class="accounting-entry-filter ui-widget" *ngIf="(valueSource$ | async) != null">
+  <div class="tabs">
+  </div>
+
+  <div class="controls filter-form">
+
+    <div class="control">
+      <label>Account type</label>
+      <div>
+        <cp-account-type-select [ngModel]="(accountSearch$ | async)?.accountType"
+                                (ngModelChange)="updateAccountSearch({accountType: $event})"
+                                [disabled]="disabled"
+        ></cp-account-type-select>
+      </div>
+    </div>
+    <div class="control" *ngIf="(accountSearch$ | async) != null">
+      <div>
+        <p-triStateCheckbox [ngModel]="(accountSearch$ | async).cash"
+                            (ngModelChange)="updateAccountSearch({cash: $event})"
+                            [disabled]="disabled"
+                            label="Cash accounts"
+        ></p-triStateCheckbox>
+      </div>
+    </div>
+
+    <div class="control">
+      <cp-date-range-select [ngModel]="dateRange$ | async"
+                            (ngModelChange)="updateDateRange($event)"
+                            [disabled]="disabled"
+                            [showSuggestions]="true"
+                            [showFreeRange]="true"
+      ></cp-date-range-select>
+    </div>
+  </div>
+
+</div>

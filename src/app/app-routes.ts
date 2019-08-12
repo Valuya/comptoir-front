@@ -26,15 +26,9 @@ export const APP_MODULES_ROUTES: Route[] = [
     data: createAppRouteData(AppMenu.home),
   },
   {
-    path: 'account',
-    loadChildren: './account/account.module#AccountModule',
-    data: createAppRouteData(AppMenu.account)
-  },
-  {
-    path: 'balance',
-    loadChildren: './balance/balance.module#BalanceModule',
-    data: createAppRouteData(AppMenu.balance)
-
+    path: 'accounting',
+    loadChildren: './accounting/accounting.module#AccountingModule',
+    data: createAppRouteData(AppMenu.accounting)
   },
   {
     path: 'company',
