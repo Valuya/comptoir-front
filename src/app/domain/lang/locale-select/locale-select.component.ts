@@ -24,6 +24,11 @@ export class LocaleSelectComponent implements OnInit, ControlValueAccessor {
   @Input()
   invalid: boolean;
 
+  @Input()
+  showFlag = true;
+  @Input()
+  showCode: boolean;
+
   valueSource$ = new BehaviorSubject<string | null>(null);
 
   private onChange: (value: string) => void;
@@ -32,6 +37,8 @@ export class LocaleSelectComponent implements OnInit, ControlValueAccessor {
   suggestionQuerySource$ = new Subject<string>();
   suggestions$: Observable<string[]>;
   loadingSuggestions$ = new BehaviorSubject<boolean>(false);
+
+  supportedLocales$: Observable<string[]>;
 
   constructor(private localeService: LocaleService,
               private authService: AuthService) {
@@ -42,6 +49,7 @@ export class LocaleSelectComponent implements OnInit, ControlValueAccessor {
       switchMap(searchQuery => this.searchSuggestions$(searchQuery)),
       publishReplay(1), refCount(),
     );
+    this.supportedLocales$ = this.localeService.getSupportedLocales$();
   }
 
   registerOnChange(fn: any): void {
@@ -61,6 +69,7 @@ export class LocaleSelectComponent implements OnInit, ControlValueAccessor {
   }
 
   fireChanges(newValue: string) {
+    this.valueSource$.next(newValue);
     if (this.onTouched) {
       this.onTouched();
     }

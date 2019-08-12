@@ -27,6 +27,7 @@
     "@ngrx/store": "^8.1.0",
     "@valuya/comptoir-ws-api": "1.0.0-alpha.1-SNAPSHOT.201907281017",
     "chart.js": "^2.8.0",
+    "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
     "moment": "^2.24.0",
     "primeicons": "^1.0.0",
