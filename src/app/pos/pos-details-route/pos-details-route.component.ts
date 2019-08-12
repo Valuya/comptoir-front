@@ -59,7 +59,7 @@ export class PosDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Pos ${updatedPos.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsPos): Observable<ValidationResult<WsPos>> {

@@ -58,7 +58,7 @@ export class SaleDetailsFormRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Sale ${updatedSale.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsSale): Observable<ValidationResult<WsSale>> {

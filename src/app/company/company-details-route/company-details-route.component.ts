@@ -58,7 +58,7 @@ export class CompanyDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Company ${updatedCompany.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsCompany): Observable<ValidationResult<WsCompany>> {

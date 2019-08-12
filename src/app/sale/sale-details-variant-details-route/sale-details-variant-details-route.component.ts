@@ -64,7 +64,7 @@ export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestro
       severity: 'success',
       summary: `SaleVariant ${updatedSaleVariant.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItemVariantSale): Observable<ValidationResult<WsItemVariantSale>> {

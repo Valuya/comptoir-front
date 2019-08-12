@@ -133,7 +133,7 @@ export class BalanceDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Balance ${updatedBalance.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsBalance): Observable<ValidationResult<WsBalance>> {

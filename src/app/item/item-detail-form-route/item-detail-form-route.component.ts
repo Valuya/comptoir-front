@@ -60,7 +60,7 @@ export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Item ${updatedItem.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItem): Observable<ValidationResult<WsItem>> {

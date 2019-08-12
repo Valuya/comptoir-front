@@ -88,7 +88,7 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
       severity: 'success',
       summary: `ItemVariant ${updatedItemVariant.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItemVariant): Observable<ValidationResult<WsItemVariant>> {

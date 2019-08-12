@@ -59,7 +59,7 @@ export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Invoice ${updatedInvoice.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsInvoice): Observable<ValidationResult<WsInvoice>> {

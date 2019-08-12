@@ -53,7 +53,7 @@ export class LoginRouteComponent implements OnInit {
   }
 
   private redirectOnLoggedIn() {
-    this.navigationService.navigateWithRedirectChek(['/']);
+    this.navigationService.navigateWithRedirectCheck(['/']);
   }
 
   private onLoginError(error: any) {

@@ -32,7 +32,7 @@ export class AuthService {
       this.loginService.testAuth(firstAuth)
         .subscribe(auth => {
           this.setAuth(auth);
-          this.navigationService.navigateWithRedirectChek(['/']);
+          this.navigationService.navigateWithRedirectCheck(['/']);
         });
     }
   }

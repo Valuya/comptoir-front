@@ -21,7 +21,7 @@ export class LogoutRouteComponent implements OnInit {
       severity: 'info',
       summary: 'Logged out'
     });
-    this.navigationService.navigateWithRedirectChek(['/login']);
+    this.navigationService.navigateWithRedirectCheck(['/login']);
   }
 
 }

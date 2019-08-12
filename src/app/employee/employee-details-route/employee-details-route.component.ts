@@ -58,7 +58,7 @@ export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Employee ${updatedEmployee.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsEmployee): Observable<ValidationResult<WsEmployee>> {

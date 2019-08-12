@@ -58,7 +58,7 @@ export class AccountDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Account ${updatedAccount.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsAccount): Observable<ValidationResult<WsAccount>> {

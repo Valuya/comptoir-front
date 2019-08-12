@@ -64,7 +64,7 @@ export class StockDetailsVariantDetailsRouteComponent implements OnInit, OnDestr
       severity: 'success',
       summary: `StockVariant ${updatedStockVariant.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItemVariantStock): Observable<ValidationResult<WsItemVariantStock>> {
