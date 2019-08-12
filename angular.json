@@ -39,6 +39,7 @@
               "node_modules/primeicons/primeicons.css",
               "node_modules/quill/dist/quill.core.css",
               "node_modules/quill/dist/quill.snow.css",
+              "node_modules/flag-icon-css/css/flag-icon.css",
               "src/styles.scss"
             ],
             "scripts": [

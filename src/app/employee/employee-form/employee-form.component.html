@@ -58,7 +58,6 @@
   </div>
 
 
-
   <div class="control">
     <label>Login</label>
     <cp-shell-inplace-edit name="login" #login
@@ -79,25 +78,28 @@
 
   </div>
 
-    <div class="control">
-      <label>Locale</label>
-      <cp-shell-inplace-edit name="locale" #locale
-                             [disabled]="disabled"
-                             [errors]="validationResults?.errors?.locale"
-                             [ngModel]="value.locale"
-                             (ngModelChange)="updateValue({locale: $event})"
-      >
-        <ng-template cpInplaceOutput let-invalid="invalid">
-          {{ value.locale }}
-        </ng-template>
-        <ng-template cpInplaceInput let-invalid="invalid">
-          <input type="text" pInputText [(ngModel)]="locale.editValue"
-                 autofocus
-                 [class.ui-state-error]="invalid">
-        </ng-template>
-      </cp-shell-inplace-edit>
+  <div class="control">
+    <label>Locale</label>
+    <cp-shell-inplace-edit name="locale" #locale
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.locale"
+                           [ngModel]="value.locale"
+                           (ngModelChange)="updateValue({locale: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <cp-locale [locale]="value.locale"
+                   [showFlag]="true" [showCode]="true"
+        ></cp-locale>
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-locale-select [ngModel]="locale.editValue"
+                          (ngModelChange)="locale.commitEdit($event)"
+                          [showFlag]="true" [showCode]="true"
+        ></cp-locale-select>
+      </ng-template>
+    </cp-shell-inplace-edit>
 
-    </div>
+  </div>
 
 
 </div>

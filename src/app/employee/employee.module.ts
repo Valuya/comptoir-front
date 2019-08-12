@@ -13,6 +13,8 @@ import {FormsModule} from '@angular/forms';
 import {ButtonModule, InputSwitchModule, InputTextModule} from 'primeng/primeng';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 import {AppShellModule} from '../app-shell/app-shell.module';
+import {LocaleSelectModule} from '../domain/lang/locale-select/locale-select.module';
+import {LocaleModule} from '../domain/lang/locale/locale.module';
 
 
 @NgModule({
@@ -29,6 +31,8 @@ import {AppShellModule} from '../app-shell/app-shell.module';
     ShellInplaceEditModule,
     ButtonModule,
     AppShellModule,
+    LocaleSelectModule,
+    LocaleModule,
   ]
 })
 export class EmployeeModule {

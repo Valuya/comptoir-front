@@ -3,6 +3,8 @@ import {CommonModule} from '@angular/common';
 import {LocaleSelectComponent} from './locale-select.component';
 import {FormsModule} from '@angular/forms';
 import {AutoCompleteModule} from 'primeng/primeng';
+import {LocaleModule} from '../locale/locale.module';
+import {ShellInplaceEditModule} from '../../../app-shell/shell-inplace-edit/shell-inplace-edit.module';
 
 
 @NgModule({
@@ -12,6 +14,8 @@ import {AutoCompleteModule} from 'primeng/primeng';
     CommonModule,
     FormsModule,
     AutoCompleteModule,
+    LocaleModule,
+    ShellInplaceEditModule,
   ],
 })
 export class LocaleSelectModule {

@@ -1,0 +1,9 @@
+<div class="locale">
+  <div class="flag" *ngIf="showFlag">
+    <span [ngClass]="flagCssClass$ | async"></span>
+  </div>
+  <div class="code" *ngIf="showCode">
+    {{ localeSource$ | async }}
+  </div>
+
+</div>

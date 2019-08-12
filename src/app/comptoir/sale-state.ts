@@ -6,4 +6,7 @@ export class SaleState {
   paymentItems: WsAccountingEntry[];
 
   totalPaid: number;
+
+  lastUpdatedVariantIndex: number;
+  lastUpdatedVariant: WsItemVariantSale;
 }
