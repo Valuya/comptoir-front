@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
-import {combineLatest, concat, Observable, of, Subscription} from 'rxjs';
-import {AuthService} from '../../auth.service';
+import {combineLatest, concat, Observable, of} from 'rxjs';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {filter, map, publishReplay, refCount, tap} from 'rxjs/operators';
+import {filter, map, publishReplay, refCount} from 'rxjs/operators';
 import {ComptoirService} from '../comptoir-service';
 import {MenuItem} from 'primeng/api';
 import {ComptoirNewSaleRouteItem} from '../comptoir-menu';
@@ -24,6 +23,7 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 
   openSales$: Observable<WsSaleRef[]>;
   openSalesMenuModel$: Observable<MenuItem[]>;
+  selectedSaleMenuItem$: Observable<MenuItem | null>;
 
   constructor(
     private saleService: ComptoirSaleService,
@@ -66,6 +66,10 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
       map(refs => this.createOpenSaleMenu(refs)),
       publishReplay(1), refCount()
     );
+    this.selectedSaleMenuItem$ = combineLatest(this.openSalesMenuModel$, this.sale$).pipe(
+      map(r => this.findSelectedSale(r[0], r[1])),
+      publishReplay(1), refCount()
+    );
   }
 
   ngOnDestroy(): void {
@@ -80,17 +84,37 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
     return ref.id == null ? 'New Sale' : `Sale #${ref.id}`;
   }
 
+
+  onCancelSaleClicked(saleRef: WsSaleRef, event: Event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    this.saleService.cancelSale$(saleRef).subscribe(() => {
+      const activeSale = this.saleService.getActiveSaleOptional();
+      if (activeSale != null && activeSale.id === saleRef.id) {
+        this.router.navigate(['../new/fill'], {
+          relativeTo: this.activatedRoute
+        });
+      }
+    });
+  }
+
   private createOpenSaleMenu(refs: WsSaleRef[]): MenuItem[] {
     const salesItems = refs.map(ref => {
       return {
         label: this.getSaleHeader(ref),
-        routerLink: ['/comptoir/sale', ref.id]
+        routerLink: ['/comptoir/sale', ref.id],
+        saleRef: ref,
       } as MenuItem;
     });
     return [
       ComptoirNewSaleRouteItem,
       ...salesItems
     ];
+  }
+
+  private findSelectedSale(menu: MenuItem[], sale: WsSale) {
+    return menu.find((i: MenuItem & { saleRef?: WsSaleRef }) => i.saleRef != null && i.saleRef.id === sale.id);
   }
 
 }

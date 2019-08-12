@@ -54,12 +54,6 @@
     ></button>
 
     <button type="button" pButton
-            label="Cancel"
-            icon="fa fa-times"
-            [hidden]="(saleRef$ | async)?.id == null || (sale$ | async)?.closed"
-            (click)="onCancelSaleClick()"
-    ></button>
-    <button type="button" pButton
             icon="fa fa-print"
             title="Print receipt"
             [hidden]="fillRoute"

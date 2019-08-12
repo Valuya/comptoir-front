@@ -83,14 +83,6 @@ export class ActiveSaleHeaderComponent implements OnInit {
       });
   }
 
-  onCancelSaleClick() {
-    this.saleService.cancelSale$().subscribe(() => {
-      this.router.navigate(['../new/fill'], {
-        relativeTo: this.activatedRoute
-      });
-    });
-  }
-
   onCloseConfirmRejected() {
     this.messageService.clear(this.CLOSE_SALE_CONFIRM_MESSAGE_KEY);
   }

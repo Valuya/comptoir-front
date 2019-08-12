@@ -3,7 +3,19 @@
 
     <div class="comptoir-sale">
       <header>
-        <p-tabMenu [model]="openSalesMenuModel$ | async">
+        <p-tabMenu [model]="openSalesMenuModel$ | async"
+                   [activeItem]="selectedSaleMenuItem$ | async"
+        >
+          <ng-template pTemplate="item" let-item let-i="index">
+            <div class="sale-tab">
+              <span>{{ item.label }}</span>
+              <span class="close-icon" *ngIf="item.saleRef != null"
+                    (click)="onCancelSaleClicked(item.saleRef, $event)"
+              >
+                <i class="fa fa-times"></i>
+              </span>
+            </div>
+          </ng-template>
         </p-tabMenu>
 
         <cp-active-sale-header [fillRoute]="isFillRoute$ | async"

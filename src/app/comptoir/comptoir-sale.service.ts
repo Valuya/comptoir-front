@@ -278,11 +278,19 @@ export class ComptoirSaleService {
     );
   }
 
-  cancelSale$(): Observable<WsSaleRef> {
-    return this.getSaleRef$().pipe(
+  cancelSale$(ref?: WsSaleRef): Observable<WsSaleRef> {
+    const saleRef$ = ref == null ? this.getSaleRef$() : of(ref);
+    return saleRef$.pipe(
       take(1),
-      switchMap(ref => this.saleService.cancelSale$(ref)),
-      tap(() => this.activeSaleSource$.next(null)),
+      switchMap(saleRef => this.saleService.cancelSale$(saleRef).pipe(
+        tap(() => {
+          const curSale = this.activeSaleSource$.getValue();
+          if (curSale != null && curSale.id === saleRef.id) {
+            this.activeSaleSource$.next(null);
+          }
+        })
+        )
+      ),
       tap(() => this.openSalesCaches.invalidate()),
     );
   }
