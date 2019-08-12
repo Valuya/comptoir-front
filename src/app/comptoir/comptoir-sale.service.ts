@@ -75,6 +75,8 @@ export class ComptoirSaleService {
   private saleRef$: Observable<WsSale | null>;
   private saleTotalPaid$: Observable<number | null>;
   private saleRemaining$: Observable<number | null>;
+  private lastUpdatedItem$: Observable<WsItemVariantSale | null>;
+
   // Tables helpers are used for lists to allow easy sorting/filtering
   private saleItemsTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
   private saleAccountingEntriessTableHelper: ShellTableHelper<WsAccountingEntry, WsAccountingEntrySearch>;
@@ -125,6 +127,10 @@ export class ComptoirSaleService {
       map(state => state == null ? null : state.totalPaid),
       publishReplay(1), refCount()
     );
+    this.lastUpdatedItem$ = this.saleState$.pipe(
+      map(state => state == null ? null : state.lastUpdatedVariant),
+      publishReplay(1), refCount()
+    );
 
     this.saleRef$ = this.activeSaleSource$.pipe(
       map(s => s == null || s.id == null ? null : {id: s.id}),
@@ -135,6 +141,7 @@ export class ComptoirSaleService {
       map(results => this.getSaleAmountRemaining(results[0], results[1])),
       publishReplay(1), refCount()
     );
+
   }
 
   initSale(sale: WsSale) {
@@ -235,6 +242,10 @@ export class ComptoirSaleService {
 
   getSaleRemainingToPay$(): Observable<number> {
     return this.saleRemaining$;
+  }
+
+  getLastUpdatedItem$(): Observable<WsItemVariantSale | null> {
+    return this.lastUpdatedItem$;
   }
 
   getItemsTableHelper(): ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch> {
@@ -543,7 +554,9 @@ export class ComptoirSaleService {
       sale: saleValue,
       items: itemsValue,
       totalPaid: totalPaidValue,
-      paymentItems: paymentsValue
+      paymentItems: paymentsValue,
+      lastUpdatedVariantIndex: null,
+      lastUpdatedVariant: null
     };
   }
 
@@ -612,10 +625,12 @@ export class ComptoirSaleService {
     return this.addOrAppendVariant$(state.sale, state.items, event.variantRef).pipe(
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
-      mergeMap(() => this.refetchState$(state, {
+      mergeMap((variantRef) => this.refetchState$(state, {
         refetchSale: true,
         refetchItems: true
-      })),
+      }).pipe(
+        map(newState => this.setLastUpdatedItem(newState, variantRef))
+      )),
     );
   }
 
@@ -641,10 +656,12 @@ export class ComptoirSaleService {
     return this.saleService.saveVariant(variantToUpdate).pipe(
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
-      mergeMap(() => this.refetchState$(state, {
+      mergeMap((updatedRef) => this.refetchState$(state, {
         refetchSale: true,
         refetchItems: true
-      })),
+      }).pipe(
+        map(newState => this.setLastUpdatedItem(newState, updatedRef))
+      )),
     );
   }
 
@@ -673,4 +690,17 @@ export class ComptoirSaleService {
     );
   }
 
+  private setLastUpdatedItem(newState: SaleState, variantRef: WsItemVariantSaleRef): SaleState {
+    const items = newState.items;
+    const variantIndex = items.findIndex(i => i.id === variantRef.id);
+    if (variantIndex >= 0) {
+      const variant = items[variantIndex];
+      newState.lastUpdatedVariant = variant;
+      newState.lastUpdatedVariantIndex = variantIndex;
+    } else {
+      newState.lastUpdatedVariant = null;
+      newState.lastUpdatedVariantIndex = null;
+    }
+    return newState;
+  }
 }

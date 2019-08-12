@@ -1,10 +1,11 @@
-import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
+import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Pagination} from '../../util/pagination';
 import {TableColumn} from '../../util/table-column';
 import {LazyLoadEvent} from 'primeng/api';
 import {ShellColumnDirective} from './shell-column.directive';
 import {FilterContentDirective} from './filter-content.directive';
 import {PaginationUtils} from '../../util/pagination-utils';
+import {Table} from 'primeng/table';
 
 @Component({
   selector: 'cp-shell-table',
@@ -37,6 +38,8 @@ export class ShellTableComponent implements OnInit {
   columnTemplate: TemplateRef<any>;
   @ContentChild(FilterContentDirective, {static: false, read: TemplateRef})
   filterContentTemplate: TemplateRef<any>;
+  @ViewChild(Table, {static: false})
+  private tableChild: Table;
 
   constructor() {
   }
@@ -62,5 +65,30 @@ export class ShellTableComponent implements OnInit {
     event.stopImmediatePropagation();
     event.preventDefault();
     return false;
+  }
+
+  scrollToTop() {
+    const tableBodyElement = this.getTableBodyElement();
+    if (tableBodyElement != null) {
+      tableBodyElement.scrollTop = 0;
+    }
+  }
+
+  scrollToBottom() {
+    const tableBodyElement = this.getTableBodyElement();
+    if (tableBodyElement != null) {
+      tableBodyElement.scrollTop = tableBodyElement.scrollHeight;
+    }
+  }
+
+  private getTableBodyElement() {
+    if (this.tableChild) {
+      const tableElement: HTMLElement = this.tableChild.containerViewChild.nativeElement;
+      const tableBodyElements = tableElement.getElementsByClassName('ui-table-scrollable-body');
+      if (tableBodyElements.length > 0) {
+        return tableBodyElements[0];
+      }
+    }
+    return null;
   }
 }
