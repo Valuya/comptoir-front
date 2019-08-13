@@ -2,18 +2,27 @@
 
   <div class="control">
     <label>Sale</label>
-    <cp-sale [ref]="value.saleRef"></cp-sale>
+    <cp-sale [ref]="value.saleRef"
+             [showIcon]="true"
+             [showId]="true"
+             [showDateTime]="true"
+    ></cp-sale>
   </div>
 
   <div class="control">
     <label>Item</label>
     <cp-item-variant [ref]="value.itemVariantRef"
+                     [showReference]="true"
+                     [showItemName]="true"
     ></cp-item-variant>
   </div>
 
   <div class="control">
     <label>Stock</label>
-    <cp-stock [ref]="value.stockRef"></cp-stock>
+    <cp-stock [ref]="value.stockRef"
+              [showIcon]="true"
+              [showDescription]="true"
+    ></cp-stock>
   </div>
 
   <div class="control">
@@ -67,7 +76,13 @@
       <ng-template cpInplaceInput let-invalid="invalid">
         <cp-locale-text-edit [(ngModel)]="comment.editValue"
                              [invalid]="invalid"
-        ></cp-locale-text-edit>
+                             #commentTexts
+        >
+          <ng-template cpLocalizedEdit>
+            <input type="text" pInputText
+                   [(ngModel)]="commentTexts.editingTextValue">
+          </ng-template>
+        </cp-locale-text-edit>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>

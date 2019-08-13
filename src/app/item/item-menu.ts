@@ -38,13 +38,13 @@ export const ResolvedItemDetailsVariantDetailsMenuItem: MenuItem & ResolvedRoute
     FunctionsUtils.splitDomainObjectCallback<WsItemVariant, string>(
       value => `${value.variantReference}`,
       value => `New variant`,
-    ), 'variant'
+    ), 'itemVariant'
   ),
   routerLinkFactory: RouteUtils.createRouterLinkFactoryFromRouteDataEntities<WsItem, WsItemVariant>(
     (item, variant) => (item == null || variant == null) ? [] : ['/item', item.id, 'variant', variant.id],
     'item', 'itemVariant'
   ),
-  icon: 'fa fa-square',
+  icon: 'fa fa-square-o',
 };
 
 const ItemDetailVariantMenuItems: MenuItem[] = [

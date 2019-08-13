@@ -39,7 +39,8 @@
   <ng-container *ngSwitchCase="'JUMP_TO_POS'">
     <cp-shell-inplace-edit [forceHoverEffect]="true">
       <ng-template cpInplaceOutput>
-        <a [routerLink]="['/comptoir/sale/', row.id]">
+        <a [routerLink]="['/comptoir/sale/', row.id]"
+        (click)="discardEvent($event)">
           <i class="fa fa-shopping-basket"></i>
         </a>
       </ng-template>

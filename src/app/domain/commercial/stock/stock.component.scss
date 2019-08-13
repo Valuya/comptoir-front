@@ -1,10 +1,13 @@
 .stock {
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
 
-  >* {
-    flex: 1 1 auto;
+  > * {
+    flex: 0 0 auto;
+
+    &:not(:first-child) {
+      margin-left: .2em;
+    }
   }
 
   &:not(.active) {

@@ -286,6 +286,7 @@ export class ComptoirSaleService {
       switchMap(ref => this.saleService.openSale$(ref)),
       switchMap(ref => this.saleService.getSale$(ref)),
       tap(() => this.openSalesCaches.invalidate()),
+      tap(sale => this.initSale(sale)),
     );
   }
 

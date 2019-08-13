@@ -6,26 +6,24 @@
       </cp-picture>
     </div>
 
-    <div class="content">
 
-      <div class="name" *ngIf="showName">
-        <cp-loading-content [loading]="loading$ |async">
-          <cp-locale-text [localeTexts]="(value$ |async)?.name"></cp-locale-text>
-        </cp-loading-content>
-      </div>
-
-      <div class="description" *ngIf="showDescription">
-        <cp-loading-content [loading]="loading$ |async">
-          <cp-locale-text [localeTexts]="(value$ |async)?.description"></cp-locale-text>
-        </cp-loading-content>
-      </div>
-
-      <div class="reference" *ngIf="showReference">
-        <cp-loading-content [loading]="loading$ |async">
-          {{ (value$ | async)?.reference }}
-        </cp-loading-content>
-      </div>
+    <div class="name" *ngIf="showName">
+      <cp-loading-content [loading]="loading$ |async">
+        <cp-locale-text [localeTexts]="(value$ |async)?.name"></cp-locale-text>
+      </cp-loading-content>
     </div>
 
+    <div class="description" *ngIf="showDescription">
+      <cp-loading-content [loading]="loading$ |async">
+        <cp-locale-text [localeTexts]="(value$ |async)?.description"></cp-locale-text>
+      </cp-loading-content>
+    </div>
+
+    <div class="reference" *ngIf="showReference">
+      <cp-loading-content [loading]="loading$ |async">
+        {{ (value$ | async)?.reference }}
+      </cp-loading-content>
+    </div>
   </div>
+
 </cp-loading-content>

@@ -21,4 +21,9 @@ export class SaleColumnComponent implements OnInit {
   ngOnInit() {
   }
 
+  discardEvent(event: MouseEvent) {
+    event.stopImmediatePropagation();
+    event.preventDefault();
+    return false;
+  }
 }

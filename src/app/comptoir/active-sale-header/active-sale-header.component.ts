@@ -78,7 +78,8 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.saleService.reopenActiveSale$()
       .subscribe(ref => {
         this.router.navigate(['../', ref.id, 'fill'], {
-          relativeTo: this.activatedRoute
+          relativeTo: this.activatedRoute,
+          replaceUrl: true,
         });
       });
   }

@@ -75,6 +75,8 @@
   <div class="control">
     <label>Customer loyalty rate</label>
     <cp-shell-inplace-edit name="customerLoyaltyRate" #customerLoyaltyRate
+                           [ngModel]="value.customerLoyaltyRate"
+                           (ngModelChange)="updateValue({customerLoyaltyRate: $event})"
                            [disabled]="disabled"
                            [errors]="validationResults?.errors?.customerLoyaltyRate"
     >

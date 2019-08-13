@@ -123,9 +123,11 @@
       </ng-template>
       <ng-template cpInplaceInput let-invalid="invalid">
         <cp-locale-text-edit #descriptionEdit [(ngModel)]="description.editValue">
-          <input type="text" pInputText
-                 [(ngModel)]="descriptionEdit.editingTextValue"
-          >
+          <ng-template cpLocalizedEdit>
+            <input type="text" pInputText
+                   [(ngModel)]="descriptionEdit.editingTextValue"
+            >
+          </ng-template>
         </cp-locale-text-edit>
       </ng-template>
     </cp-shell-inplace-edit>
