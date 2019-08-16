@@ -25,7 +25,7 @@
     "@ngrx/effects": "^8.1.0",
     "@ngrx/router-store": "^8.1.0",
     "@ngrx/store": "^8.1.0",
-    "@valuya/comptoir-ws-api": "1.0.0-alpha.1-SNAPSHOT.201908120659",
+    "@valuya/comptoir-ws-api": "file:../comptoir-back/comptoir-ws-api/target/openapi/ts",
     "chart.js": "^2.8.0",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",

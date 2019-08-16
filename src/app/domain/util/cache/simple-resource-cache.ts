@@ -38,11 +38,18 @@ export class SimpleResourceCache<T extends ResourceRef> implements ResourceCache
     }
   }
 
-  put(value: T) {
-    if (value.id == null) {
-      throw new Error('Invalid ref: ' + value);
+  put(value: T, ref?: ResourceRef) {
+    let idValue;
+    if (ref == null) {
+      if (value.id == null) {
+        throw new Error('Invalid ref: ' + value);
+      } else {
+        idValue = value.id;
+      }
+    } else {
+      idValue = ref.id;
     }
-    this.cache[value.id] = of(value);
+    this.cache[idValue] = of(value);
   }
 
   putValue$IfAbsent(ref: ResourceRef, value$: Observable<T>) {
