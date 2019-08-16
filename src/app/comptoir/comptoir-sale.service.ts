@@ -1,18 +1,20 @@
 import {BehaviorSubject, combineLatest, EMPTY, forkJoin, merge, Observable, of, Subject} from 'rxjs';
 import {
+  WsAccountAccountTypeEnum,
   WsAccountingEntry,
   WsAccountingEntryRef,
   WsAccountingEntrySearch,
-  WsBalanceSearchAccountSearchAccountTypeEnum,
   WsCompanyRef,
   WsItemRef,
   WsItemVariantRef,
   WsItemVariantSale,
+  WsItemVariantSalePriceDetails,
   WsItemVariantSaleRef,
   WsItemVariantSaleSearch,
   WsItemVariantSaleSearchResult,
   WsItemVariantSearch,
   WsSale,
+  WsSalePriceDetails,
   WsSaleRef,
   WsSaleSearch
 } from '@valuya/comptoir-ws-api';
@@ -52,6 +54,9 @@ import {RemoveSaleVariantEvent} from './sale-event/remove-sale-variant-event';
 import {UpdateSaleVariantEvent} from './sale-event/update-sale-variant-event';
 import {AddSalePaymentEvent} from './sale-event/add-sale-payment-event';
 import {RemoveSalePaymentEvent} from './sale-event/remove-sale-payment-event';
+import {UpdateSaleVariantPriceEvent} from './sale-event/update-sale-variant-price-event';
+import {WsAccountingEntrySearchAccountSearchAccountTypeEnum} from '@valuya/comptoir-ws-api/models/WsAccountingEntrySearchAccountSearch';
+import {UpdateSalePriceEvent} from './sale-event/update-sale-price-event';
 
 @Injectable({
   providedIn: 'root'
@@ -161,7 +166,7 @@ export class ComptoirSaleService {
         companyRef: sale.companyRef,
         accountingTransactionRef: sale.accountingTransactionRef,
         accountSearch: {
-          accountType: WsBalanceSearchAccountSearchAccountTypeEnum.PAYMENT,
+          accountType: WsAccountAccountTypeEnum.PAYMENT as any as WsAccountingEntrySearchAccountSearchAccountTypeEnum,
           companyRef: sale.companyRef,
         }
       });
@@ -510,14 +515,16 @@ export class ComptoirSaleService {
     if (sale == null) {
       return of(null);
     }
-    const seedState = this.createSaleState(sale, [], 0, []);
+    const seedState = this.createSaleState(sale, null, [], [], 0, []);
     if (sale.id == null) {
       return of(seedState);
     }
     const initState$ = this.refetchState$(seedState, {
+      refetchSalePrice: true,
+      reSearchItems: true,
+      refetchItemPrices: true,
       refetchTotalPaid: true,
-      refetchPayments: true,
-      refetchItems: true
+      reSearchPayments: true,
     });
     const nextStates$ = this.saleEventsSource$.pipe(
       // tap(e => console.log('event on ' + e.saleRef.id)),
@@ -528,9 +535,11 @@ export class ComptoirSaleService {
 
   private refetchState$(state: SaleState, options?: {
     refetchSale?: boolean,
-    refetchItems?: boolean,
+    refetchSalePrice?: boolean,
+    reSearchItems?: boolean,
+    refetchItemPrices?: WsItemVariantSaleRef[] | true,
     refetchTotalPaid?: boolean,
-    refetchPayments?: boolean,
+    reSearchPayments?: boolean,
   }): Observable<SaleState> {
     const saleId = state.sale.id;
     if (saleId == null) {
@@ -538,16 +547,40 @@ export class ComptoirSaleService {
     }
     const nonNullOptions = options || {};
 
-    const sale$ = nonNullOptions.refetchSale ? this.saleService.getSale$({id: saleId}, true) : of(state.sale);
-    const saleItems$ = nonNullOptions.refetchItems ? this.saleItemsTableHelper.reload() : of(state.items);
-    const totalPaid$ = nonNullOptions.refetchTotalPaid ? this.saleService.getSaleTotalPaid$({id: saleId}) : of(state.totalPaid);
-    const paymentItems$ = nonNullOptions.refetchPayments ? this.saleAccountingEntriessTableHelper.reload() : of(state.paymentItems);
+    const sale$ = nonNullOptions.refetchSale ?
+      this.saleService.getSale$({id: saleId}, true) : of(state.sale);
+
+    const salePrice$ = nonNullOptions.refetchSalePrice ?
+      this.saleService.getSalePriceDetails$({id: saleId}) : of(state.salePriceDetails);
+
+    const saleItems$ = nonNullOptions.reSearchItems ?
+      this.saleItemsTableHelper.reload() : of(state.items);
+
+    let saleItemPrices$: Observable<WsItemVariantSalePriceDetails[]>;
+    if (nonNullOptions.refetchItemPrices === true) {
+      saleItemPrices$ = saleItems$.pipe(
+        switchMap(items => this.fetchAllItemPrices$(items))
+      );
+    } else if (nonNullOptions.refetchItemPrices != null) {
+      // array of variant sale ref to refetch
+      saleItemPrices$ = saleItems$.pipe(
+        switchMap(items => this.fetchItemPrices$(items, nonNullOptions.refetchItemPrices as WsItemVariantSaleRef[]))
+      );
+    } else {
+      saleItemPrices$ = of(state.itemPrices);
+    }
+
+    const totalPaid$ = nonNullOptions.refetchTotalPaid ?
+      this.saleService.getSaleTotalPaid$({id: saleId}) : of(state.totalPaid);
+
+    const paymentItems$ = nonNullOptions.reSearchPayments ?
+      this.saleAccountingEntriessTableHelper.reload() : of(state.paymentItems);
 
     this.updatingSaleInProgress$.next(true);
     this.updatingItemsInProgress$.next(true);
     this.updatingPaymentsInProgress$.next(true);
-    return combineLatest(sale$, saleItems$, totalPaid$, paymentItems$).pipe(
-      map(r => this.createSaleState(r[0], r[1], r[2], r[3])),
+    return combineLatest(sale$, salePrice$, saleItems$, saleItemPrices$, totalPaid$, paymentItems$).pipe(
+      map(r => this.createSaleState(r[0], r[1], r[2], r[3], r[4], r[5])),
       delay(0),
       tap(() => {
         this.updatingSaleInProgress$.next(false);
@@ -557,11 +590,14 @@ export class ComptoirSaleService {
     );
   }
 
-  private createSaleState(saleValue: WsSale, itemsValue: WsItemVariantSale[],
+  private createSaleState(saleValue: WsSale, salePrice: WsSalePriceDetails,
+                          itemsValue: WsItemVariantSale[], itemPricesValue: WsItemVariantSalePriceDetails[],
                           totalPaidValue: number, paymentsValue: WsAccountingEntry[]): SaleState {
     return {
       sale: saleValue,
+      salePriceDetails: salePrice,
       items: itemsValue,
+      itemPrices: itemPricesValue,
       totalPaid: totalPaidValue,
       paymentItems: paymentsValue,
       lastUpdatedVariantIndex: null,
@@ -593,6 +629,9 @@ export class ComptoirSaleService {
       case SaleEventType.UPDATE_SALE:
         updatedState$ = this.applyUpdateSaleEvent$(event as UpdateSaleEvent<any>, state);
         break;
+      case SaleEventType.UPDATE_SALE_PRICE:
+        updatedState$ = this.applyUpdateSalePriceEvent$(event as UpdateSalePriceEvent<any>, state);
+        break;
       case SaleEventType.ADD_ITEM_VARIANT:
         updatedState$ = this.applyAddItemVariantEvent$(event as AddItemVariantEvent, state);
         break;
@@ -601,6 +640,9 @@ export class ComptoirSaleService {
         break;
       case SaleEventType.UPDATE_SALE_VARIANT:
         updatedState$ = this.applyUpdateSaleVariantEvent$(event as UpdateSaleVariantEvent<any>, state);
+        break;
+      case SaleEventType.UPDATE_SALE_VARIANT_PRICE:
+        updatedState$ = this.applyUpdateSaleVariantPriceEvent$(event as UpdateSaleVariantPriceEvent<any>, state);
         break;
       case SaleEventType.ADD_SALE_PAYMENT:
         updatedState$ = this.applyAddSalePaymentEvent(event as AddSalePaymentEvent, state);
@@ -629,6 +671,23 @@ export class ComptoirSaleService {
     );
   }
 
+
+  private applyUpdateSalePriceEvent$(event: UpdateSalePriceEvent<any>, state: SaleState) {
+    const property = event.property;
+    const value = event.value;
+    const saleRef = event.saleRef;
+
+    this.updatingSaleInProgress$.next(true);
+    return this.updateSalePrice$(saleRef, property, value).pipe(
+      delay(0),
+      tap(() => this.updatingSaleInProgress$.next(false)),
+      mergeMap(() => this.refetchState$(state, {
+        refetchSale: true
+      })),
+    );
+  }
+
+
   private applyAddItemVariantEvent$(event: AddItemVariantEvent, state: SaleState) {
     this.updatingItemsInProgress$.next(true);
     return this.addOrAppendVariant$(state.sale, state.items, event.variantRef).pipe(
@@ -636,7 +695,7 @@ export class ComptoirSaleService {
       tap(() => this.updatingItemsInProgress$.next(false)),
       mergeMap((variantRef) => this.refetchState$(state, {
         refetchSale: true,
-        refetchItems: true
+        reSearchItems: true
       }).pipe(
         map(newState => this.setLastUpdatedItem(newState, variantRef))
       )),
@@ -651,7 +710,7 @@ export class ComptoirSaleService {
       tap(() => this.updatingItemsInProgress$.next(false)),
       mergeMap(() => this.refetchState$(state, {
         refetchSale: true,
-        refetchItems: true
+        reSearchItems: true
       })),
     );
   }
@@ -667,9 +726,27 @@ export class ComptoirSaleService {
       tap(() => this.updatingItemsInProgress$.next(false)),
       mergeMap((updatedRef) => this.refetchState$(state, {
         refetchSale: true,
-        refetchItems: true
+        reSearchItems: true
       }).pipe(
         map(newState => this.setLastUpdatedItem(newState, updatedRef))
+      )),
+    );
+  }
+
+  private applyUpdateSaleVariantPriceEvent$(event: UpdateSaleVariantPriceEvent<any>, state: SaleState) {
+    const variantRef = event.variantRef;
+    const property = event.property;
+    const value = event.value;
+
+    this.updatingItemsInProgress$.next(true);
+    return this.updateVariantPrice$(variantRef, property, value).pipe(
+      delay(0),
+      tap(() => this.updatingItemsInProgress$.next(false)),
+      mergeMap((updatedRef) => this.refetchState$(state, {
+        refetchSalePrice: true,
+        refetchItemPrices: [variantRef],
+      }).pipe(
+        map(newState => this.setLastUpdatedItem(newState, variantRef))
       )),
     );
   }
@@ -680,7 +757,7 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingPaymentsInProgress$.next(false)),
       mergeMap(() => this.refetchState$(state, {
-        refetchPayments: true,
+        reSearchPayments: true,
         refetchTotalPaid: true
       })),
     );
@@ -693,7 +770,7 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingPaymentsInProgress$.next(false)),
       mergeMap(() => this.refetchState$(state, {
-        refetchPayments: true,
+        reSearchPayments: true,
         refetchTotalPaid: true
       })),
     );
@@ -711,5 +788,59 @@ export class ComptoirSaleService {
       newState.lastUpdatedVariantIndex = null;
     }
     return newState;
+  }
+
+  private updateVariantPrice$(variantRef: WsItemVariantSaleRef, property: keyof WsItemVariantSalePriceDetails, value: number)
+    : Observable<WsItemVariantSalePriceDetails> {
+    switch (property) {
+      case 'discountAmount':
+        return this.saleService.updateItemVariantSaleDiscountAmount$(variantRef, value);
+      case 'discountRatio':
+        return this.saleService.updateItemVariantSaleDiscountRatio$(variantRef, value);
+      case 'totalVatExclusive':
+        return this.saleService.updateItemVariantSaleTotalVatExclusive$(variantRef, value);
+      case 'totalVatExclusivePriorDiscount':
+        return this.saleService.updateItemVariantSaleTotalVatExclusivePriorDiscount$(variantRef, value);
+      case 'totalVatInclusive':
+        return this.saleService.updateItemVariantSaleTotalVatInclusive$(variantRef, value);
+      case 'unitPriceVatExclusive':
+        return this.saleService.updateItemVariantUnitPriceVatExclusive$(variantRef, value);
+      case 'vatAmount':
+        return this.saleService.updateItemVariantSaleVatAmount$(variantRef, value);
+      case 'vatRate':
+        return this.saleService.updateItemVariantSaleVatRate$(variantRef, value);
+      default:
+        throw new Error('Unsupported variant price update property: ' + property);
+    }
+  }
+
+
+  private updateSalePrice$(saleRef: WsSaleRef, property: keyof WsSalePriceDetails, value: number)
+    : Observable<WsItemVariantSalePriceDetails> {
+    switch (property) {
+      case 'saleDiscountAmount':
+        return this.saleService.updateSaleDiscountAmount$(saleRef, value);
+      case 'saleDiscountRatio':
+        return this.saleService.updateSaleDiscountRatio$(saleRef, value);
+      case 'totalPriceVatInclusive':
+        return this.saleService.updateSaleTotalVatInclusive$(saleRef, value);
+      default:
+        throw new Error('Unsupported sale price update property: ' + property);
+    }
+  }
+
+  private fetchAllItemPrices$(items: WsItemVariantSale[]): Observable<WsItemVariantSalePriceDetails[]> {
+    const prices$List = items.map(item => this.saleService.getSalePriceDetails$({id: item.id}, true));
+    return prices$List.length === 0 ? of([]) : forkJoin(prices$List);
+  }
+
+
+  private fetchItemPrices$(items: WsItemVariantSale[], pricesToRefetch: WsItemVariantSaleRef[])
+    : Observable<WsItemVariantSalePriceDetails[]> {
+    const prices$List = items.map(item => {
+      const shouldRefetch = pricesToRefetch.find(ref => ref.id === item.id) != null;
+      return this.saleService.getSalePriceDetails$({id: item.id}, shouldRefetch);
+    });
+    return prices$List.length === 0 ? of([]) : forkJoin(prices$List);
   }
 }

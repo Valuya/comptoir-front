@@ -194,7 +194,7 @@ export class SaleService {
     return this.variantPriceCache.getResource$(ref);
   }
 
-  updateVariantUnitPriceVatExclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+  updateItemVariantUnitPriceVatExclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleUnitPriceVatExclusive({
       id: ref.id,
       body: value
