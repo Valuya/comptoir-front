@@ -6,6 +6,7 @@ import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
+import {WsSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsSalePriceDetails';
 
 @Component({
   selector: 'cp-active-sale-header',
@@ -22,6 +23,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   payRoute: boolean;
 
   sale$: Observable<WsSale>;
+  salePrice$: Observable<WsSalePriceDetails>;
   saleRef$: Observable<WsSaleRef>;
   saleTotalPaid$: Observable<number>;
   saleRemaining$: Observable<number>;
@@ -39,6 +41,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.sale$ = this.saleService.getSale$();
+    this.salePrice$ = this.saleService.getSalePrice$();
     this.saleRef$ = this.saleService.getSaleRef$();
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
     this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();
@@ -97,6 +100,18 @@ export class ActiveSaleHeaderComponent implements OnInit {
     return this.router.routerState.snapshot.url;
   }
 
+  onTotalVatInclusiveChange(value: number) {
+    this.saleService.updateSalePrice('totalPriceVatInclusive', value);
+  }
+
+  onDiscountAmountChange(value: number) {
+    this.saleService.updateSalePrice('saleDiscountAmount', value);
+  }
+
+  onDiscountRatioChange(value: number) {
+    this.saleService.updateSalePrice('saleDiscountRatio', value);
+  }
+
   private closeSaleWithRemainingCheck(remaining: number) {
     if (remaining === 0) {
       this.closeSaleAndGoToNewSale();
@@ -131,4 +146,5 @@ export class ActiveSaleHeaderComponent implements OnInit {
         });
       });
   }
+
 }

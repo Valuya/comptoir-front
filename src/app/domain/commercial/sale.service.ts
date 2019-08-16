@@ -197,7 +197,7 @@ export class SaleService {
   updateItemVariantUnitPriceVatExclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleUnitPriceVatExclusive({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -208,7 +208,7 @@ export class SaleService {
     : Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleTotalVatExclusivePriorDiscount({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -218,7 +218,7 @@ export class SaleService {
   updateItemVariantSaleDiscountRatio$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleDiscountRatio({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -228,7 +228,7 @@ export class SaleService {
   updateItemVariantSaleDiscountAmount$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleDiscountAmount({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -238,7 +238,7 @@ export class SaleService {
   updateItemVariantSaleTotalVatExclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleTotalVatExclusive({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -248,7 +248,7 @@ export class SaleService {
   updateItemVariantSaleVatRate$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleVatRate({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -258,7 +258,7 @@ export class SaleService {
   updateItemVariantSaleVatAmount$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleVatAmount({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -268,7 +268,7 @@ export class SaleService {
   updateItemVariantSaleTotalVatInclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
     const newPrice$ = this.apiService.api.setItemVariantSaleTotalVatInclusive({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsItemVariantSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.variantPriceCache.setCachedValue(p, ref))
@@ -279,7 +279,7 @@ export class SaleService {
   updateSaleDiscountRatio$(ref: WsSaleRef, value: number): Observable<WsSalePriceDetails> {
     const newPrice$ = this.apiService.api.setSaleDiscountRatio({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.salePriceCache.setCachedValue(p, ref))
@@ -290,7 +290,7 @@ export class SaleService {
   updateSaleDiscountAmount$(ref: WsSaleRef, value: number): Observable<WsSalePriceDetails> {
     const newPrice$ = this.apiService.api.setSaleDiscountAmount({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.salePriceCache.setCachedValue(p, ref))
@@ -300,7 +300,7 @@ export class SaleService {
   updateSaleTotalVatInclusive$(ref: WsSaleRef, value: number): Observable<WsSalePriceDetails> {
     const newPrice$ = this.apiService.api.setSaleTotalVatInclusive({
       id: ref.id,
-      body: value
+      body: value == null ? 0 : value
     }) as any as Observable<WsSalePriceDetails>;
     return newPrice$.pipe(
       tap(p => this.salePriceCache.setCachedValue(p, ref))

@@ -57,6 +57,7 @@ import {RemoveSalePaymentEvent} from './sale-event/remove-sale-payment-event';
 import {UpdateSaleVariantPriceEvent} from './sale-event/update-sale-variant-price-event';
 import {WsAccountingEntrySearchAccountSearchAccountTypeEnum} from '@valuya/comptoir-ws-api/models/WsAccountingEntrySearchAccountSearch';
 import {UpdateSalePriceEvent} from './sale-event/update-sale-price-event';
+import {ItemWithPrice} from './item-with-price';
 
 @Injectable({
   providedIn: 'root'
@@ -217,6 +218,23 @@ export class ComptoirSaleService {
     this.saleEventsSource$.next(new UpdateSaleVariantEvent(curSaleRef, ref, partialUpdate));
   }
 
+  updateSaleVariantPrice<K extends keyof WsItemVariantSalePriceDetails>(
+    ref: WsItemVariantSaleRef, property: K, value: number
+  ) {
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new UpdateSaleVariantPriceEvent(curSaleRef, ref, property, value));
+  }
+
+  updateSalePrice<K extends keyof WsSalePriceDetails>(
+    property: K, value: number
+  ) {
+    const curSale = this.activeSaleSource$.getValue();
+    const curSaleRef = {id: curSale.id} as WsSaleRef;
+    this.saleEventsSource$.next(new UpdateSalePriceEvent(curSaleRef, property, value));
+  }
+
+
   addTransaction(newEntry: WsAccountingEntry) {
     const curSale = this.activeSaleSource$.getValue();
     const curSaleRef = {id: curSale.id} as WsSaleRef;
@@ -231,6 +249,13 @@ export class ComptoirSaleService {
 
   getSale$(): Observable<WsSale> {
     return this.sale$;
+  }
+
+  getSalePrice$(): Observable<WsSalePriceDetails> {
+    return this.saleState$.pipe(
+      map(state => state == null ? null : state.salePriceDetails),
+      publishReplay(1), refCount()
+    );
   }
 
   getActiveSaleOptional(): WsSale | null {
@@ -255,6 +280,13 @@ export class ComptoirSaleService {
 
   getItemsTableHelper(): ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch> {
     return this.saleItemsTableHelper;
+  }
+
+  getItemWithPrices$(): Observable<ItemWithPrice[]> {
+    return this.saleState$.pipe(
+      map(state => state == null ? [] : this.getItemWithPrices(state)),
+      publishReplay(1), refCount()
+    );
   }
 
   getAccountingEntriesTableHelper(): ShellTableHelper<WsAccountingEntry, WsAccountingEntrySearch> {
@@ -536,6 +568,7 @@ export class ComptoirSaleService {
   private refetchState$(state: SaleState, options?: {
     refetchSale?: boolean,
     refetchSalePrice?: boolean,
+    forceRefetchSalePrice?: boolean,
     reSearchItems?: boolean,
     refetchItemPrices?: WsItemVariantSaleRef[] | true,
     refetchTotalPaid?: boolean,
@@ -550,8 +583,14 @@ export class ComptoirSaleService {
     const sale$ = nonNullOptions.refetchSale ?
       this.saleService.getSale$({id: saleId}, true) : of(state.sale);
 
-    const salePrice$ = nonNullOptions.refetchSalePrice ?
-      this.saleService.getSalePriceDetails$({id: saleId}) : of(state.salePriceDetails);
+    let salePrice$: Observable<WsSalePriceDetails>;
+    if (nonNullOptions.forceRefetchSalePrice) {
+      salePrice$ = this.saleService.getSalePriceDetails$({id: saleId}, true);
+    } else if (nonNullOptions.refetchSalePrice) {
+      salePrice$ = this.saleService.getSalePriceDetails$({id: saleId});
+    } else {
+      salePrice$ = of(state.salePriceDetails);
+    }
 
     const saleItems$ = nonNullOptions.reSearchItems ?
       this.saleItemsTableHelper.reload() : of(state.items);
@@ -682,7 +721,7 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingSaleInProgress$.next(false)),
       mergeMap(() => this.refetchState$(state, {
-        refetchSale: true
+        refetchSalePrice: true,
       })),
     );
   }
@@ -694,8 +733,9 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
       mergeMap((variantRef) => this.refetchState$(state, {
-        refetchSale: true,
-        reSearchItems: true
+        forceRefetchSalePrice: true,
+        reSearchItems: true,
+        refetchItemPrices: []
       }).pipe(
         map(newState => this.setLastUpdatedItem(newState, variantRef))
       )),
@@ -709,8 +749,9 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
       mergeMap(() => this.refetchState$(state, {
-        refetchSale: true,
-        reSearchItems: true
+        forceRefetchSalePrice: true,
+        reSearchItems: true,
+        refetchItemPrices: []
       })),
     );
   }
@@ -724,10 +765,7 @@ export class ComptoirSaleService {
     return this.saleService.saveVariant(variantToUpdate).pipe(
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
-      mergeMap((updatedRef) => this.refetchState$(state, {
-        refetchSale: true,
-        reSearchItems: true
-      }).pipe(
+      mergeMap((updatedRef) => this.refetchState$(state, {}).pipe(
         map(newState => this.setLastUpdatedItem(newState, updatedRef))
       )),
     );
@@ -743,8 +781,8 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
       mergeMap((updatedRef) => this.refetchState$(state, {
-        refetchSalePrice: true,
-        refetchItemPrices: [variantRef],
+        forceRefetchSalePrice: true,
+        refetchItemPrices: [],
       }).pipe(
         map(newState => this.setLastUpdatedItem(newState, variantRef))
       )),
@@ -830,7 +868,7 @@ export class ComptoirSaleService {
   }
 
   private fetchAllItemPrices$(items: WsItemVariantSale[]): Observable<WsItemVariantSalePriceDetails[]> {
-    const prices$List = items.map(item => this.saleService.getSalePriceDetails$({id: item.id}, true));
+    const prices$List = items.map(item => this.saleService.getVariantPriceDetails$({id: item.id}, true));
     return prices$List.length === 0 ? of([]) : forkJoin(prices$List);
   }
 
@@ -839,8 +877,27 @@ export class ComptoirSaleService {
     : Observable<WsItemVariantSalePriceDetails[]> {
     const prices$List = items.map(item => {
       const shouldRefetch = pricesToRefetch.find(ref => ref.id === item.id) != null;
-      return this.saleService.getSalePriceDetails$({id: item.id}, shouldRefetch);
+      return this.saleService.getVariantPriceDetails$({id: item.id}, shouldRefetch);
     });
     return prices$List.length === 0 ? of([]) : forkJoin(prices$List);
+  }
+
+  private getItemWithPrices(state: SaleState) {
+    const items = state.items;
+    const prices = state.itemPrices;
+    return items.map(i => {
+      const price = prices.find(p => p.variantSaleRef.id === i.id);
+      return this.createItemWithPrice(i, price);
+    });
+  }
+
+
+  private createItemWithPrice(itemValue: WsItemVariantSale, priceValue: WsItemVariantSalePriceDetails) {
+    const ref: WsItemVariantSaleRef = {id: itemValue.id};
+    return {
+      itemRef: ref,
+      item: itemValue,
+      price: priceValue
+    } as ItemWithPrice;
   }
 }

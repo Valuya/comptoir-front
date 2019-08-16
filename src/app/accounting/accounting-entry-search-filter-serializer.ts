@@ -1,6 +1,7 @@
-import {WsAccountingEntrySearch, WsAccountSearch, WsAttributeDefinitionSearchResultList, WsPosRef} from '@valuya/comptoir-ws-api';
+import {WsAccountingEntrySearch, WsAccountSearch, WsPosRef} from '@valuya/comptoir-ws-api';
 import {SearchFilterQueryParams} from '../domain/util/search-filter/search-filter-query-param';
 import {SearchFilterSerializer} from '../domain/util/search-filter/search-filter-serializer';
+import {BalanceIdMoneyPilesAccountRef} from '@valuya/comptoir-ws-api/models/BalanceIdMoneyPilesAccountRef';
 
 export class AccountingEntrySearchFilterSerializer {
 
@@ -54,7 +55,7 @@ export class AccountingEntrySearchFilterSerializer {
     entrySearch.accountingTransactionRef = SearchFilterSerializer.deserializeQueryParam<WsAccountingEntrySearch>(
       queryParams, 'accountingTransactionRef',
       SearchFilterSerializer.deserializeRef
-    ) as WsAttributeDefinitionSearchResultList;
+    ) as BalanceIdMoneyPilesAccountRef;
 
     entrySearch.accountSearch = {};
     entrySearch.accountSearch.cash = SearchFilterSerializer.deserializeQueryParam<WsAccountingEntrySearch>(

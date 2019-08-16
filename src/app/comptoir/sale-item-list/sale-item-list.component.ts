@@ -1,18 +1,21 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
-import {WsItem, WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch} from '@valuya/comptoir-ws-api';
+import {WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch} from '@valuya/comptoir-ws-api';
 import {Observable} from 'rxjs';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {LazyLoadEvent, MessageService, SelectItem} from 'primeng/api';
 import {DataView} from 'primeng/dataview';
 import {SaleVariantColumns} from '../../sale/sale-variant-column/sale-variant-columns';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {WsItemVariantSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsItemVariantSalePriceDetails';
+import {ItemWithPrice} from '../item-with-price';
 
 @Component({
   selector: 'cp-sale-item-list',
   templateUrl: './sale-item-list.component.html',
   styleUrls: ['./sale-item-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('highlight', [
       state('highlighted', style({
@@ -33,7 +36,7 @@ export class SaleItemListComponent implements OnInit {
 
   itemsTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
 
-  saleItems$: Observable<WsItemVariantSale[]>;
+  saleItems$: Observable<ItemWithPrice[]>;
   paginationFirst$: Observable<number>;
   paginationRows$: Observable<number>;
   totalCount$: Observable<number>;
@@ -58,7 +61,7 @@ export class SaleItemListComponent implements OnInit {
     this.itemsTableHelper = this.comptoirSaleService.getItemsTableHelper();
     this.sortOptions = this.createSortOptions();
 
-    this.saleItems$ = this.itemsTableHelper.rows$;
+    this.saleItems$ = this.comptoirSaleService.getItemWithPrices$();
     this.paginationFirst$ = this.itemsTableHelper.paginationFirst$;
     this.paginationRows$ = this.itemsTableHelper.paginationRows$;
     this.totalCount$ = this.itemsTableHelper.totalCount$;
@@ -85,6 +88,11 @@ export class SaleItemListComponent implements OnInit {
   onSaleItemUpdate(item: WsItemVariantSale) {
     const ref: WsItemVariantSaleRef = {id: item.id};
     this.comptoirSaleService.udpdateSaleVariant(ref, item);
+  }
+
+  onSaleItemPriceUpdate(item: WsItemVariantSale, property: keyof WsItemVariantSalePriceDetails, value: number) {
+    const ref: WsItemVariantSaleRef = {id: item.id};
+    this.comptoirSaleService.updateSaleVariantPrice(ref, property, value);
   }
 
   onSaleItemRemove(item: WsItemVariantSale) {
@@ -150,4 +158,5 @@ export class SaleItemListComponent implements OnInit {
       } as SelectItem;
     });
   }
+
 }

@@ -77,7 +77,7 @@ export class SimpleResourceCache<T extends ResourceRef> implements ResourceCache
 
   private fetch(ref: ResourceRef): Observable<T> {
     const value$ = this.fetcher(ref).pipe(
-      tap(f => this.put(f)),
+      tap(f => this.put(f, ref)),
     );
     return value$;
   }

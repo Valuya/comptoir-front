@@ -12,8 +12,8 @@ import {BalanceService} from '../../../domain/accounting/balance.service';
 import {PaginationUtils} from '../../../util/pagination-utils';
 import {AuthService} from '../../../auth.service';
 import {AccountService} from '../../../domain/accounting/account.service';
-import {WsAttributeDefinitionSearchResultList} from '@valuya/comptoir-ws-api/models/WsAttributeDefinitionSearchResultList';
 import {RouteUtils} from '../../../util/route-utils';
+import {BalanceIdMoneyPilesAccountRef} from '@valuya/comptoir-ws-api/models/BalanceIdMoneyPilesAccountRef';
 
 @Component({
   selector: 'cp-balances-details-route',
@@ -168,8 +168,8 @@ export class BalanceDetailsRouteComponent implements OnInit, OnDestroy {
     return of(200, 100, 50, 20, 10, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01).pipe(
       map(amount => {
         return {
-          balanceRef: balanceRef as WsAttributeDefinitionSearchResultList,
-          accountRef: accountRef as WsAttributeDefinitionSearchResultList,
+          balanceRef: balanceRef as BalanceIdMoneyPilesAccountRef,
+          accountRef: accountRef as BalanceIdMoneyPilesAccountRef,
           unitAmount: amount,
           count: 0,
           total: 0,

@@ -65,10 +65,14 @@
 
   <div class="details">
     <cp-active-sale-details [sale]="sale$ | async"
+                            [salePrice]="salePrice$ | async"
                             [saleTotalPaid]="saleTotalPaid$ | async"
                             [showTotalDetails]="fillRoute"
                             [showPaymentdDetails]="payRoute"
                             (saleUpdate)="onSaleUpdate($event)"
+                            (totalVatInclusiveChange)="onTotalVatInclusiveChange($event)"
+                            (discountAmountChange)="onDiscountAmountChange($event)"
+                            (discountRatioChange)="onDiscountRatioChange($event)"
     ></cp-active-sale-details>
   </div>
 
