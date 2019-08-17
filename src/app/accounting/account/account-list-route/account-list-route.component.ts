@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../../util/pagination';
 import {SearchResultFactory} from '../../../app-shell/shell-table/search-result.factory';
@@ -22,7 +22,8 @@ import {
 @Component({
   selector: 'cp-accounts-list-route',
   templateUrl: './account-list-route.component.html',
-  styleUrls: ['./account-list-route.component.scss']
+  styleUrls: ['./account-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountListRouteComponent implements OnInit {
 

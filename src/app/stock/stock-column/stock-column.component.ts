@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsStock} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
 import {StockColumn} from './stock-columns';
@@ -6,7 +6,8 @@ import {StockColumn} from './stock-columns';
 @Component({
   selector: 'cp-stock-column',
   templateUrl: './stock-column.component.html',
-  styleUrls: ['./stock-column.component.scss']
+  styleUrls: ['./stock-column.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockColumnComponent implements OnInit {
 

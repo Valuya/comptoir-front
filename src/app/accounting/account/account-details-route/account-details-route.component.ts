@@ -15,7 +15,6 @@ import {RouteUtils} from '../../../util/route-utils';
   selector: 'cp-accounts-details-route',
   templateUrl: './account-details-route.component.html',
   styleUrls: ['./account-details-route.component.scss'],
-
 })
 export class AccountDetailsRouteComponent implements OnInit, OnDestroy {
 

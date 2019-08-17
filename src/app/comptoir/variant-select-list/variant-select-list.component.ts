@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {WsCompanyRef, WsItemRef, WsItemVariantRef, WsItemVariantSearch} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
@@ -22,7 +22,8 @@ import {ComptoirSaleService} from '../comptoir-sale.service';
 @Component({
   selector: 'cp-variant-select-list',
   templateUrl: './variant-select-list.component.html',
-  styleUrls: ['./variant-select-list.component.scss']
+  styleUrls: ['./variant-select-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VariantSelectListComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {BehaviorSubject, concat, Observable, of, Subscription} from 'rxjs';
 import {TableColumn} from '../../util/table-column';
@@ -18,7 +18,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-accounting-entry-list-route',
   templateUrl: './accounting-entry-list-route.component.html',
-  styleUrls: ['./accounting-entry-list-route.component.scss']
+  styleUrls: ['./accounting-entry-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountingEntryListRouteComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsAccount} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../../util/table-column';
 import {AccountColumn} from './account-columns';
@@ -6,7 +6,8 @@ import {AccountColumn} from './account-columns';
 @Component({
   selector: 'cp-account-column',
   templateUrl: './account-column.component.html',
-  styleUrls: ['./account-column.component.scss']
+  styleUrls: ['./account-column.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountColumnComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../../util/pagination';
 import {SearchResultFactory} from '../../../app-shell/shell-table/search-result.factory';
@@ -15,7 +15,8 @@ import {BalanceService} from '../../../domain/accounting/balance.service';
 @Component({
   selector: 'cp-balances-list-route',
   templateUrl: './balance-list-route.component.html',
-  styleUrls: ['./balance-list-route.component.scss']
+  styleUrls: ['./balance-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BalanceListRouteComponent implements OnInit {
 

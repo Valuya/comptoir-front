@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {
   WsAttributeDefinition,
@@ -25,7 +25,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-item-detail-variant-detail-route',
   templateUrl: './item-detail-variant-detail-route.component.html',
-  styleUrls: ['./item-detail-variant-detail-route.component.scss']
+  styleUrls: ['./item-detail-variant-detail-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy {
 

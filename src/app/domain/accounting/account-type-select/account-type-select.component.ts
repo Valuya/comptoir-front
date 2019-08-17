@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {WsAccountAccountTypeEnum} from '@valuya/comptoir-ws-api';
@@ -15,7 +15,8 @@ import {AccountTypeService} from '../account-type.service';
     provide: NG_VALUE_ACCESSOR,
     useExisting: AccountTypeSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountTypeSelectComponent implements OnInit, ControlValueAccessor {
 

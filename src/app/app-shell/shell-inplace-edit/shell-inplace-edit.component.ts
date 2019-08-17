@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterViewInit, ChangeDetectionStrategy,
   Component,
   ContentChild,
   ElementRef,
@@ -31,7 +31,8 @@ import {FocusFirstInputDirective} from '../focus-first-input.directive';
       useExisting: ShellInplaceEditComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
 
@@ -250,9 +251,9 @@ export class ShellInplaceEditComponent implements OnInit, OnDestroy, AfterViewIn
 
   private focusFirstInput() {
     if (this.focusInputDirectives) {
+      this.focusInputDirectives
+        .forEach(d => d.focusFirstInput());
       timer(10).subscribe(() => {
-        this.focusInputDirectives
-          .forEach(d => d.focusFirstInput());
       });
     }
   }

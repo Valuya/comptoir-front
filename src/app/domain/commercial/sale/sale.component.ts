@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, distinctUntilChanged, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsCompanyRef, WsItemVariantSale, WsItemVariantSaleSearch, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
@@ -10,7 +10,8 @@ import {PricingUtils} from '../../util/pricing-utils';
 @Component({
   selector: 'cp-sale',
   templateUrl: './sale.component.html',
-  styleUrls: ['./sale.component.scss']
+  styleUrls: ['./sale.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleComponent implements OnInit {
 

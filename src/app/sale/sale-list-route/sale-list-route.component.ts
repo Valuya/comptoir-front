@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
@@ -18,7 +18,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-sales-list-route',
   templateUrl: './sale-list-route.component.html',
-  styleUrls: ['./sale-list-route.component.scss']
+  styleUrls: ['./sale-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListRouteComponent implements OnInit, OnDestroy {
 

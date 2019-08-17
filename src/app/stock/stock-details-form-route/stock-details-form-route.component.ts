@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsStock} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -14,7 +14,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-stock-details-form-route',
   templateUrl: './stock-details-form-route.component.html',
-  styleUrls: ['./stock-details-form-route.component.scss']
+  styleUrls: ['./stock-details-form-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockDetailsFormRouteComponent implements OnInit, OnDestroy {
   formHelper: ShellFormHelper<WsStock>;

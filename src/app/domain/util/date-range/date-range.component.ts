@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {DateRange} from '../date-range-select/date-range';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, publishReplay, refCount} from 'rxjs/operators';
@@ -8,7 +8,8 @@ import {SelectItem} from 'primeng/api';
 @Component({
   selector: 'cp-date-range',
   templateUrl: './date-range.component.html',
-  styleUrls: ['./date-range.component.scss']
+  styleUrls: ['./date-range.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangeComponent implements OnInit {
 

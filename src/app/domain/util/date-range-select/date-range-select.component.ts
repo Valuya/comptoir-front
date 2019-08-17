@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {DateRange} from './date-range';
 import {SelectItem} from 'primeng/api';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -13,7 +13,8 @@ import {DateUtils} from '../../../util/date-utils';
     provide: NG_VALUE_ACCESSOR,
     useExisting: DateRangeSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateRangeSelectComponent implements OnInit {
 

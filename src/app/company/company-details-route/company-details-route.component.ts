@@ -15,7 +15,6 @@ import {RouteUtils} from '../../util/route-utils';
   selector: 'cp-companys-details-route',
   templateUrl: './company-details-route.component.html',
   styleUrls: ['./company-details-route.component.scss'],
-
 })
 export class CompanyDetailsRouteComponent implements OnInit, OnDestroy {
 

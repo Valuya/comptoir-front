@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {LocaleService} from 'src/app/locale.service';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map, publishReplay, refCount} from 'rxjs/operators';
@@ -7,7 +7,8 @@ import {WsLocaleText} from './ws-locale-text';
 @Component({
   selector: 'cp-locale-text',
   templateUrl: './locale-text.component.html',
-  styleUrls: ['./locale-text.component.scss']
+  styleUrls: ['./locale-text.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocaleTextComponent implements OnInit {
 

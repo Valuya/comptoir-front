@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
 import {AuthService} from '../../../auth.service';
 import {delay, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
@@ -18,7 +18,8 @@ import {PaginationUtils} from '../../../util/pagination-utils';
     provide: NG_VALUE_ACCESSOR,
     useExisting: AttributeDefinitionSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeDefinitionSelectComponent implements OnInit, ControlValueAccessor {
 

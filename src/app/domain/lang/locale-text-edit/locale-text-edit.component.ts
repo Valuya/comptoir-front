@@ -1,4 +1,4 @@
-import {Component, ContentChild, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ContentChild, Inject, Input, OnDestroy, OnInit, Optional, TemplateRef} from '@angular/core';
 import {LocaleTextsEditService} from './locale-texts-edit.service';
 import {LocaleService} from '../../../locale.service';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
@@ -15,7 +15,8 @@ import {distinctUntilChanged, withLatestFrom} from 'rxjs/operators';
     provide: NG_VALUE_ACCESSOR,
     useExisting: LocaleTextEditComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocaleTextEditComponent implements OnInit, OnDestroy, ControlValueAccessor {
 

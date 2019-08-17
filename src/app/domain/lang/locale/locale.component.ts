@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map, publishReplay, refCount} from 'rxjs/operators';
 
 @Component({
   selector: 'cp-locale',
   templateUrl: './locale.component.html',
-  styleUrls: ['./locale.component.scss']
+  styleUrls: ['./locale.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocaleComponent implements OnInit {
 

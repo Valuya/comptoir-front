@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsBalance} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../../app-shell/shell-details-form/validation-result';
@@ -14,7 +14,8 @@ import {BehaviorSubject} from 'rxjs';
       useExisting: BalanceFormComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BalanceFormComponent implements OnInit, ControlValueAccessor {
 

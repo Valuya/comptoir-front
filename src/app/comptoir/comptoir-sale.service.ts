@@ -566,6 +566,7 @@ export class ComptoirSaleService {
   }
 
   private refetchState$(state: SaleState, options?: {
+    // TODO: simplify, do not fetch itemvariantsale in the table helper and allow to refetch 1 from ref
     refetchSale?: boolean,
     refetchSalePrice?: boolean,
     forceRefetchSalePrice?: boolean,
@@ -765,7 +766,9 @@ export class ComptoirSaleService {
     return this.saleService.saveVariant(variantToUpdate).pipe(
       delay(0),
       tap(() => this.updatingItemsInProgress$.next(false)),
-      mergeMap((updatedRef) => this.refetchState$(state, {}).pipe(
+      mergeMap((updatedRef) => this.refetchState$(state, {
+        reSearchItems: true,
+      }).pipe(
         map(newState => this.setLastUpdatedItem(newState, updatedRef))
       )),
     );

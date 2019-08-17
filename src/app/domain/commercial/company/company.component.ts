@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsCompany, WsCompanyRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
@@ -7,7 +7,8 @@ import {CompanyService} from '../company.service';
 @Component({
   selector: 'cp-company',
   templateUrl: './company.component.html',
-  styleUrls: ['./company.component.scss']
+  styleUrls: ['./company.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CompanyComponent implements OnInit {
 

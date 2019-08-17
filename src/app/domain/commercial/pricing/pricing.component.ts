@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsItemVariantPricingEnum} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -7,7 +7,8 @@ import {PricingService} from './pricing.service';
 @Component({
   selector: 'cp-pricing',
   templateUrl: './pricing.component.html',
-  styleUrls: ['./pricing.component.scss']
+  styleUrls: ['./pricing.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PricingComponent implements OnInit {
 

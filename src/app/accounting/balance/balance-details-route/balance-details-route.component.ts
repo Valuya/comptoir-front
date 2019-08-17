@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../../app-shell/shell-details-form/shell-form-helper';
 import {WsAccountRef, WsAccountSearch, WsBalance, WsBalanceRef, WsCompanyRef, WsMoneyPile} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, combineLatest, concat, forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
@@ -19,7 +19,7 @@ import {BalanceIdMoneyPilesAccountRef} from '@valuya/comptoir-ws-api/models/Bala
   selector: 'cp-balances-details-route',
   templateUrl: './balance-details-route.component.html',
   styleUrls: ['./balance-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BalanceDetailsRouteComponent implements OnInit, OnDestroy {
 

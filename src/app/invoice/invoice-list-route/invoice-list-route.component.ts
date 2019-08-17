@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
@@ -15,7 +15,8 @@ import {InvoiceService} from '../../domain/commercial/invoice.service';
 @Component({
   selector: 'cp-invoices-list-route',
   templateUrl: './invoice-list-route.component.html',
-  styleUrls: ['./invoice-list-route.component.scss']
+  styleUrls: ['./invoice-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoiceListRouteComponent implements OnInit {
 

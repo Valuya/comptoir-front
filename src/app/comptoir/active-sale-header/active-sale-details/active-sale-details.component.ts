@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsSale} from '@valuya/comptoir-ws-api';
-import {PricingUtils} from '../../../domain/util/pricing-utils';
 import {WsSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsSalePriceDetails';
 
 @Component({

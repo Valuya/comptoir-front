@@ -156,5 +156,12 @@
       }
     }
   },
-  "defaultProject": "comptoir-front"
+  "defaultProject": "comptoir-front",
+  "schematics": {
+    "@schematics/angular": {
+      "component": {
+        "changeDetection": "OnPush"
+      }
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Pagination} from '../../util/pagination';
 import {TableColumn} from '../../util/table-column';
 import {LazyLoadEvent} from 'primeng/api';
@@ -10,7 +10,8 @@ import {Table} from 'primeng/table';
 @Component({
   selector: 'cp-shell-table',
   templateUrl: './shell-table.component.html',
-  styleUrls: ['./shell-table.component.scss']
+  styleUrls: ['./shell-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellTableComponent implements OnInit {
 

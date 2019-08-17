@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
 import {EmployeeColumn} from './employee-columns';
@@ -6,7 +6,8 @@ import {EmployeeColumn} from './employee-columns';
 @Component({
   selector: 'cp-employee-column',
   templateUrl: './employee-column.component.html',
-  styleUrls: ['./employee-column.component.scss']
+  styleUrls: ['./employee-column.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeColumnComponent implements OnInit {
 

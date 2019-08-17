@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsItemVariantStock, WsItemVariantStockRef, WsStock} from '@valuya/comptoir-ws-api';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
@@ -14,7 +14,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-stock-details-variant-details-route',
   templateUrl: './stock-details-variant-details-route.component.html',
-  styleUrls: ['./stock-details-variant-details-route.component.scss']
+  styleUrls: ['./stock-details-variant-details-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockDetailsVariantDetailsRouteComponent implements OnInit, OnDestroy {
 

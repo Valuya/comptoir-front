@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {interval, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'cp-clock',
   templateUrl: './clock.component.html',
-  styleUrls: ['./clock.component.scss']
+  styleUrls: ['./clock.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClockComponent implements OnInit {
 

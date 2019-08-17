@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsItem, WsItemRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
@@ -7,7 +7,8 @@ import {ItemService} from '../../../domain/commercial/item.service';
 @Component({
   selector: 'cp-item-select-list-item',
   templateUrl: './item-select-list-item.component.html',
-  styleUrls: ['./item-select-list-item.component.scss']
+  styleUrls: ['./item-select-list-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemSelectListItemComponent implements OnInit {
 

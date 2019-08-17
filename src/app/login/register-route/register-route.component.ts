@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {WsCompany, WsCompanyRef, WsEmployee, WsRegistration} from '@valuya/comptoir-ws-api';
 import {RegistrationModel} from './registration-model';
@@ -9,7 +9,8 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'cp-register-route',
   templateUrl: './register-route.component.html',
-  styleUrls: ['./register-route.component.scss']
+  styleUrls: ['./register-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterRouteComponent implements OnInit {
 

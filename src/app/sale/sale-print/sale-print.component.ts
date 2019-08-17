@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsCompanyRef, WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
 import {AuthService} from '../../auth.service';
@@ -10,7 +10,8 @@ import {SaleVariantColumns} from '../sale-variant-column/sale-variant-columns';
 @Component({
   selector: 'cp-sale-print',
   templateUrl: './sale-print.component.html',
-  styleUrls: ['./sale-print.component.scss']
+  styleUrls: ['./sale-print.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SalePrintComponent implements OnInit {
 

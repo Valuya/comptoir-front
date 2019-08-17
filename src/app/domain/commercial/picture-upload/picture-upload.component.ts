@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsCustomerRef, WsPicture, WsPictureRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, forkJoin, Observable, Observer, Subscriber, Subscription} from 'rxjs';
@@ -16,7 +16,8 @@ import {PictureService} from '../picture.service';
     provide: NG_VALUE_ACCESSOR,
     useExisting: PictureUploadComponent,
     multi: true,
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PictureUploadComponent implements OnInit, ControlValueAccessor {
 

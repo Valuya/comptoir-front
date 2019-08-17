@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsAttributeValueRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, merge, Observable, of} from 'rxjs';
 import {AttributeSelectItem} from '../attribute-value/attribute-select-item';
@@ -10,7 +10,8 @@ import {AttributeService} from '../attribute.service';
 @Component({
   selector: 'cp-attribute-values',
   templateUrl: './attribute-values.component.html',
-  styleUrls: ['./attribute-values.component.scss']
+  styleUrls: ['./attribute-values.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AttributeValuesComponent implements OnInit {
 

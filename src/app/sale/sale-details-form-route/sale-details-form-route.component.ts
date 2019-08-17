@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsSale} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -14,7 +14,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-sale-details-form-route',
   templateUrl: './sale-details-form-route.component.html',
-  styleUrls: ['./sale-details-form-route.component.scss']
+  styleUrls: ['./sale-details-form-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleDetailsFormRouteComponent implements OnInit, OnDestroy {
   formHelper: ShellFormHelper<WsSale>;

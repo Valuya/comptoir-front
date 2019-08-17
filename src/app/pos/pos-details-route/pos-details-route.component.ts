@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsPos, WsPosRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -15,7 +15,7 @@ import {RouteUtils} from '../../util/route-utils';
   selector: 'cp-pos-details-route',
   templateUrl: './pos-details-route.component.html',
   styleUrls: ['./pos-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PosDetailsRouteComponent implements OnInit, OnDestroy {
 

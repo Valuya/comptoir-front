@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {
   WsCompanyRef,
@@ -25,7 +25,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-sale-details-variants-route',
   templateUrl: './sale-details-variants-route.component.html',
-  styleUrls: ['./sale-details-variants-route.component.scss']
+  styleUrls: ['./sale-details-variants-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleDetailsVariantsRouteComponent implements OnInit {
 

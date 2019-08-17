@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsStock, WsStockRef} from '@valuya/comptoir-ws-api';
@@ -7,7 +7,8 @@ import {StockService} from '../stock.service';
 @Component({
   selector: 'cp-stock',
   templateUrl: './stock.component.html',
-  styleUrls: ['./stock.component.scss']
+  styleUrls: ['./stock.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockComponent implements OnInit {
   @Input()

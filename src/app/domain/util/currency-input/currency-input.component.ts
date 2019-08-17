@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
 import {NumberUtils} from '../../../util/number-utils';
@@ -11,7 +11,8 @@ import {NumberUtils} from '../../../util/number-utils';
     provide: NG_VALUE_ACCESSOR,
     useExisting: CurrencyInputComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CurrencyInputComponent implements OnInit, ControlValueAccessor {
   @Input()

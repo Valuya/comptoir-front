@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
@@ -23,7 +23,8 @@ import {CustomerService} from '../../domain/thirdparty/customer.service';
 @Component({
   selector: 'cp-customers-list-route',
   templateUrl: './customer-list-route.component.html',
-  styleUrls: ['./customer-list-route.component.scss']
+  styleUrls: ['./customer-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerListRouteComponent implements OnInit {
 

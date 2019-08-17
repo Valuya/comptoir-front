@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {combineLatest, concat, Observable, of} from 'rxjs';
@@ -12,6 +12,7 @@ import {ComptoirNewSaleRouteItem} from '../comptoir-menu';
   selector: 'cp-comptoir-sale-route',
   templateUrl: './comptoir-sale-route.component.html',
   styleUrls: ['./comptoir-sale-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 

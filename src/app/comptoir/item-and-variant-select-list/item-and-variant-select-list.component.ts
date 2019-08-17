@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemRef, WsItemVariantRef} from '@valuya/comptoir-ws-api';
 import {$e} from 'codelyzer/angular/styles/chars';
 import {MessageService} from 'primeng/api';
@@ -8,7 +8,8 @@ import {debounceTime, publishReplay, refCount} from 'rxjs/operators';
 @Component({
   selector: 'cp-item-and-variant-select-list',
   templateUrl: './item-and-variant-select-list.component.html',
-  styleUrls: ['./item-and-variant-select-list.component.scss']
+  styleUrls: ['./item-and-variant-select-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemAndVariantSelectListComponent implements OnInit {
 

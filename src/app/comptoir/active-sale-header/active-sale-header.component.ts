@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {ComptoirSaleService} from '../comptoir-sale.service';
@@ -11,7 +11,8 @@ import {WsSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsSalePric
 @Component({
   selector: 'cp-active-sale-header',
   templateUrl: './active-sale-header.component.html',
-  styleUrls: ['./active-sale-header.component.scss']
+  styleUrls: ['./active-sale-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActiveSaleHeaderComponent implements OnInit {
 

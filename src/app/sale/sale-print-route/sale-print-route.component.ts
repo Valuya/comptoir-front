@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {AfterContentInit, ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouteUtils} from '../../util/route-utils';
 import {WsSale} from '@valuya/comptoir-ws-api';
@@ -7,7 +7,8 @@ import {delay, filter, map, mergeMap, publishReplay, refCount, take} from 'rxjs/
 @Component({
   selector: 'cp-sale-print-route',
   templateUrl: './sale-print-route.component.html',
-  styleUrls: ['./sale-print-route.component.scss']
+  styleUrls: ['./sale-print-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SalePrintRouteComponent implements OnInit, AfterContentInit {
 

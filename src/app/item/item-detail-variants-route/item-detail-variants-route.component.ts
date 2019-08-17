@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {WsCompanyRef, WsItem, WsItemVariant, WsItemVariantSearch, WsItemVariantSearchResult} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
@@ -24,7 +24,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-item-detail-variants-route',
   templateUrl: './item-detail-variants-route.component.html',
-  styleUrls: ['./item-detail-variants-route.component.scss']
+  styleUrls: ['./item-detail-variants-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailVariantsRouteComponent implements OnInit {
 

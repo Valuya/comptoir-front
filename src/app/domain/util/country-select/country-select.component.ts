@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsCompanyRef, WsCountry} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
@@ -21,7 +21,8 @@ interface CountryRef {
     provide: NG_VALUE_ACCESSOR,
     useExisting: CountrySelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountrySelectComponent implements OnInit, ControlValueAccessor {
 

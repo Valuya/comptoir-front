@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {WsStock} from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
@@ -11,7 +11,7 @@ import {AppMenuService} from '../../app-shell/app-menu.service';
   selector: 'cp-stocks-details-route',
   templateUrl: './stock-details-route.component.html',
   styleUrls: ['./stock-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockDetailsRouteComponent implements OnInit {
 

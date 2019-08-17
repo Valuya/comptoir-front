@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsCustomer, WsCustomerRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -15,7 +15,7 @@ import {RouteUtils} from '../../util/route-utils';
   selector: 'cp-customers-details-route',
   templateUrl: './customer-details-route.component.html',
   styleUrls: ['./customer-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
 

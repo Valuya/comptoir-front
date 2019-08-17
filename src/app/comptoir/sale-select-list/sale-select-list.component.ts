@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {WsSaleRef, WsSaleSearch} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
@@ -12,7 +12,8 @@ import {SaleColumns} from '../../sale/sale-column/sale-columns';
 @Component({
   selector: 'cp-sale-select-list',
   templateUrl: './sale-select-list.component.html',
-  styleUrls: ['./sale-select-list.component.scss']
+  styleUrls: ['./sale-select-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleSelectListComponent implements OnInit, OnDestroy {
 

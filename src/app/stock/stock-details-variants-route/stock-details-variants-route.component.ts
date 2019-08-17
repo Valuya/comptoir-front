@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {WsCompanyRef, WsItemVariantStock, WsItemVariantStockSearch, WsItemVariantStockSearchResult, WsStock} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
@@ -16,7 +16,8 @@ import {RouteUtils} from '../../util/route-utils';
 @Component({
   selector: 'cp-stock-details-variants-route',
   templateUrl: './stock-details-variants-route.component.html',
-  styleUrls: ['./stock-details-variants-route.component.scss']
+  styleUrls: ['./stock-details-variants-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockDetailsVariantsRouteComponent implements OnInit {
 
