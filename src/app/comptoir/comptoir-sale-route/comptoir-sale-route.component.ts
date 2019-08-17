@@ -92,8 +92,12 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 
     this.saleService.cancelSale$(saleRef).subscribe(() => {
       const activeSale = this.saleService.getActiveSaleOptional();
-      if (activeSale != null && activeSale.id === saleRef.id) {
-        this.router.navigate(['../new/fill'], {
+      if (activeSale != null) {
+        this.router.navigate(['../', activeSale.id, 'fill'], {
+          relativeTo: this.activatedRoute
+        });
+      } else {
+        this.router.navigate(['../', 'new', 'fill'], {
           relativeTo: this.activatedRoute
         });
       }
