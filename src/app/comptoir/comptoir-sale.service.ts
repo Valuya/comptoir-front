@@ -55,9 +55,9 @@ import {UpdateSaleVariantEvent} from './sale-event/update-sale-variant-event';
 import {AddSalePaymentEvent} from './sale-event/add-sale-payment-event';
 import {RemoveSalePaymentEvent} from './sale-event/remove-sale-payment-event';
 import {UpdateSaleVariantPriceEvent} from './sale-event/update-sale-variant-price-event';
-import {WsAccountingEntrySearchAccountSearchAccountTypeEnum} from '@valuya/comptoir-ws-api/models/WsAccountingEntrySearchAccountSearch';
 import {UpdateSalePriceEvent} from './sale-event/update-sale-price-event';
 import {VariantSaleWithPrice} from '../domain/commercial/item-variant-sale/variant-sale-with-price';
+import {WsBalanceSearchAccountSearchAccountTypeEnum} from '@valuya/comptoir-ws-api/models/WsBalanceSearchAccountSearch';
 
 @Injectable({
   providedIn: 'root'
@@ -172,7 +172,7 @@ export class ComptoirSaleService {
         companyRef: sale.companyRef,
         accountingTransactionRef: sale.accountingTransactionRef,
         accountSearch: {
-          accountType: WsAccountAccountTypeEnum.PAYMENT as any as WsAccountingEntrySearchAccountSearchAccountTypeEnum,
+          accountType: WsAccountAccountTypeEnum.PAYMENT as any as WsBalanceSearchAccountSearchAccountTypeEnum,
           companyRef: sale.companyRef,
         }
       });

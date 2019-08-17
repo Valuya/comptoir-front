@@ -12,6 +12,7 @@ import {CustomerFormComponent} from './customer-form/customer-form.component';
 import {FormsModule} from '@angular/forms';
 import {ButtonModule, InputSwitchModule, InputTextModule} from 'primeng/primeng';
 import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inplace-edit.module';
+import {PercentInputModule} from '../domain/util/percent-input/percent-input.module';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {ShellInplaceEditModule} from '../app-shell/shell-inplace-edit/shell-inpl
     InputTextModule,
     ShellInplaceEditModule,
     ButtonModule,
+    PercentInputModule,
   ]
 })
 export class CustomerModule {

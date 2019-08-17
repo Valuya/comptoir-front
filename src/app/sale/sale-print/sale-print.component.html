@@ -39,8 +39,8 @@
         <span>x</span>
         <cp-sale-variant-column [variantWithPrice]="item" [column]="SALE_VARIANTS_COLUMNS.VAT_INCLUSIVE_COLUMN">
         </cp-sale-variant-column>
-        <div class="discount" *ngIf="item.price.discountRatio != null && item.price.discountRatio !== 0">
-          - {{ item.price.discountRatio | percent }}
+        <div class="discount" *ngIf="item.price.effectiveDiscountRatio != null && item.price.effectiveDiscountRatio !== 0">
+          - {{ item.price.effectiveDiscountRatio | percent }}
         </div>
         <div class="vat">
           tva {{ item.price.vatRate | percent }}
