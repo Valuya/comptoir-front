@@ -3,6 +3,7 @@ import {TableColumn} from '../../util/table-column';
 import {WsItemVariantSale} from '@valuya/comptoir-ws-api';
 import {SaleVariantColumn} from './sale-variant-columns';
 import {PricingUtils} from '../../domain/util/pricing-utils';
+import {VariantSaleWithPrice} from '../../domain/commercial/item-variant-sale/variant-sale-with-price';
 
 @Component({
   selector: 'cp-sale-variant-column',
@@ -12,10 +13,8 @@ import {PricingUtils} from '../../domain/util/pricing-utils';
 })
 export class SaleVariantColumnComponent implements OnInit {
 
-  PRICING_UTILS = PricingUtils;
-
   @Input()
-  row: WsItemVariantSale;
+  variantWithPrice: VariantSaleWithPrice;
   @Input()
   column: TableColumn<SaleVariantColumn>;
 

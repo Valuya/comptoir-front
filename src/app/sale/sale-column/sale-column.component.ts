@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {WsSale} from '@valuya/comptoir-ws-api';
+import {WsSale, WsSalePriceDetails} from '@valuya/comptoir-ws-api';
 import {TableColumn} from '../../util/table-column';
 import {SaleColumn} from './sale-columns';
 
@@ -12,7 +12,9 @@ import {SaleColumn} from './sale-columns';
 export class SaleColumnComponent implements OnInit {
 
   @Input()
-  row: WsSale;
+  sale: WsSale;
+  @Input()
+  price: WsSalePriceDetails;
   @Input()
   column: TableColumn<SaleColumn>;
 

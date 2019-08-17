@@ -53,8 +53,8 @@
                                (ngModelChange)="onDiscountAmountChange($event)"
         >
           <ng-template cpInplaceOutput>
-            <i class="fa fa-sun-o" *ngIf="salePrice.saleDiscountAmount == null"></i>
-            <span *ngIf="salePrice.saleDiscountAmount != null">
+            <i class="fa fa-sun-o" *ngIf="!(salePrice.saleDiscountAmount > 0)"></i>
+            <span *ngIf="salePrice.saleDiscountAmount > 0">
               <span>-</span>
               <span>{{ salePrice.saleDiscountAmount | currency }}</span>
               <span>discount</span>

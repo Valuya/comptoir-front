@@ -15,11 +15,11 @@
     <div class="amounts">
       <div class="quantity">
         <cp-shell-inplace-edit name="quantity" #quantity
-                               [ngModel]="item.quantity"
+                               [ngModel]="priceDetails.quantity"
                                (ngModelChange)="fireQuantityChange($event)"
         >
           <ng-template cpInplaceOutput>
-            <span>{{ item.quantity }}</span>
+            <span>{{ priceDetails.quantity }}</span>
             <span>x</span>
           </ng-template>
           <ng-template cpInplaceInput>
@@ -52,8 +52,8 @@
                                (ngModelChange)="fireDiscountRateChange($event)"
         >
           <ng-template cpInplaceOutput>
-            <i class="fa fa-sun-o" *ngIf="priceDetails.discountRatio == null"></i>
-            <span *ngIf="priceDetails.discountRatio != null" class="discount-line">
+            <i class="fa fa-sun-o" *ngIf="!(priceDetails.discountRatio > 0)"></i>
+            <span *ngIf="priceDetails.discountRatio > 0" class="discount-line">
               <span>-</span>
               <span>
                 {{ priceDetails.discountRatio | percent }}
@@ -89,7 +89,7 @@
     </div>
 
     <div class="info">
-      <div class="customer-loyalty" title="Apply customer loyalty discount">
+      <div class="customer-loyalty" title="Apply customer loyalty">
         <cp-shell-inplace-edit name="includeCustomerLoyalty" #includeCustomerLoyalty>
           <ng-template cpInplaceOutput>
             <label for="customer-loyalty">
@@ -102,6 +102,21 @@
           </ng-template>
         </cp-shell-inplace-edit>
       </div>
+
+      <div class="customer-discount" title="Apply default customer discount">
+        <cp-shell-inplace-edit name="includeCustomerDiscount" #includeCustomerDiscount>
+          <ng-template cpInplaceOutput>
+            <label for="customer-loyalty">
+              <i class="fa fa-user-secret"></i>
+            </label>
+            <p-triStateCheckbox id="customer-discount"
+                                [ngModel]="item.includeCustomerDiscount"
+                                (ngModelChange)="fireChanges({includeCustomerDiscount: $event})"
+            ></p-triStateCheckbox>
+          </ng-template>
+        </cp-shell-inplace-edit>
+      </div>
+
 
       <div class="stock">
         <cp-shell-inplace-edit name="stockRef" #stockRef

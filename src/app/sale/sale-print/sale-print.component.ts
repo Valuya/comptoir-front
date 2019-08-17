@@ -6,6 +6,7 @@ import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {SaleService} from '../../domain/commercial/sale.service';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {SaleVariantColumns} from '../sale-variant-column/sale-variant-columns';
+import {VariantSaleWithPrice} from '../../domain/commercial/item-variant-sale/variant-sale-with-price';
 
 @Component({
   selector: 'cp-sale-print',
@@ -26,7 +27,7 @@ export class SalePrintComponent implements OnInit {
   sale$: Observable<WsSale | null>;
   companyRef$: Observable<WsCompanyRef>;
   itemRefs$: Observable<WsItemVariantSaleRef[]>;
-  items$: Observable<WsItemVariantSale[]>;
+  itemsWithPrice$: Observable<VariantSaleWithPrice[]>;
 
   constructor(private authService: AuthService,
               private saleService: SaleService
@@ -42,7 +43,7 @@ export class SalePrintComponent implements OnInit {
       switchMap(ref => this.searchItemsRefs$(ref)),
       publishReplay(1), refCount()
     );
-    this.items$ = this.itemRefs$.pipe(
+    this.itemsWithPrice$ = this.itemRefs$.pipe(
       switchMap(refs => this.searchItems$(refs))
     );
     this.companyRef$ = this.authService.getNextNonNullLoggedEmployeeCompanyRef$();
@@ -66,11 +67,11 @@ export class SalePrintComponent implements OnInit {
     );
   }
 
-  private searchItems$(refs: WsItemVariantSaleRef[]): Observable<WsItemVariantSale[]> {
+  private searchItems$(refs: WsItemVariantSaleRef[]): Observable<VariantSaleWithPrice[]> {
     if (refs == null || refs.length === 0) {
       return of([]);
     }
-    const item$List = refs.map(ref => this.saleService.getVariant$(ref));
+    const item$List = refs.map(ref => this.saleService.getVariantWithPrice$(ref));
     return forkJoin(item$List);
   }
 }

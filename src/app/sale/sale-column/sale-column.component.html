@@ -1,46 +1,46 @@
-<div *ngIf="row != null && column != null"
+<div *ngIf="sale != null && column != null && price != null"
      [ngSwitch]="column.value"
      [ngClass]="column.value"
 >
   <ng-container *ngSwitchCase="'ID'">
-    {{ row.id | json }}
+    {{ sale.id | json }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'CLOSED'">
-    <i class="fa fa-check-circle" *ngIf="row.closed"></i>
+    <i class="fa fa-check-circle" *ngIf="sale.closed"></i>
   </ng-container>
 
   <ng-container *ngSwitchCase="'CUSTOMER'">
-    <cp-customer [ref]="row.customerRef"></cp-customer>
+    <cp-customer [ref]="sale.customerRef"></cp-customer>
   </ng-container>
 
   <ng-container *ngSwitchCase="'DATETIME'">
-    {{ row.dateTime | date }}
+    {{ sale.dateTime | date }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'VAT_AMOUNT'">
-    {{  (row.vatAmount) | currency}}
+    {{  price.vatAmount | currency}}
   </ng-container>
 
 
   <ng-container *ngSwitchCase="'VAT_EXLUSIVE_AMOUNT'">
-    <cp-sale [ref]="{id: row.id}" [showVatExclusive]="true"></cp-sale>
+    {{ price.totalPriceVatExclusive | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'TOTAL_AMOUNT'">
-    <cp-sale [ref]="{id: row.id}" [showTotal]="true"></cp-sale>
+    {{ price.totalPriceVatInclusive | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'ITEM_COUNT'">
-    <cp-sale [ref]="{id: row.id}" [showItemCount]="true"></cp-sale>
+    <cp-sale [ref]="{id: sale.id}" [showItemCount]="true"></cp-sale>
   </ng-container>
 
 
   <ng-container *ngSwitchCase="'JUMP_TO_POS'">
     <cp-shell-inplace-edit [forceHoverEffect]="true">
       <ng-template cpInplaceOutput>
-        <a [routerLink]="['/comptoir/sale/', row.id]"
-        (click)="discardEvent($event)">
+        <a [routerLink]="['/comptoir/sale/', sale.id]"
+           (click)="discardEvent($event)">
           <i class="fa fa-shopping-basket"></i>
         </a>
       </ng-template>

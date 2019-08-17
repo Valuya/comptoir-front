@@ -50,7 +50,6 @@ export class SaleVariantIdResolverService {
       saleRef: {id: sale.id},
       stockRef: undefined,
       itemVariantRef: undefined,
-      quantity: 0,
       dateTime: new Date(),
       comment: [],
     };

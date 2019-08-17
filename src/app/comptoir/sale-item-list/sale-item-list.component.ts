@@ -2,14 +2,14 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/co
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch} from '@valuya/comptoir-ws-api';
-import {Observable} from 'rxjs';
+import {Observable, timer} from 'rxjs';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {LazyLoadEvent, MessageService, SelectItem} from 'primeng/api';
 import {DataView} from 'primeng/dataview';
 import {SaleVariantColumns} from '../../sale/sale-variant-column/sale-variant-columns';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {WsItemVariantSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsItemVariantSalePriceDetails';
-import {ItemWithPrice} from '../item-with-price';
+import {VariantSaleWithPrice} from '../../domain/commercial/item-variant-sale/variant-sale-with-price';
 
 @Component({
   selector: 'cp-sale-item-list',
@@ -34,9 +34,9 @@ import {ItemWithPrice} from '../item-with-price';
 })
 export class SaleItemListComponent implements OnInit {
 
-  itemsTableHelper: ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>;
+  itemsTableHelper: ShellTableHelper<VariantSaleWithPrice, WsItemVariantSaleSearch>;
 
-  saleItems$: Observable<ItemWithPrice[]>;
+  saleItems$: Observable<VariantSaleWithPrice[]>;
   paginationFirst$: Observable<number>;
   paginationRows$: Observable<number>;
   totalCount$: Observable<number>;
@@ -122,11 +122,13 @@ export class SaleItemListComponent implements OnInit {
     }
     const tableBodyElement = this.getViewContentElement();
     if (tableBodyElement != null) {
-      const itemElements = tableBodyElement.getElementsByClassName(`item-${item.id}`);
-      if (itemElements.length > 0) {
-        const itemElement = itemElements[0];
-        itemElement.scrollIntoView();
-      }
+      timer(0).subscribe(() => {
+        const itemElements = tableBodyElement.getElementsByClassName(`item-${item.id}`);
+        if (itemElements.length > 0) {
+          const itemElement = itemElements[0];
+          itemElement.scrollIntoView();
+        }
+      });
     }
   }
 

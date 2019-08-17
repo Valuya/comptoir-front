@@ -61,6 +61,24 @@
     </cp-shell-inplace-edit>
   </div>
 
+
+  <div class="control">
+    <label>Include customer discount</label>
+    <cp-shell-inplace-edit name="includeCustomerDiscount" #includeCustomerDiscount
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.includeCustomerDiscount"
+                           [ngModel]="value.includeCustomerDiscount"
+                           (ngModelChange)="updateValue({includeCustomerDiscount: $event})"
+    >
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <p-inputSwitch [(ngModel)]="includeCustomerLoyalty.editValue"
+                       (ngModelChange)="updateValue({includeCustomerDiscount: $event})"
+                       [disabled]="disabled"
+        ></p-inputSwitch>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
   <div class="control">
     <label>Comment</label>
     <cp-shell-inplace-edit name="comment" #comment
@@ -83,97 +101,6 @@
                    [(ngModel)]="commentTexts.editingTextValue">
           </ng-template>
         </cp-locale-text-edit>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-  <div class="control">
-    <label>Discount</label>
-    <cp-shell-inplace-edit name="discountRatio" #discountRatio
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.discountRatio"
-                           [ngModel]="value.discountRatio"
-                           (ngModelChange)="updateValue({discountRatio: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.discountRatio | percent }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
-        <cp-percent-input [(ngModel)]="discountRatio.editValue"></cp-percent-input>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-  <div class="control">
-    <label>Vat rate</label>
-    <cp-shell-inplace-edit name="vatRate" #vatRate
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.vatRate"
-                           [ngModel]="value.vatRate"
-                           (ngModelChange)="updateValue({vatRate: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.vatRate | percent }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
-        <cp-percent-input [(ngModel)]="vatRate.editValue"></cp-percent-input>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-  <div class="control">
-    <label>Quantity</label>
-    <cp-shell-inplace-edit name="quantity" #quantity
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.quantity"
-                           [ngModel]="value.quantity"
-                           (ngModelChange)="updateValue({quantity: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.quantity }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
-        <p-spinner [ngModel]="quantity.editValue "
-                   (ngModelChange)="quantity.editValue = $event"
-                   step="1" min="0"
-                   [class.ui-state-error]="invalid"
-        ></p-spinner>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-
-  <div class="control">
-    <label>Vat Exclusive</label>
-    <cp-shell-inplace-edit name="vatExclusive" #vatExclusive
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.vatExclusive"
-                           [ngModel]="value.vatExclusive"
-                           (ngModelChange)="updateValue({vatExclusive: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.vatExclusive | currency }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
-        <cp-currency-input [(ngModel)]="vatExclusive.editValue"></cp-currency-input>
-      </ng-template>
-    </cp-shell-inplace-edit>
-  </div>
-
-
-  <div class="control">
-    <label>Total</label>
-    <cp-shell-inplace-edit name="total" #total
-                           [disabled]="disabled"
-                           [errors]="validationResults?.errors?.total"
-                           [ngModel]="value.total"
-                           (ngModelChange)="updateValue({total: $event})"
-    >
-      <ng-template cpInplaceOutput let-invalid="invalid">
-        {{ value.total | currency }}
-      </ng-template>
-      <ng-template cpInplaceInput let-invalid="invalid">
-        <cp-currency-input [(ngModel)]="total.editValue"></cp-currency-input>
       </ng-template>
     </cp-shell-inplace-edit>
   </div>

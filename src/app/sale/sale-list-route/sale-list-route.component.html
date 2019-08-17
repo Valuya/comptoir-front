@@ -23,7 +23,8 @@
       </ng-template>
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-sale-column [column]="column"
-                        [row]="row"
+                        [sale]="row.sale"
+                        [price]="row.price"
         ></cp-sale-column>
       </ng-template>
     </cp-shell-table>

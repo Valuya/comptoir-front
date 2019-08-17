@@ -24,21 +24,21 @@
              hidden>
     </p-header>
 
-    <ng-template let-itemWithPrice pTemplate="listItem">
-      <div class="list-item" [ngClass]="'item-'+itemWithPrice.itemRef.id"
-           [@highlight]="itemWithPrice.item === updatedItem ? 'highlighted' : ''"
+    <ng-template let-variantWithPrice pTemplate="listItem">
+      <div class="list-item" [ngClass]="'item-'+variantWithPrice.variantSale.id"
+           [@highlight]="variantWithPrice.variantSale === updatedItem ? 'highlighted' : ''"
       >
-        <cp-sale-item-list-item [item]="itemWithPrice.item"
-                                [priceDetails]="itemWithPrice.price"
+        <cp-sale-item-list-item [item]="variantWithPrice.variantSale"
+                                [priceDetails]="variantWithPrice.price"
                                 (itemChange)="onSaleItemUpdate($event)"
                                 (itemRemove)="onSaleItemRemove($event)"
-                                (discountAmountChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'discountAmount', $event)"
-                                (discountRateChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'discountRatio', $event)"
-                                (quantityChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'quantity', $event)"
-                                (totalVatExclusiveChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'totalVatExclusive', $event)"
-                                (totalVatInclusiveChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'totalVatInclusive', $event)"
-                                (unitVatExclusiveChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'unitPriceVatExclusive', $event)"
-                                (vatRateChange)="onSaleItemPriceUpdate(itemWithPrice.item, 'vatRate', $event)"
+                                (discountAmountChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'discountAmount', $event)"
+                                (discountRateChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'discountRatio', $event)"
+                                (quantityChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'quantity', $event)"
+                                (totalVatExclusiveChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'totalVatExclusive', $event)"
+                                (totalVatInclusiveChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'totalVatInclusive', $event)"
+                                (unitVatExclusiveChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'unitPriceVatExclusive', $event)"
+                                (vatRateChange)="onSaleItemPriceUpdate(variantWithPrice.variantSale, 'vatRate', $event)"
         ></cp-sale-item-list-item>
       </div>
     </ng-template>
