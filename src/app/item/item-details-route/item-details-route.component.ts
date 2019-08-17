@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
 import {MenuItem} from 'primeng/api';
 import {Observable, of} from 'rxjs';
@@ -11,6 +11,7 @@ import {RouteUtils} from '../../util/route-utils';
   selector: 'cp-item-details-route',
   templateUrl: './item-details-route.component.html',
   styleUrls: ['./item-details-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailsRouteComponent implements OnInit {
 
@@ -23,7 +24,7 @@ export class ItemDetailsRouteComponent implements OnInit {
 
   ngOnInit() {
     const routeSnapshot = this.activatedRoute.snapshot;
-    const item = RouteUtils.findRouteDataInAncestors<WsItem>(routeSnapshot.pathFromRoot, 'item');
+    const item = RouteUtils.findRouteDataInRouteSnapshotAncestors<WsItem>(routeSnapshot.pathFromRoot, 'item');
     this.detailsRoutesItems$ = of(this.createTabs(item, routeSnapshot));
   }
 

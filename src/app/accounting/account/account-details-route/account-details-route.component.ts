@@ -9,12 +9,12 @@ import {ValidationResult} from '../../../app-shell/shell-details-form/validation
 import {ValidationResultFactory} from '../../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../../navigation.service';
 import {AccountService} from '../../../domain/accounting/account.service';
+import {RouteUtils} from '../../../util/route-utils';
 
 @Component({
   selector: 'cp-accounts-details-route',
   templateUrl: './account-details-route.component.html',
   styleUrls: ['./account-details-route.component.scss'],
-
 })
 export class AccountDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -33,9 +33,8 @@ export class AccountDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.account),
-    ).subscribe(account => this.formHelper.init(account));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'account')
+      .subscribe(account => this.formHelper.init(account));
   }
 
   ngOnDestroy(): void {
@@ -58,7 +57,7 @@ export class AccountDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Account ${updatedAccount.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsAccount): Observable<ValidationResult<WsAccount>> {

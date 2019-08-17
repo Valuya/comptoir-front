@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsCountry} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
@@ -7,7 +7,8 @@ import {CountryService} from '../country.service';
 @Component({
   selector: 'cp-country',
   templateUrl: './country.component.html',
-  styleUrls: ['./country.component.scss']
+  styleUrls: ['./country.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountryComponent implements OnInit {
 

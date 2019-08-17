@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
@@ -15,7 +15,8 @@ import {StockService} from '../../domain/commercial/stock.service';
 @Component({
   selector: 'cp-stocks-list-route',
   templateUrl: './stock-list-route.component.html',
-  styleUrls: ['./stock-list-route.component.scss']
+  styleUrls: ['./stock-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockListRouteComponent implements OnInit {
 

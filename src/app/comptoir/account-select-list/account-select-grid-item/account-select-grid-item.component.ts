@@ -1,11 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsAccount, WsAccountRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Component({
   selector: 'cp-account-select-grid-item',
   templateUrl: './account-select-grid-item.component.html',
-  styleUrls: ['./account-select-grid-item.component.scss']
+  styleUrls: ['./account-select-grid-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountSelectGridItemComponent implements OnInit {
 

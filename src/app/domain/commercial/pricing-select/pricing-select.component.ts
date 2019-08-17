@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsItemVariantPricingEnum,} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
@@ -14,7 +14,8 @@ import {PricingService} from '../pricing/pricing.service';
     provide: NG_VALUE_ACCESSOR,
     useExisting: PricingSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PricingSelectComponent implements OnInit, ControlValueAccessor {
 

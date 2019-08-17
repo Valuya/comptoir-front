@@ -1,9 +1,9 @@
-<div *ngIf="row != null && column != null"
+<div *ngIf="variantWithPrice != null && column != null"
      [ngSwitch]="column.value"
      [ngClass]="column.value"
 >
   <ng-container *ngSwitchCase="'ID'">
-    {{ row.id | json }}
+    {{ variantWithPrice.variantSale.id | json }}
   </ng-container>
 
 
@@ -18,49 +18,48 @@
 
 
   <ng-container *ngSwitchCase="'COMMENT'">
-    <cp-locale-text [localeTexts]="row.comment"
+    <cp-locale-text [localeTexts]="variantWithPrice.variantSale.comment"
     ></cp-locale-text>
   </ng-container>
 
 
   <ng-container *ngSwitchCase="'DATETIME'">
-    {{ row.dateTime | date }}
+    {{ variantWithPrice.variantSale.dateTime | date }}
   </ng-container>
 
 
   <ng-container *ngSwitchCase="'DISCOUNT_RATIO'">
-    {{ row.discountRatio | percent }}
+    {{ variantWithPrice.price.discountRatio | percent }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'INCLUDE_CUSTOMER_LOYALTY'">
-    <i class="fa fa-check-circle" *ngIf="row.includeCustomerLoyalty"></i>
+    <i class="fa fa-check-circle" *ngIf="variantWithPrice.variantSale.includeCustomerLoyalty"></i>
   </ng-container>
 
   <ng-container *ngSwitchCase="'ITEM_VARIANT'">
-    <cp-item-variant [ref]="row.itemVariantRef"
+    <cp-item-variant [ref]="variantWithPrice.variantSale.itemVariantRef"
                      [showItemName]="true"
     ></cp-item-variant>
   </ng-container>
 
   <ng-container *ngSwitchCase="'QUANTITY'">
-    {{ row.quantity | number }}
+    {{ variantWithPrice.price.quantity | number }}
   </ng-container>
 
-  <ng-container *ngSwitchCase="'TOTAL'">
-    {{ PRICING_UTILS.getVatInclusiveromVatExclusive(row.total, row.vatRate) | currency }}
+  <ng-container *ngSwitchCase="'TOTAL_VAT_INCLUSIVE'">
+    {{ variantWithPrice.price.totalVatInclusive | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'VAT_EXCLUSIVE'">
-    {{ row.vatExclusive | currency }}
+    {{ variantWithPrice.price.totalVatExclusive | currency }}
   </ng-container>
 
-
-  <ng-container *ngSwitchCase="'VAT_INCLUSIVE'">
-    {{ PRICING_UTILS.getVatInclusiveromVatExclusive(row.vatExclusive, row.vatRate) | currency }}
+  <ng-container *ngSwitchCase="'UNIT_VAT_EXCLUSIVE'">
+    {{ variantWithPrice.price.unitPriceVatExclusive | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'VAT_RATE'">
-    {{ row.vatRate | percent }}
+    {{ variantWithPrice.price.vatRate | currency }}
   </ng-container>
 
 

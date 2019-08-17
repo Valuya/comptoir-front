@@ -28,27 +28,25 @@
   </div>
 
   <div class="items">
-    <div *ngFor="let item of items$ | async" class="item">
-      <cp-sale-variant-column [row]="item" [column]="SALE_VARIANTS_COLUMNS.ITEM_VARIANT_COLUMN">
+    <div *ngFor="let item of itemsWithPrice$ | async" class="item">
+      <cp-sale-variant-column [variantWithPrice]="item" [column]="SALE_VARIANTS_COLUMNS.ITEM_VARIANT_COLUMN">
       </cp-sale-variant-column>
-      <cp-sale-variant-column [row]="item" [column]="SALE_VARIANTS_COLUMNS.COMMENT_COLUMN">
+      <cp-sale-variant-column [variantWithPrice]="item" [column]="SALE_VARIANTS_COLUMNS.COMMENT_COLUMN">
       </cp-sale-variant-column>
 
       <div class="amounts">
-        <span>{{ item.quantity }}</span>
+        <span>{{ item.price.quantity }}</span>
         <span>x</span>
-        <cp-sale-variant-column [row]="item" [column]="SALE_VARIANTS_COLUMNS.VAT_INCLUSIVE_COLUMN">
-        </cp-sale-variant-column>
-        <div class="discount" *ngIf="item.discountRatio != null && item.discountRatio !== 0">
-          - {{ item.discountRatio | percent }}
+        <span>{{ item.price.unitPriceVatExclusive * (1 + item.price.vatRate) | currency }}</span>
+        <div class="discount" *ngIf="item.price.effectiveDiscountRatio != null && item.price.effectiveDiscountRatio !== 0">
+          - {{ item.price.effectiveDiscountRatio | percent }}
         </div>
         <div class="vat">
-          tva {{ item.vatRate | percent }}
+          tva {{ item.price.vatRate | percent }}
         </div>
       </div>
       <div class="total">
-        <cp-sale-variant-column [row]="item" [column]="SALE_VARIANTS_COLUMNS.TOTAL_COLUMN">
-        </cp-sale-variant-column>
+        {{ item.price.totalVatInclusive | currency}}
       </div>
     </div>
   </div>

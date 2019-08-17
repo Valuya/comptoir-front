@@ -7,7 +7,7 @@
                     [pagination]="customersTableHelper.pagination$ | async"
                     (paginationChange)="customersTableHelper.setPagination($event)"
                     [(selection)]="selectedCustomers"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-customer-column [column]="column"

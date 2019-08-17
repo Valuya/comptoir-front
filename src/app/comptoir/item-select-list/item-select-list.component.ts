@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {WsCompanyRef, WsItemRef, WsItemSearch} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
@@ -21,7 +21,8 @@ import {ItemService} from '../../domain/commercial/item.service';
 @Component({
   selector: 'cp-item-select-list',
   templateUrl: './item-select-list.component.html',
-  styleUrls: ['./item-select-list.component.scss']
+  styleUrls: ['./item-select-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemSelectListComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {distinctUntilChanged, map, publishReplay, refCount} from 'rxjs/operators';
@@ -14,7 +14,8 @@ import {DateUtils} from '../../../util/date-utils';
     provide: NG_VALUE_ACCESSOR,
     useExisting: DateSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateSelectComponent implements OnInit, ControlValueAccessor {
 

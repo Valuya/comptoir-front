@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
@@ -13,7 +13,8 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
       useExisting: EmployeeFormComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeFormComponent implements OnInit, ControlValueAccessor {
 

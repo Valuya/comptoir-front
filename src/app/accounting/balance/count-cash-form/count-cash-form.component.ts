@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SelectItem} from 'primeng/api';
 import {CountCashRow} from './count-cash-row';
 import {WsBalance, WsBalanceRef, WsMoneyPile} from '@valuya/comptoir-ws-api';
@@ -14,7 +14,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
       useExisting: CountCashFormComponent,
       multi: true
     }
-  ]
+  ],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CountCashFormComponent implements OnInit, ControlValueAccessor {
 
@@ -60,7 +61,7 @@ export class CountCashFormComponent implements OnInit, ControlValueAccessor {
     const moneyPile = this.value[index];
     moneyPile.count = quantity;
     moneyPile.total = quantity * moneyPile.unitAmount;
-    this.fireChanges(this.value);
+    this.fireChanges([...this.value]);
   }
 
   private fireChanges(piles: WsMoneyPile[]) {

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsItemVariantStock, WsItemVariantStockRef, WsStock} from '@valuya/comptoir-ws-api';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
@@ -9,11 +9,13 @@ import {map, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators'
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {StockService} from '../../domain/commercial/stock.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-stock-details-variant-details-route',
   templateUrl: './stock-details-variant-details-route.component.html',
-  styleUrls: ['./stock-details-variant-details-route.component.scss']
+  styleUrls: ['./stock-details-variant-details-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockDetailsVariantDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -34,15 +36,10 @@ export class StockDetailsVariantDetailsRouteComponent implements OnInit, OnDestr
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.stockVariant),
-    ).subscribe(stockVariant => this.formHelper.init(stockVariant));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'stockVariant')
+      .subscribe(stockVariant => this.formHelper.init(stockVariant));
 
-    const stock$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.stock))
-    );
-    this.stock$ = combineLatest(...stock$List).pipe(
-      map(list => list.find(stock => stock != null)),
+    this.stock$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'stock').pipe(
       publishReplay(1), refCount(),
     );
   }
@@ -68,7 +65,7 @@ export class StockDetailsVariantDetailsRouteComponent implements OnInit, OnDestr
       severity: 'success',
       summary: `StockVariant ${updatedStockVariant.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItemVariantStock): Observable<ValidationResult<WsItemVariantStock>> {

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {
   WsAttributeDefinition,
@@ -20,11 +20,13 @@ import {AuthService} from '../../auth.service';
 import {LocaleTextUtils} from '../../domain/lang/locale-text/LocaleTextUtils';
 import {ItemService} from '../../domain/commercial/item.service';
 import {AttributeService} from '../../domain/commercial/attribute.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-item-detail-variant-detail-route',
   templateUrl: './item-detail-variant-detail-route.component.html',
-  styleUrls: ['./item-detail-variant-detail-route.component.scss']
+  styleUrls: ['./item-detail-variant-detail-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy {
 
@@ -49,17 +51,12 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.itemVariant),
-    ).subscribe(itemVariant => this.formHelper.init(itemVariant));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'itemVariant')
+      .subscribe(itemVariant => this.formHelper.init(itemVariant));
 
-    const item$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.item))
-    );
-    this.item$ = combineLatest(...item$List).pipe(
-      map(list => list.find(item => item != null)),
+    this.item$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'item').pipe(
       publishReplay(1), refCount(),
-    );
+    ) as any as Observable<WsItem>;
   }
 
 
@@ -92,7 +89,7 @@ export class ItemDetailVariantDetailRouteComponent implements OnInit, OnDestroy 
       severity: 'success',
       summary: `ItemVariant ${updatedItemVariant.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItemVariant): Observable<ValidationResult<WsItemVariant>> {

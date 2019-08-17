@@ -1,4 +1,4 @@
-import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import {FormContentDirective} from './form-content.directive';
 import {InplaceEditService} from '../shell-inplace-edit/inplace-edit.service';
 
@@ -6,7 +6,8 @@ import {InplaceEditService} from '../shell-inplace-edit/inplace-edit.service';
   selector: 'cp-shell-details-form',
   templateUrl: './shell-details-form.component.html',
   styleUrls: ['./shell-details-form.component.scss'],
-  providers: [InplaceEditService]
+  providers: [InplaceEditService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellDetailsFormComponent implements OnInit {
 

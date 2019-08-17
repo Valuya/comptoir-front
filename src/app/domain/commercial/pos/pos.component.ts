@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsPos, WsPosRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
@@ -7,7 +7,8 @@ import {PosService} from '../pos.service';
 @Component({
   selector: 'cp-pos',
   templateUrl: './pos.component.html',
-  styleUrls: ['./pos.component.scss']
+  styleUrls: ['./pos.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PosComponent implements OnInit {
 

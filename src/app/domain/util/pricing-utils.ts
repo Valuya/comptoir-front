@@ -28,20 +28,4 @@ export class PricingUtils {
   static fixedDecimals(priceValue: number): number {
     return NumberUtils.toFixedDecimals(priceValue, 4);
   }
-
-  static getDiscountRateFromAmount(item: WsItemVariantSale, amount: number): number {
-    const amountRate = PricingUtils.fixedDecimals(amount / item.vatExclusive);
-    return amountRate;
-  }
-
-  static getSaleDiscountRateFromAmount(sale: WsSale, amonut: number) {
-    const saleTotal = sale.vatExclusiveAmount + sale.discountAmount;
-    const amountRatio = amonut / saleTotal;
-    return amountRatio;
-  }
-
-  static getSaleTotal(sale: WsSale) {
-    return sale.vatExclusiveAmount + sale.vatAmount;
-  }
-
 }

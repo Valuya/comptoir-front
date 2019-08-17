@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsPos, WsPosRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -9,12 +9,13 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {PosService} from '../../domain/commercial/pos.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-pos-details-route',
   templateUrl: './pos-details-route.component.html',
   styleUrls: ['./pos-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PosDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -34,9 +35,8 @@ export class PosDetailsRouteComponent implements OnInit, OnDestroy {
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.pos),
-    ).subscribe(pos => this.formHelper.init(pos));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'pos')
+      .subscribe(pos => this.formHelper.init(pos as WsPos));
   }
 
   ngOnDestroy(): void {
@@ -59,7 +59,7 @@ export class PosDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Pos ${updatedPos.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsPos): Observable<ValidationResult<WsPos>> {

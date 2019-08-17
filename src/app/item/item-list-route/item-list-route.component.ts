@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {TableColumn} from '../../util/table-column';
 import {
@@ -23,7 +23,8 @@ import {ItemService} from '../../domain/commercial/item.service';
 @Component({
   selector: 'cp-item-list-route',
   templateUrl: './item-list-route.component.html',
-  styleUrls: ['./item-list-route.component.scss']
+  styleUrls: ['./item-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemListRouteComponent implements OnInit {
 

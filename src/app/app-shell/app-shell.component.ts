@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AppMenuService} from './app-menu.service';
 import {Observable} from 'rxjs';
 import {MenuItem, MessageService} from 'primeng/api';
@@ -21,7 +21,8 @@ import {WebNotificationService} from './web-notification.service';
         animate('.3s ease-out')
       ]),
     ])
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppShellComponent implements OnInit {
 

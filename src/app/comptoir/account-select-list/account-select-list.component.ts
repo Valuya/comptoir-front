@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {WsAccountRef, WsAccountSearch, WsAccountSearchAccountTypeEnum, WsCompanyRef, WsPosRef} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../auth.service';
@@ -15,7 +15,8 @@ import {NAME_COLUMN} from '../../accounting/account/account-column/account-colum
 @Component({
   selector: 'cp-account-select-list',
   templateUrl: './account-select-list.component.html',
-  styleUrls: ['./account-select-list.component.scss']
+  styleUrls: ['./account-select-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountSelectListComponent implements OnInit, OnDestroy {
 

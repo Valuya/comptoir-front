@@ -197,7 +197,39 @@
                [class.ui-state-error]="invalid">
       </ng-template>
     </cp-shell-inplace-edit>
+  </div>
 
+
+  <div class="control">
+    <label>Discount</label>
+    <cp-shell-inplace-edit name="discountRate" #discountRate
+                           [disabled]="disabled"
+                           [errors]="validationResults?.errors?.discountRate"
+                           [ngModel]="value.discountRate"
+                           (ngModelChange)="updateValue({discountRate: $event})"
+    >
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        {{ value.discountRate | percent }}
+      </ng-template>
+      <ng-template cpInplaceInput let-invalid="invalid">
+        <cp-percent-input [(ngModel)]="discountRate.editValue"
+                          [invalid]="invalid"
+        ></cp-percent-input>
+      </ng-template>
+    </cp-shell-inplace-edit>
+  </div>
+
+
+  <div class="control">
+    <label>Discount cumulable</label>
+    <cp-shell-inplace-edit [errors]="validationResults?.errors?.discountCumulable">
+      <ng-template cpInplaceOutput let-invalid="invalid">
+        <p-inputSwitch name="discountCumulable"
+                       [ngModel]="value.discountCumulable"
+                       (ngModelChange)="updateValue({discountCumulable: $event})"
+        ></p-inputSwitch>
+      </ng-template>
+    </cp-shell-inplace-edit>
   </div>
 
 

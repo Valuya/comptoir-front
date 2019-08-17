@@ -12,7 +12,6 @@
            [columns]="columns"
            [value]="rows"
            selectionMode="multiple"
-           (onRowSelect)="onRowSelect($event)"
            [selection]="selection"
            (selectionChange)="onSelectionChange($event)"
            [lazy]="true"
@@ -32,7 +31,7 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr [pSelectableRow]="rowData">
+      <tr [pSelectableRow]="rowData" (click)="onRowClick(rowData)">
         <td>
           <div cpClickStopPropagation class="checkbox-col">
             <p-tableCheckbox [value]="rowData"

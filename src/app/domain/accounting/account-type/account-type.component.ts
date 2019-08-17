@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsAccount, WsAccountAccountTypeEnum, WsAccountRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {SelectItem} from 'primeng/api';
@@ -8,7 +8,8 @@ import {map, publishReplay, refCount} from 'rxjs/operators';
 @Component({
   selector: 'cp-account-type',
   templateUrl: './account-type.component.html',
-  styleUrls: ['./account-type.component.scss']
+  styleUrls: ['./account-type.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountTypeComponent implements OnInit {
 

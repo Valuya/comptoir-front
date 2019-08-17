@@ -3,21 +3,29 @@ import {ApiService} from '../../api.service';
 import {
   WsAccountingEntry,
   WsAccountingEntryRef,
-  WsBalance, WsBalanceRef, WsItem, WsItemVariant,
+  WsItem,
+  WsItemVariant,
   WsItemVariantSale,
-  WsItemVariantSaleRef, WsItemVariantSaleSearch, WsItemVariantSaleSearchResult,
+  WsItemVariantSaleRef,
+  WsItemVariantSaleSearch,
+  WsItemVariantSaleSearchResult,
   WsSale,
-  WsSaleRef, WsSaleSearch, WsSalesSearchResult
+  WsSaleRef,
+  WsSaleSearch,
+  WsSalesSearchResult
 } from '@valuya/comptoir-ws-api';
-import {Observable, of} from 'rxjs';
+import {forkJoin, Observable, of} from 'rxjs';
 import {map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {ItemService} from './item.service';
 import {CachedResourceClient} from '../util/cache/cached-resource-client';
 import {Pagination} from '../../util/pagination';
 import {PaginationUtils} from '../../util/pagination-utils';
 import {SearchResult} from '../../app-shell/shell-table/search-result';
-import {PricingUtils} from '../util/pricing-utils';
 import {AccountingService} from '../accounting/accounting.service';
+import {WsItemVariantSalePriceDetails} from '@valuya/comptoir-ws-api/models/index';
+import {WsSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models';
+import {VariantSaleWithPrice} from './item-variant-sale/variant-sale-with-price';
+import {SaleWithPrice} from './sale/sale-with-price';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +33,9 @@ import {AccountingService} from '../accounting/accounting.service';
 export class SaleService {
 
   private saleCache: CachedResourceClient<WsSaleRef, WsSale>;
-  private variantCache: CachedResourceClient<WsItemVariantSaleRef, WsSaleRef>;
+  private variantCache: CachedResourceClient<WsItemVariantSaleRef, WsItemVariantSale>;
+  private salePriceCache: CachedResourceClient<WsItemVariantSaleRef, WsSalePriceDetails>;
+  private variantPriceCache: CachedResourceClient<WsItemVariantSaleRef, WsItemVariantSalePriceDetails>;
 
   constructor(
     private apiService: ApiService,
@@ -43,6 +53,12 @@ export class SaleService {
       val => this.doPutVariant$(val),
       val => this.doCreateVariant$(val),
       ref => this.doDeleteVariant$(ref),
+    );
+    this.salePriceCache = new CachedResourceClient<WsItemVariantSaleRef, WsSalePriceDetails>(
+      ref => this.doGetSalePriceDetails$(ref),
+    );
+    this.variantPriceCache = new CachedResourceClient<WsItemVariantSaleRef, WsItemVariantSalePriceDetails>(
+      ref => this.doGetVariantPriceDetails$(ref),
     );
   }
 
@@ -75,6 +91,19 @@ export class SaleService {
     return this.saleCache.getResource$(ref);
   }
 
+  getSaleWithPrice$(ref, forceFetch?: boolean): Observable<SaleWithPrice> {
+    const sale$ = this.getSale$(ref, forceFetch);
+    const price$ = this.getSalePriceDetails$(ref, forceFetch);
+    return forkJoin(sale$, price$).pipe(
+      map(r => {
+        return {
+          sale: r[0],
+          price: r[1]
+        } as SaleWithPrice;
+      })
+    );
+  }
+
   getSaleTotalPaid$(ref: WsSaleRef): Observable<number> {
     if (ref == null) {
       return of(0);
@@ -92,6 +121,19 @@ export class SaleService {
       this.variantCache.clearCache(ref);
     }
     return this.variantCache.getResource$(ref);
+  }
+
+  getVariantWithPrice$(ref: WsItemVariantSaleRef, forceFetch?: boolean): Observable<VariantSaleWithPrice> {
+    const variant$ = this.getVariant$(ref, forceFetch);
+    const price$ = this.getVariantPriceDetails$(ref, forceFetch);
+    return forkJoin(variant$, price$).pipe(
+      map(r => {
+        return {
+          variantSale: r[0],
+          price: r[1]
+        } as VariantSaleWithPrice;
+      })
+    );
   }
 
   saveSale(sale: WsSale): Observable<WsSaleRef> {
@@ -147,22 +189,148 @@ export class SaleService {
     );
   }
 
-  appendToExistingItem$(existingItem: WsItemVariantSale, amount: number): Observable<WsItemVariantSaleRef> {
-    const curQuantity = existingItem.quantity;
-    return this.updateQuantity$({id: existingItem.id}, curQuantity + amount);
-  }
-
-  updateQuantity$(variantRef: WsItemVariantSaleRef, quantityValue: number): Observable<WsItemVariantSaleRef> {
-    return this.getVariant$(variantRef).pipe(
-      switchMap(variant => this.updateVariant$(variant, {
-        quantity: quantityValue
-      })),
-    );
-  }
-
   updateVariant$(variant: WsItemVariantSale, updates?: Partial<WsItemVariantSale>) {
     const newVariant = Object.assign({}, variant, updates);
     return this.variantCache.updateResource$(newVariant);
+  }
+
+
+  getSalePriceDetails$(ref: WsSaleRef, forceFetch?: boolean): Observable<WsSalePriceDetails> {
+    if (forceFetch === true) {
+      this.salePriceCache.clearCache(ref);
+    }
+    return this.salePriceCache.getResource$(ref);
+  }
+
+  getVariantPriceDetails$(ref: WsItemVariantSaleRef, forceFetch?: boolean): Observable<WsItemVariantSalePriceDetails> {
+    if (forceFetch === true) {
+      this.variantPriceCache.clearCache(ref);
+    }
+    return this.variantPriceCache.getResource$(ref);
+  }
+
+
+  updateItemVariantQuantity$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleQuantity({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantUnitPriceVatExclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleUnitPriceVatExclusive({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleTotalVatExclusivePriorDiscount$(ref: WsItemVariantSaleRef, value: number)
+    : Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleTotalVatExclusivePriorDiscount({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleDiscountRatio$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleDiscountRatio({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleDiscountAmount$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleDiscountAmount({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleTotalVatExclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleTotalVatExclusive({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleVatRate$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleVatRate({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleVatAmount$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleVatAmount({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateItemVariantSaleTotalVatInclusive$(ref: WsItemVariantSaleRef, value: number): Observable<WsItemVariantSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setItemVariantSaleTotalVatInclusive({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.variantPriceCache.setCachedValue(p, ref))
+    );
+  }
+
+
+  updateSaleDiscountRatio$(ref: WsSaleRef, value: number): Observable<WsSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setSaleDiscountRatio({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.salePriceCache.setCachedValue(p, ref))
+    );
+  }
+
+
+  updateSaleDiscountAmount$(ref: WsSaleRef, value: number): Observable<WsSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setSaleDiscountAmount({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.salePriceCache.setCachedValue(p, ref))
+    );
+  }
+
+  updateSaleTotalVatInclusive$(ref: WsSaleRef, value: number): Observable<WsSalePriceDetails> {
+    const newPrice$ = this.apiService.api.setSaleTotalVatInclusive({
+      id: ref.id,
+      body: value == null ? 0 : value
+    }) as any as Observable<WsSalePriceDetails>;
+    return newPrice$.pipe(
+      tap(p => this.salePriceCache.setCachedValue(p, ref))
+    );
   }
 
 
@@ -255,6 +423,20 @@ export class SaleService {
     }) as any as Observable<WsItemVariantSaleRef>;
   }
 
+
+  private doGetSalePriceDetails$(ref: WsSaleRef): Observable<WsSalePriceDetails> {
+    return this.apiService.api.getSalePrice({
+      id: ref.id
+    }) as any as Observable<WsSalePriceDetails>;
+  }
+
+
+  private doGetVariantPriceDetails$(ref: WsItemVariantSaleRef) {
+    return this.apiService.api.getItemVariantSalePrice({
+      id: ref.id
+    }) as any as Observable<WsItemVariantSalePriceDetails>;
+  }
+
   private createNewSaleItemVariant$(curSale: WsSale, itemVariant: WsItemVariant) {
     return this.itemService.getItem$(itemVariant.itemRef).pipe(
       mergeMap(item => this.createNewSaleItemVariantWithItem$(curSale, item, itemVariant))
@@ -263,19 +445,16 @@ export class SaleService {
   }
 
   private createNewSaleItemVariantWithItem$(curSale: WsSale, item: WsItem, itemVariant: WsItemVariant) {
-    const vatExclusive = item.vatExclusive;
-    const variantPricing = itemVariant.pricing;
-    const pricingAmount = itemVariant.pricingAmount;
-    const variantPrice = PricingUtils.applyPricing(vatExclusive, variantPricing, pricingAmount);
     const itemVatRate = item.vatRate;
     const variant: WsItemVariantSale = {
       saleRef: {id: curSale.id},
       dateTime: new Date(),
       itemVariantRef: {id: itemVariant.id},
-      quantity: 1,
-      vatExclusive: variantPrice,
-      vatRate: itemVatRate,
+      includeCustomerDiscount: true,
+      includeCustomerLoyalty: true
     };
     return this.variantCache.createResource$(variant);
   }
+
+
 }

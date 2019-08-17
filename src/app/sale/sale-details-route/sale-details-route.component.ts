@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {WsItem, WsSale} from '@valuya/comptoir-ws-api';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute, ActivatedRouteSnapshot} from '@angular/router';
@@ -11,7 +11,7 @@ import {RouteUtils} from '../../util/route-utils';
   selector: 'cp-sales-details-route',
   templateUrl: './sale-details-route.component.html',
   styleUrls: ['./sale-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleDetailsRouteComponent implements OnInit {
 
@@ -26,7 +26,7 @@ export class SaleDetailsRouteComponent implements OnInit {
 
   ngOnInit() {
     const routeSnapshot = this.activatedRoute.snapshot;
-    const sale = RouteUtils.findRouteDataInAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
+    const sale = RouteUtils.findRouteDataInRouteSnapshotAncestors<WsSale>(routeSnapshot.pathFromRoot, 'sale');
     this.detailsRoutesItems$ = of(this.createTabs(sale, routeSnapshot));
   }
 

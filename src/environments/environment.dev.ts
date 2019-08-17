@@ -7,7 +7,7 @@ import {EnvironmentConfig} from './environment-config';
 export const environment: EnvironmentConfig = {
   production: false,
   backend: {
-    url: 'https://dev.comptoir.valuya.be',
+    url: 'https://dev.comptoir.valuya.be/comptoir-ws',
     swPushKey: ''
   }
 };

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
@@ -13,15 +13,18 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SaleService} from '../../domain/commercial/sale.service';
 import {MenuItem, MessageService} from 'primeng/api';
 import {SaleSearchFilterUtils} from '../sale-search-filter-utils';
+import {RouteUtils} from '../../util/route-utils';
+import {SaleWithPrice} from '../../domain/commercial/sale/sale-with-price';
 
 @Component({
   selector: 'cp-sales-list-route',
   templateUrl: './sale-list-route.component.html',
-  styleUrls: ['./sale-list-route.component.scss']
+  styleUrls: ['./sale-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleListRouteComponent implements OnInit, OnDestroy {
 
-  salesTableHelper: ShellTableHelper<WsSale, WsSaleSearch>;
+  salesTableHelper: ShellTableHelper<SaleWithPrice, WsSaleSearch>;
   selectedSales$ = new BehaviorSubject<WsSale[]>([]);
   columns: TableColumn<SaleColumn>[] = [
     SaleColumns.ID_COLUMN,
@@ -47,7 +50,7 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.salesTableHelper = new ShellTableHelper<WsSale, WsSaleSearch>(
+    this.salesTableHelper = new ShellTableHelper<SaleWithPrice, WsSaleSearch>(
       (searchFilter, pagination) => this.searchSales$(searchFilter, pagination)
     );
     this.selectionMenu$ = this.selectedSales$.pipe(
@@ -58,9 +61,8 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
       map(s => s == null || s.length === 0 ? '' : `${s.length} sales selected`)
     );
 
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.saleSearchFilter),
-    ).subscribe(searchFilter => this.salesTableHelper.setFilter(searchFilter));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'saleSearchFilter')
+      .subscribe(searchFilter => this.salesTableHelper.setFilter(searchFilter as WsSaleSearch));
   }
 
   ngOnDestroy(): void {
@@ -68,12 +70,13 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
   }
 
 
-  onRowSelect(sale: WsSale) {
-    this.router.navigate(['/sale', sale.id]);
+  onRowSelect(sale: SaleWithPrice) {
+    this.router.navigate(['/sale', sale.sale.id]);
   }
 
-  onSelectionChange$(sales: WsSale[]) {
-    this.selectedSales$.next(sales);
+  onSelectionChange$(sales: SaleWithPrice[]) {
+    const saleList = sales.map(s => s.sale);
+    this.selectedSales$.next(saleList);
   }
 
   onFilterChange(searchFilter: WsSaleSearch) {
@@ -84,7 +87,7 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
     });
   }
 
-  private searchSales$(searchFilter: WsSaleSearch | null, pagination: Pagination | null): Observable<SearchResult<WsSale>> {
+  private searchSales$(searchFilter: WsSaleSearch | null, pagination: Pagination | null): Observable<SearchResult<SaleWithPrice>> {
     if (searchFilter == null || pagination == null) {
       return of(SearchResultFactory.emptyResults());
     }
@@ -93,14 +96,15 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
     );
   }
 
-  private searchResultSales$(results: WsSalesSearchResult): Observable<SearchResult<WsSale>> {
-    const sales$List = results.list.map(ref => this.saleService.getSale$(ref));
-    return concat(...sales$List).pipe(toArray()).pipe(
+  private searchResultSales$(results: WsSalesSearchResult): Observable<SearchResult<SaleWithPrice>> {
+    const salesWithPriceList$List = results.list.map(ref => this.saleService.getSaleWithPrice$(ref));
+    const saleWithPrices$ = salesWithPriceList$List.length === 0 ? of([]) : forkJoin(salesWithPriceList$List);
+    return saleWithPrices$.pipe(
       map(newList => {
         return {
           list: newList,
           totalCount: results.totalCount
-        } as SearchResult<WsSale>;
+        } as SearchResult<SaleWithPrice>;
       })
     );
   }

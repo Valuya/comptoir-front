@@ -1,6 +1,14 @@
-::ng-deep .item-variant {
+.item-variant {
   display: flex;
   align-items: center;
+
+  > * {
+    flex: 0 0 auto;
+
+    &:not(:first-child) {
+      margin-left: .2em;
+    }
+  }
 
   &.row, &.details-column {
     flex-direction: row;

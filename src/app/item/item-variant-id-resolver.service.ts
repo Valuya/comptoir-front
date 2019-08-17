@@ -19,7 +19,7 @@ export class ItemVariantIdResolverService {
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<WsItemVariant> | Promise<WsItemVariant> | WsItemVariant {
     const param = route.params.variantId;
-    const resolvedItem: WsItem = RouteUtils.findRouteDataInAncestors(route.pathFromRoot, 'item');
+    const resolvedItem: WsItem = RouteUtils.findRouteDataInRouteSnapshotAncestors(route.pathFromRoot, 'item');
 
     if (param == null) {
       return this.createNew$(resolvedItem);

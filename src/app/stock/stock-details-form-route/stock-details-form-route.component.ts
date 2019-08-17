@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsStock} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -9,11 +9,13 @@ import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
 import {StockService} from '../../domain/commercial/stock.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-stock-details-form-route',
   templateUrl: './stock-details-form-route.component.html',
-  styleUrls: ['./stock-details-form-route.component.scss']
+  styleUrls: ['./stock-details-form-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StockDetailsFormRouteComponent implements OnInit, OnDestroy {
   formHelper: ShellFormHelper<WsStock>;
@@ -33,9 +35,8 @@ export class StockDetailsFormRouteComponent implements OnInit, OnDestroy {
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.stock),
-    ).subscribe(stock => this.formHelper.init(stock));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'stock')
+      .subscribe(stock => this.formHelper.init(stock));
 
   }
 
@@ -60,7 +61,7 @@ export class StockDetailsFormRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Stock ${updatedStock.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsStock): Observable<ValidationResult<WsStock>> {

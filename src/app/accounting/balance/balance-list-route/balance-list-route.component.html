@@ -7,11 +7,11 @@
                     [pagination]="balancesTableHelper.pagination$ | async"
                     (paginationChange)="balancesTableHelper.setPagination($event)"
                     [(selection)]="selectedBalances"
-                    (rowSelect)="onRowSelect($event)"
+                    (rowClick)="onRowSelect($event)"
     >
       <ng-template cpShellColumn let-row="row" let-column="column">
         <cp-balance-column [column]="column"
-                        [row]="row"
+                           [row]="row"
         ></cp-balance-column>
       </ng-template>
     </cp-shell-table>

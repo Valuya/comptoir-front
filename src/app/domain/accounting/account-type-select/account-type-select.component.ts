@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {WsAccountAccountTypeEnum} from '@valuya/comptoir-ws-api';
@@ -15,7 +15,8 @@ import {AccountTypeService} from '../account-type.service';
     provide: NG_VALUE_ACCESSOR,
     useExisting: AccountTypeSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountTypeSelectComponent implements OnInit, ControlValueAccessor {
 
@@ -40,11 +41,11 @@ export class AccountTypeSelectComponent implements OnInit, ControlValueAccessor 
   }
 
   ngOnInit() {
+    this.options = this.createSelectItems();
     this.valueItem$ = this.valueSource$.pipe(
       map(type => this.findSelectItem(type)),
       publishReplay(1), refCount()
     );
-    this.options = this.createSelectItems();
   }
 
   registerOnChange(fn: any): void {

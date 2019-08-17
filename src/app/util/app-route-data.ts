@@ -15,7 +15,7 @@ export interface AppRoute extends Route {
 export function createAppRouteData<T>(
   routeMenuItem: MenuItem | ResolvedRouteItem<T>,
   quickActionItems?: (MenuItem | ResolvedRouteItem<T>)[]
-): AppRouteData {
+): AppRouteData & Data {
   return {
     menuItem: routeMenuItem,
     quickActions: quickActionItems

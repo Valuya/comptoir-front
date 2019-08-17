@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {WsAccountingEntrySearch, WsAccountSearch} from '@valuya/comptoir-ws-api';
@@ -15,7 +15,8 @@ import {map, publishReplay, refCount} from 'rxjs/operators';
       useExisting: AccountingEntryFilterComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountingEntryFilterComponent implements OnInit, ControlValueAccessor {
 

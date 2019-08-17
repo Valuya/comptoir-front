@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {WsAccountingEntry, WsPosRef} from '@valuya/comptoir-ws-api';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {MessageService} from 'primeng/api';
@@ -8,7 +8,8 @@ import {ComptoirService} from '../comptoir-service';
 @Component({
   selector: 'cp-comptoir-sale-pay-route',
   templateUrl: './comptoir-sale-pay-route.component.html',
-  styleUrls: ['./comptoir-sale-pay-route.component.scss']
+  styleUrls: ['./comptoir-sale-pay-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComptoirSalePayRouteComponent implements OnInit {
 

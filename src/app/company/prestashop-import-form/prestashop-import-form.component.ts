@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {WsCompany, WsPrestashopImportParams} from '@valuya/comptoir-ws-api';
@@ -13,7 +13,8 @@ import {WsCompany, WsPrestashopImportParams} from '@valuya/comptoir-ws-api';
       useExisting: PrestashopImportFormComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrestashopImportFormComponent implements OnInit, ControlValueAccessor {
 

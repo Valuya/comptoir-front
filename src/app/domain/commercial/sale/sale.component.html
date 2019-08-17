@@ -10,12 +10,12 @@
 
     <div class="vatExclusiveAmount" *ngIf="showVatExclusive">
       <cp-loading-content [loading]="loading$ |async">
-        {{ (value$ | async)?.vatExclusiveAmount | currency }}
+        {{ (price$ | async)?.totalPriceVatExclusive | currency }}
       </cp-loading-content>
     </div>
     <div class="vatExclusiveAmount" *ngIf="showVat">
       <cp-loading-content [loading]="loading$ |async">
-        {{ (value$ | async)?.vatAmount | currency }}
+        {{ (price$ | async)?.vatAmount | currency }}
       </cp-loading-content>
     </div>
 

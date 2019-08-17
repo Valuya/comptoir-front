@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {LoginService} from '../login.service';
 import {AuthService} from '../../auth.service';
@@ -10,7 +10,8 @@ import {NavigationService} from '../../navigation.service';
 @Component({
   selector: 'cp-login-route',
   templateUrl: './login-route.component.html',
-  styleUrls: ['./login-route.component.scss']
+  styleUrls: ['./login-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginRouteComponent implements OnInit {
 
@@ -53,7 +54,7 @@ export class LoginRouteComponent implements OnInit {
   }
 
   private redirectOnLoggedIn() {
-    this.navigationService.navigateWithRedirectChek(['/']);
+    this.navigationService.navigateWithRedirectCheck(['/']);
   }
 
   private onLoginError(error: any) {

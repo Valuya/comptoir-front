@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, delay, map, publishReplay, refCount, tap} from 'rxjs/operators';
 import {animate, state, style, transition, trigger} from '@angular/animations';
@@ -6,7 +6,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 @Component({
   selector: 'cp-loading-content',
   templateUrl: './loading-content.component.html',
-  styleUrls: ['./loading-content.component.scss']
+  styleUrls: ['./loading-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadingContentComponent implements OnInit {
 

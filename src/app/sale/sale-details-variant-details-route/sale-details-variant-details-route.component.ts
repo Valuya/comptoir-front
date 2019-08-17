@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsItemVariantSale, WsItemVariantSaleRef, WsSale} from '@valuya/comptoir-ws-api';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
@@ -9,11 +9,13 @@ import {map, mergeMap, publishReplay, refCount, switchMap} from 'rxjs/operators'
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {SaleService} from '../../domain/commercial/sale.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-sale-details-variant-details-route',
   templateUrl: './sale-details-variant-details-route.component.html',
-  styleUrls: ['./sale-details-variant-details-route.component.scss']
+  styleUrls: ['./sale-details-variant-details-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -34,15 +36,10 @@ export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestro
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.saleVariant),
-    ).subscribe(saleVariant => this.formHelper.init(saleVariant));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'saleVariant')
+      .subscribe(saleVariant => this.formHelper.init(saleVariant));
 
-    const sale$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.sale))
-    );
-    this.sale$ = combineLatest(...sale$List).pipe(
-      map(list => list.find(sale => sale != null)),
+    this.sale$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'sale').pipe(
       publishReplay(1), refCount(),
     );
   }
@@ -68,7 +65,7 @@ export class SaleDetailsVariantDetailsRouteComponent implements OnInit, OnDestro
       severity: 'success',
       summary: `SaleVariant ${updatedSaleVariant.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItemVariantSale): Observable<ValidationResult<WsItemVariantSale>> {

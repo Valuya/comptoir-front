@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsEmployee} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -9,12 +9,13 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {EmployeeService} from '../../domain/thirdparty/employee.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-employees-details-route',
   templateUrl: './employee-details-route.component.html',
   styleUrls: ['./employee-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -33,9 +34,8 @@ export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.employee),
-    ).subscribe(employee => this.formHelper.init(employee));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'employee')
+      .subscribe(employee => this.formHelper.init(employee as WsEmployee));
   }
 
   ngOnDestroy(): void {
@@ -58,7 +58,7 @@ export class EmployeeDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Employee ${updatedEmployee.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsEmployee): Observable<ValidationResult<WsEmployee>> {

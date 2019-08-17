@@ -14,18 +14,17 @@
       </ng-template>
     </div>
 
-    <div class="details" [ngClass]="layout">
-      <div class="ref item-ref" *ngIf="showReference">
-        <cp-item [showReference]="true"
-                 [ref]="(value$ | async)?.itemRef"
-        ></cp-item>
-        <span>{{ (value$ | async)?.variantReference }}</span>
-      </div>
-      <div class="name" *ngIf="showItemName">
-        <cp-item [ref]="(value$ | async)?.itemRef"
-                 [showName]="true"
-        ></cp-item>
-      </div>
+    <div class="ref item-ref" *ngIf="showReference">
+      <cp-item [showReference]="true"
+               [ref]="(value$ | async)?.itemRef"
+      ></cp-item>
+      <span>{{ (value$ | async)?.variantReference }}</span>
+    </div>
+
+    <div class="name" *ngIf="showItemName">
+      <cp-item [ref]="(value$ | async)?.itemRef"
+               [showName]="true"
+      ></cp-item>
     </div>
 
   </div>

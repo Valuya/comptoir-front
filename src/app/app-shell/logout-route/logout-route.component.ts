@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {NavigationService} from '../../navigation.service';
 import {AuthService} from '../../auth.service';
 import {MessageService} from 'primeng/api';
@@ -6,7 +6,8 @@ import {MessageService} from 'primeng/api';
 @Component({
   selector: 'cp-logout-route',
   templateUrl: './logout-route.component.html',
-  styleUrls: ['./logout-route.component.scss']
+  styleUrls: ['./logout-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LogoutRouteComponent implements OnInit {
 
@@ -21,7 +22,7 @@ export class LogoutRouteComponent implements OnInit {
       severity: 'info',
       summary: 'Logged out'
     });
-    this.navigationService.navigateWithRedirectChek(['/login']);
+    this.navigationService.navigateWithRedirectCheck(['/login']);
   }
 
 }

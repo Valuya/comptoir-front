@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsSaleSearch} from '@valuya/comptoir-ws-api';
 import {DateRange} from '../../domain/util/date-range-select/date-range';
@@ -16,7 +16,8 @@ import {map, publishReplay, refCount} from 'rxjs/operators';
       useExisting: SaleFilterComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleFilterComponent implements OnInit, ControlValueAccessor {
 

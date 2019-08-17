@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsItem, WsItemRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -9,11 +9,13 @@ import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {NavigationService} from '../../navigation.service';
 import {ItemService} from '../../domain/commercial/item.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-item-detail-form-route',
   templateUrl: './item-detail-form-route.component.html',
-  styleUrls: ['./item-detail-form-route.component.scss']
+  styleUrls: ['./item-detail-form-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
 
@@ -34,9 +36,8 @@ export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
       value => this.validate$(value),
       value => this.persist$(value),
     );
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.item),
-    ).subscribe(item => this.formHelper.init(item));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'item')
+      .subscribe(item => this.formHelper.init(item as WsItem));
   }
 
 
@@ -60,7 +61,7 @@ export class ItemDetailFormRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Item ${updatedItem.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsItem): Observable<ValidationResult<WsItem>> {

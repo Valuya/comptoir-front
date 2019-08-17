@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
 import {WsAccount, WsAccountRef, WsAccountSearch, WsCompanyRef} from '@valuya/comptoir-ws-api';
@@ -16,7 +16,8 @@ import {PaginationUtils} from '../../../util/pagination-utils';
     provide: NG_VALUE_ACCESSOR,
     useExisting: AccountSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountSelectComponent implements OnInit, ControlValueAccessor {
 

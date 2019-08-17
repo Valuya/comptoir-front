@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsItem, WsItemVariant, WsItemVariantPricingEnum, WsItemVariantRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {delay, map, mergeMap, publishReplay, refCount, switchMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -8,7 +8,8 @@ import {PricingUtils} from '../../../domain/util/pricing-utils';
 @Component({
   selector: 'cp-variant-select-list-item',
   templateUrl: './variant-select-list-item.component.html',
-  styleUrls: ['./variant-select-list-item.component.scss']
+  styleUrls: ['./variant-select-list-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VariantSelectListItemComponent implements OnInit {
 

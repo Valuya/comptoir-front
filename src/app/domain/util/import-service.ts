@@ -17,7 +17,6 @@ export class ImportService {
     return this.apiService.api.importPrestashop({
       companyId: companyRef.id,
       backendName: backend,
-      ibackendNamed: backend,
       wsPrestashopImportParams: params
     });
   }

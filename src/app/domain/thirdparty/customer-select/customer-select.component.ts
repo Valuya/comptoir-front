@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {WsCompanyRef, WsCustomer, WsCustomerRef, WsCustomerSearch, WsCustomerSearchResult} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, forkJoin, Observable, of, Subject} from 'rxjs';
@@ -16,7 +16,8 @@ import {PaginationUtils} from '../../../util/pagination-utils';
     provide: NG_VALUE_ACCESSOR,
     useExisting: CustomerSelectComponent,
     multi: true
-  }]
+  }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerSelectComponent implements OnInit, ControlValueAccessor {
 

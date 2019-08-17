@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemVariant} from '@valuya/comptoir-ws-api';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ValidationResult} from '../../app-shell/shell-details-form/validation-result';
@@ -18,7 +18,8 @@ import {AttributeService} from '../../domain/commercial/attribute.service';
       useExisting: ItemVariantFormComponent,
       multi: true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemVariantFormComponent implements OnInit, ControlValueAccessor {
 

@@ -1,4 +1,4 @@
-import {Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {Pagination} from '../../util/pagination';
 import {TableColumn} from '../../util/table-column';
 import {LazyLoadEvent} from 'primeng/api';
@@ -10,7 +10,8 @@ import {Table} from 'primeng/table';
 @Component({
   selector: 'cp-shell-table',
   templateUrl: './shell-table.component.html',
-  styleUrls: ['./shell-table.component.scss']
+  styleUrls: ['./shell-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShellTableComponent implements OnInit {
 
@@ -32,7 +33,7 @@ export class ShellTableComponent implements OnInit {
   @Output()
   selectionChange = new EventEmitter<any[]>();
   @Output()
-  rowSelect = new EventEmitter<any>();
+  rowClick = new EventEmitter<any>();
 
   @ContentChild(ShellColumnDirective, {static: false, read: TemplateRef})
   columnTemplate: TemplateRef<any>;
@@ -48,7 +49,11 @@ export class ShellTableComponent implements OnInit {
   }
 
   onRowSelect(event: any) {
-    this.rowSelect.next(event.data);
+    this.rowClick.next(event.data);
+  }
+
+  onRowClick(row: any) {
+    this.rowClick.next(row);
   }
 
   onLazyLoad(event: LazyLoadEvent) {
@@ -64,6 +69,7 @@ export class ShellTableComponent implements OnInit {
   stopEvent(event: Event) {
     event.stopImmediatePropagation();
     event.preventDefault();
+    console.log('stopped ' + event);
     return false;
   }
 

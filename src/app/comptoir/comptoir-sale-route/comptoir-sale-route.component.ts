@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ComptoirSaleService} from '../comptoir-sale.service';
 import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {combineLatest, concat, Observable, of} from 'rxjs';
@@ -12,6 +12,7 @@ import {ComptoirNewSaleRouteItem} from '../comptoir-menu';
   selector: 'cp-comptoir-sale-route',
   templateUrl: './comptoir-sale-route.component.html',
   styleUrls: ['./comptoir-sale-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 
@@ -91,8 +92,12 @@ export class ComptoirSaleRouteComponent implements OnInit, OnDestroy {
 
     this.saleService.cancelSale$(saleRef).subscribe(() => {
       const activeSale = this.saleService.getActiveSaleOptional();
-      if (activeSale != null && activeSale.id === saleRef.id) {
-        this.router.navigate(['../new/fill'], {
+      if (activeSale != null) {
+        this.router.navigate(['../', activeSale.id, 'fill'], {
+          relativeTo: this.activatedRoute
+        });
+      } else {
+        this.router.navigate(['../', 'new', 'fill'], {
           relativeTo: this.activatedRoute
         });
       }

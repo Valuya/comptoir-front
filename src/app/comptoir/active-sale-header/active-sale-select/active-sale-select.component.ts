@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsSaleRef} from '@valuya/comptoir-ws-api';
 import {AuthService} from '../../../auth.service';
 import {SaleService} from '../../../domain/commercial/sale.service';
@@ -7,7 +7,7 @@ import {SaleService} from '../../../domain/commercial/sale.service';
   selector: 'cp-active-sale-select',
   templateUrl: './active-sale-select.component.html',
   styleUrls: ['./active-sale-select.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActiveSaleSelectComponent implements OnInit {
 

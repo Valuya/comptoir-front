@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsCustomer, WsCustomerRef} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -9,12 +9,13 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {CustomerService} from '../../domain/thirdparty/customer.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-customers-details-route',
   templateUrl: './customer-details-route.component.html',
   styleUrls: ['./customer-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -34,9 +35,8 @@ export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.customer),
-    ).subscribe(customer => this.formHelper.init(customer));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'customer')
+      .subscribe(customer => this.formHelper.init(customer));
   }
 
   ngOnDestroy(): void {
@@ -59,7 +59,7 @@ export class CustomerDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Customer ${updatedCustomer.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsCustomer): Observable<ValidationResult<WsCustomer>> {

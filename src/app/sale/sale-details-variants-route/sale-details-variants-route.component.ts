@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {
   WsCompanyRef,
@@ -20,11 +20,13 @@ import {CompanyService} from '../../domain/commercial/company.service';
 import {ItemService} from '../../domain/commercial/item.service';
 import {SaleService} from '../../domain/commercial/sale.service';
 import {SaleVariantColumn, SaleVariantColumns} from '../sale-variant-column/sale-variant-columns';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-sale-details-variants-route',
   templateUrl: './sale-details-variants-route.component.html',
-  styleUrls: ['./sale-details-variants-route.component.scss']
+  styleUrls: ['./sale-details-variants-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleDetailsVariantsRouteComponent implements OnInit {
 
@@ -39,7 +41,7 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
     SaleVariantColumns.DISCOUNT_RATIO_COLUMN,
     SaleVariantColumns.VAT_EXCLUSIVE_COLUMN,
     SaleVariantColumns.VAT_RATE_COLUMN,
-    SaleVariantColumns.TOTAL_COLUMN,
+    SaleVariantColumns.TOTAL_VAT_INCLUSIVE,
   ];
   sale$: Observable<WsSale | null>;
 
@@ -55,15 +57,8 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
     this.saleVariantTableHelper = new ShellTableHelper<WsItemVariantSale, WsItemVariantSaleSearch>(
       (searchFilter, pagination) => this.searchSaleVariant$(searchFilter, pagination)
     );
-    const companyRef$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(
-      filter(c => c != null),
-      take(1)
-    );
-    const item$List = this.activatedRoute.pathFromRoot.map(
-      route => route.data.pipe(map(data => data.sale))
-    );
-    this.sale$ = combineLatest(...item$List).pipe(
-      map(list => list.find(sale => sale != null)),
+    const companyRef$ = this.authService.getNextNonNullLoggedEmployeeCompanyRef$();
+    this.sale$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'sale').pipe(
       publishReplay(1), refCount(),
     );
     forkJoin(companyRef$, this.sale$.pipe(filter(i => i != null), take(1)))

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ShellFormHelper} from '../../app-shell/shell-details-form/shell-form-helper';
 import {WsInvoice} from '@valuya/comptoir-ws-api';
 import {Observable, of, Subscription} from 'rxjs';
@@ -9,12 +9,13 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {InvoiceService} from '../../domain/commercial/invoice.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-invoices-details-route',
   templateUrl: './invoice-details-route.component.html',
   styleUrls: ['./invoice-details-route.component.scss'],
-
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -34,9 +35,8 @@ export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.invoice),
-    ).subscribe(invoice => this.formHelper.init(invoice));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'invoice')
+      .subscribe(invoice => this.formHelper.init(invoice));
   }
 
   ngOnDestroy(): void {
@@ -59,7 +59,7 @@ export class InvoiceDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Invoice ${updatedInvoice.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsInvoice): Observable<ValidationResult<WsInvoice>> {

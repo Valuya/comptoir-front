@@ -1,15 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {WsCompany, WsImportSummary, WsPrestashopImportParams} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ImportService} from '../../domain/util/import-service';
 import {delay, map, publishReplay, refCount, switchMap, take} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {MessageService} from 'primeng/api';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-presathop-import',
   templateUrl: './presathop-import.component.html',
-  styleUrls: ['./presathop-import.component.scss']
+  styleUrls: ['./presathop-import.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PresathopImportComponent implements OnInit {
 
@@ -33,8 +35,7 @@ export class PresathopImportComponent implements OnInit {
       driverClassName: 'org.mariadb.jdbc.Driver',
       dbUrl: 'jdbc:mariadb://',
     };
-    this.company$ = this.activatedRoute.data.pipe(
-      map(data => data.company),
+    this.company$ = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'company').pipe(
       publishReplay(1), refCount()
     );
   }

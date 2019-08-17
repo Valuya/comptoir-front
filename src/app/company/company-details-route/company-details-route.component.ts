@@ -9,12 +9,12 @@ import {ValidationResult} from '../../app-shell/shell-details-form/validation-re
 import {ValidationResultFactory} from '../../app-shell/shell-details-form/validation-result.factory';
 import {NavigationService} from '../../navigation.service';
 import {CompanyService} from '../../domain/commercial/company.service';
+import {RouteUtils} from '../../util/route-utils';
 
 @Component({
   selector: 'cp-companys-details-route',
   templateUrl: './company-details-route.component.html',
   styleUrls: ['./company-details-route.component.scss'],
-
 })
 export class CompanyDetailsRouteComponent implements OnInit, OnDestroy {
 
@@ -33,9 +33,8 @@ export class CompanyDetailsRouteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription = this.activatedRoute.data.pipe(
-      map(data => data.company),
-    ).subscribe(company => this.formHelper.init(company));
+    this.subscription = RouteUtils.observeRoutePathData$(this.activatedRoute.pathFromRoot, 'company')
+      .subscribe(company => this.formHelper.init(company));
   }
 
   ngOnDestroy(): void {
@@ -58,7 +57,7 @@ export class CompanyDetailsRouteComponent implements OnInit, OnDestroy {
       severity: 'success',
       summary: `Company ${updatedCompany.id} saved`
     });
-    this.navigationService.navigateBackWithRedirectCheck();
+    this.navigationService.navigateBackOrToParentWithRedirectCheck();
   }
 
   private validate$(value: WsCompany): Observable<ValidationResult<WsCompany>> {

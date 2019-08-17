@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {WsPicture, WsPictureRef} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {ApiService} from '../../../api.service';
@@ -10,7 +10,8 @@ import {PictureService} from '../picture.service';
 @Component({
   selector: 'cp-picture',
   templateUrl: './picture.component.html',
-  styleUrls: ['./picture.component.scss']
+  styleUrls: ['./picture.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PictureComponent implements OnInit {
 

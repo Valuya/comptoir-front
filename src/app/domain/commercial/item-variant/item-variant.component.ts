@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {delay, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
 import {WsItemVariant, WsItemVariantRef} from '@valuya/comptoir-ws-api';
@@ -7,7 +7,8 @@ import {ItemService} from '../item.service';
 @Component({
   selector: 'cp-item-variant',
   templateUrl: './item-variant.component.html',
-  styleUrls: ['./item-variant.component.scss']
+  styleUrls: ['./item-variant.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemVariantComponent implements OnInit {
 

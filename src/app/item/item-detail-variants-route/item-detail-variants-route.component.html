@@ -6,7 +6,7 @@
                   [pagination]="itemVariantTableHelper.pagination$ | async"
                   (paginationChange)="itemVariantTableHelper.setPagination($event)"
                   [(selection)]="selectedItemVariants"
-                  (rowSelect)="onRowSelect($event)"
+                  (rowClick)="onRowSelect($event)"
   >
     <ng-template cpShellColumn let-row="row" let-column="column">
       <cp-item-variant-column [column]="column"

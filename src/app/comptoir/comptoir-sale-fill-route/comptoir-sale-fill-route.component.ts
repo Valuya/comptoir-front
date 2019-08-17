@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {WsItemVariantRef, WsItemVariantSale} from '@valuya/comptoir-ws-api';
 import {MessageService} from 'primeng/api';
 import {ComptoirSaleService} from '../comptoir-sale.service';
@@ -9,7 +9,8 @@ import {Subscription} from 'rxjs';
 @Component({
   selector: 'cp-comptoir-sale-fill-route',
   templateUrl: './comptoir-sale-fill-route.component.html',
-  styleUrls: ['./comptoir-sale-fill-route.component.scss']
+  styleUrls: ['./comptoir-sale-fill-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComptoirSaleFillRouteComponent implements OnInit, OnDestroy {
 

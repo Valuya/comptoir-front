@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {ComptoirSaleService} from '../comptoir-sale.service';
@@ -6,11 +6,13 @@ import {AuthService} from '../../auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {take} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
+import {WsSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsSalePriceDetails';
 
 @Component({
   selector: 'cp-active-sale-header',
   templateUrl: './active-sale-header.component.html',
-  styleUrls: ['./active-sale-header.component.scss']
+  styleUrls: ['./active-sale-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActiveSaleHeaderComponent implements OnInit {
 
@@ -22,6 +24,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
   payRoute: boolean;
 
   sale$: Observable<WsSale>;
+  salePrice$: Observable<WsSalePriceDetails>;
   saleRef$: Observable<WsSaleRef>;
   saleTotalPaid$: Observable<number>;
   saleRemaining$: Observable<number>;
@@ -39,6 +42,7 @@ export class ActiveSaleHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.sale$ = this.saleService.getSale$();
+    this.salePrice$ = this.saleService.getSalePrice$();
     this.saleRef$ = this.saleService.getSaleRef$();
     this.saleTotalPaid$ = this.saleService.getSaleTotalPaid$();
     this.saleRemaining$ = this.saleService.getSaleRemainingToPay$();
@@ -78,7 +82,8 @@ export class ActiveSaleHeaderComponent implements OnInit {
     this.saleService.reopenActiveSale$()
       .subscribe(ref => {
         this.router.navigate(['../', ref.id, 'fill'], {
-          relativeTo: this.activatedRoute
+          relativeTo: this.activatedRoute,
+          replaceUrl: true,
         });
       });
   }
@@ -94,6 +99,18 @@ export class ActiveSaleHeaderComponent implements OnInit {
 
   getRedirectUrl() {
     return this.router.routerState.snapshot.url;
+  }
+
+  onTotalVatInclusiveChange(value: number) {
+    this.saleService.updateSalePrice('totalPriceVatInclusive', value);
+  }
+
+  onDiscountAmountChange(value: number) {
+    this.saleService.updateSalePrice('saleDiscountAmount', value);
+  }
+
+  onDiscountRatioChange(value: number) {
+    this.saleService.updateSalePrice('saleDiscountRatio', value);
   }
 
   private closeSaleWithRemainingCheck(remaining: number) {
@@ -130,4 +147,5 @@ export class ActiveSaleHeaderComponent implements OnInit {
         });
       });
   }
+
 }

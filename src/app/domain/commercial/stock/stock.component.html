@@ -5,14 +5,10 @@
     <i class="fa fa-hand-spock-o"></i>
   </div>
 
-  <div class="content">
-
-    <div class="description" *ngIf="showDescription">
-      <cp-loading-content [loading]="loading$ |async">
-        <cp-locale-text [localeTexts]="(value$ |async)?.description"></cp-locale-text>
-      </cp-loading-content>
-    </div>
-
+  <div class="description" *ngIf="showDescription">
+    <cp-loading-content [loading]="loading$ |async">
+      <cp-locale-text [localeTexts]="(value$ |async)?.description"></cp-locale-text>
+    </cp-loading-content>
   </div>
 
 </div>

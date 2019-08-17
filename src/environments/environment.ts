@@ -7,7 +7,7 @@ import {EnvironmentConfig} from './environment-config';
 export const environment: EnvironmentConfig = {
   production: false,
   backend: {
-    url: 'https://comptoir.local:8443',
+    url: 'https://comptoir.local:8443/comptoir-ws',
     swPushKey: 'BLOcP1_dkbCRHRQyMwPAa4jxruPeGcoAqq9CouHy-Y-a6YeIKaz9Jl7gn7CR1JLD5_Jm5alMEqT9aJMKMoguUU4'
   }
 };

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ShellTableHelper} from '../../app-shell/shell-table/shell-table-helper';
 import {Pagination} from '../../util/pagination';
 import {SearchResultFactory} from '../../app-shell/shell-table/search-result.factory';
@@ -15,7 +15,8 @@ import {PosService} from '../../domain/commercial/pos.service';
 @Component({
   selector: 'cp-pos-list-route',
   templateUrl: './pos-list-route.component.html',
-  styleUrls: ['./pos-list-route.component.scss']
+  styleUrls: ['./pos-list-route.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PosListRouteComponent implements OnInit {
 

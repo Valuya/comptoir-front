@@ -1,16 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {delay, distinctUntilChanged, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
-import {WsCompanyRef, WsItemVariantSale, WsItemVariantSaleSearch, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
+import {delay, map, publishReplay, refCount, switchMap, tap} from 'rxjs/operators';
+import {WsCompanyRef, WsItemVariantSaleSearch, WsSale, WsSalePriceDetails, WsSaleRef} from '@valuya/comptoir-ws-api';
 import {SaleService} from '../sale.service';
 import {AuthService} from '../../../auth.service';
 import {PaginationUtils} from '../../../util/pagination-utils';
-import {PricingUtils} from '../../util/pricing-utils';
 
 @Component({
   selector: 'cp-sale',
   templateUrl: './sale.component.html',
-  styleUrls: ['./sale.component.scss']
+  styleUrls: ['./sale.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleComponent implements OnInit {
 
@@ -43,6 +43,7 @@ export class SaleComponent implements OnInit {
 
   value$: Observable<WsSale>;
   itemCount$: Observable<number>;
+  price$: Observable<WsSalePriceDetails>;
   total$: Observable<number>;
 
   constructor(
@@ -62,8 +63,12 @@ export class SaleComponent implements OnInit {
       switchMap(ref => this.searchItemCount$(ref)),
       publishReplay(1), refCount()
     );
-    this.total$ = this.value$.pipe(
-      map(sale => PricingUtils.getSaleTotal(sale)),
+    this.price$ = this.refSource$.pipe(
+      switchMap(ref => this.searchSalePrice$(ref)),
+      publishReplay(1), refCount()
+    );
+    this.total$ = this.price$.pipe(
+      map(p => p.totalPriceVatInclusive),
       publishReplay(1), refCount()
     );
   }
@@ -98,5 +103,12 @@ export class SaleComponent implements OnInit {
       saleRef: saleRefVal,
       companyRef: companyRefVal
     };
+  }
+
+  private searchSalePrice$(ref: WsSaleRef) {
+    if (ref == null) {
+      return of(null);
+    }
+    return this.saleService.getSalePriceDetails$(ref);
   }
 }

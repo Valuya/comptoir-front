@@ -1,22 +1,38 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsItemVariantSale} from '@valuya/comptoir-ws-api';
-import {PricingUtils} from '../../../domain/util/pricing-utils';
-import {NumberUtils} from '../../../util/number-utils';
+import {WsItemVariantSalePriceDetails} from '@valuya/comptoir-ws-api/dist/models/WsItemVariantSalePriceDetails';
 
 @Component({
   selector: 'cp-sale-item-list-item',
   templateUrl: './sale-item-list-item.component.html',
-  styleUrls: ['./sale-item-list-item.component.scss']
+  styleUrls: ['./sale-item-list-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaleItemListItemComponent implements OnInit {
 
   @Input()
   item: WsItemVariantSale;
+  @Input()
+  priceDetails: WsItemVariantSalePriceDetails;
 
   @Output()
   itemChange = new EventEmitter<WsItemVariantSale>();
   @Output()
   itemRemove = new EventEmitter<WsItemVariantSale>();
+  @Output()
+  totalVatExclusiveChange = new EventEmitter<number>();
+  @Output()
+  totalVatInclusiveChange = new EventEmitter<number>();
+  @Output()
+  unitVatExclusiveChange = new EventEmitter<number>();
+  @Output()
+  vatRateChange = new EventEmitter<number>();
+  @Output()
+  discountRateChange = new EventEmitter<number>();
+  @Output()
+  discountAmountChange = new EventEmitter<number>();
+  @Output()
+  quantityChange = new EventEmitter<number>();
 
   constructor() {
   }
@@ -30,49 +46,35 @@ export class SaleItemListItemComponent implements OnInit {
   }
 
   fireTotalVatExclusiveChange(totalValue: number) {
-    const quantity = this.item.quantity;
-    const unitPrice = NumberUtils.toFixedDecimals(totalValue / quantity, 4);
-    return this.fireChanges({
-      total: totalValue,
-      vatExclusive: unitPrice
-    });
+    this.totalVatExclusiveChange.next(totalValue);
   }
 
-
   fireTotalVatInclusiveChange(totalValue: number) {
-    const vatRate = this.item.vatRate;
-    const discountRate = this.item.discountRatio;
-    const totalVatExclusive = PricingUtils.getVatExclusviveFromTotal(totalValue, vatRate, discountRate);
-    const quantity = this.item.quantity;
-    const unitPrice = NumberUtils.toFixedDecimals(totalVatExclusive / quantity, 4);
-    return this.fireChanges({
-      total: totalVatExclusive,
-      vatExclusive: unitPrice
-    });
+    this.totalVatInclusiveChange.next(totalValue);
   }
 
   fireVatExclusiveChange(vatExclusiveValue: number) {
-    const quantity = this.item.quantity;
-    const totalValue = NumberUtils.toFixedDecimals(quantity * vatExclusiveValue, 4);
-    return this.fireChanges({
-      total: totalValue,
-      vatExclusive: vatExclusiveValue
-    });
+    this.unitVatExclusiveChange.next(vatExclusiveValue);
   }
 
-
   fireVatRateChange(vatRateValue: number) {
-    return this.fireChanges({
-      vatRate: vatRateValue
-    });
+    this.vatRateChange.next(vatRateValue);
+  }
+
+  fireDiscountAmountChange(value: number) {
+    this.discountAmountChange.next(value);
+  }
+
+  fireDiscountRateChange(value: number) {
+    this.discountRateChange.next(value);
+  }
+
+  fireQuantityChange(value: number) {
+    this.quantityChange.next(value);
   }
 
   onRemoveItemClick(event: Event) {
     this.itemRemove.next(this.item);
   }
 
-  onDiscountAmountChange(amount: number): number {
-    const discountAmount = PricingUtils.getDiscountRateFromAmount(this.item, amount);
-    return discountAmount;
-  }
 }

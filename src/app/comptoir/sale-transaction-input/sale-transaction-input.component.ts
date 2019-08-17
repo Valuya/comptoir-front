@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WsAccountingEntry, WsAccountRef, WsPosRef} from '@valuya/comptoir-ws-api';
 import {NumberUtils} from '../../util/number-utils';
 
 @Component({
   selector: 'cp-sale-transaction-input',
   templateUrl: './sale-transaction-input.component.html',
-  styleUrls: ['./sale-transaction-input.component.scss']
+  styleUrls: ['./sale-transaction-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleTransactionInputComponent implements OnInit {
 
