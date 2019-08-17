@@ -1,5 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {WsCompanyRef, WsItemVariantSale, WsItemVariantSaleRef, WsItemVariantSaleSearch, WsSale, WsSaleRef} from '@valuya/comptoir-ws-api';
+import {
+  WsCompanyRef,
+  WsItemVariantSale,
+  WsItemVariantSaleRef,
+  WsItemVariantSaleSearch,
+  WsSale,
+  WsSalePriceDetails,
+  WsSaleRef
+} from '@valuya/comptoir-ws-api';
 import {BehaviorSubject, forkJoin, Observable, of} from 'rxjs';
 import {AuthService} from '../../auth.service';
 import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
@@ -25,6 +33,7 @@ export class SalePrintComponent implements OnInit {
 
   refSource$ = new BehaviorSubject<WsSaleRef | null>(null);
   sale$: Observable<WsSale | null>;
+  salePrice$: Observable<WsSalePriceDetails | null>;
   companyRef$: Observable<WsCompanyRef>;
   itemRefs$: Observable<WsItemVariantSaleRef[]>;
   itemsWithPrice$: Observable<VariantSaleWithPrice[]>;
@@ -37,6 +46,10 @@ export class SalePrintComponent implements OnInit {
   ngOnInit() {
     this.sale$ = this.refSource$.pipe(
       switchMap(ref => this.saleService.getSale$(ref)),
+      publishReplay(1), refCount()
+    );
+    this.salePrice$ = this.refSource$.pipe(
+      switchMap(ref => this.saleService.getSalePriceDetails$(ref)),
       publishReplay(1), refCount()
     );
     this.itemRefs$ = this.refSource$.pipe(

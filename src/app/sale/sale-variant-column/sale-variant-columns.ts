@@ -10,9 +10,9 @@ export const enum SaleVariantColumn {
   INCLUDE_CUSTOMER_LOYALTY = 'INCLUDE_CUSTOMER_LOYALTY',
   ITEM_VARIANT = 'ITEM_VARIANT',
   QUANTITY = 'QUANTITY',
-  TOTAL = 'TOTAL',
+  TOTAL_VAT_INCLUSIVE = 'TOTAL',
   VAT_EXCLUSIVE = 'VAT_EXCLUSIVE',
-  VAT_INCLUSIVE = 'VAT_INCLUSIVE',
+  UNIT_VAT_EXCLUSIVE = 'VAT_INCLUSIVE',
   VAT_RATE = 'VAT_RATE',
 }
 
@@ -77,9 +77,9 @@ export class SaleVariantColumns {
     sortable: false,
     widthWeight: 1
   };
-  static TOTAL_COLUMN: TableColumn<SaleVariantColumn> = {
-    value: SaleVariantColumn.TOTAL,
-    header: 'Total',
+  static TOTAL_VAT_INCLUSIVE: TableColumn<SaleVariantColumn> = {
+    value: SaleVariantColumn.TOTAL_VAT_INCLUSIVE,
+    header: 'TOTAL_VAT_INCLUSIVE',
     sortable: false,
     widthWeight: 1
   };
@@ -90,9 +90,9 @@ export class SaleVariantColumns {
     sortable: false,
     widthWeight: 1
   };
-  static VAT_INCLUSIVE_COLUMN: TableColumn<SaleVariantColumn> = {
-    value: SaleVariantColumn.VAT_INCLUSIVE,
-    header: 'VAT_INCLUSIVE',
+  static UNIT_VAT_EXCLUSIVE: TableColumn<SaleVariantColumn> = {
+    value: SaleVariantColumn.UNIT_VAT_EXCLUSIVE,
+    header: 'UNIT_VAT_EXCLUSIVE',
     sortable: false,
     widthWeight: 1
   };

@@ -58,6 +58,7 @@ import {UpdateSaleVariantPriceEvent} from './sale-event/update-sale-variant-pric
 import {UpdateSalePriceEvent} from './sale-event/update-sale-price-event';
 import {VariantSaleWithPrice} from '../domain/commercial/item-variant-sale/variant-sale-with-price';
 import {WsBalanceSearchAccountSearchAccountTypeEnum} from '@valuya/comptoir-ws-api/models/WsBalanceSearchAccountSearch';
+import {ComptoirService} from './comptoir-service';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +100,7 @@ export class ComptoirSaleService {
     private accountingService: AccountingService,
     private localeService: LocaleService,
     private authService: AuthService,
+    private comptoirService: ComptoirService,
   ) {
     this.saleItemsTableHelper = new ShellTableHelper<VariantSaleWithPrice, WsItemVariantSaleSearch>(
       (searchFilter, pagination) => this.searchSaleItems$(searchFilter),
@@ -436,6 +438,10 @@ export class ComptoirSaleService {
 
   private createSale$(sale: WsSale) {
     this.creatingSaleInProgress$.next(true);
+
+    const customerRef = this.comptoirService.getDefaultCustomerRefOptional();
+    sale.customerRef = customerRef;
+
     return this.saleService.createSale$(sale).pipe(
       switchMap(newSaleRef => this.saleService.getSale$(newSaleRef)),
       delay(0),
@@ -696,7 +702,8 @@ export class ComptoirSaleService {
       delay(0),
       tap(() => this.updatingSaleInProgress$.next(false)),
       mergeMap(() => this.refetchState$(state, {
-        refetchSale: true
+        refetchSale: true,
+        forceRefetchSalePrice: true, // customer change
       })),
     );
   }
@@ -749,7 +756,7 @@ export class ComptoirSaleService {
   private applyUpdateSaleVariantEvent$(event: UpdateSaleVariantEvent<any>, state: SaleState) {
     const variantRef = event.variantRef;
     const curVariant = state.items.find(i => i.variantSale.id === variantRef.id);
-    const variantToUpdate = Object.assign({}, curVariant, event.update);
+    const variantToUpdate = Object.assign({}, curVariant.variantSale, event.update);
 
     this.updatingItemsInProgress$.next(true);
     return this.saleService.saveVariant(variantToUpdate).pipe(

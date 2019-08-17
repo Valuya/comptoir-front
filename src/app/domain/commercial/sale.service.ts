@@ -450,6 +450,8 @@ export class SaleService {
       saleRef: {id: curSale.id},
       dateTime: new Date(),
       itemVariantRef: {id: itemVariant.id},
+      includeCustomerDiscount: true,
+      includeCustomerLoyalty: true
     };
     return this.variantCache.createResource$(variant);
   }

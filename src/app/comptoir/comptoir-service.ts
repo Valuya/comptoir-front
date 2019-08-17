@@ -5,7 +5,6 @@ import {map, publishReplay, refCount, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth.service';
 import {MessageService} from 'primeng/api';
 import {CompanyService} from '../domain/commercial/company.service';
-import {ComptoirSaleService} from './comptoir-sale.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,6 @@ export class ComptoirService {
   constructor(
     private authService: AuthService,
     private messageService: MessageService,
-    private comptoirSaleService: ComptoirSaleService,
     private companyService: CompanyService
   ) {
     this.customerLoyaltyAmount$ = this.authService.getLoggedEmployeeCompanyRef$().pipe(
@@ -51,6 +49,14 @@ export class ComptoirService {
       ref => this.onLoyaltyRateUpdated(),
       e => this.showUpdateError(e),
     );
+  }
+
+  getDefaultCustomerRefOptional(): WsCustomerRef | null {
+    return this.defaultCustomerRef$.getValue();
+  }
+
+  getPosRefOptional(): WsPosRef | null {
+    return this.pointOfSaleRef$.getValue();
   }
 
   private onLoyaltyRateUpdated() {
@@ -85,4 +91,5 @@ export class ComptoirService {
       detail: `${error}`
     });
   }
+
 }

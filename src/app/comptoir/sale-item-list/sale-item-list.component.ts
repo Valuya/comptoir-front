@@ -152,7 +152,7 @@ export class SaleItemListComponent implements OnInit {
       SaleVariantColumns.DISCOUNT_RATIO_COLUMN,
       SaleVariantColumns.INCLUDE_CUSTOMER_LOYALTY_COLUMN,
       SaleVariantColumns.VAT_RATE_COLUMN,
-      SaleVariantColumns.TOTAL_COLUMN,
+      SaleVariantColumns.TOTAL_VAT_INCLUSIVE,
     ].map(col => {
       return {
         value: col.value,

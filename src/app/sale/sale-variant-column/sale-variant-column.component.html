@@ -46,7 +46,7 @@
     {{ variantWithPrice.price.quantity | number }}
   </ng-container>
 
-  <ng-container *ngSwitchCase="'TOTAL'">
+  <ng-container *ngSwitchCase="'TOTAL_VAT_INCLUSIVE'">
     {{ variantWithPrice.price.totalVatInclusive | currency }}
   </ng-container>
 
@@ -54,8 +54,8 @@
     {{ variantWithPrice.price.totalVatExclusive | currency }}
   </ng-container>
 
-  <ng-container *ngSwitchCase="'VAT_INCLUSIVE'">
-    {{ variantWithPrice.price.totalVatInclusive | currency }}
+  <ng-container *ngSwitchCase="'UNIT_VAT_EXCLUSIVE'">
+    {{ variantWithPrice.price.unitPriceVatExclusive | currency }}
   </ng-container>
 
   <ng-container *ngSwitchCase="'VAT_RATE'">

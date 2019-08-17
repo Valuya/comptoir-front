@@ -37,8 +37,7 @@
       <div class="amounts">
         <span>{{ item.price.quantity }}</span>
         <span>x</span>
-        <cp-sale-variant-column [variantWithPrice]="item" [column]="SALE_VARIANTS_COLUMNS.VAT_INCLUSIVE_COLUMN">
-        </cp-sale-variant-column>
+        <span>{{ item.price.unitPriceVatExclusive * (1 + item.price.vatRate) | currency }}</span>
         <div class="discount" *ngIf="item.price.effectiveDiscountRatio != null && item.price.effectiveDiscountRatio !== 0">
           - {{ item.price.effectiveDiscountRatio | percent }}
         </div>
@@ -47,8 +46,7 @@
         </div>
       </div>
       <div class="total">
-        <cp-sale-variant-column [variantWithPrice]="item" [column]="SALE_VARIANTS_COLUMNS.TOTAL_COLUMN">
-        </cp-sale-variant-column>
+        {{ item.price.totalVatInclusive | currency}}
       </div>
     </div>
   </div>

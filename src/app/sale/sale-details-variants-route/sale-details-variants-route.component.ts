@@ -41,7 +41,7 @@ export class SaleDetailsVariantsRouteComponent implements OnInit {
     SaleVariantColumns.DISCOUNT_RATIO_COLUMN,
     SaleVariantColumns.VAT_EXCLUSIVE_COLUMN,
     SaleVariantColumns.VAT_RATE_COLUMN,
-    SaleVariantColumns.TOTAL_COLUMN,
+    SaleVariantColumns.TOTAL_VAT_INCLUSIVE,
   ];
   sale$: Observable<WsSale | null>;
 

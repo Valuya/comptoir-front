@@ -70,12 +70,13 @@ export class SaleListRouteComponent implements OnInit, OnDestroy {
   }
 
 
-  onRowSelect(sale: WsSale) {
-    this.router.navigate(['/sale', sale.id]);
+  onRowSelect(sale: SaleWithPrice) {
+    this.router.navigate(['/sale', sale.sale.id]);
   }
 
-  onSelectionChange$(sales: WsSale[]) {
-    this.selectedSales$.next(sales);
+  onSelectionChange$(sales: SaleWithPrice[]) {
+    const saleList = sales.map(s => s.sale);
+    this.selectedSales$.next(saleList);
   }
 
   onFilterChange(searchFilter: WsSaleSearch) {
