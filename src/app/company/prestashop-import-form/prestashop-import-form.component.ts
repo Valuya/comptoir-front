@@ -14,7 +14,6 @@ import {WsCompany, WsPrestashopImportParams} from '@valuya/comptoir-ws-api';
       multi: true
     }
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrestashopImportFormComponent implements OnInit, ControlValueAccessor {
 
@@ -53,6 +52,7 @@ export class PrestashopImportFormComponent implements OnInit, ControlValueAccess
   }
 
   writeValue(obj: any): void {
+    console.log(obj);
     this.value = obj;
   }
 

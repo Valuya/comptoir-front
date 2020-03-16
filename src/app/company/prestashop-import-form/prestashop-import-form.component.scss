@@ -1,0 +1,13 @@
+.import-form {
+  width: 50em;
+}
+
+.control {
+  ::ng-deep .shell-inplace-edit {
+    width: 100%;
+
+    input {
+      width: 100%;
+    }
+  }
+}

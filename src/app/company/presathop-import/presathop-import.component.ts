@@ -11,7 +11,6 @@ import {RouteUtils} from '../../util/route-utils';
   selector: 'cp-presathop-import',
   templateUrl: './presathop-import.component.html',
   styleUrls: ['./presathop-import.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PresathopImportComponent implements OnInit {
 
