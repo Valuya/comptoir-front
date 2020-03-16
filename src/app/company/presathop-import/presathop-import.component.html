@@ -21,12 +21,15 @@
           </cp-shell-inplace-edit>
         </div>
 
+        <div>
+          <cp-prestashop-import-form [(ngModel)]="importForm"
+          ></cp-prestashop-import-form>
+        </div>
 
-        <cp-prestashop-import-form [(ngModel)]="importForm"
-        ></cp-prestashop-import-form>
-
-        <p-progressSpinner *ngIf="importing$ | async"
-        ></p-progressSpinner>
+        <div>
+          <p-progressSpinner *ngIf="importing$ | async"
+          ></p-progressSpinner>
+        </div>
       </ng-template>
     </cp-shell-details-form>
   </ng-template>
